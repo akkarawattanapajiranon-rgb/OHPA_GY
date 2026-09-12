@@ -1,0 +1,2082 @@
+{
+  "10021": {
+    "empId": "10021",
+    "dept": "3200 - Production",
+    "nameTH": "สุรสิทธิ์ เดชพลกรัง",
+    "nameEN": "Surasit Dechponkung",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10070": {
+    "empId": "10070",
+    "dept": "3200 - Production",
+    "nameTH": "กรุง บำรุงแขวง",
+    "nameEN": "Krung Bamrungkhwaeng",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10071": {
+    "empId": "10071",
+    "dept": "3200 - Production",
+    "nameTH": "มานพ หอมสุข",
+    "nameEN": "Manop Homsuk",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10073": {
+    "empId": "10073",
+    "dept": "3200 - Production",
+    "nameTH": "ชัชวาล แก้วถาวร",
+    "nameEN": "Chatchawan Keawthavorn",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10116": {
+    "empId": "10116",
+    "dept": "4130 - Production",
+    "nameTH": "เสน่ห์ เชื้อเพชร",
+    "nameEN": "Sanea Chuepet",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10117": {
+    "empId": "10117",
+    "dept": "4130 - Production",
+    "nameTH": "คมสัน ทิมประทุม",
+    "nameEN": "Komson Timpratoom",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10127": {
+    "empId": "10127",
+    "dept": "3200 - Production",
+    "nameTH": "ธวัชชัย พันธ์แช่ม",
+    "nameEN": "Thawatchai Phunchiem",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10176": {
+    "empId": "10176",
+    "dept": "4130 - Production",
+    "nameTH": "สายัณห์ ฤทธิ",
+    "nameEN": "Sayan Ritti",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10199": {
+    "empId": "10199",
+    "dept": "3300 - Production",
+    "nameTH": "อาทิตย์ ระย้าแก้ว",
+    "nameEN": "Arthit Rayakeaw",
+    "position": "Calender Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10200": {
+    "empId": "10200",
+    "dept": "4300 - Production",
+    "nameTH": "กัมพล ดำเนินงาม",
+    "nameEN": "Kompon Dumnanegam",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10219": {
+    "empId": "10219",
+    "dept": "4130 - Production",
+    "nameTH": "คนึง พรมศักดิ์",
+    "nameEN": "Kuang Pormsak",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10240": {
+    "empId": "10240",
+    "dept": "4130 - Production",
+    "nameTH": "วิรุจณ์ ดวงคำ",
+    "nameEN": "Wirud Duangkhum",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10287": {
+    "empId": "10287",
+    "dept": "4130 - Production",
+    "nameTH": "ยุทธศักดิ์ นาไชโย",
+    "nameEN": "Yuttassak Nachaiyo",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10309": {
+    "empId": "10309",
+    "dept": "4110 - Production",
+    "nameTH": "นรา ฉันขาว",
+    "nameEN": "Nara Chankhao",
+    "position": "Lux/Gum Slitter Operator",
+    "machine": "Kao Yeh - Gum slitter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10310": {
+    "empId": "10310",
+    "dept": "3200 - Production",
+    "nameTH": "เสกสรรค์ จันทราช",
+    "nameEN": "Saksan Chantalad",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10311": {
+    "empId": "10311",
+    "dept": "3200 - Production",
+    "nameTH": "สมเกียรติ ทองดีเลิศ",
+    "nameEN": "Somkiat Thongdeelert",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10358": {
+    "empId": "10358",
+    "dept": "4110 - Production",
+    "nameTH": "ชัยยงค์ ยิ้มแฉ่ง",
+    "nameEN": "Chaiyong Yimchaeng",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10369": {
+    "empId": "10369",
+    "dept": "4300 - Production",
+    "nameTH": "ภูวดิท นรสิงห์",
+    "nameEN": "Poowadit Norasing",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10373": {
+    "empId": "10373",
+    "dept": "4130 - Production",
+    "nameTH": "ชัยณรงค์ คำแสน",
+    "nameEN": "Chainarong Khamsan",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10385": {
+    "empId": "10385",
+    "dept": "4110 - Production",
+    "nameTH": "ถวิล บุญให้",
+    "nameEN": "Thawin Boonhai",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10574": {
+    "empId": "10574",
+    "dept": "3200 - Production",
+    "nameTH": "อุทิศชัย ประดับหิน",
+    "nameEN": "Utischai Praduphin",
+    "position": "Auto Pigment Operator",
+    "machine": "Auto Pigment Weighing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10609": {
+    "empId": "10609",
+    "dept": "4200 - Production",
+    "nameTH": "บุญล้ำ หรอดทอง",
+    "nameEN": "Boonlam Roadthong",
+    "position": "Bead Insulate Operator",
+    "machine": "Bead Insulate",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10641": {
+    "empId": "10641",
+    "dept": "4130 - Production",
+    "nameTH": "มนูญ นามวงษา",
+    "nameEN": "Manoon Namwongsa",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10642": {
+    "empId": "10642",
+    "dept": "4200 - Production",
+    "nameTH": "วรพจน์ จันทร์แสง",
+    "nameEN": "Worapot Chansang",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10705": {
+    "empId": "10705",
+    "dept": "4130 - Production",
+    "nameTH": "วรวุฒิ พันขันตี",
+    "nameEN": "Worawut Pankhantee",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10720": {
+    "empId": "10720",
+    "dept": "3200 - Production",
+    "nameTH": "ไพโรจน์ สมกำเนิด",
+    "nameEN": "Pairot Somkumnead",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10766": {
+    "empId": "10766",
+    "dept": "4110 - Production",
+    "nameTH": "อำนาจ สร้อยประทุม",
+    "nameEN": "Amnaj Sroipathum",
+    "position": "Bias Cutter Operator/Splicer",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10780": {
+    "empId": "10780",
+    "dept": "4300 - Production",
+    "nameTH": "ทนง เชียร์สมสุข",
+    "nameEN": "Tanong Chearsomsuk",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10830": {
+    "empId": "10830",
+    "dept": "4300 - Production",
+    "nameTH": "อดิศักดิ์ อำไพจิตต์",
+    "nameEN": "Adisak Umpaijit",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10831": {
+    "empId": "10831",
+    "dept": "4300 - Production",
+    "nameTH": "กิติชัย ปลัดพรหม",
+    "nameEN": "Kittichai Paladphrom",
+    "position": "CFE Cushion Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10843": {
+    "empId": "10843",
+    "dept": "4130 - Production",
+    "nameTH": "อภิชา เอกธนาพัชรกุล",
+    "nameEN": "Apicha Aekthanaphatrakul",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "10847": {
+    "empId": "10847",
+    "dept": "3200 - Production",
+    "nameTH": "นุชิต จีนเกา",
+    "nameEN": "Nuchit Jeengao",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11168": {
+    "empId": "11168",
+    "dept": "4300 - Production",
+    "nameTH": "ก๋วน ตั๋นติ๊บ",
+    "nameEN": "Guan Tantip",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11248": {
+    "empId": "11248",
+    "dept": "4200 - Production",
+    "nameTH": "วุฒิพงษ์ คล่องการ",
+    "nameEN": "Wutipong Klongkan",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11250": {
+    "empId": "11250",
+    "dept": "3200 - Production",
+    "nameTH": "จักรี เถินมงคล",
+    "nameEN": "Juckree Ternmongkol",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11398": {
+    "empId": "11398",
+    "dept": "4110 - Production",
+    "nameTH": "นิตย์ เสนาสี",
+    "nameEN": "Nit Sanasee",
+    "position": "Chafer Lay Up Operator",
+    "machine": "Chaffer Lay-up",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11400": {
+    "empId": "11400",
+    "dept": "3200 - Production",
+    "nameTH": "ไกรทอง บุตรโท",
+    "nameEN": "Kaitong Budto",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11402": {
+    "empId": "11402",
+    "dept": "4300 - Production",
+    "nameTH": "สกล โพธิ์ศรี",
+    "nameEN": "Sakol Posri",
+    "position": "CFE Leader Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11404": {
+    "empId": "11404",
+    "dept": "4300 - Production",
+    "nameTH": "สิทธิ์ประเสริฐ มาลี",
+    "nameEN": "Sitprasert Malee",
+    "position": "Quad Leader Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11533": {
+    "empId": "11533",
+    "dept": "4110 - Production",
+    "nameTH": "จักรี ธเนศพันธุ์",
+    "nameEN": "Jakkree Thanetpan",
+    "position": "Chafer Lay Up Operator",
+    "machine": "Chaffer Lay-up",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11605": {
+    "empId": "11605",
+    "dept": "4110 - Production",
+    "nameTH": "อดิศักดิ์ โพธิ์คง",
+    "nameEN": "Adisak Phokong",
+    "position": "Chafer Lay Up Operator",
+    "machine": "Chaffer Lay-up",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11607": {
+    "empId": "11607",
+    "dept": "4300 - Production",
+    "nameTH": "อนุวัฒน์ เหมือนนึก",
+    "nameEN": "Anuwat Meaunnuk",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11646": {
+    "empId": "11646",
+    "dept": "4130 - Production",
+    "nameTH": "สมบัติ โครพ",
+    "nameEN": "Sombut Korob",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11765": {
+    "empId": "11765",
+    "dept": "4130 - Production",
+    "nameTH": "ดัสกร ดอนประดู่",
+    "nameEN": "Datsakorn Donpradoo",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11767": {
+    "empId": "11767",
+    "dept": "3200 - Production",
+    "nameTH": "นพัต สุดตา",
+    "nameEN": "Napat Sutta",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11768": {
+    "empId": "11768",
+    "dept": "4110 - Production",
+    "nameTH": "จีรศักดิ์ น้อยประเสริฐ",
+    "nameEN": "Jeerasak Noypasert",
+    "position": "Lux/Gum Slitter Operator",
+    "machine": "Kao Yeh - Gum slitter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11848": {
+    "empId": "11848",
+    "dept": "3200 - Production",
+    "nameTH": "วีระพันธ์ นุตะดี",
+    "nameEN": "Weerapan Nutadee",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11928": {
+    "empId": "11928",
+    "dept": "4300 - Production",
+    "nameTH": "บุญเรือง เพ็ญพินิจ",
+    "nameEN": "Boonrung Penpinid",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11940": {
+    "empId": "11940",
+    "dept": "4200 - Production",
+    "nameTH": "กฤชฎิ์ภพ มีพูล",
+    "nameEN": "Kruechphop Meephool",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11945": {
+    "empId": "11945",
+    "dept": "4130 - Production",
+    "nameTH": "สัญติ เกตุแก้ว",
+    "nameEN": "Santi Ketkeaw",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "11946": {
+    "empId": "11946",
+    "dept": "4300 - Production",
+    "nameTH": "รัชพล แจ้งสว่าง",
+    "nameEN": "Ratchapol Jangsawang",
+    "position": "Quad Leader Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12088": {
+    "empId": "12088",
+    "dept": "4120 - Production",
+    "nameTH": "ฉัตรชัย บุญประสิทธิ์",
+    "nameEN": "Chatchai Boonprasit",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12089": {
+    "empId": "12089",
+    "dept": "4130 - Production",
+    "nameTH": "ประทีป สังกร",
+    "nameEN": "Prathip Sangkorn",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12090": {
+    "empId": "12090",
+    "dept": "4130 - Production",
+    "nameTH": "มีชัย คณานิตย์",
+    "nameEN": "Meechai Kananid",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12093": {
+    "empId": "12093",
+    "dept": "3300 - Production",
+    "nameTH": "ธนากร จันเพ็ง",
+    "nameEN": "Thanakorn Janpaing",
+    "position": "Wind Up Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12094": {
+    "empId": "12094",
+    "dept": "4120 - Production",
+    "nameTH": "จิรเมธ แซ่ตั๊น",
+    "nameEN": "Jiramet Sae-Tan",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12110": {
+    "empId": "12110",
+    "dept": "4130 - Production",
+    "nameTH": "ณภัค สุขพสิษฐ์",
+    "nameEN": "Naphak Sukphasit",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12112": {
+    "empId": "12112",
+    "dept": "4120 - Production",
+    "nameTH": "ธวัชชัย การกล้า",
+    "nameEN": "Thawatchai Karnkla",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12113": {
+    "empId": "12113",
+    "dept": "4200 - Production",
+    "nameTH": "ปิยะ เฉลิมพล",
+    "nameEN": "Piya Chalermpon",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12115": {
+    "empId": "12115",
+    "dept": "4130 - Production",
+    "nameTH": "สมนึก จุรัมย์",
+    "nameEN": "Somnuek Churam",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12116": {
+    "empId": "12116",
+    "dept": "4110 - Production",
+    "nameTH": "อำพล ศรีชัย",
+    "nameEN": "Aumpol Srichai",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12128": {
+    "empId": "12128",
+    "dept": "3200 - Production",
+    "nameTH": "พายุ บุญมาใส",
+    "nameEN": "Phayu Bunmasai",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12140": {
+    "empId": "12140",
+    "dept": "3200 - Production",
+    "nameTH": "ถวิล ลืมอินทร์",
+    "nameEN": "Tawin Luemin",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12141": {
+    "empId": "12141",
+    "dept": "3300 - Production",
+    "nameTH": "วิวัฒน์ มาพงษ์",
+    "nameEN": "Viwat Mapong",
+    "position": "Let-off Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12142": {
+    "empId": "12142",
+    "dept": "4110 - Production",
+    "nameTH": "วสันต์ กิ่งจันทร์",
+    "nameEN": "Wasan Kingchan",
+    "position": "Bias Cutter Operator/Splicer",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12185": {
+    "empId": "12185",
+    "dept": "4130 - Production",
+    "nameTH": "จักรพงษ์ โคตรแป",
+    "nameEN": "Chakkaphong Khotpaen",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12186": {
+    "empId": "12186",
+    "dept": "4130 - Production",
+    "nameTH": "ณัฐพงษ์ อู่ชม",
+    "nameEN": "Natthaphong U-chom",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12187": {
+    "empId": "12187",
+    "dept": "3300 - Production",
+    "nameTH": "สายชล สุขสม",
+    "nameEN": "Saichon Sooksom",
+    "position": "Wind Up Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12188": {
+    "empId": "12188",
+    "dept": "4300 - Production",
+    "nameTH": "นภัทร อั้งเจ๋า",
+    "nameEN": "Naphat Aungchao",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12192": {
+    "empId": "12192",
+    "dept": "3200 - Production",
+    "nameTH": "นิติศักดิ์ ชูรัตน์",
+    "nameEN": "Nitisak Choorat",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12208": {
+    "empId": "12208",
+    "dept": "4300 - Production",
+    "nameTH": "วชิรัตน์ แซ่หล่อ",
+    "nameEN": "Wachirat Saelor",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12249": {
+    "empId": "12249",
+    "dept": "4110 - Production",
+    "nameTH": "ชริพันธ์ พลละเอียด",
+    "nameEN": "Chariphan Phonlaaiad",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12254": {
+    "empId": "12254",
+    "dept": "3200 - Production",
+    "nameTH": "จุมพล สีหินขาว",
+    "nameEN": "Joompol Seehinkhao",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12255": {
+    "empId": "12255",
+    "dept": "4110 - Production",
+    "nameTH": "เจริญวุฒิ สะใบพิมพ์",
+    "nameEN": "Jaroenwut Sabipim",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12256": {
+    "empId": "12256",
+    "dept": "4120 - Production",
+    "nameTH": "อัสนัย มั่นแสง",
+    "nameEN": "Aussanai Munsang",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12259": {
+    "empId": "12259",
+    "dept": "4110 - Production",
+    "nameTH": "อภิชาติ สำราญโรจน์",
+    "nameEN": "Aphichart Sumranrod",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12260": {
+    "empId": "12260",
+    "dept": "3200 - Production",
+    "nameTH": "เจริญ ทะนะไชย",
+    "nameEN": "Charoen Thanachai",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12267": {
+    "empId": "12267",
+    "dept": "4300 - Production",
+    "nameTH": "เอนก นนทชัย",
+    "nameEN": "Anek Nonthachai",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12269": {
+    "empId": "12269",
+    "dept": "4300 - Production",
+    "nameTH": "สุริยะ เรืองบุญ",
+    "nameEN": "Suriya Rungboon",
+    "position": "CFE Crew",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12305": {
+    "empId": "12305",
+    "dept": "4200 - Production",
+    "nameTH": "วุฒิชัย พลเรือง",
+    "nameEN": "Wutthichai Phonrueang",
+    "position": "Bead Wrapper",
+    "machine": "Bead Wrapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12306": {
+    "empId": "12306",
+    "dept": "4130 - Production",
+    "nameTH": "ณัฐพล ศิริโท",
+    "nameEN": "Nattapon Sirito",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12307": {
+    "empId": "12307",
+    "dept": "3200 - Production",
+    "nameTH": "นิคม เขียวกลม",
+    "nameEN": "NiKom Kiaokom",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12341": {
+    "empId": "12341",
+    "dept": "3300 - Production",
+    "nameTH": "มนูญ โยธามาตย์",
+    "nameEN": "Manoon Yothamat",
+    "position": "Mill Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12342": {
+    "empId": "12342",
+    "dept": "4110 - Production",
+    "nameTH": "อดิศักดิ์ โนนทา",
+    "nameEN": "Adisak Noantha",
+    "position": "Bias Cutter Operator/Splicer",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12343": {
+    "empId": "12343",
+    "dept": "4200 - Production",
+    "nameTH": "สุนทยา จงใจหาญ",
+    "nameEN": "Suntaya Jongjaihan",
+    "position": "Hex Bead Operator",
+    "machine": "Hex Bead",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12392": {
+    "empId": "12392",
+    "dept": "4200 - Production",
+    "nameTH": "รัศมี เกษวงษ์",
+    "nameEN": "Ratsamee Ketwong",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12409": {
+    "empId": "12409",
+    "dept": "3200 - Production",
+    "nameTH": "ประณพ เถาะพูน",
+    "nameEN": "Pranop Thorpoon",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12412": {
+    "empId": "12412",
+    "dept": "4300 - Production",
+    "nameTH": "พิษณุ ช้างชน",
+    "nameEN": "Phitsanu Changchon",
+    "position": "Quad Leader Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12461": {
+    "empId": "12461",
+    "dept": "4110 - Production",
+    "nameTH": "ธนเศรษฐ์ สังสมศักดิ์",
+    "nameEN": "Thanaset Sangsomsak",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12462": {
+    "empId": "12462",
+    "dept": "4110 - Production",
+    "nameTH": "อธิวัฒน์ งามสม",
+    "nameEN": "Athiwat Ngamsom",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12463": {
+    "empId": "12463",
+    "dept": "4300 - Production",
+    "nameTH": "ณัฐวัฒน์ เนาวรัตน์",
+    "nameEN": "Natthawat Naowarat",
+    "position": "CFE Leader Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12467": {
+    "empId": "12467",
+    "dept": "4300 - Production",
+    "nameTH": "สุดใจ เสียงเพราะ",
+    "nameEN": "Soodjai Seangphroh",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12485": {
+    "empId": "12485",
+    "dept": "4110 - Production",
+    "nameTH": "ชุวัฒน์ ด่านวันดี",
+    "nameEN": "Chuwat Danwandee",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12486": {
+    "empId": "12486",
+    "dept": "4110 - Production",
+    "nameTH": "ดวงสิทธิ์ เพ็ญพินิจ",
+    "nameEN": "Duangsit Phenpinit",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12487": {
+    "empId": "12487",
+    "dept": "4110 - Production",
+    "nameTH": "สรศิลป์ แก้วสะอาด",
+    "nameEN": "Sorasin Kaewsaard",
+    "position": "Bias cutter operator/splicer",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12532": {
+    "empId": "12532",
+    "dept": "3200 - Production",
+    "nameTH": "อภิรักษ์ สีดำ",
+    "nameEN": "Apirak Seedam",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12539": {
+    "empId": "12539",
+    "dept": "3200 - Production",
+    "nameTH": "อรัญ จันทชา",
+    "nameEN": "Aran  Jantacha",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12553": {
+    "empId": "12553",
+    "dept": "4120 - Production",
+    "nameTH": "เนติพงษ์ บุญรอด",
+    "nameEN": "Netipong Boonrod",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12568": {
+    "empId": "12568",
+    "dept": "4300 - Production",
+    "nameTH": "จักรพรรดิ์ กุลชร",
+    "nameEN": "Chakkaphat Kunchon",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12569": {
+    "empId": "12569",
+    "dept": "3200 - Production",
+    "nameTH": "กฤษดา ตะละชอน",
+    "nameEN": "Kritsada Talashon",
+    "position": "Auto Pigment Operator",
+    "machine": "Auto Pigment Weighing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12583": {
+    "empId": "12583",
+    "dept": "3200 - Production",
+    "nameTH": "นิรันดร์ แลดี",
+    "nameEN": "Niran Laedee",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Mixing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12584": {
+    "empId": "12584",
+    "dept": "3200 - Production",
+    "nameTH": "สถาพร สุขสวัสดิ์",
+    "nameEN": "Sataporn Suksawat",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12587": {
+    "empId": "12587",
+    "dept": "4200 - Production",
+    "nameTH": "สถาพร จำปาทอง",
+    "nameEN": "Sataporn Jamparthong",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12594": {
+    "empId": "12594",
+    "dept": "4300 - Production",
+    "nameTH": "ธนากร วงษ์อ่อน",
+    "nameEN": "Thanakorn Wongoon",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12595": {
+    "empId": "12595",
+    "dept": "4300 - Production",
+    "nameTH": "ยิ่งพันธ์ ยิ้มเครือทอง",
+    "nameEN": "Yingpan Yimkruethong",
+    "position": "Quad Leader Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12627": {
+    "empId": "12627",
+    "dept": "3200 - Production",
+    "nameTH": "สิทธิศักดิ์ สินวงค์",
+    "nameEN": "Sitthisak Sinwong",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12628": {
+    "empId": "12628",
+    "dept": "4200 - Production",
+    "nameTH": "ชาญยุทธ ป่าตอง",
+    "nameEN": "Chanyut Patong",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12629": {
+    "empId": "12629",
+    "dept": "4110 - Production",
+    "nameTH": "ณัฐพล บุญราศรี",
+    "nameEN": "Natthapon Boonrasri",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12630": {
+    "empId": "12630",
+    "dept": "4200 - Production",
+    "nameTH": "มงคลชัย แสงจันทร์คุ้ม",
+    "nameEN": "Mongkhonchai Saengchankhum",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12631": {
+    "empId": "12631",
+    "dept": "4300 - Production",
+    "nameTH": "ฐิติพงศ์ ทองแม้น",
+    "nameEN": "Tithiphong Tongman",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12632": {
+    "empId": "12632",
+    "dept": "3700 - Production",
+    "nameTH": "อนุพงษ์ วงค์คำจันทร์",
+    "nameEN": "Anuphong Wongkhamjan",
+    "position": "Cement House Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12637": {
+    "empId": "12637",
+    "dept": "3200 - Production",
+    "nameTH": "ปวริศ สะใบพิมพ์",
+    "nameEN": "Pawarit Sabaipim",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12638": {
+    "empId": "12638",
+    "dept": "3200 - Production",
+    "nameTH": "นิรุช แก้วสมุทร",
+    "nameEN": "Nirut Kaewsamut",
+    "position": "Auto Pigment Operator",
+    "machine": "Auto Pigment Weighing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12639": {
+    "empId": "12639",
+    "dept": "4300 - Production",
+    "nameTH": "วิสิฐพงศ์ พรรณสน",
+    "nameEN": "Wisitpong Phanson",
+    "position": "CFE Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12640": {
+    "empId": "12640",
+    "dept": "4300 - Production",
+    "nameTH": "ธนภูมิ เกตุไชโย",
+    "nameEN": "Tanapoom Ketchaiyo",
+    "position": "Service Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12642": {
+    "empId": "12642",
+    "dept": "4200 - Production",
+    "nameTH": "มนัส ภูงามนิล",
+    "nameEN": "Manat Pungamnin",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12644": {
+    "empId": "12644",
+    "dept": "4110 - Production",
+    "nameTH": "วีระชัย แตงอ่อน",
+    "nameEN": "Weerachai Tang-oon",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12645": {
+    "empId": "12645",
+    "dept": "4110 - Production",
+    "nameTH": "สหชาติ มะธิปะระชะตัง",
+    "nameEN": "Sahachat Matiparachatang",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12650": {
+    "empId": "12650",
+    "dept": "4200 - Production",
+    "nameTH": "นัฐพล เลือดกระโทก",
+    "nameEN": "Nattapon Luedkratok",
+    "position": "Hex Bead Operator",
+    "machine": "Hex Bead",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12651": {
+    "empId": "12651",
+    "dept": "4200 - Production",
+    "nameTH": "วีระชน ทิณเสวก",
+    "nameEN": "Veerachan Thinasawek",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12652": {
+    "empId": "12652",
+    "dept": "4300 - Production",
+    "nameTH": "อนุชา สุขน่วม",
+    "nameEN": "Anucha Suknuam",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12653": {
+    "empId": "12653",
+    "dept": "4300 - Production",
+    "nameTH": "ชาติชาย ใจอุดม",
+    "nameEN": "Chatchai Jai-udom",
+    "position": "Booker",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12654": {
+    "empId": "12654",
+    "dept": "4300 - Production",
+    "nameTH": "อนันต์ ยิ้มละไม",
+    "nameEN": "Anan Yimlamai",
+    "position": "CFE Releif Operator",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12663": {
+    "empId": "12663",
+    "dept": "3200 - Production",
+    "nameTH": "เดชา ชัยมาดี",
+    "nameEN": "Decha Chaimadee",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12673": {
+    "empId": "12673",
+    "dept": "4300 - Production",
+    "nameTH": "รัฐนันท์ ชัยอนันต์ธนโชค",
+    "nameEN": "Rattanan Chaiananthanachok",
+    "position": "Booker",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12674": {
+    "empId": "12674",
+    "dept": "4200 - Production",
+    "nameTH": "พงศกรณ์ พวงใส",
+    "nameEN": "Phongsakon Paungsai",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12676": {
+    "empId": "12676",
+    "dept": "4200 - Production",
+    "nameTH": "ประชา ไชยโชติ",
+    "nameEN": "Pracha Chaichote",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12677": {
+    "empId": "12677",
+    "dept": "4120 - Production",
+    "nameTH": "พีระพงษ์ ทองคนทา",
+    "nameEN": "Pheeraphong Thongkhontha",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12678": {
+    "empId": "12678",
+    "dept": "4130 - Production",
+    "nameTH": "พงศธร เกตุแก้ว",
+    "nameEN": "Pongsathon Ketkeaw",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12679": {
+    "empId": "12679",
+    "dept": "4130 - Production",
+    "nameTH": "สุทธิชัย ส่งศิริ",
+    "nameEN": "Sutthichai Songsiri",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12682": {
+    "empId": "12682",
+    "dept": "4200 - Production",
+    "nameTH": "กานต์พิภัช อยู่คง",
+    "nameEN": "Kanphiphat Yukhong",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12726": {
+    "empId": "12726",
+    "dept": "4300 - Production",
+    "nameTH": "อธิวัฒน์ ปันแก้ว",
+    "nameEN": "Atiwat Pankaeo",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12727": {
+    "empId": "12727",
+    "dept": "4120 - Production",
+    "nameTH": "ศราวุฒิ ละผิว",
+    "nameEN": "Sarawut Laphlo",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12729": {
+    "empId": "12729",
+    "dept": "4120 - Production",
+    "nameTH": "อลงกรณ์ หมื่นพินิจ",
+    "nameEN": "Alongkorn Muenpinit",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12730": {
+    "empId": "12730",
+    "dept": "4120 - Production",
+    "nameTH": "ศรายุทธ ทองวิเศษ",
+    "nameEN": "Sarayut Thongviset",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12731": {
+    "empId": "12731",
+    "dept": "4120 - Production",
+    "nameTH": "วิทยา อักษรชู",
+    "nameEN": "Witthaya Aksonchoo",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12732": {
+    "empId": "12732",
+    "dept": "3200 - Production",
+    "nameTH": "ขันธ์ทศพร จุดจันทึก",
+    "nameEN": "Khanthodsaporn Chutchanthuek",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12736": {
+    "empId": "12736",
+    "dept": "4300 - Production",
+    "nameTH": "พรชัย ละลง",
+    "nameEN": "Pornchai Lalong",
+    "position": "CFE Cushion Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12737": {
+    "empId": "12737",
+    "dept": "3300 - Production",
+    "nameTH": "วรัญชัย ศิริวรชาติ",
+    "nameEN": "Warunchai Siriwarachat",
+    "position": "Mill Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12753": {
+    "empId": "12753",
+    "dept": "4120 - Production",
+    "nameTH": "ปรัชญา เพ็งที",
+    "nameEN": "Pratchaya Phengthi",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12754": {
+    "empId": "12754",
+    "dept": "4200 - Production",
+    "nameTH": "สาลินี รัตนวรรณ",
+    "nameEN": "Salinee Rattanawan",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12756": {
+    "empId": "12756",
+    "dept": "4300 - Production",
+    "nameTH": "ทนงศักดิ์ ตาลอ่อน",
+    "nameEN": "Thanongsak Tan-on",
+    "position": "CFE Crew",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12757": {
+    "empId": "12757",
+    "dept": "4200 - Production",
+    "nameTH": "กิติพงษ์ ทองมูล",
+    "nameEN": "Kitipong Thongmoon",
+    "position": "Hex Bead Operator",
+    "machine": "Hex Bead",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12780": {
+    "empId": "12780",
+    "dept": "4300 - Production",
+    "nameTH": "สุรศักดิ์ งามเสน่ห์",
+    "nameEN": "Surasak Ngamsane",
+    "position": "CFE Operator Helper",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12783": {
+    "empId": "12783",
+    "dept": "4110 - Production",
+    "nameTH": "พุทธินันท์ แสนกล้า",
+    "nameEN": "Puttinan Sankla",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12807": {
+    "empId": "12807",
+    "dept": "4120 - Production",
+    "nameTH": "พิเชษฐ ชุ่มสว่าง",
+    "nameEN": "Phichet Choomsawang",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12808": {
+    "empId": "12808",
+    "dept": "4110 - Production",
+    "nameTH": "เกรียงศักดิ์ โสมอินทร์",
+    "nameEN": "Kriangsak Som-in",
+    "position": "Bias cutter operator/splicer",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12809": {
+    "empId": "12809",
+    "dept": "4200 - Production",
+    "nameTH": "ภาณุเดช แสนบุญมี",
+    "nameEN": "Phanudet Saenboonmee",
+    "position": "Bead Hot Apexer Operator",
+    "machine": "Hot Apexer",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12810": {
+    "empId": "12810",
+    "dept": "3200 - Production",
+    "nameTH": "ปริญญา ชูเลิศ",
+    "nameEN": "Parinya Chulert",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12812": {
+    "empId": "12812",
+    "dept": "3200 - Production",
+    "nameTH": "ธงชัย ไชยนาง",
+    "nameEN": "Tongchai Chaiyanang",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12833": {
+    "empId": "12833",
+    "dept": "3300 - Production",
+    "nameTH": "ปฏิภาณ มิตรผักแว่น",
+    "nameEN": "Patiphan Mitphakwaen",
+    "position": "Mill Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12845": {
+    "empId": "12845",
+    "dept": "4110 - Production",
+    "nameTH": "จำนงค์ บันไดทอง",
+    "nameEN": "Chamnong Bundaithong",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12846": {
+    "empId": "12846",
+    "dept": "4300 - Production",
+    "nameTH": "ไชยศักดิ์ เขียวกลม",
+    "nameEN": "Chaisak Khiaoklom",
+    "position": "Booker",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12849": {
+    "empId": "12849",
+    "dept": "4120 - Production",
+    "nameTH": "บัณฑิต บุญรอด",
+    "nameEN": "Bandit Boonrod",
+    "position": "Aircraft Band Builder 54\"",
+    "machine": "54\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12851": {
+    "empId": "12851",
+    "dept": "4300 - Production",
+    "nameTH": "ศรายุทธ พิมพ์แก้ว",
+    "nameEN": "Sarayut Pimkaew",
+    "position": "Booker",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12852": {
+    "empId": "12852",
+    "dept": "4300 - Production",
+    "nameTH": "พันกร ทิพย์อารักษ์",
+    "nameEN": "Pankorn Thiparak",
+    "position": "Booker",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12853": {
+    "empId": "12853",
+    "dept": "4300 - Production",
+    "nameTH": "ศักดิ์มนตรี วงศ์เมืองแก่น",
+    "nameEN": "Sakmontri Wongmueangkaen",
+    "position": "Booker",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12854": {
+    "empId": "12854",
+    "dept": "3200 - Production",
+    "nameTH": "อนุเบศน์ ถานโอฬาร",
+    "nameEN": "Anubet Thanaolan",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12861": {
+    "empId": "12861",
+    "dept": "4110 - Production",
+    "nameTH": "กฤษดา นาสิมมา",
+    "nameEN": "Kitsada Nasimma",
+    "position": "Fischer Cutter Operator",
+    "machine": "Fischer Cutter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12869": {
+    "empId": "12869",
+    "dept": "4300 - Production",
+    "nameTH": "ศักดินนท์ แสงเงิน",
+    "nameEN": "Sakdinon Sang-ngoen",
+    "position": "Booker",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12890": {
+    "empId": "12890",
+    "dept": "3200 - Production",
+    "nameTH": "ปณัฐชา ปัตถา",
+    "nameEN": "Panatcha Pattha",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12901": {
+    "empId": "12901",
+    "dept": "4300 - Production",
+    "nameTH": "รัฐภูมิ พันธ์จันดา",
+    "nameEN": "Rattaphum Panjanda",
+    "position": "Booker",
+    "machine": "Quad Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12938": {
+    "empId": "12938",
+    "dept": "3200 - Production",
+    "nameTH": "ชัยยา ชินนอก",
+    "nameEN": "Chaiya Chinnok",
+    "position": "Banbury 1 Crew",
+    "machine": "Mixer 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12945": {
+    "empId": "12945",
+    "dept": "4300 - Production",
+    "nameTH": "วรวุฒิ  มาพงษ์",
+    "nameEN": "Worawut Mapong",
+    "position": "CFE Cushion Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12961": {
+    "empId": "12961",
+    "dept": "4300 - Production",
+    "nameTH": "สว่างพงษ์ น้อยดวง",
+    "nameEN": "Savangpong Noiduang",
+    "position": "Booker",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "12967": {
+    "empId": "12967",
+    "dept": "4300 - Production",
+    "nameTH": "วัลลภ เมฆเคลื่อน",
+    "nameEN": "Wanlop  Makekluan",
+    "position": "Booker",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01232": {
+    "empId": "01232",
+    "dept": "4110 - Production",
+    "nameTH": "เรวัตร์ ปุยขุนทด",
+    "nameEN": "Rawat Puykunthod",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01249": {
+    "empId": "01249",
+    "dept": "4300 - Production",
+    "nameTH": "สักดา แนวดง",
+    "nameEN": "Sakda Nawdong",
+    "position": "CFE Leader Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01302": {
+    "empId": "01302",
+    "dept": "4110 - Production",
+    "nameTH": "บรรเลง วิเศษดี",
+    "nameEN": "Banlang Visaddee",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01312": {
+    "empId": "01312",
+    "dept": "4300 - Production",
+    "nameTH": "เชษ ศรีมุข",
+    "nameEN": "Chet Srimook",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Extrusion",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01317": {
+    "empId": "01317",
+    "dept": "4200 - Production",
+    "nameTH": "ชุมพร ชุมทองหลาง",
+    "nameEN": "Chumporn Chumthonglang",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01319": {
+    "empId": "01319",
+    "dept": "4130 - Production",
+    "nameTH": "ไพฑูลย์ สงครามยศ",
+    "nameEN": "Pitoon Songkramyot",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01320": {
+    "empId": "01320",
+    "dept": "3200 - Production",
+    "nameTH": "ประสงค์ ผายรัศมี",
+    "nameEN": "Prasong Pairatsamee",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01327": {
+    "empId": "01327",
+    "dept": "4110 - Production",
+    "nameTH": "ศิวารินทร์ จันทสิทธิ์",
+    "nameEN": "Sivarin Juntasit",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01330": {
+    "empId": "01330",
+    "dept": "4110 - Production",
+    "nameTH": "วิชัย แย้มมี",
+    "nameEN": "Wichai Yammee",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01333": {
+    "empId": "01333",
+    "dept": "4110 - Production",
+    "nameTH": "สุทิน แสนภัย",
+    "nameEN": "Suthin Sanphai",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01335": {
+    "empId": "01335",
+    "dept": "4110 - Production",
+    "nameTH": "รุ่งโรจน์ จำปาทอง",
+    "nameEN": "Rurngrot Jempathong",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01339": {
+    "empId": "01339",
+    "dept": "4300 - Production",
+    "nameTH": "เศก คงสุข",
+    "nameEN": "Sek Kongsuk",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Extrusion",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01341": {
+    "empId": "01341",
+    "dept": "4110 - Production",
+    "nameTH": "อนันต์ อุ้มสุภาพ",
+    "nameEN": "Anun Oumsupup",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01413": {
+    "empId": "01413",
+    "dept": "4300 - Production",
+    "nameTH": "ศักดา รามี่",
+    "nameEN": "Sakda Ramee",
+    "position": "CFE Leader Operator",
+    "machine": "Duplex 6\" X 8\" Extruder",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01425": {
+    "empId": "01425",
+    "dept": "4110 - Production",
+    "nameTH": "ปรีชา ชาญเวชศาสตร์",
+    "nameEN": "Preecha Charnwechasart",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01428": {
+    "empId": "01428",
+    "dept": "4110 - Production",
+    "nameTH": "กษิณ ลพประเสริฐ",
+    "nameEN": "Kasin Lopprasert",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01446": {
+    "empId": "01446",
+    "dept": "3200 - Production",
+    "nameTH": "สมชาย อัตตะสาระ",
+    "nameEN": "Somchai Attasara",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01459": {
+    "empId": "01459",
+    "dept": "4300 - Production",
+    "nameTH": "วิชัย จอมคำสิงห์",
+    "nameEN": "Vichai Jomkamsing",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Extrusion",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01468": {
+    "empId": "01468",
+    "dept": "4110 - Production",
+    "nameTH": "เสน่ห์ ทองก้อน",
+    "nameEN": "Sanae Thonggon",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01477": {
+    "empId": "01477",
+    "dept": "4110 - Production",
+    "nameTH": "สุรัตน์ ทองนรินทร์",
+    "nameEN": "Surat Thongnarin",
+    "position": "4-Roll Calender Leader Operator",
+    "machine": "4-Roll Calender 1",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "01481": {
+    "empId": "01481",
+    "dept": "3200 - Production",
+    "nameTH": "อภิชาติ พุ่มรัตน์",
+    "nameEN": "Apichart Pumrat",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03001": {
+    "empId": "03001",
+    "dept": "3200 - Production",
+    "nameTH": "สิงหา ควรพันธุ์",
+    "nameEN": "Singha Kuanpan",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03007": {
+    "empId": "03007",
+    "dept": "4110 - Production",
+    "nameTH": "รุ่งสุริยา ผาสุข",
+    "nameEN": "Rungsuriya Pasuk",
+    "position": "Bias Cutter Operator/Splicer",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03012": {
+    "empId": "03012",
+    "dept": "4200 - Production",
+    "nameTH": "สติ ยุบัวเรียน",
+    "nameEN": "Sati Yubuariean",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03027": {
+    "empId": "03027",
+    "dept": "3200 - Production",
+    "nameTH": "มงคล คุระจอก",
+    "nameEN": "Mongkol Kurajok",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03029": {
+    "empId": "03029",
+    "dept": "3200 - Production",
+    "nameTH": "พรชัย ตราชู",
+    "nameEN": "Pornchai Trachu",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03035": {
+    "empId": "03035",
+    "dept": "3200 - Production",
+    "nameTH": "ณรงค์ ภู่สละ",
+    "nameEN": "Narong Pusala",
+    "position": "Banbury 2 Crew",
+    "machine": "Mixer 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03047": {
+    "empId": "03047",
+    "dept": "4130 - Production",
+    "nameTH": "ศักดิ์วรินทร์ ศรีวิชา",
+    "nameEN": "Sakwarin Sriwicha",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03061": {
+    "empId": "03061",
+    "dept": "3300 - Production",
+    "nameTH": "ชูเกียรติ เชียงสกุล",
+    "nameEN": "Chookiat Chingsakul",
+    "position": "Calender Leader Operator",
+    "machine": "3-Roll Calender",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03062": {
+    "empId": "03062",
+    "dept": "3200 - Production",
+    "nameTH": "วินัย กลิ่นศรีสุข",
+    "nameEN": "Vinai Klinsrisuk",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Mixing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03118": {
+    "empId": "03118",
+    "dept": "4130 - Production",
+    "nameTH": "วิทยา โพธิ์ศรี",
+    "nameEN": "Vitthaya Posri",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03119": {
+    "empId": "03119",
+    "dept": "4110 - Production",
+    "nameTH": "ประพันธ์ บุตรชัย",
+    "nameEN": "Phapan Butchai",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03120": {
+    "empId": "03120",
+    "dept": "4200 - Production",
+    "nameTH": "อุทิตย์ เมืองโคตร",
+    "nameEN": "U-Thit Muangkot",
+    "position": "Bead Insulate Operator",
+    "machine": "Bead Insulate",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03122": {
+    "empId": "03122",
+    "dept": "4110 - Production",
+    "nameTH": "เทพอมร งามนา",
+    "nameEN": "Thep-Amorn Nganna",
+    "position": "Mill Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03123": {
+    "empId": "03123",
+    "dept": "4110 - Production",
+    "nameTH": "อคะเดช ธรรมขันธ์",
+    "nameEN": "Akadech Thumakhun",
+    "position": "Lux/Gum Slitter Operator",
+    "machine": "Kao Yeh - Gum slitter",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03141": {
+    "empId": "03141",
+    "dept": "3200 - Production",
+    "nameTH": "บุญเรือ อุ่มพิมาย",
+    "nameEN": "Boonrue Umpimai",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Mixing",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03153": {
+    "empId": "03153",
+    "dept": "4130 - Production",
+    "nameTH": "สุพจน์ มอญกลาง",
+    "nameEN": "Supoj Mornklang",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03159": {
+    "empId": "03159",
+    "dept": "4200 - Production",
+    "nameTH": "ไพโรจน์ กองขุนทด",
+    "nameEN": "Pairoj Kongkhuntod",
+    "position": "Bead Flapper",
+    "machine": "Bead Flapper",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03172": {
+    "empId": "03172",
+    "dept": "4110 - Production",
+    "nameTH": "สุทธิศักดิ์ สิงห์อุดร",
+    "nameEN": "Suttisak Singudon",
+    "position": "Wind Up Operator",
+    "machine": "4-Roll Calender 2",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "03179": {
+    "empId": "03179",
+    "dept": "4130 - Production",
+    "nameTH": "สนั่น ประทุมชาติ",
+    "nameEN": "Sanan Prathumchart",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "09823": {
+    "empId": "09823",
+    "dept": "4110 - Production",
+    "nameTH": "สุผล โสภะบุญ",
+    "nameEN": "Suphol Sophaboon",
+    "position": "Production Team Leader",
+    "machine": "Team Leader - Stock Preparations",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  },
+  "09833": {
+    "empId": "09833",
+    "dept": "4130 - Production",
+    "nameTH": "ปรีชา สุนทวงษ์",
+    "nameEN": "Preecha Soonthawong",
+    "position": "Aircraft Band Builder 72\"",
+    "machine": "72\" Band Building",
+    "sheet": "Database",
+    "sourceFile": "GY HC report.xlsx"
+  }
+}
