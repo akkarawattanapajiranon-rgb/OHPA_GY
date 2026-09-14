@@ -373,7 +373,13 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                     {/* Machine & Position */}
                     <td className="py-2.5 px-3 font-medium text-slate-800">
                       <div className="font-semibold text-slate-900">{r.machine || r.position}</div>
-                      {r.machine && r.position && r.machine !== r.position && (
+                      {r.regularMachineOverride ? (
+                        <div className="mt-0.5">
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-300">
+                            🔄 ย้ายกะปกติไป: {r.regularMachineOverride}
+                          </span>
+                        </div>
+                      ) : r.machine && r.position && r.machine !== r.position && (
                         <div className="text-[10px] text-slate-500 font-normal">{r.position}</div>
                       )}
                     </td>
@@ -403,10 +409,17 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                     {/* OT Column */}
                     <td className="py-2.5 px-3 text-center">
                       {r.otHours > 0 ? (
-                        <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 font-bold px-2 py-0.5 rounded text-[11px] border border-amber-300 shadow-xs">
-                          <Flame className="w-3 h-3 text-amber-600" />
-                          {r.otNote}
-                        </span>
+                        <div className="inline-flex flex-col items-center">
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 font-bold px-2 py-0.5 rounded text-[11px] border border-amber-300 shadow-xs">
+                            <Flame className="w-3 h-3 text-amber-600" />
+                            {r.otNote}
+                          </span>
+                          {r.otMachineOverride && (
+                            <span className="text-[10px] font-bold text-purple-800 bg-purple-50 px-1.5 py-0.2 rounded border border-purple-200 mt-0.5">
+                              ⭐ ทำ OT ที่: {r.otMachineOverride}
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-slate-400 font-mono">-</span>
                       )}
@@ -432,7 +445,19 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
 
                     {/* Status Column */}
                     <td className="py-2.5 px-3 text-center">
-                      {r.isEarlyLeave && r.isLate ? (
+                      {r.adjustmentInfo?.isApprovedTiming || r.adjustmentInfo?.customStartTime ? (
+                        <div className="inline-flex flex-col items-center gap-0.5">
+                          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 font-bold px-2 py-0.5 rounded text-[11px] border border-blue-200 shadow-xs">
+                            <CheckCircle2 className="w-3 h-3 text-blue-600" />
+                            เวลาพิเศษ {r.adjustmentInfo.customStartTime ? `(${r.adjustmentInfo.customStartTime})` : ''}
+                          </span>
+                          {r.adjustmentInfo.reason && (
+                            <span className="text-[10px] text-blue-700 font-medium max-w-[140px] truncate" title={r.adjustmentInfo.reason}>
+                              {r.adjustmentInfo.reason}
+                            </span>
+                          )}
+                        </div>
+                      ) : r.isEarlyLeave && r.isLate ? (
                         <div className="inline-flex flex-col items-center gap-0.5">
                           <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 font-semibold px-2 py-0.5 rounded text-[11px] border border-amber-200 shadow-xs">
                             <LogOut className="w-3 h-3 text-amber-600" />

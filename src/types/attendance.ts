@@ -32,6 +32,19 @@ export type ShiftType = 1 | 2 | 3;
 
 export type ManpowerStatusType = 'EXACT' | 'OVER' | 'REPLACEMENT' | 'UNASSIGNED';
 
+export interface DailyAdjustmentRecord {
+  id: string;
+  dateStr: string; // e.g. '13/09/2026' or '09132026' or '2026-09-13'
+  empId: string;
+  empName?: string;
+  regularMachineOverride?: string; // e.g. 'Mixer 2' or '430 Quad'
+  otMachineOverride?: string;      // e.g. 'Mixer 2' or '411 4Roll#1'
+  customStartTime?: string;        // e.g. '11:00'
+  customEndTime?: string;          // e.g. '19:00'
+  isApprovedTiming?: boolean;      // true -> not marked as late, count full 8h normal
+  reason?: string;                 // Note / justification
+}
+
 export interface ParsedShiftRecord {
   id: string;
   empId: string;
@@ -65,6 +78,9 @@ export interface ParsedShiftRecord {
   missingPunchType?: 'MISSING_IN' | 'MISSING_OUT';
   manpowerStatus: ManpowerStatusType;
   manpowerStatusLabel: string;
+  adjustmentInfo?: DailyAdjustmentRecord;
+  regularMachineOverride?: string;
+  otMachineOverride?: string;
 }
 
 export interface ShiftSummary {

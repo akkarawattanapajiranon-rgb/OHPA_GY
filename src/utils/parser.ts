@@ -7,9 +7,36 @@ import {
   DepartmentSummary,
   ManpowerComparisonRow,
   OtCategorySummary,
-  OverallKPIs
+  OverallKPIs,
+  DailyAdjustmentRecord
 } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
+
+export function normalizeDateToMMDDYYYY(dateStr?: string): string {
+  if (!dateStr) return '';
+  const clean = dateStr.trim();
+  if (clean.length === 8 && /^\d{8}$/.test(clean)) {
+    return clean; // Already MMDDYYYY or YYYYMMDD
+  }
+  // Check DD/MM/YYYY or DD-MM-YYYY
+  const parts = clean.split(/[/.-]/);
+  if (parts.length === 3) {
+    if (parts[2].length === 4) {
+      // DD/MM/YYYY -> MMDDYYYY
+      const dd = parts[0].padStart(2, '0');
+      const mm = parts[1].padStart(2, '0');
+      const yyyy = parts[2];
+      return `${mm}${dd}${yyyy}`;
+    } else if (parts[0].length === 4) {
+      // YYYY-MM-DD -> MMDDYYYY
+      const yyyy = parts[0];
+      const mm = parts[1].padStart(2, '0');
+      const dd = parts[2].padStart(2, '0');
+      return `${mm}${dd}${yyyy}`;
+    }
+  }
+  return clean;
+}
 
 export function parseScanLine(line: string): RawScanRecord | null {
   const trimmed = line.trim();
@@ -89,9 +116,17 @@ function formatTime(d: Date | null): string {
 }
 
 export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: string): string | null {
-  const m = (machine || '').toLowerCase();
-  const p = (bcaPos || '').toLowerCase();
+  const m = (machine || '').toLowerCase().trim();
+  const p = (bcaPos || '').toLowerCase().trim();
   const d = (dept || '');
+
+  // Direct match to standard position names if passed
+  for (const std of TEAM_A_STANDARD_HC) {
+    const stdLower = std.positionName.toLowerCase();
+    if (stdLower === m || stdLower === p) {
+      return std.positionName;
+    }
+  }
 
   // 1. Prioritize Team Leaders
   if (m.includes('team leader') || p.includes('team leader') || (p.includes('leader') && !p.includes('calender') && !p.includes('quad') && !p.includes('cfe'))) {
@@ -99,19 +134,19 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   }
 
   // Dept 3200 (Banbury & Pigment)
-  if (m.includes('mixer 1') || p.includes('banbury 1')) return '320 BANBURY # 1';
-  if (m.includes('mixer 2') || p.includes('banbury 2')) return '320 BANBURY # 2';
-  if (m.includes('auto pigment') || m.includes('pigment') || p.includes('pigment') || d.includes('3200')) return '320 Pigment';
+  if (m.includes('mixer 1') || m.includes('banbury 1') || m.includes('banbury # 1') || p.includes('banbury 1')) return '320 BANBURY # 1';
+  if (m.includes('mixer 2') || m.includes('banbury 2') || m.includes('banbury # 2') || p.includes('banbury 2')) return '320 BANBURY # 2';
+  if (m.includes('auto pigment') || m.includes('pigment') || p.includes('pigment') || (d.includes('3200') && !m.includes('mixer') && !p.includes('banbury'))) return '320 Pigment';
 
   // Dept 3300 (3ROII / Calender) - strictly for Dept 3300
-  if (d.includes('3300')) return '330 3ROII';
+  if (d.includes('3300') || m.includes('3-roll') || m.includes('3roii') || p.includes('3roii')) return '330 3ROII';
 
   // Dept 3700 (Cement / 3roll)
-  if (d.includes('3700') || p.includes('cement')) return 'Cement (3roll)';
+  if (d.includes('3700') || p.includes('cement') || m.includes('cement')) return 'Cement (3roll)';
 
   // Dept 4110 (Chafer, Lux, Fischer, 4Roll)
-  if (m.includes('4-roll calender 1')) return '411 4Roll#1';
-  if (m.includes('4-roll calender 2')) return '411 4Roll#2';
+  if (m.includes('4-roll calender 1') || m.includes('4roll#1') || m.includes('4roll 1')) return '411 4Roll#1';
+  if (m.includes('4-roll calender 2') || m.includes('4roll#2') || m.includes('4roll 2')) return '411 4Roll#2';
   if (m.includes('chaffer') || m.includes('chafer') || p.includes('chafer')) return '411 Chafer lay up';
   if (m.includes('gum slitter') || m.includes('kao yeh') || m.includes('lux') || p.includes('lux') || p.includes('slitter')) return '411 Lux/slitter';
   if (m.includes('fischer') || m.includes('shear') || p.includes('fischer') || p.includes('shear') || p.includes('bias')) return '411 Shear Fiscer';
@@ -120,19 +155,19 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   }
 
   // Dept 4120 / 4130 (Band)
-  if (d.includes('4120') || m.includes('54') || p.includes('54')) return '412 Band54"';
-  if (d.includes('4130') || m.includes('72') || p.includes('72')) return '413 Band72"';
+  if (d.includes('4120') || m.includes('54') || p.includes('54') || m.includes('band54')) return '412 Band54"';
+  if (d.includes('4130') || m.includes('72') || p.includes('72') || m.includes('band72')) return '413 Band72"';
 
   // Dept 4200 (Bead)
   if (m.includes('hot apexer') || p.includes('apexer') || p.includes('apex')) return '420 Hot apexer';
-  if (m.includes('bead flapper') || p.includes('flapper') || p.includes('flap')) return '420 Bead Flap';
-  if (m.includes('bead insulate') || p.includes('insulate') || p.includes('insulation')) return '420 Bead insulation';
-  if (m.includes('bead wrapper') || p.includes('wrapper') || p.includes('wrap')) return '420 Bead Wrap';
+  if (m.includes('bead flapper') || p.includes('flapper') || p.includes('flap') || m.includes('bead flap')) return '420 Bead Flap';
+  if (m.includes('bead insulate') || p.includes('insulate') || p.includes('insulation') || m.includes('bead insulation')) return '420 Bead insulation';
+  if (m.includes('bead wrapper') || p.includes('wrapper') || p.includes('wrap') || m.includes('bead wrap')) return '420 Bead Wrap';
   if (m.includes('hex bead') || p.includes('hex')) return '420 Hex Bead';
 
   // Dept 4300 (Tuber & Quad)
   if (m.includes('quad') || p.includes('quad')) return '430 Quad';
-  if (d.includes('4300') || m.includes('duplex') || m.includes('6" x 8"') || m.includes('tuber') || p.includes('cfe') || p.includes('tuber') || p.includes('booker')) {
+  if (d.includes('4300') || m.includes('duplex') || m.includes('6" x 8"') || m.includes('6"x8"') || m.includes('tuber') || p.includes('cfe') || p.includes('tuber') || p.includes('booker')) {
     return '430 6"x8" Tuber';
   }
 
@@ -143,7 +178,8 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
 
 export function processScanRecords(
   fileContent: string,
-  employeeMap: Record<string, EmployeeInfo> = {}
+  employeeMap: Record<string, EmployeeInfo> = {},
+  dailyAdjustments: DailyAdjustmentRecord[] = []
 ): {
   records: ParsedShiftRecord[];
   shiftSummaries: ShiftSummary[];
@@ -194,7 +230,19 @@ export function processScanRecords(
     };
   }
 
-  // Filter raw scans within 120s duplicate window
+  // Find primary date of the file
+  const firstValidDate = rawScans.find(s => s.dateStr && s.dateStr.length === 8)?.dateStr || '';
+
+  // Index adjustments for quick lookup
+  const adjMap: Record<string, DailyAdjustmentRecord> = {};
+  dailyAdjustments.forEach(adj => {
+    const cleanId = (adj.empId || '').replace(/\D/g, '').padStart(5, '0');
+    const normAdjDate = normalizeDateToMMDDYYYY(adj.dateStr);
+    if (!normAdjDate || !firstValidDate || normAdjDate === firstValidDate) {
+      adjMap[cleanId] = adj;
+    }
+  });
+
   // Filter raw scans within 120s duplicate window (only deduplicate if same IO direction)
   const scansByEmp: Record<string, RawScanRecord[]> = {};
   rawScans.forEach(s => {
@@ -227,6 +275,7 @@ export function processScanRecords(
 
   uniqueEmpIds.forEach(empId => {
     const empInfo: EmployeeInfo = employeeMap[empId] || { empId };
+    const empAdjustment = adjMap[empId];
     const empScans = scansByEmp[empId];
     const ins = empScans.filter(s => s.io === 'I');
     const outs = empScans.filter(s => s.io === 'O');
@@ -287,7 +336,31 @@ export function processScanRecords(
     // Check Late Status
     let isLate = false;
     let lateMinutes = 0;
-    if (isPreShiftReliefOt) {
+
+    // Handle Custom Shift Timing / Approved Special Timing (Scenario 3)
+    const hasApprovedTiming = Boolean(empAdjustment && (empAdjustment.isApprovedTiming || empAdjustment.customStartTime));
+
+    if (hasApprovedTiming) {
+      if (empAdjustment?.customStartTime && inScan) {
+        const parts = empAdjustment.customStartTime.split(':');
+        const customH = parseInt(parts[0], 10) || 7;
+        const customM = parseInt(parts[1], 10) || 0;
+        const inHh = inScan.timestamp.getHours();
+        const inMm = inScan.timestamp.getMinutes();
+        const customMins = customH * 60 + customM;
+        const actualMins = inHh * 60 + inMm;
+        if (actualMins > customMins + 7) {
+          isLate = true;
+          lateMinutes = actualMins - customMins;
+        } else {
+          isLate = false;
+          lateMinutes = 0;
+        }
+      } else {
+        isLate = false;
+        lateMinutes = 0;
+      }
+    } else if (isPreShiftReliefOt) {
       // Arrived early before shift start for break relief OT -> on time
       isLate = false;
       lateMinutes = 0;
@@ -348,63 +421,80 @@ export function processScanRecords(
       let preOtHours = 0;
       let postOtHours = 0;
 
-      // 1. Pre-shift Break Relief OT (Only when scheduled for break relief)
-      if (shiftNum === 2 && isPreShiftReliefOt) {
-        preOtHours = 4; // 11:00 - 15:00
-      } else if (shiftNum === 3 && isPreShiftReliefOt) {
-        preOtHours = 4; // 19:00 - 23:00
-      }
+      if (hasApprovedTiming) {
+        // Custom approved schedule (e.g. 11:00 to 19:00 = 8h normal)
+        if (effectiveWorkHours >= 7.5) {
+          normalWorkHours = 8;
+          otHours = Math.max(0, Math.round(effectiveWorkHours - 8));
+        } else {
+          normalWorkHours = effectiveWorkHours;
+          otHours = 0;
+        }
+      } else {
+        // 1. Pre-shift Break Relief OT (Only when scheduled for break relief)
+        if (shiftNum === 2 && isPreShiftReliefOt) {
+          preOtHours = 4; // 11:00 - 15:00
+        } else if (shiftNum === 3 && isPreShiftReliefOt) {
+          preOtHours = 4; // 19:00 - 23:00
+        }
 
-      // 2. Post-shift OT (calculated as standard OT hours with transit/checkout grace buffer)
-      if (shiftNum === 1) {
-        // Shift 1: 07:00 to 15:00
-        // Only consider crossing midnight if duration is long (> 14h) and outHh <= 12
-        const isNextDay = (outScan.timestamp.getTime() - inScan.timestamp.getTime()) > 14 * 3600 * 1000 && outHh <= 12;
-        const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
-        const minsPastShift = totalOutMins - 15 * 60;
-        if (minsPastShift >= 45) { // At least 45 mins past shift end (1h OT = 16:00, 2h = 17:00, 3h = 18:00, 4h = 19:00, 8h = 23:00)
-          postOtHours = Math.floor((minsPastShift + 15) / 60);
-        }
-      } else if (shiftNum === 2) {
-        // Shift 2: 15:00 to 23:00
-        const isNextDay = outHh < 12;
-        const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
-        const minsPastShift = totalOutMins - 23 * 60;
-        if (minsPastShift >= 45) {
-          postOtHours = Math.floor((minsPastShift + 15) / 60);
-        }
-      } else if (shiftNum === 3) {
-        // Shift 3: 23:00 to 07:00
-        if (outMins >= 7 * 60 + 45 && outMins <= 19 * 60) {
-          const minsPastShift = outMins - 7 * 60;
+        // 2. Post-shift OT (calculated as standard OT hours with transit/checkout grace buffer)
+        if (shiftNum === 1) {
+          // Shift 1: 07:00 to 15:00
+          // Only consider crossing midnight if duration is long (> 14h) and outHh <= 12
+          const isNextDay = (outScan.timestamp.getTime() - inScan.timestamp.getTime()) > 14 * 3600 * 1000 && outHh <= 12;
+          const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
+          const minsPastShift = totalOutMins - 15 * 60;
+          if (minsPastShift >= 45) { // At least 45 mins past shift end (1h OT = 16:00, 2h = 17:00, 3h = 18:00, 4h = 19:00, 8h = 23:00)
+            postOtHours = Math.floor((minsPastShift + 15) / 60);
+          }
+        } else if (shiftNum === 2) {
+          // Shift 2: 15:00 to 23:00
+          const isNextDay = outHh < 12;
+          const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
+          const minsPastShift = totalOutMins - 23 * 60;
           if (minsPastShift >= 45) {
             postOtHours = Math.floor((minsPastShift + 15) / 60);
           }
+        } else if (shiftNum === 3) {
+          // Shift 3: 23:00 to 07:00
+          if (outMins >= 7 * 60 + 45 && outMins <= 19 * 60) {
+            const minsPastShift = outMins - 7 * 60;
+            if (minsPastShift >= 45) {
+              postOtHours = Math.floor((minsPastShift + 15) / 60);
+            }
+          }
         }
+
+        otHours = preOtHours + postOtHours;
+        normalWorkHours = Math.min(8, Math.max(0, effectiveWorkHours - otHours));
       }
 
-      otHours = preOtHours + postOtHours;
       if (otHours >= 1) {
         otNote = `OT ${otHours} ชม.`;
       }
-      normalWorkHours = Math.min(8, Math.max(0, effectiveWorkHours - otHours));
     } else if (!inScan || !outScan) {
       effectiveWorkHours = 0;
       normalWorkHours = 0;
     }
 
     // Check Early Leave (worked less than 7.5 hours and no OT)
-    const isEarlyLeave = Boolean(inScan && outScan && effectiveWorkHours > 0 && effectiveWorkHours < 7.5 && otHours === 0);
+    const isEarlyLeave = Boolean(inScan && outScan && effectiveWorkHours > 0 && effectiveWorkHours < 7.5 && otHours === 0 && !hasApprovedTiming);
     const earlyLeaveHours = isEarlyLeave ? Math.round((8 - effectiveWorkHours) * 10) / 10 : 0;
 
     const machine = empInfo.machine || empInfo.position || '-';
     const position = empInfo.position || '-';
     const dept = empInfo.dept || 'ไม่ระบุแผนก';
 
+    const regularMachineOverride = empAdjustment?.regularMachineOverride?.trim();
+    const otMachineOverride = empAdjustment?.otMachineOverride?.trim();
+
     // Increment Standard HC actual count (Only for BCA employees - 208 people)
     const isBca = (empInfo.category === 'BCA') || (!empInfo.category && (dept.includes('3200') || dept.includes('4130')));
     if (isBca) {
-      const stdPosName = mapBcaPosToStdPosition(position, dept, machine);
+      // If employee has a regular machine transfer (Scenario 1), count towards the target machine!
+      const effectiveMachine = regularMachineOverride || machine;
+      const stdPosName = mapBcaPosToStdPosition(regularMachineOverride ? regularMachineOverride : position, dept, effectiveMachine);
       if (stdPosName && actualCounts[stdPosName]) {
         if (shiftNum === 1) actualCounts[stdPosName].shift1++;
         if (shiftNum === 2) actualCounts[stdPosName].shift2++;
@@ -447,7 +537,10 @@ export function processScanRecords(
       hasMissingPunch: !inScan || !outScan,
       missingPunchType: !inScan ? 'MISSING_IN' : (!outScan ? 'MISSING_OUT' : undefined),
       manpowerStatus: 'EXACT',
-      manpowerStatusLabel: 'จัดคนพอดี'
+      manpowerStatusLabel: 'จัดคนพอดี',
+      adjustmentInfo: empAdjustment,
+      regularMachineOverride,
+      otMachineOverride
     });
   });
 
@@ -468,7 +561,10 @@ export function processScanRecords(
 
   processedRecords.forEach(r => {
     if (r.category && r.category !== 'BCA') return; // Only BCA employees cover Team A Standard HC!
-    const stdPosName = mapBcaPosToStdPosition(r.position, r.dept, r.machine);
+    
+    // If employee has an OT machine transfer (Scenario 2), credit OT hours to the target machine!
+    const effectiveOtMachine = r.otMachineOverride || r.regularMachineOverride || r.machine;
+    const stdPosName = mapBcaPosToStdPosition(r.otMachineOverride ? r.otMachineOverride : r.position, r.dept, effectiveOtMachine);
     if (!stdPosName || !posOtCoverage[stdPosName] || r.otHours <= 0) return;
 
     if (r.shift === 1) {

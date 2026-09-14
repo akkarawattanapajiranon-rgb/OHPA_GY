@@ -3,16 +3,17 @@ import { Navbar } from './components/Navbar';
 import { EmployeeDetailTable } from './components/EmployeeDetailTable';
 import { ManpowerGapTable } from './components/ManpowerGapTable';
 import { FileUploaderModal } from './components/FileUploaderModal';
+import { DailyAdjustmentModal } from './components/DailyAdjustmentModal';
 
 import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset } from './data/default_scan_record';
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
-import { processScanRecords, createPresetsFromScanFiles, RawScanFileItem } from './utils/parser';
-import { EmployeeInfo } from './types/attendance';
+import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
+import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
 import {
   TableProperties,
   UserCheck,
   Calendar,
-  Users,
+  Shuffle,
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
@@ -25,11 +26,21 @@ export default function App() {
     defaultEmpMappingRaw as Record<string, EmployeeInfo>
   );
 
+  const [dailyAdjustments, setDailyAdjustments] = useState<DailyAdjustmentRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('ohpa_daily_adjustments');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [selectedShiftFilter, setSelectedShiftFilter] = useState<number | 'ALL'>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
   const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_MANPOWER'>('PAGE_1_DETAILS');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
+  const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
   const [toastNotification, setToastNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
@@ -50,8 +61,8 @@ export default function App() {
 
   // Core processing - 1 row per employee, 100% sync with Standard HC
   const processedData = useMemo(() => {
-    return processScanRecords(scanContent, employeeMapping);
-  }, [scanContent, employeeMapping]);
+    return processScanRecords(scanContent, employeeMapping, dailyAdjustments);
+  }, [scanContent, employeeMapping, dailyAdjustments]);
 
   const {
     records,
@@ -176,6 +187,25 @@ export default function App() {
     }
   };
 
+  const handleSaveAdjustments = (newAdjustments: DailyAdjustmentRecord[]) => {
+    setDailyAdjustments(newAdjustments);
+    try {
+      localStorage.setItem('ohpa_daily_adjustments', JSON.stringify(newAdjustments));
+    } catch (e) {
+      console.error('Error saving adjustments:', e);
+    }
+    setToastNotification({
+      type: 'success',
+      message: `บันทึกรายการปรับเปลี่ยนเรียบร้อย (${newAdjustments.length} รายการ)`
+    });
+  };
+
+  const normCurrentDate = normalizeDateToMMDDYYYY(dateStringFormatted);
+  const currentDateAdjustmentsCount = dailyAdjustments.filter(a => {
+    const norm = normalizeDateToMMDDYYYY(a.dateStr);
+    return !norm || norm === normCurrentDate;
+  }).length;
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-12">
       {/* Navbar Header */}
@@ -252,9 +282,26 @@ export default function App() {
             </button>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500 px-3">
-            <Calendar className="w-3.5 h-3.5 text-blue-500" />
-            <span>ข้อมูลวันที่: <strong className="text-slate-800">{dateStringFormatted}</strong></span>
+          <div className="flex items-center gap-3">
+            {/* Daily Adjustment Trigger Button */}
+            <button
+              onClick={() => setIsAdjustmentModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer"
+              title="บันทึกย้ายเครื่องกะปกติ, ทำ OT ข้ามเครื่อง หรือเวลาพิเศษตามที่หัวหน้างานสั่ง"
+            >
+              <Shuffle className="w-3.5 h-3.5" />
+              <span>ย้ายเครื่อง / OT / เวลาพิเศษ</span>
+              {currentDateAdjustmentsCount > 0 && (
+                <span className="bg-white text-blue-700 text-[10px] px-1.5 py-0.2 rounded-full font-extrabold shadow-xs">
+                  {currentDateAdjustmentsCount}
+                </span>
+              )}
+            </button>
+
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 px-2 py-1 bg-slate-50 rounded-xl border border-slate-200">
+              <Calendar className="w-3.5 h-3.5 text-blue-500" />
+              <span>วันที่: <strong className="text-slate-800">{dateStringFormatted}</strong></span>
+            </div>
           </div>
         </div>
 
@@ -286,6 +333,16 @@ export default function App() {
         onFetchFolderScans={handleFetchFolderScans}
         onOpenFolderInExplorer={handleOpenFolderInExplorer}
         onBatchUploadFiles={handleBatchUploadFiles}
+      />
+
+      {/* Daily Adjustment Modal */}
+      <DailyAdjustmentModal
+        isOpen={isAdjustmentModalOpen}
+        onClose={() => setIsAdjustmentModalOpen(false)}
+        currentDateFormatted={dateStringFormatted}
+        adjustments={dailyAdjustments}
+        onSaveAdjustments={handleSaveAdjustments}
+        employeeMap={employeeMapping}
       />
     </div>
   );
