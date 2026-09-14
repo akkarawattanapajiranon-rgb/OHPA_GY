@@ -90,39 +90,86 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
     const sampleData = [
       {
         'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
-        'รหัสพนักงาน (Emp ID)': '11848',
-        'ชื่อพนักงาน': 'วีระพันธ์ นุตะดี',
-        'ย้ายเครื่องกะปกติ (Normal Machine)': '',
-        'ย้ายเครื่อง OT (OT Machine)': '320 BANBURY # 2',
-        'เวลาเข้าพิเศษ (HH:MM)': '',
-        'เวลาออกพิเศษ (HH:MM)': '',
-        'เหตุผล / หมายเหตุ': 'ไปช่วยทำ OT กะ 3 ที่ Mixer 2'
+        'รหัสพนักงาน': '11848',
+        'ชื่อ - นามสกุล': 'วีระพันธ์ นุตะดี',
+        'แผนก/Cost Center': '3200',
+        'เครื่องประจำเดิม': '320 BANBURY # 1',
+        '1. ย้ายเครื่องกะปกติ': '',
+        '2. ย้ายเครื่องทำ OT': '320 BANBURY # 2',
+        '3. เวลาเข้าพิเศษ (HH:MM)': '',
+        '4. เวลาออกพิเศษ (HH:MM)': '',
+        'เหตุผล / หมายเหตุ': 'ทำ OT กะ 3 ช่วย Mixer 2'
       },
       {
         'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
-        'รหัสพนักงาน (Emp ID)': '12128',
-        'ชื่อพนักงาน': 'พายุ บุญมาใส',
-        'ย้ายเครื่องกะปกติ (Normal Machine)': '320 BANBURY # 2',
-        'ย้ายเครื่อง OT (OT Machine)': '',
-        'เวลาเข้าพิเศษ (HH:MM)': '',
-        'เวลาออกพิเศษ (HH:MM)': '',
-        'เหตุผล / หมายเหตุ': 'ย้ายไปประจำ Mixer 2 กะ 1'
+        'รหัสพนักงาน': '12128',
+        'ชื่อ - นามสกุล': 'พายุ บุญมาใส',
+        'แผนก/Cost Center': '3200',
+        'เครื่องประจำเดิม': '320 BANBURY # 1',
+        '1. ย้ายเครื่องกะปกติ': '320 BANBURY # 2',
+        '2. ย้ายเครื่องทำ OT': '',
+        '3. เวลาเข้าพิเศษ (HH:MM)': '',
+        '4. เวลาออกพิเศษ (HH:MM)': '',
+        'เหตุผล / หมายเหตุ': 'ย้ายไปประจำ Mixer 2 กะ 1 แทนคนที่ลา'
       },
       {
         'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
-        'รหัสพนักงาน (Emp ID)': '12140',
-        'ชื่อพนักงาน': 'ถวิล ลืมอินทร์',
-        'ย้ายเครื่องกะปกติ (Normal Machine)': '',
-        'ย้ายเครื่อง OT (OT Machine)': '',
-        'เวลาเข้าพิเศษ (HH:MM)': '11:00',
-        'เวลาออกพิเศษ (HH:MM)': '19:00',
-        'เหตุผล / หมายเหตุ': 'หัวหน้างานสั่งให้มาทำงาน 11:00-19:00'
+        'รหัสพนักงาน': '12140',
+        'ชื่อ - นามสกุล': 'ถวิล ลืมอินทร์',
+        'แผนก/Cost Center': '3200',
+        'เครื่องประจำเดิม': '320 BANBURY # 1',
+        '1. ย้ายเครื่องกะปกติ': '',
+        '2. ย้ายเครื่องทำ OT': '',
+        '3. เวลาเข้าพิเศษ (HH:MM)': '11:00',
+        '4. เวลาออกพิเศษ (HH:MM)': '19:00',
+        'เหตุผล / หมายเหตุ': 'หัวหน้างานสั่งให้มาทำงานเวลาพิเศษ 11:00-19:00 (ไม่คิดสาย)'
       }
     ];
 
-    const ws = XLSX.utils.json_to_sheet(sampleData);
+    const standardMachines = [
+      { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 BANBURY # 1', 'คำอธิบาย': 'Mixer 1' },
+      { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 BANBURY # 2', 'คำอธิบาย': 'Mixer 2' },
+      { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 Pigment', 'คำอธิบาย': 'Auto Pigment' },
+      { 'รหัส Cost Center': '3300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '330 3ROII', 'คำอธิบาย': '3-Roll Calender' },
+      { 'รหัส Cost Center': '3700', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'Cement (3roll)', 'คำอธิบาย': 'Cement House' },
+      { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 4Roll#1', 'คำอธิบาย': '4-Roll Calender 1' },
+      { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 4Roll#2', 'คำอธิบาย': '4-Roll Calender 2' },
+      { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 Chafer lay up', 'คำอธิบาย': 'Chaffer Lay-up' },
+      { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 Lux/slitter', 'คำอธิบาย': 'Gum Slitter / Lux' },
+      { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 Shear Fiscer', 'คำอธิบาย': 'Fischer Cutter' },
+      { 'รหัส Cost Center': '4120', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '412 Band54"', 'คำอธิบาย': '54" Band Building' },
+      { 'รหัส Cost Center': '4130', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '413 Band72"', 'คำอธิบาย': '72" Band Building' },
+      { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Bead Flap', 'คำอธิบาย': 'Bead Flapper' },
+      { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Bead insulation', 'คำอธิบาย': 'Bead Insulate' },
+      { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Bead Wrap', 'คำอธิบาย': 'Bead Wrapper' },
+      { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Hex Bead', 'คำอธิบาย': 'Hex Bead' },
+      { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Hot apexer', 'คำอธิบาย': 'Hot Apexer' },
+      { 'รหัส Cost Center': '4300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '430 6"x8" Tuber', 'คำอธิบาย': 'Duplex 6" X 8" Extruder' },
+      { 'รหัส Cost Center': '4300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '430 Quad', 'คำอธิบาย': 'Quad Extruder' },
+      { 'รหัส Cost Center': '3200/4300/4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'Leader', 'คำอธิบาย': 'Production Team Leader (หัวหน้ากะ)' }
+    ];
+
+    const instructions = [
+      { 'หัวข้อ': 'รูปแบบที่ 1: กะตัวเอง ย้ายไปทำเครื่องอื่น (Normal Shift Transfer)', 'คำอธิบาย': 'กรอกชื่อเครื่องจักรเป้าหมายในช่อง "1. ย้ายเครื่องกะปกติ" -> ระบบจะโอนยอดคนปกติ 1 คนไปนับที่เครื่องใหม่ทันที' },
+      { 'หัวข้อ': 'รูปแบบที่ 2: กะตัวเองทำเครื่องเดิม และทำ OT เครื่องอื่น (OT Transfer)', 'คำอธิบาย': 'กรอกชื่อเครื่องจักรเป้าหมายในช่อง "2. ย้ายเครื่องทำ OT" -> กำลังพลกะปกติจะอยู่เครื่องเดิม แต่ชั่วโมงและยอดกำลังพล OT จะโอนไปเติมให้เครื่องที่ไปช่วยทำ OT' },
+      { 'หัวข้อ': 'รูปแบบที่ 3: เวลาเข้า-ออกพิเศษตามที่หัวหน้างานสั่ง (Custom Shift Timing)', 'คำอธิบาย': 'กรอกเวลาในช่อง "3. เวลาเข้าพิเศษ (HH:MM)" เช่น 11:00 -> ระบบจะไม่คิดว่าสาย (isLate = false) และนับชั่วโมงทำงานปกติครบ 8 ชม.' },
+      { 'หัวข้อ': 'คำแนะนำการระบุชื่อเครื่องจักร', 'คำอธิบาย': 'สามารถก๊อปปี้ชื่อเครื่องจักรจากแผ่นงาน "Standard_Machine_List" มาใส่ได้เลย หรือพิมพ์ชื่อย่อ เช่น Mixer 2, Quad, Tuber ระบบจะค้นหาให้อัตโนมัติ' }
+    ];
+
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Daily_Adjustments');
+
+    const ws1 = XLSX.utils.json_to_sheet(sampleData);
+    ws1['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 24 }, { wch: 16 }, { wch: 22 }, { wch: 24 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 45 }];
+    XLSX.utils.book_append_sheet(wb, ws1, 'Daily_Adjustments');
+
+    const ws2 = XLSX.utils.json_to_sheet(standardMachines);
+    ws2['!cols'] = [{ wch: 18 }, { wch: 35 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Standard_Machine_List');
+
+    const ws3 = XLSX.utils.json_to_sheet(instructions);
+    ws3['!cols'] = [{ wch: 40 }, { wch: 70 }];
+    XLSX.utils.book_append_sheet(wb, ws3, 'Instructions_คำแนะนำ');
+
     XLSX.writeFile(wb, `Daily_Adjustments_Template_${(currentDateFormatted || 'Sample').replace(/\//g, '')}.xlsx`);
   };
 
