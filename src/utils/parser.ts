@@ -546,22 +546,13 @@ export function processScanRecords(
 
     // Calculate effective actual headcount including OT support
     const s1OtHC = Math.round(otCov.s1OtHours / 8);
-    let s1Actual = actuals.shift1;
-    if (s1Target > 0 && actuals.shift1 < s1Target && s1OtHC > 0) {
-      s1Actual = actuals.shift1 + s1OtHC;
-    }
+    const s1Actual = actuals.shift1 + s1OtHC;
 
     const s2OtHC = Math.round(otCov.s2OtHours / 8);
-    let s2Actual = actuals.shift2;
-    if (s2Target > 0 && actuals.shift2 < s2Target && s2OtHC > 0) {
-      s2Actual = actuals.shift2 + s2OtHC;
-    }
+    const s2Actual = actuals.shift2 + s2OtHC;
 
     const s3OtHC = Math.round(otCov.s3OtHours / 8);
-    let s3Actual = actuals.shift3;
-    if (s3Target > 0 && actuals.shift3 < s3Target && s3OtHC > 0) {
-      s3Actual = actuals.shift3 + s3OtHC;
-    }
+    const s3Actual = actuals.shift3 + s3OtHC;
 
     const s1Gap = s1Actual - s1Target;
     const s2Gap = s2Actual - s2Target;

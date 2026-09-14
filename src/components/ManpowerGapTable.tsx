@@ -47,7 +47,7 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
       return <span className="text-slate-400 font-mono text-[11px]">-</span>;
     }
 
-    const hasOtSupport = otHC !== undefined && otHC > 0 && regular !== undefined && regular < actual;
+    const hasOtSupport = otHC !== undefined && otHC > 0;
 
     if (status === 'EXACT') {
       return (
