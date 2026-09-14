@@ -646,3 +646,112 @@ export function processScanRecords(
     dateStringFormatted
   };
 }
+
+export interface RawScanFileItem {
+  fileName: string;
+  content: string;
+  modifiedTime?: string;
+  sizeBytes?: number;
+}
+
+export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: string; name: string; content: string; dateFormatted: string; dateTimestamp: number }[] {
+  const allEvents: { raw: string; parsed: RawScanRecord }[] = [];
+  const seenRaw = new Set<string>();
+
+  for (const f of files) {
+    const lines = f.content.split(/\r?\n/);
+    for (const l of lines) {
+      const trimmed = l.trim();
+      if (!trimmed || seenRaw.has(trimmed)) continue;
+      const parsed = parseScanLine(trimmed);
+      if (parsed) {
+        seenRaw.add(trimmed);
+        allEvents.push({ raw: trimmed, parsed });
+      }
+    }
+  }
+
+  // Find all unique dates (MMDDYYYY)
+  const uniqueDates = Array.from(new Set(allEvents.map(e => e.parsed.dateStr))).sort((a, b) => {
+    const yA = parseInt(a.slice(4, 8), 10);
+    const mA = parseInt(a.slice(0, 2), 10);
+    const dA = parseInt(a.slice(2, 4), 10);
+    const yB = parseInt(b.slice(4, 8), 10);
+    const mB = parseInt(b.slice(0, 2), 10);
+    const dB = parseInt(b.slice(2, 4), 10);
+    return new Date(yA, mA - 1, dA).getTime() - new Date(yB, mB - 1, dB).getTime();
+  });
+
+  const presets: { id: string; name: string; content: string; dateFormatted: string; dateTimestamp: number }[] = [];
+
+  for (const dayStr of uniqueDates) {
+    const mm = parseInt(dayStr.slice(0, 2), 10);
+    const dd = parseInt(dayStr.slice(2, 4), 10);
+    const yyyy = parseInt(dayStr.slice(4, 8), 10);
+    const curDate = new Date(yyyy, mm - 1, dd);
+    const nextDate = new Date(curDate.getTime() + 24 * 3600 * 1000);
+    const nextDayStr = `${String(nextDate.getMonth() + 1).padStart(2, '0')}${String(nextDate.getDate()).padStart(2, '0')}${nextDate.getFullYear()}`;
+
+    // Operational day D events
+    const dayLines = allEvents.filter(item => {
+      const e = item.parsed;
+      if (e.dateStr === dayStr) {
+        if (e.io === 'O') {
+          const hh = e.timestamp.getHours();
+          const mm = e.timestamp.getMinutes();
+          const mins = hh * 60 + mm;
+          if (mins >= 4 * 60 && mins <= 8 * 60 + 30) {
+            return allEvents.some(cur =>
+              cur.parsed.empId === e.empId &&
+              cur.parsed.dateStr === dayStr &&
+              cur.parsed.io === 'I' &&
+              cur.parsed.timestamp.getTime() < e.timestamp.getTime()
+            );
+          }
+        }
+        return true;
+      } else if (e.dateStr === nextDayStr && e.io === 'O') {
+        const hh = e.timestamp.getHours();
+        const mm = e.timestamp.getMinutes();
+        const mins = hh * 60 + mm;
+        if (mins >= 5 * 60 && mins <= 8 * 60 + 30) {
+          return allEvents.some(cur =>
+            cur.parsed.empId === e.empId &&
+            cur.parsed.dateStr === dayStr &&
+            cur.parsed.io === 'I' &&
+            cur.parsed.timestamp.getHours() >= 14
+          );
+        }
+      }
+      return false;
+    });
+
+    if (dayLines.length > 0) {
+      const content = dayLines.map(l => l.raw).join('\r\n');
+      const dateFormatted = `${dd}/${mm}/${yyyy}`;
+      presets.push({
+        id: `folder_day_${dayStr}`,
+        name: `📅 วันที่ ${dd}/${mm}/${yyyy}`,
+        dateFormatted,
+        dateTimestamp: curDate.getTime(),
+        content
+      });
+    }
+  }
+
+  // If no date parsed, fallback to per-file presets
+  if (presets.length === 0 && files.length > 0) {
+    files.forEach((f, idx) => {
+      presets.push({
+        id: `folder_file_${idx}_${f.fileName}`,
+        name: `📄 ${f.fileName}`,
+        dateFormatted: f.fileName,
+        dateTimestamp: idx,
+        content: f.content
+      });
+    });
+  }
+
+  return presets.sort((a, b) => b.dateTimestamp - a.dateTimestamp);
+}
+

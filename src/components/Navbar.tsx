@@ -1,13 +1,17 @@
 import React from 'react';
-import { Fingerprint, Upload, RefreshCw, Users, FileText, Calendar } from 'lucide-react';
-import { SCAN_FILE_PRESETS } from '../data/default_scan_record';
+import { Fingerprint, Upload, RefreshCw, Users, FileText, Calendar, FolderOpen } from 'lucide-react';
+import { ScanPreset } from '../data/default_scan_record';
 
 interface NavbarProps {
   fileName: string;
   scanDate: string;
   mappedEmployeesCount: number;
   totalRecords: number;
+  presets: ScanPreset[];
+  isLoadingFolder?: boolean;
   onSelectPreset: (presetId: string) => void;
+  onFetchFolderScans: () => void;
+  onOpenFolderInExplorer: () => void;
   onOpenUploadModal: () => void;
   onResetToDefault: () => void;
 }
@@ -17,7 +21,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   scanDate,
   mappedEmployeesCount,
   totalRecords,
+  presets,
+  isLoadingFolder = false,
   onSelectPreset,
+  onFetchFolderScans,
+  onOpenFolderInExplorer,
   onOpenUploadModal,
   onResetToDefault
 }) => {
@@ -44,16 +52,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Quick Info & Action Buttons */}
-          <div className="flex items-center space-x-3">
-            {/* File Selector Dropdown */}
+          <div className="flex items-center space-x-2.5">
+            {/* File/Date Selector Dropdown */}
             <div className="flex items-center space-x-2 bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-700">
-              <Calendar className="w-4 h-4 text-emerald-400" />
+              <Calendar className="w-4 h-4 text-emerald-400 shrink-0" />
               <select
                 value={fileName}
                 onChange={e => onSelectPreset(e.target.value)}
-                className="bg-transparent text-xs text-white font-semibold focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs text-white font-semibold focus:outline-none cursor-pointer max-w-[180px] sm:max-w-[220px]"
               >
-                {SCAN_FILE_PRESETS.map(p => (
+                {presets.map(p => (
                   <option key={p.id} value={p.id} className="bg-slate-900 text-white">
                     {p.name}
                   </option>
@@ -61,29 +69,44 @@ export const Navbar: React.FC<NavbarProps> = ({
               </select>
             </div>
 
+            {/* Quick Button: Pull from scans Folder */}
+            <button
+              onClick={onFetchFolderScans}
+              disabled={isLoadingFolder}
+              className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all hover:shadow-emerald-600/30 active:scale-95 cursor-pointer"
+              title="กดเพื่อดึงไฟล์สแกนทั้งหมดที่อยู่ในโฟลเดอร์ scans"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingFolder ? 'animate-spin' : ''}`} />
+              <span className="hidden md:inline">{isLoadingFolder ? 'กำลังดึง...' : 'ดึงข้อมูลจากโฟลเดอร์'}</span>
+              <span className="md:hidden">{isLoadingFolder ? 'ดึง...' : 'ดึงโฟลเดอร์'}</span>
+            </button>
+
+            {/* Quick Button: Open scans Folder */}
+            <button
+              onClick={onOpenFolderInExplorer}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-2 rounded-xl border border-slate-700 transition-all text-xs flex items-center gap-1.5 cursor-pointer"
+              title="เปิดโฟลเดอร์ scans ใน Windows Explorer"
+            >
+              <FolderOpen className="w-4 h-4 text-amber-400" />
+              <span className="hidden lg:inline">โฟลเดอร์</span>
+            </button>
+
             {/* DB Mapping Status Badge */}
-            <div className="hidden lg:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+            <div className="hidden xl:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
               <Users className="w-4 h-4 text-emerald-400" />
               <span className="text-slate-300">
-                พนักงานในฐานข้อมูล: <strong className="text-emerald-400">{mappedEmployeesCount.toLocaleString()}</strong> คน
-              </span>
-            </div>
-
-            {/* Total Records Badge */}
-            <div className="hidden lg:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
-              <FileText className="w-4 h-4 text-blue-400" />
-              <span className="text-slate-300">
-                ประมวลผล: <strong className="text-blue-400">{totalRecords.toLocaleString()}</strong> รายการ
+                พนักงาน: <strong className="text-emerald-400">{mappedEmployeesCount.toLocaleString()}</strong> คน
               </span>
             </div>
 
             {/* Upload Button */}
             <button
               onClick={onOpenUploadModal}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all hover:shadow-blue-600/30 active:scale-95"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all hover:shadow-blue-600/30 active:scale-95 cursor-pointer"
+              title="นำเข้าไฟล์ด้วยตนเอง หรือเลือกโฟลเดอร์อื่น"
             >
               <Upload className="w-4 h-4" />
-              <span>นำเข้าไฟล์เพิ่ม</span>
+              <span className="hidden sm:inline">นำเข้าไฟล์</span>
             </button>
           </div>
         </div>
@@ -91,3 +114,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
