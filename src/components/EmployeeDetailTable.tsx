@@ -12,7 +12,9 @@ import {
   Users,
   Clock,
   Briefcase,
-  LogOut
+  LogOut,
+  Tag,
+  Layers
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -20,29 +22,75 @@ interface EmployeeDetailTableProps {
   records: ParsedShiftRecord[];
   selectedShiftFilter: number | 'ALL';
   selectedDeptFilter: string;
+  selectedCategoryFilter?: string;
   onSelectShift: (shift: number | 'ALL') => void;
   onSelectDept: (dept: string) => void;
+  onSelectCategory?: (category: string) => void;
 }
 
 export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
   records,
   selectedShiftFilter,
   selectedDeptFilter,
+  selectedCategoryFilter: propCategoryFilter,
   onSelectShift,
-  onSelectDept
+  onSelectDept,
+  onSelectCategory
 }) => {
+  const [internalCategoryFilter, setInternalCategoryFilter] = useState<string>('ALL');
+  const selectedCategoryFilter = propCategoryFilter !== undefined ? propCategoryFilter : internalCategoryFilter;
+  const handleCategoryChange = (cat: string) => {
+    if (onSelectCategory) {
+      onSelectCategory(cat);
+    } else {
+      setInternalCategoryFilter(cat);
+    }
+    setCurrentPage(1);
+  };
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'OT_ONLY' | 'LATE_ONLY' | 'EARLY_LEAVE' | 'MISSING_PUNCH'>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
-  // Extract available depts for filter
+  // Extract available categories & depts for filters
+  const categories = Array.from(new Set(records.map(r => r.category || 'Other'))).filter(Boolean).sort();
   const departments = Array.from(new Set(records.map(r => r.dept))).filter(Boolean).sort();
+
+  // Category counts
+  const categoryCounts = categories.reduce((acc, cat) => {
+    acc[cat] = records.filter(r => (r.category || 'Other') === cat).length;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Helper for Category badge colors
+  const getCategoryBadgeClass = (category?: string) => {
+    switch (category) {
+      case 'BCA':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Bias Aero':
+        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case 'Radial Aero':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Consumer':
+        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Retread':
+        return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'Non-MFG : Quality':
+        return 'bg-cyan-100 text-cyan-800 border-cyan-200';
+      case 'Non-MFG : Engineering':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      default:
+        return 'bg-slate-100 text-slate-700 border-slate-200';
+    }
+  };
 
   // Filter records
   const filteredRecords = records.filter(r => {
     // Shift filter
     if (selectedShiftFilter !== 'ALL' && r.shift !== selectedShiftFilter) return false;
+    // Category filter
+    if (selectedCategoryFilter !== 'ALL' && (r.category || 'Other') !== selectedCategoryFilter) return false;
     // Dept filter
     if (selectedDeptFilter !== 'ALL' && r.dept !== selectedDeptFilter) return false;
 
@@ -59,6 +107,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
       r.empId.toLowerCase().includes(q) ||
       r.nameTH.toLowerCase().includes(q) ||
       r.nameEN.toLowerCase().includes(q) ||
+      (r.category && r.category.toLowerCase().includes(q)) ||
       r.dept.toLowerCase().includes(q) ||
       (r.machine && r.machine.toLowerCase().includes(q)) ||
       r.position.toLowerCase().includes(q)
@@ -94,6 +143,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
         'ลำดับ': i + 1,
         'รหัสพนักงาน': r.empId,
         'ชื่อ-นามสกุล': r.nameTH,
+        'หมวดหมู่ (Category)': r.category || '-',
         'เครื่องจักร (Machine)': r.machine || r.position,
         'Cost Center': r.dept,
         'กะการทำงาน': r.shiftLabel,
@@ -149,6 +199,20 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
               className="pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-52"
             />
           </div>
+
+          {/* Category Filter */}
+          <select
+            value={selectedCategoryFilter}
+            onChange={e => {
+              handleCategoryChange(e.target.value);
+            }}
+            className="py-1.5 px-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none text-slate-700 font-medium"
+          >
+            <option value="ALL">หมวดหมู่ทั้งหมด ({records.length})</option>
+            {categories.map(c => (
+              <option key={c} value={c}>{c} ({categoryCounts[c] || 0})</option>
+            ))}
+          </select>
 
           {/* Shift Filter */}
           <select
@@ -207,6 +271,50 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
         </div>
       </div>
 
+      {/* Category Filter Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <button
+          onClick={() => handleCategoryChange('ALL')}
+          className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+            selectedCategoryFilter === 'ALL'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+          }`}
+        >
+          <Layers className="w-3.5 h-3.5" />
+          <span>ทุกหมวดหมู่</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+            selectedCategoryFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-slate-200 text-slate-700'
+          }`}>
+            {records.length}
+          </span>
+        </button>
+
+        {categories.map(cat => {
+          const count = categoryCounts[cat] || 0;
+          const isSelected = selectedCategoryFilter === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 border ${
+                isSelected
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+              }`}
+            >
+              <Tag className="w-3 h-3 text-current opacity-70" />
+              <span>{cat}</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                isSelected ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-700'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Main Table */}
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left text-xs">
@@ -215,6 +323,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
               <th className="py-3 px-3 text-center w-12">#</th>
               <th className="py-3 px-3 w-24">รหัสพนักงาน</th>
               <th className="py-3 px-4">ชื่อ - นามสกุล</th>
+              <th className="py-3 px-3">หมวดหมู่ (Category)</th>
               <th className="py-3 px-3">เครื่องจักร (Machine)</th>
               <th className="py-3 px-3">Cost Center</th>
               <th className="py-3 px-3 text-center">กะ</th>
@@ -227,7 +336,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
           <tbody className="divide-y divide-slate-100 text-slate-800">
             {paginatedRecords.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-8 text-center text-slate-400">
+                <td colSpan={11} className="py-8 text-center text-slate-400">
                   ไม่พบข้อมูลตามเงื่อนไขที่เลือก
                 </td>
               </tr>
@@ -252,6 +361,13 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                       {r.nameEN && r.nameEN !== r.nameTH && (
                         <div className="text-[10px] text-slate-400 font-normal">{r.nameEN}</div>
                       )}
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-2.5 px-3">
+                      <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold border ${getCategoryBadgeClass(r.category)}`}>
+                        {r.category || 'Other'}
+                      </span>
                     </td>
 
                     {/* Machine & Position */}

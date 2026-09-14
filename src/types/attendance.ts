@@ -16,7 +16,13 @@ export interface EmployeeInfo {
   nameTH?: string;
   nameEN?: string;
   position?: string;
+  category?: string;
+  mor?: string;
+  costCenter?: string;
+  manager?: string;
   machine?: string;
+  pbu?: string;
+  function?: string;
   pos?: string;
   sheet?: string;
   sourceFile?: string;
@@ -33,6 +39,7 @@ export interface ParsedShiftRecord {
   nameEN: string;
   dept: string;
   position: string;
+  category?: string;
   machine?: string;
   shift: ShiftType;
   shiftLabel: string;

@@ -135,24 +135,52 @@ export const FileUploaderModal: React.FC<FileUploaderModalProps> = ({
 
           rows.forEach((row, idx) => {
             if (idx === 0 || !row) return;
-            for (let c = 0; c < Math.min(row.length, 10); c++) {
-              const val = String(row[c] || '').trim();
-              if (/^\d{3,5}$/.test(val)) {
-                const empId = val.padStart(5, '0');
-                const dept = String(row[1] || row[0] || '').trim();
-                const nameTH = String(row[4] || row[3] || '').trim();
-                const nameEN = String(row[5] || row[4] || '').trim();
-                const pos = String(row[7] || row[6] || '').trim();
+            const col0 = String(row[0] || '').trim();
+            if (/^\d{3,6}$/.test(col0)) {
+              // GY HC report standard header: [0: Emp No, 1: TH Name, 2: EN Name, 3: Position Title, 4: Categories, 5: MOR, 6: Cost Center, 7: Manager, 8: Machine]
+              const empId = col0.padStart(5, '0');
+              const nameTH = String(row[1] || '').trim();
+              const nameEN = String(row[2] || '').trim();
+              const position = String(row[3] || '').trim();
+              const category = String(row[4] || '').trim();
+              const costCenter = String(row[6] || '').trim();
+              const machine = String(row[8] || '').trim();
+              const func = String(row[10] || row[9] || '').trim();
+              const dept = costCenter ? `${costCenter} - ${func || 'Production'}` : (func || 'Production');
 
-                newMapping[empId] = {
-                  empId,
-                  dept,
-                  nameTH,
-                  nameEN,
-                  position: pos,
-                  sheet: sheetName,
-                  sourceFile: file.name
-                };
+              newMapping[empId] = {
+                empId,
+                nameTH,
+                nameEN,
+                position,
+                category,
+                machine,
+                dept,
+                sheet: sheetName,
+                sourceFile: file.name
+              };
+            } else {
+              // Generic scan across row for ID
+              for (let c = 0; c < Math.min(row.length, 5); c++) {
+                const val = String(row[c] || '').trim();
+                if (/^\d{3,5}$/.test(val)) {
+                  const empId = val.padStart(5, '0');
+                  const dept = String(row[1] || row[0] || '').trim();
+                  const nameTH = String(row[4] || row[3] || '').trim();
+                  const nameEN = String(row[5] || row[4] || '').trim();
+                  const pos = String(row[7] || row[6] || '').trim();
+
+                  newMapping[empId] = {
+                    empId,
+                    dept,
+                    nameTH,
+                    nameEN,
+                    position: pos,
+                    sheet: sheetName,
+                    sourceFile: file.name
+                  };
+                  break;
+                }
               }
             }
           });

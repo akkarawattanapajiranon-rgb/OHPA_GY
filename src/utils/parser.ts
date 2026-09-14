@@ -419,6 +419,7 @@ export function processScanRecords(
       nameEN: empInfo.nameEN || `Emp ${empId}`,
       machine,
       position,
+      category: empInfo.category || 'Other',
       dept,
       shift: shiftNum,
       shiftLabel,

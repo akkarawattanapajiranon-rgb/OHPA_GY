@@ -27,6 +27,7 @@ export default function App() {
 
   const [selectedShiftFilter, setSelectedShiftFilter] = useState<number | 'ALL'>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
   const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_MANPOWER'>('PAGE_1_DETAILS');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
@@ -69,6 +70,7 @@ export default function App() {
       setSelectedFileId(preset.id);
       setSelectedShiftFilter('ALL');
       setSelectedDeptFilter('ALL');
+      setSelectedCategoryFilter('ALL');
     }
   };
 
@@ -77,6 +79,7 @@ export default function App() {
     setSelectedFileId(name);
     setSelectedShiftFilter('ALL');
     setSelectedDeptFilter('ALL');
+    setSelectedCategoryFilter('ALL');
   };
 
   const handleUpdateEmployeeMapping = (newMapping: Record<string, EmployeeInfo>) => {
@@ -93,6 +96,7 @@ export default function App() {
     setEmployeeMapping(defaultEmpMappingRaw as Record<string, EmployeeInfo>);
     setSelectedShiftFilter('ALL');
     setSelectedDeptFilter('ALL');
+    setSelectedCategoryFilter('ALL');
   };
 
   // Fetch scans directly from scans/ folder
@@ -260,8 +264,10 @@ export default function App() {
             records={records}
             selectedShiftFilter={selectedShiftFilter}
             selectedDeptFilter={selectedDeptFilter}
+            selectedCategoryFilter={selectedCategoryFilter}
             onSelectShift={setSelectedShiftFilter}
             onSelectDept={setSelectedDeptFilter}
+            onSelectCategory={setSelectedCategoryFilter}
           />
         )}
 
