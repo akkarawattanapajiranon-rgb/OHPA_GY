@@ -401,12 +401,15 @@ export function processScanRecords(
     const position = empInfo.position || '-';
     const dept = empInfo.dept || 'ไม่ระบุแผนก';
 
-    // Increment Standard HC actual count
-    const stdPosName = mapBcaPosToStdPosition(position, dept, machine);
-    if (stdPosName && actualCounts[stdPosName]) {
-      if (shiftNum === 1) actualCounts[stdPosName].shift1++;
-      if (shiftNum === 2) actualCounts[stdPosName].shift2++;
-      if (shiftNum === 3) actualCounts[stdPosName].shift3++;
+    // Increment Standard HC actual count (Only for BCA employees - 208 people)
+    const isBca = (empInfo.category === 'BCA') || (!empInfo.category && (dept.includes('3200') || dept.includes('4130')));
+    if (isBca) {
+      const stdPosName = mapBcaPosToStdPosition(position, dept, machine);
+      if (stdPosName && actualCounts[stdPosName]) {
+        if (shiftNum === 1) actualCounts[stdPosName].shift1++;
+        if (shiftNum === 2) actualCounts[stdPosName].shift2++;
+        if (shiftNum === 3) actualCounts[stdPosName].shift3++;
+      }
     }
 
     const officialStart = inScan ? inScan.timestamp : new Date();
@@ -448,7 +451,7 @@ export function processScanRecords(
     });
   });
 
-  // Pre-calculate OT hours covering each shift for each Standard HC position
+  // Pre-calculate OT hours covering each shift for each Standard HC position (BCA only)
   const posOtCoverage: Record<string, {
     s1OtHours: number;
     s2OtHours: number;
@@ -464,6 +467,7 @@ export function processScanRecords(
   });
 
   processedRecords.forEach(r => {
+    if (r.category && r.category !== 'BCA') return; // Only BCA employees cover Team A Standard HC!
     const stdPosName = mapBcaPosToStdPosition(r.position, r.dept, r.machine);
     if (!stdPosName || !posOtCoverage[stdPosName] || r.otHours <= 0) return;
 
