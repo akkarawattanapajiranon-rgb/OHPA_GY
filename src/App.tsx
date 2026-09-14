@@ -42,6 +42,11 @@ export default function App() {
     }
   }, [toastNotification]);
 
+  // Initial auto-fetch from scans folder on load
+  useEffect(() => {
+    handleFetchFolderScans();
+  }, []);
+
   // Core processing - 1 row per employee, 100% sync with Standard HC
   const processedData = useMemo(() => {
     return processScanRecords(scanContent, employeeMapping);
