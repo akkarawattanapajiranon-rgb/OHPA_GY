@@ -17,30 +17,33 @@ function scanFolderApiPlugin(): Plugin {
             fs.mkdirSync(scansDir, { recursive: true });
           }
 
-          let files = fs.readdirSync(scansDir);
-          let scanFiles = files.filter(f => !f.startsWith('.') && /\.(txt|dat|csv|log)$/i.test(f));
-
-          // Fallback: If scans/ is empty, check Downloads folder for scan files
-          if (scanFiles.length === 0) {
-            const userHome = process.env.USERPROFILE || 'C:\\Users\\aa11909';
-            const downloadsDir = path.join(userHome, 'Downloads');
-            if (fs.existsSync(downloadsDir)) {
+          // Auto-sync: Always check Downloads folder for new scan files (e.g. 2026xxxx.txt) and copy to scans/
+          const userHome = process.env.USERPROFILE || 'C:\\Users\\aa11909';
+          const downloadsDir = path.join(userHome, 'Downloads');
+          if (fs.existsSync(downloadsDir)) {
+            try {
               const dlFiles = fs.readdirSync(downloadsDir);
               const matchingDl = dlFiles.filter(f => /^(2026\d{4}|\d{8})\.txt$/i.test(f) || (f.endsWith('.txt') && f.includes('2026')));
               for (const dlFile of matchingDl) {
                 try {
                   const src = path.join(downloadsDir, dlFile);
                   const dest = path.join(scansDir, dlFile);
-                  fs.copyFileSync(src, dest);
+                  const srcStat = fs.statSync(src);
+                  // Copy if not exists or if source in Downloads was modified more recently
+                  if (!fs.existsSync(dest) || srcStat.mtimeMs > fs.statSync(dest).mtimeMs) {
+                    fs.copyFileSync(src, dest);
+                  }
                 } catch (e) {
                   // ignore copy error
                 }
               }
-              // Re-read scans dir after copying
-              files = fs.readdirSync(scansDir);
-              scanFiles = files.filter(f => !f.startsWith('.') && /\.(txt|dat|csv|log)$/i.test(f));
+            } catch (e) {
+              // ignore dir read error
             }
           }
+
+          let files = fs.readdirSync(scansDir);
+          let scanFiles = files.filter(f => !f.startsWith('.') && /\.(txt|dat|csv|log)$/i.test(f));
 
           if (scanFiles.length === 0) {
             res.setHeader('Content-Type', 'application/json');
