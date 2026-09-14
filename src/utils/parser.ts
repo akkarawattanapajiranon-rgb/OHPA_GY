@@ -714,12 +714,12 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
         const hh = e.timestamp.getHours();
         const mm = e.timestamp.getMinutes();
         const mins = hh * 60 + mm;
-        if (mins >= 5 * 60 && mins <= 8 * 60 + 30) {
+        if (mins >= 4 * 60 && mins <= 8 * 60 + 30) {
           return allEvents.some(cur =>
             cur.parsed.empId === e.empId &&
             cur.parsed.dateStr === dayStr &&
             cur.parsed.io === 'I' &&
-            cur.parsed.timestamp.getHours() >= 14
+            cur.parsed.timestamp.getHours() >= 11
           );
         }
       }
