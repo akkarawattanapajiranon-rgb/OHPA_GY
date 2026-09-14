@@ -89,40 +89,28 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
   const handleDownloadTemplate = () => {
     const sampleData = [
       {
-        'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
+        'วันที่': currentDateFormatted || '13/09/2026',
         'รหัสพนักงาน': '11848',
-        'ชื่อ - นามสกุล': 'วีระพันธ์ นุตะดี',
-        'แผนก/Cost Center': '3200',
-        'เครื่องประจำเดิม': '320 BANBURY # 1',
-        '1. ย้ายเครื่องกะปกติ': '',
-        '2. ย้ายเครื่องทำ OT': '320 BANBURY # 2',
-        '3. เวลาเข้าพิเศษ (HH:MM)': '',
-        '4. เวลาออกพิเศษ (HH:MM)': '',
-        'เหตุผล / หมายเหตุ': 'ทำ OT กะ 3 ช่วย Mixer 2'
+        'เครื่องจักรที่ไปทำ OT (OT Machine)': '320 BANBURY # 2',
+        'เวลา': ''
       },
       {
-        'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
-        'รหัสพนักงาน': '12128',
-        'ชื่อ - นามสกุล': 'พายุ บุญมาใส',
-        'แผนก/Cost Center': '3200',
-        'เครื่องประจำเดิม': '320 BANBURY # 1',
-        '1. ย้ายเครื่องกะปกติ': '320 BANBURY # 2',
-        '2. ย้ายเครื่องทำ OT': '',
-        '3. เวลาเข้าพิเศษ (HH:MM)': '',
-        '4. เวลาออกพิเศษ (HH:MM)': '',
-        'เหตุผล / หมายเหตุ': 'ย้ายไปประจำ Mixer 2 กะ 1 แทนคนที่ลา'
+        'วันที่': currentDateFormatted || '13/09/2026',
+        'รหัสพนักงาน': '03027',
+        'เครื่องจักรที่ไปทำ OT (OT Machine)': '320 BANBURY # 2',
+        'เวลา': ''
       },
       {
-        'วันที่ (DD/MM/YYYY)': currentDateFormatted || '13/09/2026',
+        'วันที่': currentDateFormatted || '13/09/2026',
         'รหัสพนักงาน': '12140',
-        'ชื่อ - นามสกุล': 'ถวิล ลืมอินทร์',
-        'แผนก/Cost Center': '3200',
-        'เครื่องประจำเดิม': '320 BANBURY # 1',
-        '1. ย้ายเครื่องกะปกติ': '',
-        '2. ย้ายเครื่องทำ OT': '',
-        '3. เวลาเข้าพิเศษ (HH:MM)': '11:00',
-        '4. เวลาออกพิเศษ (HH:MM)': '19:00',
-        'เหตุผล / หมายเหตุ': 'หัวหน้างานสั่งให้มาทำงานเวลาพิเศษ 11:00-19:00 (ไม่คิดสาย)'
+        'เครื่องจักรที่ไปทำ OT (OT Machine)': '',
+        'เวลา': '11:00 - 19:00'
+      },
+      {
+        'วันที่': currentDateFormatted || '13/09/2026',
+        'รหัสพนักงาน': '12128',
+        'เครื่องจักรที่ไปทำ OT (OT Machine)': '320 BANBURY # 2',
+        'เวลา': ''
       }
     ];
 
@@ -150,16 +138,16 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
     ];
 
     const instructions = [
-      { 'หัวข้อ': 'รูปแบบที่ 1: กะตัวเอง ย้ายไปทำเครื่องอื่น (Normal Shift Transfer)', 'คำอธิบาย': 'กรอกชื่อเครื่องจักรเป้าหมายในช่อง "1. ย้ายเครื่องกะปกติ" -> ระบบจะโอนยอดคนปกติ 1 คนไปนับที่เครื่องใหม่ทันที' },
-      { 'หัวข้อ': 'รูปแบบที่ 2: กะตัวเองทำเครื่องเดิม และทำ OT เครื่องอื่น (OT Transfer)', 'คำอธิบาย': 'กรอกชื่อเครื่องจักรเป้าหมายในช่อง "2. ย้ายเครื่องทำ OT" -> กำลังพลกะปกติจะอยู่เครื่องเดิม แต่ชั่วโมงและยอดกำลังพล OT จะโอนไปเติมให้เครื่องที่ไปช่วยทำ OT' },
-      { 'หัวข้อ': 'รูปแบบที่ 3: เวลาเข้า-ออกพิเศษตามที่หัวหน้างานสั่ง (Custom Shift Timing)', 'คำอธิบาย': 'กรอกเวลาในช่อง "3. เวลาเข้าพิเศษ (HH:MM)" เช่น 11:00 -> ระบบจะไม่คิดว่าสาย (isLate = false) และนับชั่วโมงทำงานปกติครบ 8 ชม.' },
-      { 'หัวข้อ': 'คำแนะนำการระบุชื่อเครื่องจักร', 'คำอธิบาย': 'สามารถก๊อปปี้ชื่อเครื่องจักรจากแผ่นงาน "Standard_Machine_List" มาใส่ได้เลย หรือพิมพ์ชื่อย่อ เช่น Mixer 2, Quad, Tuber ระบบจะค้นหาให้อัตโนมัติ' }
+      { 'คอลัมน์ (4 ช่อง)': '1. วันที่', 'คำอธิบาย': 'วันที่ที่ต้องการปรับเปลี่ยน เช่น 13/09/2026' },
+      { 'คอลัมน์ (4 ช่อง)': '2. รหัสพนักงาน', 'คำอธิบาย': 'รหัสพนักงาน 5 หลัก เช่น 11848' },
+      { 'คอลัมน์ (4 ช่อง)': '3. เครื่องจักรที่ไปทำ OT (OT Machine)', 'คำอธิบาย': 'ใส่ชื่อเครื่องจักรที่พนักงานไปทำ OT เช่น 320 BANBURY # 2 หรือ Mixer 2 (หากเป็นการย้ายกะปกติก็สามารถใส่ชื่อเครื่องจักรได้)' },
+      { 'คอลัมน์ (4 ช่อง)': '4. เวลา', 'คำอธิบาย': 'กรณีหัวหน้าสั่งให้มาทำงานเวลาพิเศษ เช่น 11:00 หรือ 11:00 - 19:00 (ระบบจะไม่คิดสาย)' }
     ];
 
     const wb = XLSX.utils.book_new();
 
     const ws1 = XLSX.utils.json_to_sheet(sampleData);
-    ws1['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 24 }, { wch: 16 }, { wch: 22 }, { wch: 24 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 45 }];
+    ws1['!cols'] = [{ wch: 18 }, { wch: 16 }, { wch: 38 }, { wch: 24 }];
     XLSX.utils.book_append_sheet(wb, ws1, 'Daily_Adjustments');
 
     const ws2 = XLSX.utils.json_to_sheet(standardMachines);
@@ -205,11 +193,27 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
 
           const cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
           const dateStr = findVal(['วัน', 'date']) || currentDateFormatted;
-          const regMachine = findVal(['กะปกติ', 'ย้ายเครื่อง', 'regular', 'normal']);
-          const otMachine = findVal(['โอที', 'ot machine', 'เครื่อง ot', 'ot']);
-          const customStart = findVal(['เวลาเข้า', 'start', 'เข้าพิเศษ']);
-          const customEnd = findVal(['เวลาออก', 'end', 'ออกพิเศษ']);
+          const machineTarget = findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'เครื่องจักร', 'โอที', 'ot', 'machine']);
+          const timeStr = findVal(['เวลา', 'time']);
           const reason = findVal(['เหตุผล', 'หมายเหตุ', 'reason', 'note']);
+
+          let customStart: string | undefined = undefined;
+          let customEnd: string | undefined = undefined;
+          let isApproved = false;
+
+          if (timeStr) {
+            isApproved = true;
+            // E.g. "11:00 - 19:00" or "11:00"
+            const timeMatches = timeStr.match(/\d{1,2}:\d{2}/g);
+            if (timeMatches && timeMatches.length >= 1) {
+              customStart = timeMatches[0];
+              if (timeMatches.length >= 2) {
+                customEnd = timeMatches[1];
+              }
+            } else if (!isNaN(Number(timeStr))) {
+              customStart = `${timeStr}:00`;
+            }
+          }
 
           const empInfo = employeeMap[cleanId];
 
@@ -218,12 +222,12 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
             dateStr,
             empId: cleanId,
             empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
-            regularMachineOverride: regMachine || undefined,
-            otMachineOverride: otMachine || undefined,
-            customStartTime: customStart || undefined,
-            customEndTime: customEnd || undefined,
-            isApprovedTiming: true,
-            reason: reason || undefined
+            regularMachineOverride: machineTarget || undefined,
+            otMachineOverride: machineTarget || undefined,
+            customStartTime: customStart,
+            customEndTime: customEnd,
+            isApprovedTiming: isApproved || Boolean(timeStr),
+            reason: reason || (machineTarget ? `ไปทำที่ ${machineTarget}` : (timeStr ? `เวลาพิเศษ ${timeStr}` : undefined))
           });
         });
 
