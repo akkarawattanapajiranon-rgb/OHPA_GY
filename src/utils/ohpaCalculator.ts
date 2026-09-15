@@ -454,21 +454,24 @@ export function calculateOhpaSummary(
       };
     }
 
-    const d = String(dept || costCenter || closing || '').toUpperCase().trim();
+    const d = String(dept || '').toUpperCase().trim();
+    const cc = String(costCenter || '').toUpperCase().trim();
+    const cls = String(closing || '').toUpperCase().trim();
     const c = String(category || '').toLowerCase().trim();
     const loc = String(location || '').toUpperCase().trim();
-    const cls = String(closing || '').toUpperCase().trim();
 
-    // Extract department / costCenter code like 3200, A5110, S5110, etc.
-    const codeMatch = d.match(/([A-Z]?\d{4})/i) || cls.match(/([A-Z]?\d{4})/i);
-    const code = codeMatch ? codeMatch[1].toUpperCase() : d;
+    // Extract 4-5 character code from closing, costCenter, dept in priority order
+    const extractCode = (str: string): string => {
+      const m = str.match(/([A-Z]?\d{4})/i);
+      return m ? m[1].toUpperCase() : '';
+    };
+
+    const code = extractCode(cls) || extractCode(cc) || extractCode(d);
 
     // 1. Bias Aero (121 คน): แผนก A5110, A5120, A5130
     if (
-      ['A5110', 'A5120', 'A5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      ['A5110', 'A5120', 'A5130'].includes(code) ||
       c.includes('bias aero') ||
-      loc.includes('BTA') ||
-      loc.includes('BIAS AERO') ||
       (c.includes('aero') && !c.includes('radial') && !loc.includes('STA'))
     ) {
       return {
@@ -483,11 +486,10 @@ export function calculateOhpaSummary(
 
     // 2. Radial Aero (74 คน): แผนก S5110, S5120, S5130
     if (
-      ['S5110', 'S5120', 'S5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      ['S5110', 'S5120', 'S5130'].includes(code) ||
       c.includes('radial aero') ||
-      loc.includes('STA') ||
-      loc.includes('RADIAL AERO') ||
-      (c.includes('radial') && c.includes('aero'))
+      (c.includes('radial') && c.includes('aero')) ||
+      loc.includes('STA')
     ) {
       return {
         key: 'Radial Aero',
@@ -501,10 +503,8 @@ export function calculateOhpaSummary(
 
     // 3. BCA (208 คน): แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300
     if (
-      ['3200', '3300', '3700', '4110', '4120', '4130', '4200', '4300'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      ['3200', '3300', '3700', '4110', '4120', '4130', '4200', '4300'].includes(code) ||
       c.includes('bca') ||
-      loc.includes('BTB') ||
-      loc.includes('BCA') ||
       c.includes('banbury') ||
       c.includes('calender') ||
       c.includes('stock prep')
@@ -521,10 +521,8 @@ export function calculateOhpaSummary(
 
     // 4. Consumer (148 คน): แผนก 4140, 5110, 5120, 5130
     if (
-      ['4140', '5110', '5120', '5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
-      c.includes('consumer') ||
-      loc.includes('BTC') ||
-      loc.includes('CONSUMER')
+      ['4140', '5110', '5120', '5130'].includes(code) ||
+      c.includes('consumer')
     ) {
       return {
         key: 'Consumer',
@@ -538,7 +536,7 @@ export function calculateOhpaSummary(
 
     // 5. Retread (71 คน): แผนก 6320 และส่วนงานหล่อดอกยาง
     if (
-      ['6320'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      code === '6320' ||
       c.includes('retread') ||
       loc.includes('RETREAD') ||
       d.includes('หล่อดอก')
@@ -556,10 +554,9 @@ export function calculateOhpaSummary(
 
     // 6. Non-MFG : Engineering (65 คน): แผนก 1100, 1110, 1161, 1164, 1210, S1100
     if (
-      ['1100', '1110', '1161', '1164', '1210', 'S1100'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      ['1100', '1110', '1161', '1164', '1210', 'S1100'].includes(code) ||
       c.includes('engineering') ||
       loc.includes('ENG') ||
-      loc.includes('ENGINEERING') ||
       c.includes('maintenance')
     ) {
       return {
@@ -574,7 +571,7 @@ export function calculateOhpaSummary(
 
     // 7. Non-MFG : Quality (57 คน): แผนก 1021, 1022, 1040, S1040
     if (
-      ['1021', '1022', '1040', 'S1040'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      ['1021', '1022', '1040', 'S1040'].includes(code) ||
       c.includes('quality') ||
       loc.includes('Q-TECH') ||
       loc.includes('QUALITY') ||
@@ -590,7 +587,7 @@ export function calculateOhpaSummary(
       };
     }
 
-    // 8. Non-MFG : Others (6 คน): แผนก 1860
+    // 8. Non-MFG : Others (6 คน): แผนก 1860 (และ 1850, 1200)
     return {
       key: 'Non-MFG : Others',
       name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
@@ -803,10 +800,12 @@ export function calculateOhpaSummary(
     a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 11. Process All Contractor Records (Active + 6320) into Areas & Depts
+  // 11. Process All Contractor Records (Active + 6320) into Areas & Depts (separated by exact department)
   rawContActive.forEach(r => {
     const isExcluded = isContDept6320(r);
-    const d = `Contractor WAS (${r.location || r.closing || 'MFG'})`;
+    const code = (r.closing || r.department || 'MFG').trim();
+    const loc = r.location ? ` (${r.location})` : '';
+    const d = `Cont แผนก ${code}${loc}`;
     const nHours = r.normalHours || 0;
     const otH = r.otHours || 0;
     const totH = nHours + otH;
@@ -827,7 +826,7 @@ export function calculateOhpaSummary(
     a.contNormal += nHours;
     a.contOt += otH;
 
-    const deptKey = `Cont: ${d}`;
+    const deptKey = `Cont: ${code}${loc}`;
     if (!a.deptMap[deptKey]) {
       a.deptMap[deptKey] = {
         dept: d,
