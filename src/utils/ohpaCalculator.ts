@@ -119,25 +119,117 @@ export function calculateOhpaSummary(
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / contractorTotalHours) * 100) / 100
     : 0;
 
-  // 7. Shift Breakdown (Combining GY non-6320 + Contractor non-6320 for each shift)
+  // 7. Shift Breakdown (Allocating working hours & OT to the actual shift operating time window)
+  // Shift 1 window: 07:00 - 15:00
+  // Shift 2 window: 15:00 - 23:00 (Includes Shift 1 OT 15:00-23:00, Shift 3 pre-OT/เข้าทุ่ม 19:00-23:00, Cont Day OT 15:00-19:00, Cont Night OT 19:00-23:00)
+  // Shift 3 window: 23:00 - 07:00 (Includes Shift 2 post-OT past 23:00, Shift 1 extended OT past 23:00)
+  const shiftAlloc: Record<1 | 2 | 3, {
+    gyNorm: number;
+    gyOt: number;
+    gyHc: number;
+    contNorm: number;
+    contOt: number;
+    contHc: number;
+  }> = {
+    1: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 },
+    2: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 },
+    3: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 }
+  };
+
+  // Goodyear Allocation
+  gyActiveRecords.forEach(r => {
+    const s = r.shift;
+    const norm = r.normalWorkHours || 0;
+    const ot = r.otHours || 0;
+
+    if (s === 1) {
+      shiftAlloc[1].gyNorm += norm;
+      shiftAlloc[1].gyHc++;
+      if (ot > 0) {
+        if (r.empId === '01454' || r.empId === '1454') {
+          // Special 01454: Pre-shift morning OT (03:00 - 07:00) credits to Shift 1
+          shiftAlloc[1].gyOt += ot;
+        } else {
+          // Standard Shift 1 Post-shift OT: 15:00 - 23:00 goes to Shift 2, excess goes to Shift 3
+          const s2Ot = Math.min(8, ot);
+          const s3Ot = Math.max(0, ot - 8);
+          shiftAlloc[2].gyOt += s2Ot;
+          shiftAlloc[3].gyOt += s3Ot;
+        }
+      }
+    } else if (s === 2) {
+      shiftAlloc[2].gyNorm += norm;
+      shiftAlloc[2].gyHc++;
+      if (ot > 0) {
+        if (r.isPreShiftReliefOt) {
+          // Pre-shift break relief (11:00 - 15:00) goes to Shift 1
+          shiftAlloc[1].gyOt += ot;
+        } else {
+          // Post-shift OT (23:00 - 07:00) goes to Shift 3
+          shiftAlloc[3].gyOt += ot;
+        }
+      }
+    } else if (s === 3) {
+      shiftAlloc[3].gyNorm += norm;
+      shiftAlloc[3].gyHc++;
+      if (ot > 0) {
+        const inH = r.inTime ? (typeof r.inTime.getHours === 'function' ? r.inTime.getHours() : new Date(r.inTime).getHours()) : 23;
+        if (inH >= 17 && inH < 22) {
+          // Pre-shift OT / เข้าทุ่ม (17:30 - 23:00) goes to Shift 2
+          shiftAlloc[2].gyOt += ot;
+        } else {
+          // Post-shift OT (07:00 - 15:00) goes to Shift 1
+          shiftAlloc[1].gyOt += ot;
+        }
+      }
+    }
+  });
+
+  // Contractor Allocation
+  contActiveRecords.forEach(r => {
+    const s = r.shiftNumber;
+    const norm = r.normalHours || 0;
+    const ot = r.otHours || 0;
+
+    if (s === 1) {
+      shiftAlloc[1].contNorm += norm;
+      shiftAlloc[1].contHc++;
+      if (ot > 0) {
+        // Day shift OT (15:00 - 19:00 / 23:00) goes to Shift 2 window
+        const s2Ot = Math.min(8, ot);
+        const s3Ot = Math.max(0, ot - 8);
+        shiftAlloc[2].contOt += s2Ot;
+        shiftAlloc[3].contOt += s3Ot;
+      }
+    } else if (s === 2) {
+      shiftAlloc[2].contNorm += norm;
+      shiftAlloc[2].contOt += ot;
+      shiftAlloc[2].contHc++;
+    } else if (s === 3) {
+      shiftAlloc[3].contNorm += norm;
+      shiftAlloc[3].contHc++;
+      if (ot > 0) {
+        // Night shift pre-OT / เข้าทุ่ม (19:00 - 23:00 or 15:00 - 23:00) goes to Shift 2 window
+        shiftAlloc[2].contOt += ot;
+      }
+    }
+  });
+
   const shiftList: (1 | 2 | 3)[] = [1, 2, 3];
   const shifts: OhpaShiftMetrics[] = shiftList.map(shiftNum => {
-    // GY records for this shift
-    const gyShiftRecs = gyActiveRecords.filter(r => r.shift === shiftNum);
-    const gyHc = gyShiftRecs.length;
-    const gyNorm = gyShiftRecs.reduce((sum, r) => sum + (r.normalWorkHours || 0), 0);
-    const gyOt = gyShiftRecs.reduce((sum, r) => sum + (r.otHours || 0), 0);
+    const alloc = shiftAlloc[shiftNum];
+    const gyHc = alloc.gyHc;
+    const contHc = alloc.contHc;
+    const headcount = gyHc + contHc;
+
+    const gyNorm = alloc.gyNorm;
+    const gyOt = alloc.gyOt;
     const gyTot = gyNorm + gyOt;
 
-    // Contractor records for this shift
-    const contShiftRecs = contActiveRecords.filter(r => r.shiftNumber === shiftNum);
-    const contHc = contShiftRecs.length;
-    const contNorm = contShiftRecs.reduce((sum, r) => sum + (r.normalHours || 0), 0);
-    const contOt = contShiftRecs.reduce((sum, r) => sum + (r.otHours || 0), 0);
+    const contNorm = alloc.contNorm;
+    const contOt = alloc.contOt;
     const contTot = contNorm + contOt;
 
-    // Combined Shift Totals
-    const headcount = gyHc + contHc;
     const normalHours = gyNorm + contNorm;
     const otHours = gyOt + contOt;
     const totalHours = gyTot + contTot;
