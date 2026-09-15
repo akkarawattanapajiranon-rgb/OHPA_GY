@@ -1,6 +1,6 @@
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
+import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
 import { processScanRecords } from './parser';
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
@@ -433,34 +433,305 @@ export function calculateOhpaSummary(
     };
   });
 
-  // 8. Department Breakdown
+  // 8. Area Classification Helper
+  const classifyArea = (
+    category?: string,
+    dept?: string,
+    costCenter?: string,
+    pbu?: string,
+    location?: string,
+    closing?: string,
+    isMonthly?: boolean
+  ): { key: 'BCA' | 'Consumer' | 'Aero' | 'Eng' | 'อื่นๆ'; name: string; label: string; icon: string; order: number } => {
+    if (isMonthly) {
+      return {
+        key: 'อื่นๆ',
+        name: 'อื่นๆ (Quality / Retread / Support & Staff)',
+        label: 'อื่นๆ / สนับสนุน',
+        icon: '📦',
+        order: 5
+      };
+    }
+
+    const cat = (category || '').toLowerCase();
+    const d = (dept || costCenter || closing || '').toUpperCase();
+    const p = (pbu || '').toLowerCase();
+    const loc = (location || '').toUpperCase();
+
+    // 1. BCA
+    if (
+      cat.includes('bca') ||
+      d.includes('3200') ||
+      d.includes('3300') ||
+      p.includes('bca') ||
+      p.includes('shared') ||
+      loc.includes('BTB') ||
+      loc.includes('BCA')
+    ) {
+      return {
+        key: 'BCA',
+        name: 'BCA (Banbury / Mixing / Calender / Extruder)',
+        label: 'BCA (เตรียมวัตถุดิบ)',
+        icon: '🏢',
+        order: 1
+      };
+    }
+
+    // 2. Consumer
+    if (
+      cat.includes('consumer') ||
+      d.includes('5110') ||
+      d.includes('5120') ||
+      d.includes('5130') ||
+      d.includes('4110') ||
+      d.includes('4120') ||
+      d.includes('4130') ||
+      d.includes('4300') ||
+      d.includes('4200') ||
+      loc.includes('BTC') ||
+      loc.includes('CONSUMER')
+    ) {
+      return {
+        key: 'Consumer',
+        name: 'Consumer (Building / Curing / Final Finish)',
+        label: 'Consumer (ยางรถยนต์นั่ง)',
+        icon: '🚗',
+        order: 2
+      };
+    }
+
+    // 3. Aero
+    if (
+      cat.includes('aero') ||
+      d.startsWith('A') ||
+      d.includes('1850') ||
+      p.includes('aero') ||
+      loc.includes('BTA') ||
+      loc.includes('AERO')
+    ) {
+      return {
+        key: 'Aero',
+        name: 'Aero (Aviation Radial & Bias Tire)',
+        label: 'Aero (ยางเครื่องบิน)',
+        icon: '✈️',
+        order: 3
+      };
+    }
+
+    // 4. Engineering
+    if (
+      cat.includes('engineering') ||
+      d.includes('1110') ||
+      d.includes('1120') ||
+      d.includes('1100') ||
+      d.includes('1130') ||
+      d.includes('1140') ||
+      d.includes('1200') ||
+      loc.includes('ENG')
+    ) {
+      return {
+        key: 'Eng',
+        name: 'Engineering & Maintenance (ซ่อมบำรุง / วิศวกรรม)',
+        label: 'Engineering (วิศวกรรม)',
+        icon: '🔧',
+        order: 4
+      };
+    }
+
+    // 5. อื่นๆ (Others)
+    return {
+      key: 'อื่นๆ',
+      name: 'อื่นๆ (Quality / Retread / Warehouse / Support)',
+      label: 'อื่นๆ / สนับสนุน',
+      icon: '📦',
+      order: 5
+    };
+  };
+
+  // 9. Area Breakdown Map
+  const areaMap: Record<string, {
+    areaKey: string;
+    areaName: string;
+    areaLabel: string;
+    icon: string;
+    order: number;
+    gyHc: number;
+    contHc: number;
+    monthlyHc: number;
+    gyNormal: number;
+    gyOt: number;
+    contNormal: number;
+    contOt: number;
+    monthlyNormal: number;
+    deptMap: Record<string, OhpaAreaDeptItem>;
+  }> = {
+    BCA: {
+      areaKey: 'BCA',
+      areaName: 'BCA (Banbury / Mixing / Calender / Extruder)',
+      areaLabel: 'BCA (เตรียมวัตถุดิบ)',
+      icon: '🏢',
+      order: 1,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    Consumer: {
+      areaKey: 'Consumer',
+      areaName: 'Consumer (Building / Curing / Final Finish)',
+      areaLabel: 'Consumer (ยางรถยนต์นั่ง)',
+      icon: '🚗',
+      order: 2,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    Aero: {
+      areaKey: 'Aero',
+      areaName: 'Aero (Aviation Radial & Bias Tire)',
+      areaLabel: 'Aero (ยางเครื่องบิน)',
+      icon: '✈️',
+      order: 3,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    Eng: {
+      areaKey: 'Eng',
+      areaName: 'Engineering & Maintenance (ซ่อมบำรุง / วิศวกรรม)',
+      areaLabel: 'Engineering (วิศวกรรม)',
+      icon: '🔧',
+      order: 4,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'อื่นๆ': {
+      areaKey: 'อื่นๆ',
+      areaName: 'อื่นๆ (Quality / Retread / Warehouse / Support)',
+      areaLabel: 'อื่นๆ / สนับสนุน',
+      icon: '📦',
+      order: 5,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    }
+  };
+
+  // 10. Process GY Active Records into Areas & Depts
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
-  // GY Active Depts (non-6320)
   gyActiveRecords.forEach(r => {
     const d = r.dept || 'ไม่ระบุแผนก (GY)';
+    const nHours = r.normalWorkHours || 0;
+    const otH = r.otHours || 0;
+    const totH = nHours + otH;
+
+    // Dept map
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: false, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
     deptMap[d].headcount++;
-    deptMap[d].normalHours += (r.normalWorkHours || 0);
-    deptMap[d].otHours += (r.otHours || 0);
-    deptMap[d].totalHours += ((r.normalWorkHours || 0) + (r.otHours || 0));
+    deptMap[d].normalHours += nHours;
+    deptMap[d].otHours += otH;
+    deptMap[d].totalHours += totH;
+
+    // Area map
+    const areaInfo = classifyArea(r.category, r.dept, r.costCenter, '', '', '');
+    const a = areaMap[areaInfo.key] || areaMap['อื่นๆ'];
+    a.gyHc++;
+    a.gyNormal += nHours;
+    a.gyOt += otH;
+
+    const deptKey = `GY: ${d}`;
+    if (!a.deptMap[deptKey]) {
+      a.deptMap[deptKey] = {
+        dept: d,
+        isContractor: false,
+        isMonthly: false,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    a.deptMap[deptKey].headcount++;
+    a.deptMap[deptKey].normalHours += nHours;
+    a.deptMap[deptKey].otHours += otH;
+    a.deptMap[deptKey].totalHours += totH;
   });
 
-  // Contractor Active Depts (non-6320)
+  // 11. Process Contractor Active Records into Areas & Depts
   contActiveRecords.forEach(r => {
     const d = `Contractor WAS (${r.location || r.closing || 'MFG'})`;
+    const nHours = r.normalHours || 0;
+    const otH = r.otHours || 0;
+    const totH = nHours + otH;
+
+    // Dept map
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: true, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
     deptMap[d].headcount++;
-    deptMap[d].normalHours += (r.normalHours || 0);
-    deptMap[d].otHours += (r.otHours || 0);
-    deptMap[d].totalHours += ((r.normalHours || 0) + (r.otHours || 0));
+    deptMap[d].normalHours += nHours;
+    deptMap[d].otHours += otH;
+    deptMap[d].totalHours += totH;
+
+    // Area map
+    const areaInfo = classifyArea('', r.department, r.closing, '', r.location, r.closing);
+    const a = areaMap[areaInfo.key] || areaMap['อื่นๆ'];
+    a.contHc++;
+    a.contNormal += nHours;
+    a.contOt += otH;
+
+    const deptKey = `Cont: ${d}`;
+    if (!a.deptMap[deptKey]) {
+      a.deptMap[deptKey] = {
+        dept: d,
+        isContractor: true,
+        isMonthly: false,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    a.deptMap[deptKey].headcount++;
+    a.deptMap[deptKey].normalHours += nHours;
+    a.deptMap[deptKey].otHours += otH;
+    a.deptMap[deptKey].totalHours += totH;
   });
 
-  // Add Monthly Staff row
+  // 12. Add Monthly Staff
   if (monthlyStaff.count > 0) {
     const monthlyKey = `พนักงานรายเดือน (Monthly Staff - 62 คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
     deptMap[monthlyKey] = {
@@ -471,8 +742,69 @@ export function calculateOhpaSummary(
       otHours: 0,
       totalHours: monthlyStaff.totalHours
     };
+
+    const aOther = areaMap['อื่นๆ'];
+    aOther.monthlyHc = monthlyStaff.count;
+    aOther.monthlyNormal = monthlyStaff.totalHours;
+    aOther.deptMap['Monthly Staff'] = {
+      dept: monthlyKey,
+      isContractor: false,
+      isMonthly: true,
+      headcount: monthlyStaff.count,
+      normalHours: monthlyStaff.totalHours,
+      otHours: 0,
+      totalHours: monthlyStaff.totalHours
+    };
   }
 
+  // 13. Build final areaBreakdown list
+  const areaBreakdown: OhpaAreaMetrics[] = Object.values(areaMap)
+    .map(a => {
+      const normalH = a.gyNormal + a.contNormal + a.monthlyNormal;
+      const otH = a.gyOt + a.contOt;
+      const totH = normalH + otH;
+      const totHc = a.gyHc + a.contHc + a.monthlyHc;
+      const gyTot = a.gyNormal + a.gyOt;
+      const contTot = a.contNormal + a.contOt;
+
+      const subDepts = Object.values(a.deptMap)
+        .map(d => ({
+          ...d,
+          normalHours: Math.round(d.normalHours * 10) / 10,
+          otHours: Math.round(d.otHours * 10) / 10,
+          totalHours: Math.round(d.totalHours * 10) / 10
+        }))
+        .sort((x, y) => y.totalHours - x.totalHours);
+
+      return {
+        areaKey: a.areaKey,
+        areaName: a.areaName,
+        areaLabel: a.areaLabel,
+        icon: a.icon,
+        order: a.order,
+        totalHeadcount: totHc,
+        gyHeadcount: a.gyHc,
+        contractorHeadcount: a.contHc,
+        monthlyHeadcount: a.monthlyHc > 0 ? a.monthlyHc : undefined,
+        normalHours: Math.round(normalH * 10) / 10,
+        otHours: Math.round(otH * 10) / 10,
+        totalHours: Math.round(totH * 10) / 10,
+        gyNormalHours: Math.round(a.gyNormal * 10) / 10,
+        gyOtHours: Math.round(a.gyOt * 10) / 10,
+        gyTotalHours: Math.round(gyTot * 10) / 10,
+        contractorNormalHours: Math.round(a.contNormal * 10) / 10,
+        contractorOtHours: Math.round(a.contOt * 10) / 10,
+        contractorTotalHours: Math.round(contTot * 10) / 10,
+        monthlyHours: a.monthlyNormal > 0 ? Math.round(a.monthlyNormal * 10) / 10 : undefined,
+        percentageOfTotalHours: totalWorkingHours > 0
+          ? Math.round((totH / totalWorkingHours) * 1000) / 10
+          : 0,
+        departments: subDepts
+      };
+    })
+    .sort((a, b) => a.order - b.order);
+
+  // 14. Department Breakdown (for backwards compatibility)
   const departmentBreakdown: OhpaDeptMetrics[] = Object.entries(deptMap)
     .map(([dept, val]) => ({
       dept,
@@ -489,51 +821,52 @@ export function calculateOhpaSummary(
     }))
     .sort((a, b) => b.totalHours - a.totalHours);
 
-    const mtd = calculateMtdSummary(
-      productionDayFormatted,
-      records,
-      contractorRecords,
-      tonnageReport,
-      allScanPresets,
-      contractorRecordsByDate,
-      employeeMapping,
-      dailyAdjustments
-    );
+  const mtd = calculateMtdSummary(
+    productionDayFormatted,
+    records,
+    contractorRecords,
+    tonnageReport,
+    allScanPresets,
+    contractorRecordsByDate,
+    employeeMapping,
+    dailyAdjustments
+  );
 
-    return {
-      productionDay: productionDayFormatted,
-      totalEmployeesCount,
-      totalNormalHours: Math.round(totalNormalHours * 10) / 10,
-      totalOtHours: Math.round(totalOtHours * 10) / 10,
-      totalWorkingHours: Math.round(totalWorkingHours * 10) / 10,
+  return {
+    productionDay: productionDayFormatted,
+    totalEmployeesCount,
+    totalNormalHours: Math.round(totalNormalHours * 10) / 10,
+    totalOtHours: Math.round(totalOtHours * 10) / 10,
+    totalWorkingHours: Math.round(totalWorkingHours * 10) / 10,
 
-      gyEmployeesCount,
-      gyNormalHours: Math.round(gyNormalHours * 10) / 10,
-      gyOtHours: Math.round(gyOtHours * 10) / 10,
-      gyTotalHours: Math.round(gyTotalHours * 10) / 10,
-      gyOpahLbsPerHour,
+    gyEmployeesCount,
+    gyNormalHours: Math.round(gyNormalHours * 10) / 10,
+    gyOtHours: Math.round(gyOtHours * 10) / 10,
+    gyTotalHours: Math.round(gyTotalHours * 10) / 10,
+    gyOpahLbsPerHour,
 
-      contractorEmployeesCount,
-      contractorNormalHours: Math.round(contractorNormalHours * 10) / 10,
-      contractorOtHours: Math.round(contractorOtHours * 10) / 10,
-      contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
-      contractorOpahLbsPerHour,
+    contractorEmployeesCount,
+    contractorNormalHours: Math.round(contractorNormalHours * 10) / 10,
+    contractorOtHours: Math.round(contractorOtHours * 10) / 10,
+    contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
+    contractorOpahLbsPerHour,
 
-      monthlyStaff,
+    monthlyStaff,
 
-      excluded6320GyCount,
-      excluded6320GyHours: Math.round(excluded6320GyHours * 10) / 10,
-      excluded6320ContCount,
-      excluded6320ContHours: Math.round(excluded6320ContHours * 10) / 10,
+    excluded6320GyCount,
+    excluded6320GyHours: Math.round(excluded6320GyHours * 10) / 10,
+    excluded6320ContCount,
+    excluded6320ContHours: Math.round(excluded6320ContHours * 10) / 10,
 
-      totalTonnageKg,
-      totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
-      totalTonnageLbs,
-      totalPallets,
-      overallOpahLbsPerHour,
-      shifts,
-      departmentBreakdown,
-      mtd
-    };
-  }
+    totalTonnageKg,
+    totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
+    totalTonnageLbs,
+    totalPallets,
+    overallOpahLbsPerHour,
+    shifts,
+    areaBreakdown,
+    departmentBreakdown,
+    mtd
+  };
+}
 

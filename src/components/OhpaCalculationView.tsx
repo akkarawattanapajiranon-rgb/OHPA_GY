@@ -23,7 +23,15 @@ import {
   CheckCircle2,
   Briefcase,
   ShieldBan,
-  Info
+  Info,
+  ChevronDown,
+  ChevronRight,
+  PieChart,
+  Factory,
+  Wrench,
+  Plane,
+  Car,
+  Package
 } from 'lucide-react';
 
 interface OhpaCalculationViewProps {
@@ -52,6 +60,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'DAILY' | 'MTD'>('DAILY');
+  const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
+
+  const toggleArea = (key: string) => {
+    setExpandedAreas(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   // Fetch stocking tonnage report from /api/stocking-tonnage
   const fetchTonnageData = async (pdVal?: string, dateStr?: string) => {
@@ -219,18 +232,21 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws3 = XLSX.utils.json_to_sheet(shiftData);
     XLSX.utils.book_append_sheet(wb, ws3, 'Shift_Breakdown');
 
-    // Sheet 4: Department Breakdown
-    const deptData = ohpaSummary.departmentBreakdown.map(d => ({
-      'แผนก / ฝ่าย': d.dept,
-      'ประเภท': d.isMonthly ? 'Monthly Staff' : d.isContractor ? 'Contractor WAS' : 'Goodyear Employee',
-      'จำนวนคน (คน)': d.headcount,
-      'ชม.ปกติ (ชม.)': d.normalHours,
-      'ชม. OT (ชม.)': d.otHours,
-      'ชม.รวมทั้งหมด (ชม.)': d.totalHours,
-      '% สัดส่วน': d.percentageOfTotalHours + '%'
+    // Sheet 4: Area Breakdown (BCA, Consumer, Aero, Eng, อื่นๆ)
+    const areaData = (ohpaSummary.areaBreakdown || []).map(a => ({
+      'พื้นที่ / กลุ่มโรงงาน': a.areaName,
+      'จำนวนคนรวม (คน)': a.totalHeadcount,
+      'Goodyear (คน)': a.gyHeadcount,
+      'Contractor (คน)': a.contractorHeadcount,
+      'ชม.ปกติ (ชม.)': a.normalHours,
+      'ชม. OT (ชม.)': a.otHours,
+      'ชม.รวมทั้งหมด (ชม.)': a.totalHours,
+      'Goodyear ชม.รวม': a.gyTotalHours,
+      'Contractor ชม.รวม': a.contractorTotalHours,
+      '% สัดส่วน': a.percentageOfTotalHours + '%'
     }));
-    const ws4 = XLSX.utils.json_to_sheet(deptData);
-    XLSX.utils.book_append_sheet(wb, ws4, 'Department_Breakdown');
+    const ws4 = XLSX.utils.json_to_sheet(areaData);
+    XLSX.utils.book_append_sheet(wb, ws4, 'Area_Breakdown');
 
     // Sheet 5: MTD Daily Breakdown
     if (ohpaSummary.mtd?.dailyItems && ohpaSummary.mtd.dailyItems.length > 0) {
@@ -788,86 +804,331 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
-      {/* Department Working Hours Breakdown */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
+      {/* Area Working Hours & OT Summary (BCA, Consumer, Aero, Eng, อื่นๆ) */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
-              <Users className="w-5 h-5" />
+            <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-blue-600 text-white rounded-2xl shadow-sm">
+              <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">
-                สัดส่วนชั่วโมงทำงานแยกตามแผนก (Department Hours Contribution - Goodyear & Contractor)
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                สรุปชั่วโมงทำงานและ OT แยกตามพื้นที่ (Area Working Hours & OT Summary)
+                <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-200/60">
+                  5 พื้นที่หลัก
+                </span>
               </h3>
               <p className="text-xs text-slate-500">
-                สรุปชั่วโมงทำงานและกำลังพลจริงของทุกแผนกและผู้รับเหมาที่นำมาคำนวณ OHPA
+                รวมชั่วโมงทำงานปกติ, ชั่วโมง OT และกำลังพลจริงแยกตามพื้นที่: <strong>BCA</strong>, <strong>Consumer</strong>, <strong>Aero</strong>, <strong>Engineering</strong> และ <strong>อื่นๆ</strong>
               </p>
             </div>
           </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => {
+                const allKeys = (ohpaSummary.areaBreakdown || []).map(a => a.areaKey);
+                const isAllExpanded = allKeys.every(k => expandedAreas[k]);
+                const nextState: Record<string, boolean> = {};
+                allKeys.forEach(k => {
+                  nextState[k] = !isAllExpanded;
+                });
+                setExpandedAreas(nextState);
+              }}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <Info className="w-3.5 h-3.5 text-slate-500" />
+              <span>{Object.values(expandedAreas).some(Boolean) ? 'ย่อแผนกย่อยทั้งหมด' : 'ขยายแผนกย่อยทั้งหมด'}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* 5 Area Summary Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {(ohpaSummary.areaBreakdown || []).map((area) => {
+            const isBCA = area.areaKey === 'BCA';
+            const isConsumer = area.areaKey === 'Consumer';
+            const isAero = area.areaKey === 'Aero';
+            const isEng = area.areaKey === 'Eng';
+
+            const cardBorder = isBCA
+              ? 'border-amber-200 bg-amber-50/40 hover:bg-amber-50/70'
+              : isConsumer
+              ? 'border-blue-200 bg-blue-50/40 hover:bg-blue-50/70'
+              : isAero
+              ? 'border-sky-200 bg-sky-50/40 hover:bg-sky-50/70'
+              : isEng
+              ? 'border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50/70'
+              : 'border-purple-200 bg-purple-50/40 hover:bg-purple-50/70';
+
+            const badgeBg = isBCA
+              ? 'bg-amber-500 text-white'
+              : isConsumer
+              ? 'bg-blue-600 text-white'
+              : isAero
+              ? 'bg-sky-600 text-white'
+              : isEng
+              ? 'bg-emerald-600 text-white'
+              : 'bg-purple-600 text-white';
+
+            return (
+              <div
+                key={area.areaKey}
+                onClick={() => toggleArea(area.areaKey)}
+                className={`p-3.5 rounded-2xl border transition-all cursor-pointer shadow-2xs ${cardBorder}`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${badgeBg}`}>
+                    {area.areaKey}
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-600">
+                    {area.percentageOfTotalHours}%
+                  </span>
+                </div>
+                <div className="text-lg font-black text-slate-900 font-mono leading-tight">
+                  {area.totalHours.toLocaleString()} <span className="text-[11px] font-sans font-normal text-slate-500">ชม.</span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
+                  <span>ปกติ: {area.normalHours.toLocaleString()}</span>
+                  <span className="text-amber-700 font-bold">OT: +{area.otHours.toLocaleString()}</span>
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">
+                  กำลังพล: <strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} | Cont {area.contractorHeadcount})
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Main Area Table */}
+        <div className="overflow-x-auto rounded-2xl border border-slate-200">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                <th className="py-2.5 px-4">แผนก / ฝ่าย (Department)</th>
-                <th className="py-2.5 px-4 text-center">ประเภท (Type)</th>
-                <th className="py-2.5 px-4 text-center">จำนวนคน (Headcount)</th>
-                <th className="py-2.5 px-4 text-right">ชม.ปกติ (Normal)</th>
-                <th className="py-2.5 px-4 text-right">ชม. OT</th>
-                <th className="py-2.5 px-4 text-right font-black">ชม.รวมทั้งหมด (Total Hours)</th>
-                <th className="py-2.5 px-4 text-right">% สัดส่วนชั่วโมง</th>
+              <tr className="bg-slate-900 text-white font-bold">
+                <th className="py-3 px-4 min-w-[240px]">พื้นที่ / กลุ่มโรงงาน (Area / Section)</th>
+                <th className="py-3 px-4 text-center">กำลังพลรวม (Headcount)</th>
+                <th className="py-3 px-4 text-right bg-slate-800/80">ชม.ปกติ (Normal)</th>
+                <th className="py-3 px-4 text-right bg-amber-950/60 text-amber-300">ชม. OT (OT Hours)</th>
+                <th className="py-3 px-4 text-right bg-indigo-950/80 text-indigo-200 font-black">ชม.รวมทั้งหมด (Total Hours)</th>
+                <th className="py-3 px-4 text-right min-w-[160px]">% สัดส่วนชั่วโมง</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {ohpaSummary.departmentBreakdown.map((dept, idx) => (
-                <tr key={dept.dept + idx} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-2.5 px-4 font-semibold text-slate-800 flex items-center gap-2">
-                    {dept.isMonthly ? (
-                      <Briefcase className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                    ) : dept.isContractor ? (
-                      <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                    ) : (
-                      <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+              {(ohpaSummary.areaBreakdown || []).map((area) => {
+                const isExpanded = Boolean(expandedAreas[area.areaKey]);
+                const isBCA = area.areaKey === 'BCA';
+                const isConsumer = area.areaKey === 'Consumer';
+                const isAero = area.areaKey === 'Aero';
+                const isEng = area.areaKey === 'Eng';
+
+                const progressColor = isBCA
+                  ? 'bg-amber-500'
+                  : isConsumer
+                  ? 'bg-blue-600'
+                  : isAero
+                  ? 'bg-sky-500'
+                  : isEng
+                  ? 'bg-emerald-600'
+                  : 'bg-purple-600';
+
+                const rowBg = isExpanded
+                  ? 'bg-slate-50/80'
+                  : isBCA
+                  ? 'hover:bg-amber-50/30'
+                  : isConsumer
+                  ? 'hover:bg-blue-50/30'
+                  : isAero
+                  ? 'hover:bg-sky-50/30'
+                  : isEng
+                  ? 'hover:bg-emerald-50/30'
+                  : 'hover:bg-purple-50/30';
+
+                const iconElem = isBCA ? (
+                  <Factory className="w-4 h-4 text-amber-600 shrink-0" />
+                ) : isConsumer ? (
+                  <Car className="w-4 h-4 text-blue-600 shrink-0" />
+                ) : isAero ? (
+                  <Plane className="w-4 h-4 text-sky-600 shrink-0" />
+                ) : isEng ? (
+                  <Wrench className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <Package className="w-4 h-4 text-purple-600 shrink-0" />
+                );
+
+                return (
+                  <React.Fragment key={area.areaKey}>
+                    {/* Area Primary Row */}
+                    <tr
+                      onClick={() => toggleArea(area.areaKey)}
+                      className={`transition-colors cursor-pointer ${rowBg}`}
+                    >
+                      <td className="py-3 px-4 font-bold text-slate-900">
+                        <div className="flex items-center gap-2.5">
+                          <button
+                            type="button"
+                            className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
+                            title={isExpanded ? 'ย่อรายละเอียด' : 'คลิกเพื่อดูรายละเอียดแผนกย่อย'}
+                          >
+                            {isExpanded ? (
+                              <ChevronDown className="w-4 h-4 text-indigo-600" />
+                            ) : (
+                              <ChevronRight className="w-4 h-4" />
+                            )}
+                          </button>
+                          <div className="p-1.5 rounded-lg bg-white shadow-2xs border border-slate-200">
+                            {iconElem}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-black text-slate-900">{area.areaKey}</span>
+                              <span className="text-[11px] text-slate-500 font-medium">({area.areaLabel})</span>
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-normal">
+                              {area.departments.length} แผนก / หน่วยงานย่อย
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Headcount */}
+                      <td className="py-3 px-4 text-center">
+                        <div className="inline-flex flex-col items-center">
+                          <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-black text-xs">
+                            {area.totalHeadcount} คน
+                          </span>
+                          <span className="text-[10px] text-slate-500 mt-0.5">
+                            GY {area.gyHeadcount} | Cont {area.contractorHeadcount}
+                            {area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Normal Hours */}
+                      <td className="py-3 px-4 text-right font-mono font-semibold text-slate-700 bg-slate-50/50">
+                        {area.normalHours.toLocaleString()} ชม.
+                      </td>
+
+                      {/* OT Hours */}
+                      <td className="py-3 px-4 text-right font-mono font-bold text-amber-700 bg-amber-50/40">
+                        +{area.otHours.toLocaleString()} ชม.
+                      </td>
+
+                      {/* Total Hours */}
+                      <td className="py-3 px-4 text-right font-mono font-black text-sm text-indigo-950 bg-indigo-50/40">
+                        {area.totalHours.toLocaleString()} ชม.
+                      </td>
+
+                      {/* % Contribution */}
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2.5">
+                          <div className="w-20 bg-slate-200 rounded-full h-2 overflow-hidden shadow-2xs">
+                            <div
+                              className={`h-2 rounded-full transition-all duration-500 ${progressColor}`}
+                              style={{ width: `${Math.min(100, area.percentageOfTotalHours)}%` }}
+                            ></div>
+                          </div>
+                          <span className="font-mono font-black text-slate-900 text-xs w-12 text-right">
+                            {area.percentageOfTotalHours}%
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+
+                    {/* Expandable Sub-departments table */}
+                    {isExpanded && (
+                      <tr className="bg-slate-50/90 border-y border-slate-200">
+                        <td colSpan={6} className="py-3 px-6 sm:px-10">
+                          <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
+                            <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
+                              <span>รายละเอียดหน่วยงานย่อยในพื้นที่: {area.areaName}</span>
+                              <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left text-xs border-collapse">
+                                <thead>
+                                  <tr className="text-slate-500 font-bold border-b border-slate-100 text-[11px]">
+                                    <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด</th>
+                                    <th className="py-1.5 px-3 text-center">ประเภท</th>
+                                    <th className="py-1.5 px-3 text-center">จำนวนคน</th>
+                                    <th className="py-1.5 px-3 text-right">ชม.ปกติ</th>
+                                    <th className="py-1.5 px-3 text-right">ชม. OT</th>
+                                    <th className="py-1.5 px-3 text-right font-black">ชม.รวม</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-50 font-sans">
+                                  {area.departments.map((sub, sIdx) => (
+                                    <tr key={sub.dept + sIdx} className="hover:bg-slate-50/80">
+                                      <td className="py-1.5 px-3 font-medium text-slate-800 flex items-center gap-2">
+                                        {sub.isMonthly ? (
+                                          <Briefcase className="w-3 h-3 text-purple-600 shrink-0" />
+                                        ) : sub.isContractor ? (
+                                          <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
+                                        ) : (
+                                          <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
+                                        )}
+                                        <span>{sub.dept}</span>
+                                      </td>
+                                      <td className="py-1.5 px-3 text-center">
+                                        <span className={`px-2 py-0.2 rounded-full font-bold text-[10px] ${
+                                          sub.isMonthly
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : sub.isContractor
+                                            ? 'bg-teal-100 text-teal-800'
+                                            : 'bg-blue-100 text-blue-800'
+                                        }`}>
+                                          {sub.isMonthly ? 'Monthly' : sub.isContractor ? 'Contractor' : 'Goodyear'}
+                                        </span>
+                                      </td>
+                                      <td className="py-1.5 px-3 text-center font-bold text-slate-700">
+                                        {sub.headcount} คน
+                                      </td>
+                                      <td className="py-1.5 px-3 text-right text-slate-600 font-mono">
+                                        {sub.normalHours.toLocaleString()}
+                                      </td>
+                                      <td className="py-1.5 px-3 text-right font-mono font-bold text-amber-600">
+                                        +{sub.otHours.toLocaleString()}
+                                      </td>
+                                      <td className="py-1.5 px-3 text-right font-mono font-black text-slate-900">
+                                        {sub.totalHours.toLocaleString()} ชม.
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
                     )}
-                    <span>{dept.dept}</span>
-                  </td>
-                  <td className="py-2.5 px-4 text-center">
-                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                      dept.isMonthly
-                        ? 'bg-purple-100 text-purple-800 border border-purple-300/40'
-                        : dept.isContractor
-                        ? 'bg-teal-100 text-teal-800 border border-teal-300/40'
-                        : 'bg-blue-100 text-blue-800 border border-blue-300/40'
-                    }`}>
-                      {dept.isMonthly ? 'Monthly Staff' : dept.isContractor ? 'Contractor' : 'Goodyear'}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-4 text-center">
-                    <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold text-[11px]">
-                      {dept.headcount} คน
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-4 text-right text-slate-600 font-mono">{dept.normalHours.toLocaleString()} ชม.</td>
-                  <td className="py-2.5 px-4 text-right text-amber-600 font-bold font-mono">+{dept.otHours.toLocaleString()} ชม.</td>
-                  <td className="py-2.5 px-4 text-right font-black text-slate-900 font-mono">{dept.totalHours.toLocaleString()} ชม.</td>
-                  <td className="py-2.5 px-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="w-16 bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                        <div
-                          className={`h-1.5 rounded-full ${
-                            dept.isMonthly ? 'bg-purple-600' : dept.isContractor ? 'bg-teal-500' : 'bg-blue-600'
-                          }`}
-                          style={{ width: Math.min(100, dept.percentageOfTotalHours) + '%' }}
-                        ></div>
-                      </div>
-                      <span className="font-bold text-slate-700 font-mono text-[11px] w-12 text-right">
-                        {dept.percentageOfTotalHours}%
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Grand Total Row */}
+              <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-800 text-sm">
+                <td className="py-3.5 px-4 flex items-center gap-2 text-white">
+                  <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
+                    TOTAL
+                  </div>
+                  <span>ยอดรวมทุกพื้นที่โรงงาน (Plant Grand Total)</span>
+                </td>
+                <td className="py-3.5 px-4 text-center text-white font-mono">
+                  {ohpaSummary.totalEmployeesCount} คน
+                </td>
+                <td className="py-3.5 px-4 text-right text-slate-200 font-mono bg-slate-800/80">
+                  {ohpaSummary.totalNormalHours.toLocaleString()} ชม.
+                </td>
+                <td className="py-3.5 px-4 text-right text-amber-300 font-mono bg-amber-950/80">
+                  +{ohpaSummary.totalOtHours.toLocaleString()} ชม.
+                </td>
+                <td className="py-3.5 px-4 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
+                  {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
+                </td>
+                <td className="py-3.5 px-4 text-right text-emerald-400 font-mono text-xs">
+                  100.0%
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

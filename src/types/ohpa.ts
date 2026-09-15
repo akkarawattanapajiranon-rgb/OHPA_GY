@@ -66,6 +66,40 @@ export interface OhpaDeptMetrics {
   percentageOfTotalHours: number;
 }
 
+export interface OhpaAreaDeptItem {
+  dept: string;
+  isContractor: boolean;
+  isMonthly?: boolean;
+  headcount: number;
+  normalHours: number;
+  otHours: number;
+  totalHours: number;
+}
+
+export interface OhpaAreaMetrics {
+  areaKey: 'BCA' | 'Consumer' | 'Aero' | 'Eng' | 'อื่นๆ' | string;
+  areaName: string;
+  areaLabel: string;
+  icon: string;
+  order: number;
+  totalHeadcount: number;
+  gyHeadcount: number;
+  contractorHeadcount: number;
+  monthlyHeadcount?: number;
+  normalHours: number;
+  otHours: number;
+  totalHours: number;
+  gyNormalHours: number;
+  gyOtHours: number;
+  gyTotalHours: number;
+  contractorNormalHours: number;
+  contractorOtHours: number;
+  contractorTotalHours: number;
+  monthlyHours?: number;
+  percentageOfTotalHours: number;
+  departments: OhpaAreaDeptItem[];
+}
+
 export interface DailyMtdItem {
   day: number;
   dateStr: string; // e.g. "01/09/2026"
@@ -137,6 +171,7 @@ export interface OhpaSummary {
   overallOpahLbsPerHour: number;
 
   shifts: OhpaShiftMetrics[];
+  areaBreakdown: OhpaAreaMetrics[];
   departmentBreakdown: OhpaDeptMetrics[];
 
   // Month-To-Date (MTD) metrics from day 1 to selected date
