@@ -750,6 +750,86 @@ export const DEFAULT_CONTRACTOR_MAPPING: Record<string, ContractorEmployeeInfo> 
     "closing": "3200",
     "department": "MFG",
     "type": "Hourly"
+  },
+  "93733": {
+    "empCode": "93733",
+    "nameEn": "Phiranya Thareethien",
+    "nameTh": "ภิรัญญา  ธารีเธียร",
+    "position": "Accounting",
+    "location": "Factory Accounting",
+    "closing": "1030",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "91387": {
+    "empCode": "91387",
+    "nameEn": "Waranya Thepwongsa",
+    "nameTh": "วรัญญา เทพวงษา",
+    "position": "Payroll officer",
+    "location": "Human Resources",
+    "closing": "1050",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "93812": {
+    "empCode": "93812",
+    "nameEn": "Nugkarin Kemsiri",
+    "nameTh": "นครินทร์ เข็มศิริ",
+    "position": "Procurement",
+    "location": "Procurement",
+    "closing": "1826",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "90481": {
+    "empCode": "90481",
+    "nameEn": "Suparaporn Phuesanthea",
+    "nameTh": "ศุภราภรณ์ พือสันเทียะ",
+    "position": "Receiving Assistant",
+    "location": "Receiving",
+    "closing": "1200",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "94065": {
+    "empCode": "94065",
+    "nameEn": "Praweekorn Juansantia",
+    "nameTh": "ปวีร์กร จวนสันเทียะ",
+    "position": "Receiving Assistant",
+    "location": "Receiving",
+    "closing": "1200",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "94266": {
+    "empCode": "94266",
+    "nameEn": "Tharathep Putisathian",
+    "nameTh": "ธราเทพ  พุฒิเสถียร",
+    "position": "Digital Transformation Specialist",
+    "location": "IE",
+    "closing": "1011",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "94288": {
+    "empCode": "94288",
+    "nameEn": "Wanichanon Sae-lee",
+    "nameTh": "วณิชานนท์  ซี่ลี้",
+    "position": "Digital Transformation Specialist",
+    "location": "IE",
+    "closing": "1011",
+    "department": "MFG",
+    "type": "Salary"
+  },
+  "94322": {
+    "empCode": "94322",
+    "nameEn": "Apiwit Hasalem",
+    "nameTh": "อภิวิชญ์ หะสะเล็ม",
+    "position": "Compounder Engineer",
+    "location": "Quality",
+    "closing": "1022",
+    "department": "MFG",
+    "type": "Salary"
   }
 };
 

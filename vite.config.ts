@@ -662,7 +662,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           const networkBaseDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record';
           const networkWasScanDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\SCAN นิ้ว WAS';
 
-          // Sync Name list WAS
+          // Sync Name list WAS and WAS_รายเดือน
           if (fs.existsSync(networkBaseDir)) {
             try {
               const files = fs.readdirSync(networkBaseDir);
@@ -670,6 +670,14 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               if (nameListFile) {
                 const src = path.join(networkBaseDir, nameListFile);
                 const dest = path.join(wasScansDir, nameListFile);
+                if (!fs.existsSync(dest) || fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs) {
+                  fs.copyFileSync(src, dest);
+                }
+              }
+              const monthlyFile = files.find(f => f.toLowerCase().includes('was_รายเดือน') || f.toLowerCase().includes('was_salary'));
+              if (monthlyFile) {
+                const src = path.join(networkBaseDir, monthlyFile);
+                const dest = path.join(wasScansDir, monthlyFile);
                 if (!fs.existsSync(dest) || fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs) {
                   fs.copyFileSync(src, dest);
                 }
@@ -706,9 +714,10 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           };
 
           const nameListPath = findFile(networkBaseDir, wasScansDir, 'name list was');
+          const monthlyListPath = findFile(networkBaseDir, wasScansDir, 'was_รายเดือน') || findFile(networkBaseDir, wasScansDir, 'was_salary');
           const scanFilePath = findFile(networkWasScanDir, wasScansDir, 'รายงานการทำงาน');
 
-          if (!nameListPath && !scanFilePath) {
+          if (!nameListPath && !monthlyListPath && !scanFilePath) {
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ success: false, message: 'ไม่พบไฟล์ Contractor ในโฟลเดอร์ T: หรือ scans_was' }));
             return;
@@ -716,27 +725,35 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
 
           // Parse employee mapping
           const contractorMapping: Record<string, any> = {};
-          if (nameListPath && fs.existsSync(nameListPath)) {
-            const buf = fs.readFileSync(nameListPath);
-            const wb = XLSX.read(buf, { type: 'buffer' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
-            for (let i = 3; i < data.length; i++) {
-              const row = data[i];
-              if (!row || !row[1]) continue;
-              const empCode = String(row[1]).trim();
-              contractorMapping[empCode] = {
-                empCode,
-                nameEn: String(row[2] || '').trim(),
-                nameTh: String(row[3] || '').trim(),
-                position: String(row[4] || '').trim(),
-                location: String(row[5] || '').trim(),
-                closing: String(row[6] || '').trim(),
-                department: String(row[7] || '').trim(),
-                type: String(row[9] || '').trim()
-              };
+          const parseContractorSheet = (filePath: string) => {
+            if (!filePath || !fs.existsSync(filePath)) return;
+            try {
+              const buf = fs.readFileSync(filePath);
+              const wb = XLSX.read(buf, { type: 'buffer' });
+              const ws = wb.Sheets[wb.SheetNames[0]];
+              const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+              for (let i = 3; i < data.length; i++) {
+                const row = data[i];
+                if (!row || !row[1]) continue;
+                const empCode = String(row[1]).trim();
+                contractorMapping[empCode] = {
+                  empCode,
+                  nameEn: String(row[2] || '').trim(),
+                  nameTh: String(row[3] || '').trim(),
+                  position: String(row[4] || '').trim(),
+                  location: String(row[5] || '').trim(),
+                  closing: String(row[6] || '').trim(),
+                  department: String(row[7] || '').trim(),
+                  type: String(row[9] || '').trim() || 'Hourly'
+                };
+              }
+            } catch (err) {
+              console.warn(`Error parsing contractor sheet ${filePath}:`, err);
             }
-          }
+          };
+
+          if (nameListPath) parseContractorSheet(nameListPath);
+          if (monthlyListPath) parseContractorSheet(monthlyListPath);
 
           // Parse scan records
           const recordsByDate: Record<string, any> = {};
