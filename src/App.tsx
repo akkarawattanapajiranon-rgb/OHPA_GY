@@ -13,6 +13,7 @@ import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset 
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
 import defaultAdjustmentsRaw from './data/default_adjustments.json';
 import { DEFAULT_CONTRACTOR_MAPPING, DEFAULT_CONTRACTOR_RECORDS_BY_DATE } from './data/default_contractor_data';
+import { DEFAULT_PDI_BEAD_REPORT, PdiBeadReport } from './data/default_pdi_bead';
 import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
 import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
 import { ContractorScanRecord } from './types/contractor';
@@ -41,6 +42,20 @@ export default function App() {
     Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>
   >(DEFAULT_CONTRACTOR_RECORDS_BY_DATE);
   const [isContractorLoading, setIsContractorLoading] = useState<boolean>(false);
+
+  // PDI Deduct & B-end (Bead) state
+  const [pdiBeadReport, setPdiBeadReport] = useState<PdiBeadReport>(() => {
+    try {
+      const saved = localStorage.getItem('ohpa_pdi_bead_report');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.pdiDailyTotals) return parsed;
+      }
+      return DEFAULT_PDI_BEAD_REPORT;
+    } catch {
+      return DEFAULT_PDI_BEAD_REPORT;
+    }
+  });
 
   const [dailyAdjustments, setDailyAdjustments] = useState<DailyAdjustmentRecord[]>(() => {
     try {
@@ -124,6 +139,17 @@ export default function App() {
     setToastNotification({
       type: 'success',
       message: 'เปลี่ยนรหัสผ่าน Admin เรียบร้อยแล้ว'
+    });
+  };
+
+  const handleUpdatePdiBeadReport = (newReport: PdiBeadReport) => {
+    setPdiBeadReport(newReport);
+    try {
+      localStorage.setItem('ohpa_pdi_bead_report', JSON.stringify(newReport));
+    } catch {}
+    setToastNotification({
+      type: 'success',
+      message: '✅ อัปเดตข้อมูล OPAH Hour (PDI Deduct & B-end Bead) สำเร็จแล้ว'
     });
   };
 
@@ -594,6 +620,7 @@ export default function App() {
             contractorRecordsByDate={contractorRecordsByDate}
             employeeMapping={employeeMapping}
             dailyAdjustments={dailyAdjustments}
+            pdiBeadReport={pdiBeadReport}
           />
         )}
       </main>
@@ -639,6 +666,8 @@ export default function App() {
         onLogout={handleAdminLogout}
         currentPasswordHash={adminPasswordHash}
         onUpdatePassword={handleUpdateAdminPassword}
+        pdiBeadReport={pdiBeadReport}
+        onUpdatePdiBeadReport={handleUpdatePdiBeadReport}
       />
     </div>
   );

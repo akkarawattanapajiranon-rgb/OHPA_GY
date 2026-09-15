@@ -1,6 +1,7 @@
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
+import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { processScanRecords } from './parser';
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
@@ -66,7 +67,8 @@ export function calculateMtdSummary(
   allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
   contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
-  dailyAdjustments: DailyAdjustmentRecord[] = []
+  dailyAdjustments: DailyAdjustmentRecord[] = [],
+  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 ): MtdOhpaSummary {
   const clean = (targetDateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
   const parts = clean.split(/[/.-]/);
@@ -88,6 +90,9 @@ export function calculateMtdSummary(
   let mtdGyHours = 0;
   let mtdContractorHours = 0;
   let mtdMonthlyHours = 0;
+  let mtdPdiDeductHours = 0;
+  let mtdBeadAddHours = 0;
+  let mtdOpahWorkingHours = 0;
 
   const dayNames = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
 
@@ -149,11 +154,17 @@ export function calculateMtdSummary(
     const monthlyHours = monthlyStaff.totalHours;
 
     const dayTotalHours = gyHours + contractorHours + monthlyHours;
+    const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
+    const beadAddHours = pdiBeadReport?.beadDailyTotals?.[d] || 0;
+    const dayOpahHours = Math.max(0, dayTotalHours - pdiDeductHours + beadAddHours);
 
     mtdGyHours += gyHours;
     mtdContractorHours += contractorHours;
     mtdMonthlyHours += monthlyHours;
     mtdTotalHours += dayTotalHours;
+    mtdPdiDeductHours += pdiDeductHours;
+    mtdBeadAddHours += beadAddHours;
+    mtdOpahWorkingHours += dayOpahHours;
 
     dailyItems.push({
       day: d,
@@ -165,7 +176,11 @@ export function calculateMtdSummary(
       contractorHours: Math.round(contractorHours * 10) / 10,
       monthlyHours: Math.round(monthlyHours * 10) / 10,
       totalHours: Math.round(dayTotalHours * 10) / 10,
-      cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10
+      pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
+      beadAddHours: Math.round(beadAddHours * 10) / 10,
+      opahWorkingHours: Math.round(dayOpahHours * 10) / 10,
+      cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10,
+      cumulativeOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10
     });
   }
 
@@ -175,8 +190,8 @@ export function calculateMtdSummary(
   const mtdStockingTon = Math.round((mtdStockingKg / 1000) * 1000) / 1000;
   const mtdPallets = tonnageReport?.total?.mtdPallets || 0;
 
-  const mtdOpahLbsPerHour = mtdTotalHours > 0
-    ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdTotalHours) * 100) / 100
+  const mtdOpahLbsPerHour = mtdOpahWorkingHours > 0
+    ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdOpahWorkingHours) * 100) / 100
     : 0;
 
   const mtdGyOpahLbsPerHour = mtdGyHours > 0
@@ -194,6 +209,9 @@ export function calculateMtdSummary(
     mtdGyHours: Math.round(mtdGyHours * 10) / 10,
     mtdContractorHours: Math.round(mtdContractorHours * 10) / 10,
     mtdMonthlyHours: Math.round(mtdMonthlyHours * 10) / 10,
+    mtdPdiDeductHours: Math.round(mtdPdiDeductHours * 10) / 10,
+    mtdBeadAddHours: Math.round(mtdBeadAddHours * 10) / 10,
+    mtdOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10,
     mtdStockingKg,
     mtdStockingLbs,
     mtdStockingTon,
@@ -213,7 +231,8 @@ export function calculateOhpaSummary(
   allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
   contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
-  dailyAdjustments: DailyAdjustmentRecord[] = []
+  dailyAdjustments: DailyAdjustmentRecord[] = [],
+  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 ): OhpaSummary {
   // 1. Separate Department 6320 (Retread) from Goodyear
   const gyActiveRecords = records.filter(r => !isGyDept6320(r));
@@ -249,6 +268,18 @@ export function calculateOhpaSummary(
   const totalOtHours = gyOtHours + contractorOtHours;
   const totalWorkingHours = gyTotalHours + contractorTotalHours + monthlyStaff.totalHours;
 
+  // 4.1 PDI Deduct & B-end (Bead) Addition for OPAH
+  const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const dateParts = cleanDate.split(/[/.-]/);
+  let targetDay = 14;
+  if (dateParts.length === 3) {
+    if (dateParts[2].length === 4) targetDay = parseInt(dateParts[0], 10) || 14;
+    else if (dateParts[0].length === 4) targetDay = parseInt(dateParts[2], 10) || 14;
+  }
+  const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[targetDay] || 0;
+  const beadAddHours = pdiBeadReport?.beadDailyTotals?.[targetDay] || 0;
+  const opahWorkingHours = Math.max(0, Math.round((totalWorkingHours - pdiDeductHours + beadAddHours) * 10) / 10);
+
   // 5. Tonnage & Pounds (lbs)
   const LBS_CONVERSION_FACTOR = 2.2046;
   const totalTonnageKg = tonnageReport?.total?.dailyTotalTonnage || 0;
@@ -256,9 +287,9 @@ export function calculateOhpaSummary(
   const totalTonnageLbs = Math.round(totalTonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
   const totalPallets = tonnageReport?.total?.dailyTotalPallets || 0;
 
-  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Total working hour (lbs/hr)
-  const overallOpahLbsPerHour = totalWorkingHours > 0
-    ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / totalWorkingHours) * 100) / 100
+  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Net OPAH Working Hours (lbs/hr)
+  const overallOpahLbsPerHour = opahWorkingHours > 0
+    ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / opahWorkingHours) * 100) / 100
     : 0;
 
   const gyOpahLbsPerHour = gyTotalHours > 0
@@ -942,7 +973,8 @@ export function calculateOhpaSummary(
     allScanPresets,
     contractorRecordsByDate,
     employeeMapping,
-    dailyAdjustments
+    dailyAdjustments,
+    pdiBeadReport
   );
 
   return {
@@ -951,6 +983,10 @@ export function calculateOhpaSummary(
     totalNormalHours: Math.round(totalNormalHours * 10) / 10,
     totalOtHours: Math.round(totalOtHours * 10) / 10,
     totalWorkingHours: Math.round(totalWorkingHours * 10) / 10,
+
+    pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
+    beadAddHours: Math.round(beadAddHours * 10) / 10,
+    opahWorkingHours: Math.round(opahWorkingHours * 10) / 10,
 
     gyEmployeesCount,
     gyNormalHours: Math.round(gyNormalHours * 10) / 10,

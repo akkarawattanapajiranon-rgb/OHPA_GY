@@ -112,7 +112,11 @@ export interface DailyMtdItem {
   contractorHours: number;
   monthlyHours: number;
   totalHours: number;
+  pdiDeductHours: number;
+  beadAddHours: number;
+  opahWorkingHours: number;
   cumulativeTotalHours: number;
+  cumulativeOpahWorkingHours?: number;
   stockingKg?: number;
   stockingLbs?: number;
 }
@@ -124,6 +128,9 @@ export interface MtdOhpaSummary {
   mtdGyHours: number;
   mtdContractorHours: number;
   mtdMonthlyHours: number;
+  mtdPdiDeductHours: number;
+  mtdBeadAddHours: number;
+  mtdOpahWorkingHours: number;
   mtdStockingKg: number;
   mtdStockingLbs: number;
   mtdStockingTon: number;
@@ -141,6 +148,11 @@ export interface OhpaSummary {
   totalNormalHours: number;
   totalOtHours: number;
   totalWorkingHours: number;
+
+  // PDI Deduct & B-end (Bead) Adjustment for OPAH
+  pdiDeductHours: number;
+  beadAddHours: number;
+  opahWorkingHours: number;
 
   // Goodyear Breakdown (excluding 6320)
   gyEmployeesCount: number;

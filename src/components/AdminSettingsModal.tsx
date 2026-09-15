@@ -9,8 +9,14 @@ import {
   AlertCircle,
   Database,
   Download,
-  Upload
+  Upload,
+  RefreshCw,
+  FileSpreadsheet,
+  Layers,
+  Sparkles
 } from 'lucide-react';
+import { PdiBeadReport } from '../data/default_pdi_bead';
+import { parsePdiBeadArrayBuffer } from '../utils/pdiBeadParser';
 
 interface AdminSettingsModalProps {
   isOpen: boolean;
@@ -19,6 +25,8 @@ interface AdminSettingsModalProps {
   currentPasswordHash: string;
   onUpdatePassword: (newPassword: string) => void;
   onExportBackup?: () => void;
+  pdiBeadReport?: PdiBeadReport;
+  onUpdatePdiBeadReport?: (newReport: PdiBeadReport) => void;
 }
 
 export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
@@ -27,12 +35,17 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
   onLogout,
   currentPasswordHash,
   onUpdatePassword,
-  onExportBackup
+  onExportBackup,
+  pdiBeadReport,
+  onUpdatePdiBeadReport
 }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const [isSyncingPdi, setIsSyncingPdi] = useState(false);
+  const [pdiStatusMsg, setPdiStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   if (!isOpen) return null;
 
@@ -63,12 +76,82 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
     setStatusMsg({ type: 'success', text: 'เปลี่ยนรหัสผ่านผู้ดูแลระบบสำเร็จแล้ว!' });
   };
 
+  // Sync PDI & Bead from network drive
+  const handleSyncPdiFromNetwork = async () => {
+    setIsSyncingPdi(true);
+    setPdiStatusMsg(null);
+    try {
+      const res = await fetch('/api/sync-pdi-bead');
+      const data = await res.json();
+      if (data.success && data.report) {
+        if (onUpdatePdiBeadReport) {
+          onUpdatePdiBeadReport(data.report);
+        }
+        setPdiStatusMsg({
+          type: 'success',
+          text: `ดึงข้อมูลสำเร็จจาก ${data.targetPath || 'ไดรฟ์ T:'}`
+        });
+      } else {
+        setPdiStatusMsg({
+          type: 'error',
+          text: data.message || 'ไม่สามารถอ่านไฟล์ OPAH hour PDI& B-ead.xlsx ได้'
+        });
+      }
+    } catch (err: any) {
+      setPdiStatusMsg({
+        type: 'error',
+        text: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์เพื่อซิงค์ไฟล์ได้ (หากใช้งานบนเว็บให้ใช้ปุ่มอัปโหลด)'
+      });
+    } finally {
+      setIsSyncingPdi(false);
+    }
+  };
+
+  // Upload Excel file directly from browser
+  const handleUploadPdiExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setPdiStatusMsg(null);
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const buffer = evt.target?.result as ArrayBuffer;
+        if (!buffer) throw new Error('ไม่สามารถอ่านไฟล์ได้');
+
+        const parsed = parsePdiBeadArrayBuffer(buffer);
+        if (onUpdatePdiBeadReport) {
+          onUpdatePdiBeadReport(parsed);
+        }
+        setPdiStatusMsg({
+          type: 'success',
+          text: `นำเข้าไฟล์ "${file.name}" สำเร็จ (${parsed.pdiPersons.length} คน PDI, รวม Bead)`
+        });
+      } catch (err: any) {
+        setPdiStatusMsg({
+          type: 'error',
+          text: `เกิดข้อผิดพลาดในการนำเข้า: ${err.message || 'รูปแบบไฟล์ไม่ถูกต้อง'}`
+        });
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = '';
+  };
+
+  // Calculate quick stats from pdiBeadReport
+  const totalPdiMonth = pdiBeadReport?.pdiDailyTotals
+    ? Object.values(pdiBeadReport.pdiDailyTotals).reduce((a, b) => a + b, 0)
+    : 0;
+  const totalBeadMonth = pdiBeadReport?.beadDailyTotals
+    ? Object.values(pdiBeadReport.beadDailyTotals).reduce((a, b) => a + b, 0)
+    : 0;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
+        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white shrink-0">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-amber-500/20 text-amber-400 rounded-xl">
               <Shield className="w-5 h-5" />
@@ -80,7 +163,7 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
                   กำลังใช้งาน
                 </span>
               </h2>
-              <p className="text-[11px] text-slate-400">จัดการความปลอดภัยและออกจากระบบ Admin</p>
+              <p className="text-[11px] text-slate-400">จัดการข้อมูล OPAH, ความปลอดภัย และระบบ</p>
             </div>
           </div>
           <button
@@ -92,9 +175,77 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
-          {/* Section 1: Change Password */}
+          {/* Section 1: PDI Deduct & B-end Bead Data Management */}
+          <div className="bg-blue-50/60 p-4 rounded-xl border border-blue-200/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+                <span>จัดการข้อมูลชั่วโมง PDI & B-end (Bead)</span>
+              </h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md border border-blue-200">
+                {pdiBeadReport?.monthYear || '09/2026'}
+              </span>
+            </div>
+
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              สูตรคิด OPAH: นำ ชม.รวมทั้งโรงงาน <strong className="text-rose-600">- PDI Deduct</strong> และ <strong className="text-emerald-600">+ B-end Bead Add</strong> ในแต่ละวัน
+            </p>
+
+            {/* Quick Status Stats */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2.5 bg-white rounded-lg border border-blue-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-600">🔻 รวม PDI ทั้งเดือน (Deduct):</span>
+                <strong className="text-rose-700 font-mono font-bold">-{totalPdiMonth.toFixed(1)} ชม.</strong>
+              </div>
+              <div className="p-2.5 bg-white rounded-lg border border-blue-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-600">🟢 รวม B-end ทั้งเดือน (Add):</span>
+                <strong className="text-emerald-700 font-mono font-bold">+{totalBeadMonth.toFixed(1)} ชม.</strong>
+              </div>
+            </div>
+
+            {pdiStatusMsg && (
+              <div className={`flex items-center gap-2 p-2.5 rounded-lg text-xs ${
+                pdiStatusMsg.type === 'success'
+                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                  : 'bg-rose-50 border border-rose-200 text-rose-800'
+              }`}>
+                {pdiStatusMsg.type === 'success' ? (
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                )}
+                <span>{pdiStatusMsg.text}</span>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleSyncPdiFromNetwork}
+                disabled={isSyncingPdi}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncingPdi ? 'animate-spin' : ''}`} />
+                <span>{isSyncingPdi ? 'กำลังซิงค์...' : '🔄 ซิงค์จากไดรฟ์ T:'}</span>
+              </button>
+
+              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer">
+                <Upload className="w-3.5 h-3.5 text-blue-600" />
+                <span>📤 อัปโหลดไฟล์ Excel (.xlsx)</span>
+                <input
+                  type="file"
+                  accept=".xlsx, .xls"
+                  onChange={handleUploadPdiExcel}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Section 2: Change Password */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-4">
             <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
               <Key className="w-4 h-4 text-indigo-600" />
@@ -168,7 +319,7 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
             </form>
           </div>
 
-          {/* Section 2: Session and Logout */}
+          {/* Section 3: Session and Logout */}
           <div className="flex items-center justify-between p-4 bg-rose-50/50 rounded-xl border border-rose-100">
             <div>
               <h4 className="text-xs font-bold text-rose-950 flex items-center gap-1.5 mb-0.5">
@@ -196,3 +347,4 @@ export const AdminSettingsModal: React.FC<AdminSettingsModalProps> = ({
     </div>
   );
 };
+

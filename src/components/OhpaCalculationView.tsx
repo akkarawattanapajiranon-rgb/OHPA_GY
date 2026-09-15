@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { ParsedShiftRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport } from '../types/ohpa';
+import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import {
   Calculator,
@@ -31,7 +32,8 @@ import {
   Wrench,
   Plane,
   Car,
-  Package
+  Package,
+  FileSpreadsheet
 } from 'lucide-react';
 
 interface OhpaCalculationViewProps {
@@ -43,6 +45,7 @@ interface OhpaCalculationViewProps {
   contractorRecordsByDate?: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>;
   employeeMapping?: Record<string, any>;
   dailyAdjustments?: any[];
+  pdiBeadReport?: PdiBeadReport;
 }
 
 export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
@@ -53,7 +56,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   allScanPresets = [],
   contractorRecordsByDate = {},
   employeeMapping = {},
-  dailyAdjustments = []
+  dailyAdjustments = [],
+  pdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 }) => {
   const [tonnageReport, setTonnageReport] = useState<StockingTonnageReport | null>(null);
   const [selectedPdValue, setSelectedPdValue] = useState<string>('');
@@ -61,6 +65,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'DAILY' | 'MTD'>('DAILY');
   const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
+  const [showPdiDetail, setShowPdiDetail] = useState<boolean>(false);
 
   const toggleArea = (key: string) => {
     setExpandedAreas(prev => ({ ...prev, [key]: !prev[key] }));
@@ -136,7 +141,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     fetchTonnageData(undefined, currentScanDateFormatted);
   };
 
-  // Compute Combined OPAH Summary (Goodyear + Contractor + Monthly staff, excluding 6320, plus MTD)
+  // Compute Combined OPAH Summary (Goodyear + Contractor + Monthly staff, excluding 6320, plus PDI & Bead adjustments)
   const ohpaSummary = useMemo(() => {
     const displayDate = tonnageReport?.productionDay || currentScanDateFormatted || '-';
     return calculateOhpaSummary(
@@ -147,9 +152,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       allScanPresets,
       contractorRecordsByDate,
       employeeMapping,
-      dailyAdjustments
+      dailyAdjustments,
+      pdiBeadReport
     );
-  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments]);
+  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport]);
 
   const handleExportExcel = () => {
     if (!tonnageReport) return;
@@ -166,17 +172,23 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': '🚫 พนักงานแผนก 6320 ที่ตัดออก (GY + Cont)', 'ค่า': `${ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน (${(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.)` },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น (รวมรายเดือน)', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงาน OT รวมทั้งสิ้น', 'ค่า': ohpaSummary.totalOtHours.toLocaleString() + ' ชม.' },
-      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานรวมทั้งโรงงานประจำวัน (Total Working Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
+      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Total Plant Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
+      { 'หัวข้อ (KPI)': '🔻 Development + PDI Hours (Deduct)', 'ค่า': `-${ohpaSummary.pdiDeductHours.toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '🟢 B-end / Bead Hours (Add)', 'ค่า': `+${ohpaSummary.beadAddHours.toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '⭐ ชั่วโมงทำงานสุทธิที่ใช้คิด OPAH (Net OPAH Hours)', 'ค่า': `${ohpaSummary.opahWorkingHours.toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (kg)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg' },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (lbs = kg x 2.2046)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
       { 'หัวข้อ (KPI)': 'ยอดตันประจำวัน (Metric Tons)', 'ค่า': ohpaSummary.totalTonnageTon + ' Tons' },
-      { 'หัวข้อ (KPI)': '⭐ Daily Overall Plant OPAH [(kg x 2.2046) / Total Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '⭐ Daily Overall Plant OPAH [(kg x 2.2046) / Net OPAH Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Goodyear', 'ค่า': ohpaSummary.gyOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Contractor', 'ค่า': ohpaSummary.contractorOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '----------------------------------------', 'ค่า': '----------------------------------------' },
       { 'หัวข้อ (KPI)': `📈 MTD สะสม (วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14})`, 'ค่า': `รวม ${ohpaSummary.mtd?.daysCount || 14} วัน` },
       { 'หัวข้อ (KPI)': '⭐ MTD Overall Plant OPAH', 'ค่า': (ohpaSummary.mtd?.mtdOpahLbsPerHour || 0) + ' lbs/ชม.' },
-      { 'หัวข้อ (KPI)': 'MTD ชั่วโมงทำงานรวมทั้งโรงงาน (Total Hours)', 'ค่า': (ohpaSummary.mtd?.mtdTotalHours.toLocaleString() || '0') + ' ชม.' },
+      { 'หัวข้อ (KPI)': 'MTD ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Base Hours)', 'ค่า': (ohpaSummary.mtd?.mtdTotalHours.toLocaleString() || '0') + ' ชม.' },
+      { 'หัวข้อ (KPI)': 'MTD 🔻 PDI Deduct สะสม', 'ค่า': `-${ohpaSummary.mtd?.mtdPdiDeductHours.toLocaleString() || '0'} ชม.` },
+      { 'หัวข้อ (KPI)': 'MTD 🟢 B-end Bead Add สะสม', 'ค่า': `+${ohpaSummary.mtd?.mtdBeadAddHours.toLocaleString() || '0'} ชม.` },
+      { 'หัวข้อ (KPI)': '⭐ MTD ชั่วโมงทำงานสุทธิคิด OPAH (Net OPAH Hours)', 'ค่า': `${ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString() || '0'} ชม.` },
       { 'หัวข้อ (KPI)': '- MTD ชม. Goodyear', 'ค่า': (ohpaSummary.mtd?.mtdGyHours.toLocaleString() || '0') + ' ชม.' },
       { 'หัวข้อ (KPI)': '- MTD ชม. Contractor', 'ค่า': (ohpaSummary.mtd?.mtdContractorHours.toLocaleString() || '0') + ' ชม.' },
       { 'หัวข้อ (KPI)': '- MTD ชม. พนักงานรายเดือน', 'ค่า': (ohpaSummary.mtd?.mtdMonthlyHours.toLocaleString() || '0') + ' ชม.' },
@@ -261,11 +273,31 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'Cont กำลังพล (คน)': item.contractorHeadcount,
         'Cont ชั่วโมง (ชม.)': item.contractorHours,
         'รายเดือน (ชม.)': item.monthlyHours,
-        'รวม ชม.วันนั้น (ชม.)': item.totalHours,
-        'ชม.สะสม MTD (ชม.)': item.cumulativeTotalHours
+        'ชม. รวมฐานโรงงาน (ชม.)': item.totalHours,
+        'PDI Deduct (ชม.)': -item.pdiDeductHours,
+        'B-end Bead Add (ชม.)': item.beadAddHours,
+        'ชม. สุทธิคิด OPAH (ชม.)': item.opahWorkingHours,
+        'ชม. สะสมสุทธิ MTD (ชม.)': item.cumulativeOpahWorkingHours || item.cumulativeTotalHours
       }));
       const ws5 = XLSX.utils.json_to_sheet(mtdData);
       XLSX.utils.book_append_sheet(wb, ws5, 'MTD_Daily_Breakdown');
+    }
+
+    // Sheet 6: PDI & B-end Breakdown
+    if (pdiBeadReport && pdiBeadReport.pdiPersons) {
+      const pdiSheetData = pdiBeadReport.pdiPersons.map(p => {
+        const rowObj: Record<string, any> = {
+          'ชื่อพนักงาน': p.name,
+          'กลุ่ม / ฝ่าย': p.group,
+          'ตำแหน่ง / หน้าที่': p.desc,
+        };
+        for (let d = 1; d <= 31; d++) {
+          rowObj[`วันที่ ${d}`] = p.dailyHours[d] || 0;
+        }
+        return rowObj;
+      });
+      const ws6 = XLSX.utils.json_to_sheet(pdiSheetData);
+      XLSX.utils.book_append_sheet(wb, ws6, 'PDI_Deduct_Persons');
     }
 
     XLSX.writeFile(wb, 'OPAH_CAL_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
@@ -293,9 +325,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <span className="bg-rose-100 text-rose-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-300/40">
                 ตัดแผนก 6320 ออก
               </span>
+              <span className="bg-amber-100 text-amber-900 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300/40">
+                🔻 PDI (-{ohpaSummary.pdiDeductHours}h) &nbsp; 🟢 Bead (+{ohpaSummary.beadAddHours}h)
+              </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Total Working Hours (ตัดแผนก 6320 ออกทั้ง GY + Cont และรวมพนักงานรายเดือน 62 คน)
+              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Net Working Hours [ฐานรวม - PDI ({ohpaSummary.pdiDeductHours} ชม.) + Bead ({ohpaSummary.beadAddHours} ชม.) = {ohpaSummary.opahWorkingHours} ชม.]
             </p>
           </div>
         </div>
@@ -332,6 +367,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <span>ซิงค์วันสแกน</span>
           </button>
 
+          <button
+            onClick={() => setShowPdiDetail(!showPdiDetail)}
+            className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-amber-200"
+            title="ดูรายละเอียด PDI Deduct & B-end Bead"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-amber-700" />
+            <span>{showPdiDetail ? 'ซ่อนตาราง PDI/Bead' : 'ดูตาราง PDI/Bead'}</span>
+          </button>
+
           <a
             href="https://10.124.129.34/l2web/datahost/all_areas/dpics.php?server=db_server&action=r06&mt=TBM&smt=TBM"
             target="_blank"
@@ -356,21 +400,140 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       {/* Logic Callout Banner */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-4 shadow-md border border-indigo-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-indigo-500/20 rounded-xl border border-indigo-400/30 text-indigo-300">
+          <div className="p-2 bg-indigo-500/20 rounded-xl border border-indigo-400/30 text-indigo-300 shrink-0">
             <Info className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold text-amber-300 block">เงื่อนไขการคำนวณ OPAH พิเศษ:</span>
-            <span className="text-slate-300">
-              1. <strong>ตัดแผนก 6320 (Retread)</strong> ออกทั้ง GY ({ohpaSummary.excluded6320GyCount} คน) และ Cont ({ohpaSummary.excluded6320ContCount} คน) &nbsp;|&nbsp;
-              2. <strong>เพิ่มพนักงานรายเดือน 62 คน</strong> ({ohpaSummary.monthlyStaff.dayName} คิด {ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน = +{ohpaSummary.monthlyStaff.totalHours} ชม.)
-            </span>
+            <span className="font-bold text-amber-300 block mb-0.5">สูตรและเงื่อนไขการคำนวณ OPAH:</span>
+            <div className="text-slate-300 space-y-0.5">
+              <span>
+                1. <strong>ตัดแผนก 6320 (Retread)</strong> ออกทั้ง GY ({ohpaSummary.excluded6320GyCount} คน) และ Cont ({ohpaSummary.excluded6320ContCount} คน) &nbsp;|&nbsp;
+                2. <strong>รวมพนักงานรายเดือน 62 คน</strong> ({ohpaSummary.monthlyStaff.dayName} คิด {ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน = +{ohpaSummary.monthlyStaff.totalHours} ชม.)
+              </span>
+              <span className="block text-slate-200">
+                3. <strong className="text-rose-400">🔻 หัก Development + PDI Hour (Deduct):</strong> -{ohpaSummary.pdiDeductHours} ชม. &nbsp;|&nbsp;
+                4. <strong className="text-emerald-400">🟢 รวม B-end / Bead (Include):</strong> +{ohpaSummary.beadAddHours} ชม.
+              </span>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl text-[11px] font-mono shrink-0">
-          <span>ตัด 6320 ออก: <strong>-{(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.</strong></span>
+        <div className="flex flex-col items-end gap-1 bg-white/10 p-2.5 px-3.5 rounded-xl text-[11px] font-mono shrink-0 border border-white/10">
+          <div className="text-slate-300">
+            ฐานรวม: <strong>{ohpaSummary.totalWorkingHours} ชม.</strong> - PDI <strong>({ohpaSummary.pdiDeductHours})</strong> + Bead <strong>(+{ohpaSummary.beadAddHours})</strong>
+          </div>
+          <div className="text-emerald-300 font-bold text-xs">
+            = ชม. สุทธิคิด OPAH: <span className="text-amber-300 text-sm">{ohpaSummary.opahWorkingHours}</span> ชม.
+          </div>
         </div>
       </div>
+
+      {/* Collapsible PDI & B-end Bead Inspection Card */}
+      {showPdiDetail && pdiBeadReport && (
+        <div className="bg-amber-50/50 rounded-3xl p-5 border border-amber-200/80 shadow-xs space-y-3 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-amber-700" />
+              <div>
+                <h3 className="text-sm font-bold text-amber-950">
+                  รายละเอียดชั่วโมง PDI Deduct & B-end Bead ประจำเดือน ({pdiBeadReport.monthYear || '09/2026'})
+                </h3>
+                <p className="text-[11px] text-amber-800">
+                  ไฟล์ต้นฉบับ: <code>OPAH hour PDI& B-ead.xlsx</code> (Development + PDI หักออก / B-end นำมาบวกเพิ่ม)
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowPdiDetail(false)}
+              className="text-xs text-amber-800 hover:text-amber-950 font-bold cursor-pointer underline"
+            >
+              ปิดตาราง
+            </button>
+          </div>
+
+          {/* PDI Engineers Table */}
+          <div className="overflow-x-auto rounded-xl border border-amber-200 bg-white shadow-2xs">
+            <table className="w-full text-left text-xs border-collapse font-mono">
+              <thead>
+                <tr className="bg-amber-100/80 text-amber-950 font-bold text-[11px]">
+                  <th className="py-2 px-3 font-sans min-w-[120px]">วิศวกร PDI / Dev</th>
+                  <th className="py-2 px-2 font-sans min-w-[120px]">กลุ่ม / สังกัด</th>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                    <th
+                      key={day}
+                      className={`py-2 px-1 text-center w-8 ${
+                        day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-amber-300 text-slate-950 font-black' : ''
+                      }`}
+                    >
+                      {day}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-amber-100 font-sans text-xs">
+                {(pdiBeadReport.pdiPersons || []).map((person, idx) => (
+                  <tr key={person.name + idx} className="hover:bg-amber-50/40">
+                    <td className="py-1.5 px-3 font-bold text-slate-900">{person.name}</td>
+                    <td className="py-1.5 px-2 text-[11px] text-slate-500">{person.desc || person.group}</td>
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                      const h = person.dailyHours[day] || 0;
+                      return (
+                        <td
+                          key={day}
+                          className={`py-1.5 px-1 text-center font-mono ${
+                            day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-amber-50 font-bold text-rose-700' : ''
+                          } ${h > 0 ? 'text-rose-600 font-bold' : 'text-slate-300'}`}
+                        >
+                          {h > 0 ? h : '-'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+
+                {/* Total PDI Deduct Row */}
+                <tr className="bg-rose-50 text-rose-950 font-bold border-t-2 border-rose-200">
+                  <td className="py-2 px-3 font-bold text-rose-900" colSpan={2}>
+                    🔻 รวม PDI Deduct ประจำวัน (ชม.)
+                  </td>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                    const total = pdiBeadReport.pdiDailyTotals[day] || 0;
+                    return (
+                      <td
+                        key={day}
+                        className={`py-2 px-1 text-center font-mono font-black ${
+                          day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-rose-200 text-rose-950 text-sm' : ''
+                        } ${total > 0 ? 'text-rose-700' : 'text-slate-300'}`}
+                      >
+                        {total > 0 ? `-${total}` : '-'}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* Total B-end Bead Add Row */}
+                <tr className="bg-emerald-50 text-emerald-950 font-bold border-t border-emerald-200">
+                  <td className="py-2 px-3 font-bold text-emerald-900" colSpan={2}>
+                    🟢 รวม B-end / Bead Add ประจำวัน (ชม.)
+                  </td>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                    const total = pdiBeadReport.beadDailyTotals[day] || 0;
+                    return (
+                      <td
+                        key={day}
+                        className={`py-2 px-1 text-center font-mono font-black ${
+                          day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-emerald-200 text-emerald-950 text-sm' : ''
+                        } ${total > 0 ? 'text-emerald-700' : 'text-slate-300'}`}
+                      >
+                        {total > 0 ? `+${total.toFixed(0)}` : '-'}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {fetchError && (
         <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl text-xs flex items-center gap-2.5">
@@ -450,7 +613,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <span className="text-sm font-bold text-blue-200">lbs / ชม.</span>
               </div>
               <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">
-                สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม. = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
+                สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม.
               </p>
             </div>
             <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-blue-100 z-10">
@@ -459,11 +622,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             </div>
           </div>
 
-          {/* Card 2: Daily Total Working Hours */}
+          {/* Card 2: Daily Net Working Hours */}
           <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                ชม.ทำงานรวมทั้งโรงงาน (DAILY TOTAL)
+                ชม.ทำงานสุทธิคิด OPAH (NET OPAH HOURS)
               </span>
               <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
                 <Clock className="w-5 h-5" />
@@ -472,42 +635,38 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <div className="my-3">
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-                  {ohpaSummary.totalWorkingHours.toLocaleString()}
+                  {ohpaSummary.opahWorkingHours.toLocaleString()}
                 </span>
                 <span className="text-sm font-bold text-slate-500">ชม.</span>
+                <span className="text-xs text-slate-400">
+                  (จากฐาน {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.)
+                </span>
+              </div>
+              {/* Formula calculation badge */}
+              <div className="grid grid-cols-2 gap-1.5 mt-2.5 pt-2 border-t border-slate-100 text-xs">
+                <div className="bg-rose-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-rose-700 font-bold text-[11px]">🔻 PDI Deduct:</span>
+                  <span className="font-mono font-black text-rose-800">-{ohpaSummary.pdiDeductHours} ชม.</span>
+                </div>
+                <div className="bg-emerald-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-emerald-700 font-bold text-[11px]">🟢 Bead Add:</span>
+                  <span className="font-mono font-black text-emerald-800">+{ohpaSummary.beadAddHours} ชม.</span>
+                </div>
               </div>
               {/* 3 Breakdown Cards: GY, Contractor, Monthly */}
-              <div className="grid grid-cols-3 gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-xs">
-                <div className="bg-blue-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-blue-900 flex items-center gap-1 text-[11px]">
-                    <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
-                    GY ({ohpaSummary.gyEmployeesCount} คน):
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.gyTotalHours.toLocaleString()} ชม.
-                  </span>
+              <div className="grid grid-cols-3 gap-1.5 mt-1.5 text-xs">
+                <div className="bg-blue-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-blue-900 text-[10px] block">GY: {ohpaSummary.gyTotalHours.toLocaleString()}h</span>
                 </div>
-                <div className="bg-teal-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-teal-900 flex items-center gap-1 text-[11px]">
-                    <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
-                    Cont ({ohpaSummary.contractorEmployeesCount} คน):
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.contractorTotalHours.toLocaleString()} ชม.
-                  </span>
+                <div className="bg-teal-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-teal-900 text-[10px] block">Cont: {ohpaSummary.contractorTotalHours.toLocaleString()}h</span>
                 </div>
-                <div className="bg-purple-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-purple-900 flex items-center gap-1 text-[11px]">
-                    <Briefcase className="w-3 h-3 text-purple-600 shrink-0" />
-                    รายเดือน ({ohpaSummary.monthlyStaff.count} คน):
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.monthlyStaff.totalHours.toLocaleString()} ชม.
-                  </span>
+                <div className="bg-purple-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-purple-900 text-[10px] block">รายเดือน: {ohpaSummary.monthlyStaff.totalHours.toLocaleString()}h</span>
                 </div>
               </div>
             </div>
-            <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span>กำลังพลรวม: <strong>{ohpaSummary.totalEmployeesCount.toLocaleString()} คน</strong></span>
               <span className="text-rose-600 font-semibold text-[11px]">
                 (ตัด 6320 ออก {ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน)
@@ -568,7 +727,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <span className="text-sm font-bold text-indigo-200">lbs / ชม.</span>
               </div>
               <p className="text-xs text-indigo-100/90 mt-2 leading-relaxed">
-                สูตร: ({ohpaSummary.mtd?.mtdStockingKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.mtd?.mtdTotalHours.toLocaleString()} ชม. = <strong>{ohpaSummary.mtd?.mtdStockingLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.mtd?.mtdTotalHours.toLocaleString()} ชม.
+                สูตร: ({ohpaSummary.mtd?.mtdStockingKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.mtd?.mtdStockingLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม.
               </p>
             </div>
             <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-indigo-100 z-10">
@@ -581,7 +740,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <div className="bg-white p-6 rounded-3xl border border-indigo-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
-                ชั่วโมงทำงานสะสม MTD (1 - {ohpaSummary.mtd?.daysCount || 14}/09)
+                ชม.ทำงานสุทธิสะสม MTD (NET OPAH HOURS)
               </span>
               <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
                 <Clock className="w-5 h-5" />
@@ -590,42 +749,38 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <div className="my-3">
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl lg:text-5xl font-black text-indigo-950 tracking-tight">
-                  {ohpaSummary.mtd?.mtdTotalHours.toLocaleString() || '0'}
+                  {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString() || '0'}
                 </span>
                 <span className="text-sm font-bold text-slate-500">ชม.</span>
+                <span className="text-xs text-slate-400">
+                  (จากฐาน {ohpaSummary.mtd?.mtdTotalHours.toLocaleString()} ชม.)
+                </span>
+              </div>
+              {/* Formula calculation badge for MTD */}
+              <div className="grid grid-cols-2 gap-1.5 mt-2.5 pt-2 border-t border-slate-100 text-xs">
+                <div className="bg-rose-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-rose-700 font-bold text-[11px]">🔻 MTD PDI Deduct:</span>
+                  <span className="font-mono font-black text-rose-800">-{ohpaSummary.mtd?.mtdPdiDeductHours.toLocaleString()} ชม.</span>
+                </div>
+                <div className="bg-emerald-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-emerald-700 font-bold text-[11px]">🟢 MTD Bead Add:</span>
+                  <span className="font-mono font-black text-emerald-800">+{ohpaSummary.mtd?.mtdBeadAddHours.toLocaleString()} ชม.</span>
+                </div>
               </div>
               {/* 3 Breakdown Cards: GY, Contractor, Monthly */}
-              <div className="grid grid-cols-3 gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-xs">
-                <div className="bg-blue-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-blue-900 flex items-center gap-1 text-[11px]">
-                    <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
-                    GY สะสม:
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.mtd?.mtdGyHours.toLocaleString()} ชม.
-                  </span>
+              <div className="grid grid-cols-3 gap-1.5 mt-1.5 text-xs">
+                <div className="bg-blue-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-blue-900 text-[10px] block">GY: {ohpaSummary.mtd?.mtdGyHours.toLocaleString()}h</span>
                 </div>
-                <div className="bg-teal-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-teal-900 flex items-center gap-1 text-[11px]">
-                    <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
-                    Cont สะสม:
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.mtd?.mtdContractorHours.toLocaleString()} ชม.
-                  </span>
+                <div className="bg-teal-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-teal-900 text-[10px] block">Cont: {ohpaSummary.mtd?.mtdContractorHours.toLocaleString()}h</span>
                 </div>
-                <div className="bg-purple-50/70 p-2 rounded-xl">
-                  <span className="font-bold text-purple-900 flex items-center gap-1 text-[11px]">
-                    <Briefcase className="w-3 h-3 text-purple-600 shrink-0" />
-                    รายเดือน สะสม:
-                  </span>
-                  <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
-                    {ohpaSummary.mtd?.mtdMonthlyHours.toLocaleString()} ชม.
-                  </span>
+                <div className="bg-purple-50/70 p-1.5 px-2 rounded-lg">
+                  <span className="font-bold text-purple-900 text-[10px] block">รายเดือน: {ohpaSummary.mtd?.mtdMonthlyHours.toLocaleString()}h</span>
                 </div>
               </div>
             </div>
-            <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span>รวมสะสม: <strong>{ohpaSummary.mtd?.daysCount} วันทำการ</strong></span>
               <span className="text-emerald-700 font-bold text-[11px]">
                 (ตัดแผนก 6320 ออกทุกวัน)
@@ -660,6 +815,124 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 {Math.round((ohpaSummary.mtd?.mtdStockingKg || 0) / (ohpaSummary.mtd?.daysCount || 1)).toLocaleString()} kg / วัน
               </span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MTD Daily Breakdown Table (Visible in MTD mode) */}
+      {viewMode === 'MTD' && ohpaSummary.mtd?.dailyItems && (
+        <div className="bg-white rounded-3xl border border-indigo-200 shadow-xs overflow-hidden">
+          <div className="px-6 py-4 bg-gradient-to-r from-indigo-50/80 to-purple-50/50 border-b border-indigo-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-indigo-600 text-white rounded-xl">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-slate-900">
+                  ตารางสรุปชั่วโมงทำงานและยอดสะสมรายวัน (MTD Daily Breakdown: วันที่ 1 ถึง {ohpaSummary.mtd.daysCount}/09/2026)
+                </h3>
+                <p className="text-xs text-slate-500">
+                  รวม Goodyear + Contractor + รายเดือน 62 คน หัก PDI (-{ohpaSummary.mtd.mtdPdiDeductHours}h) และบวก Bead (+{ohpaSummary.mtd.mtdBeadAddHours}h)
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-indigo-700 bg-white px-3 py-1 rounded-lg border border-indigo-200">
+              รวมสะสม {ohpaSummary.mtd.daysCount} วัน
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-900 text-white border-b border-slate-700 font-bold">
+                  <th className="py-3 px-3 text-center w-12 border-r border-slate-800">วันที่</th>
+                  <th className="py-3 px-3 text-center border-r border-slate-800">วันในสัปดาห์</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800">GY (คน / ชม.)</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800">Cont (คน / ชม.)</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800">รายเดือน (ชม.)</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 bg-slate-800">ชม.ฐานรวม</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 text-rose-300 bg-rose-950/60">🔻 PDI Deduct</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 text-emerald-300 bg-emerald-950/60">🟢 Bead Add</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 text-amber-300 bg-amber-950/70 font-black">⭐ ชม.สุทธิ OPAH</th>
+                  <th className="py-3 px-3 text-right bg-indigo-950 text-indigo-200 font-black">ชม.สะสม MTD</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-sans">
+                {ohpaSummary.mtd.dailyItems.map((item) => {
+                  const isCurrentDay = item.day === (ohpaSummary.mtd?.daysCount || 14);
+                  return (
+                    <tr
+                      key={item.day}
+                      className={`hover:bg-slate-50/80 transition-colors ${
+                        isCurrentDay ? 'bg-indigo-50/40 font-bold' : ''
+                      }`}
+                    >
+                      <td className="py-2.5 px-3 text-center font-mono font-bold text-slate-800 border-r border-slate-100">
+                        {item.day}
+                      </td>
+                      <td className="py-2.5 px-3 text-center text-slate-600 border-r border-slate-100">
+                        {item.dayName}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono text-slate-700 border-r border-slate-100">
+                        <span className="text-[11px] text-slate-400">({item.gyHeadcount})</span> {item.gyHours.toLocaleString()} ชม.
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono text-slate-700 border-r border-slate-100">
+                        <span className="text-[11px] text-slate-400">({item.contractorHeadcount})</span> {item.contractorHours.toLocaleString()} ชม.
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono text-purple-700 border-r border-slate-100">
+                        {item.monthlyHours.toLocaleString()} ชม.
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900 border-r border-slate-100 bg-slate-50/60">
+                        {item.totalHours.toLocaleString()} ชม.
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-rose-700 border-r border-slate-100 bg-rose-50/30">
+                        {item.pdiDeductHours > 0 ? `-${item.pdiDeductHours} ชม.` : '-'}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-700 border-r border-slate-100 bg-emerald-50/30">
+                        {item.beadAddHours > 0 ? `+${item.beadAddHours.toFixed(1)} ชม.` : '-'}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-black text-amber-900 border-r border-slate-100 bg-amber-50/50">
+                        {item.opahWorkingHours.toLocaleString()} ชม.
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-black text-indigo-900 bg-indigo-50/60">
+                        {(item.cumulativeOpahWorkingHours || item.cumulativeTotalHours).toLocaleString()} ชม.
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="bg-slate-900 text-white font-black text-xs border-t-2 border-slate-700">
+                  <td className="py-3 px-3 text-center" colSpan={2}>
+                    รวม MTD สะสม {ohpaSummary.mtd.daysCount} วัน
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-blue-300">
+                    {ohpaSummary.mtd.mtdGyHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-teal-300">
+                    {ohpaSummary.mtd.mtdContractorHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-purple-300">
+                    {ohpaSummary.mtd.mtdMonthlyHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-slate-300 bg-slate-800">
+                    {ohpaSummary.mtd.mtdTotalHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-rose-300 bg-rose-950">
+                    -{ohpaSummary.mtd.mtdPdiDeductHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-emerald-300 bg-emerald-950">
+                    +{ohpaSummary.mtd.mtdBeadAddHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-amber-300 bg-amber-950 font-black text-sm">
+                    {ohpaSummary.mtd.mtdOpahWorkingHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-emerald-400 bg-indigo-950 font-black text-sm">
+                    {ohpaSummary.mtd.mtdOpahWorkingHours.toLocaleString()} ชม.
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
       )}

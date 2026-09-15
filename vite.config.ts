@@ -297,6 +297,194 @@ function scanFolderApiPlugin(): Plugin {
         }
       });
 
+      // API to sync PDI and B-end Bead data from T: drive Excel (OPAH hour PDI& B-ead.xlsx)
+      server.middlewares.use('/api/sync-pdi-bead', (req, res) => {
+        try {
+          const networkPath = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\OPAH hour PDI& B-ead.xlsx';
+          const localPath = path.resolve(__dirname, 'OPAH hour PDI& B-ead.xlsx');
+          
+          let targetPath = '';
+          if (fs.existsSync(networkPath)) {
+            targetPath = networkPath;
+          } else if (fs.existsSync(localPath)) {
+            targetPath = localPath;
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              success: false,
+              message: 'ไม่พบไฟล์ OPAH hour PDI& B-ead.xlsx ทั้งบนไดรฟ์ T: และเครื่อง'
+            }));
+            return;
+          }
+
+          const stat = fs.statSync(targetPath);
+          const wb = XLSX.readFile(targetPath);
+          const wsName = wb.SheetNames[0];
+          const ws = wb.Sheets[wsName];
+          const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+          const pdiPersons: any[] = [];
+          const pdiDailyTotals: Record<number, number> = {};
+          const beadDailyTotals: Record<number, number> = {};
+
+          for (let d = 1; d <= 31; d++) {
+            pdiDailyTotals[d] = 0;
+            beadDailyTotals[d] = 0;
+          }
+
+          let dayColMap: Record<number, number> = {};
+          for (let r = 0; r < Math.min(data.length, 5); r++) {
+            const row = data[r] || [];
+            let foundDays = 0;
+            const tempMap: Record<number, number> = {};
+            for (let c = 0; c < row.length; c++) {
+              const val = parseInt(String(row[c]).trim(), 10);
+              if (!isNaN(val) && val >= 1 && val <= 31) {
+                tempMap[c] = val;
+                foundDays++;
+              }
+            }
+            if (foundDays >= 10) {
+              dayColMap = tempMap;
+              break;
+            }
+          }
+
+          if (Object.keys(dayColMap).length === 0) {
+            for (let d = 1; d <= 31; d++) {
+              dayColMap[d + 2] = d;
+            }
+          }
+
+          for (let r = 0; r < data.length; r++) {
+            const row = data[r] || [];
+            const textAll = row.map(cell => String(cell || '')).join(' ').toLowerCase();
+
+            const col0 = String(row[0] || '').trim();
+            const col1 = String(row[1] || '').trim();
+            const col2 = String(row[2] || '').trim();
+
+            const isPdiPerson = (
+              col0.toLowerCase().includes('somrudee') ||
+              col0.toLowerCase().includes('damrongsak') ||
+              col0.toLowerCase().includes('kitipan') ||
+              col0.toLowerCase().includes('sangpian') ||
+              col0.toLowerCase().includes('vattana') ||
+              col1.toLowerCase().includes('npi') ||
+              col2.toLowerCase().includes('tire dev')
+            );
+
+            if (isPdiPerson) {
+              const dailyHours: Record<number, number> = {};
+              for (let d = 1; d <= 31; d++) dailyHours[d] = 0;
+
+              for (const [cStr, d] of Object.entries(dayColMap)) {
+                const c = Number(cStr);
+                const val = parseFloat(String(row[c] || '0').trim());
+                if (!isNaN(val)) {
+                  dailyHours[d] = val;
+                }
+              }
+
+              pdiPersons.push({
+                name: col0 || `Person ${pdiPersons.length + 1}`,
+                group: col1 || '',
+                desc: col2 || '',
+                dailyHours
+              });
+            }
+
+            const isPdiTotalRow = (
+              (textAll.includes('total') || textAll.includes('sum') || textAll.includes('pdi')) &&
+              (textAll.includes('pdi') || textAll.includes('deduct') || r === 6) &&
+              !textAll.includes('b-end') && !textAll.includes('bead')
+            );
+
+            if (isPdiTotalRow) {
+              for (const [cStr, d] of Object.entries(dayColMap)) {
+                const c = Number(cStr);
+                const val = parseFloat(String(row[c] || '0').trim());
+                if (!isNaN(val) && val > 0) {
+                  pdiDailyTotals[d] = val;
+                }
+              }
+            }
+
+            const isBeadRow = (
+              textAll.includes('b-end') ||
+              textAll.includes('b-ead') ||
+              textAll.includes('bead') ||
+              col0.toLowerCase().includes('b-end') ||
+              col0.toLowerCase().includes('b-ead') ||
+              r === 10
+            );
+
+            if (isBeadRow) {
+              for (const [cStr, d] of Object.entries(dayColMap)) {
+                const c = Number(cStr);
+                const val = parseFloat(String(row[c] || '0').trim());
+                if (!isNaN(val) && val > 0) {
+                  beadDailyTotals[d] = Math.round(val * 100) / 100;
+                }
+              }
+            }
+          }
+
+          if (pdiPersons.length > 0) {
+            const hasAnyPdiTotal = Object.values(pdiDailyTotals).some(v => v > 0);
+            if (!hasAnyPdiTotal) {
+              for (let d = 1; d <= 31; d++) {
+                pdiDailyTotals[d] = pdiPersons.reduce((sum, p) => sum + (p.dailyHours[d] || 0), 0);
+              }
+            }
+          }
+
+          const result = {
+            monthYear: '09/2026',
+            pdiPersons,
+            pdiDailyTotals,
+            beadDailyTotals,
+            updatedAt: new Date().toISOString()
+          };
+
+          const codeContent = `export interface PdiPersonRecord {
+  name: string;
+  group: string;
+  desc: string;
+  dailyHours: Record<number, number>;
+}
+
+export interface PdiBeadReport {
+  monthYear: string;
+  pdiPersons: PdiPersonRecord[];
+  pdiDailyTotals: Record<number, number>;
+  beadDailyTotals: Record<number, number>;
+  updatedAt?: string;
+}
+
+export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, null, 2)};
+`;
+          try {
+            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_pdi_bead.ts'), codeContent, 'utf8');
+          } catch (wErr) {}
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: true,
+            targetPath,
+            modifiedTime: stat.mtime.toISOString(),
+            report: result
+          }));
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: false,
+            message: err.message || 'เกิดข้อผิดพลาดในการอ่านไฟล์ OPAH hour PDI& B-ead.xlsx'
+          }));
+        }
+      });
+
       // API to fetch Stocking Tonnage Report 55012 from 10.124.129.34
       server.middlewares.use('/api/stocking-tonnage', (req, res) => {
         const urlObj = new URL(req.url || '', 'http://localhost');
