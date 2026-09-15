@@ -1180,36 +1180,104 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 );
               })}
 
-              {/* Grand Total Row */}
-              <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-800 text-sm">
-                <td className="py-3.5 px-4 flex items-center gap-2 text-white">
-                  <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
-                    TOTAL
+              {/* Row 1: OPAH Active Total (7 Production Areas, excluding 6320) */}
+              <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-700 text-sm">
+                <td className="py-3 px-4 flex items-center gap-2 text-white">
+                  <div className="p-1 rounded-md bg-emerald-500 text-slate-950 font-black text-xs">
+                    OPAH
                   </div>
                   <div>
-                    <span>ยอดรวมชั่วโมงคำนวณ OPAH (Total Plant Working Hours)</span>
+                    <span className="text-emerald-300 font-bold">ยอดรวม 7 พื้นที่คำนวณ OPAH (Active Working Hours)</span>
                     <span className="text-[11px] font-normal text-slate-400 block">
-                      (รวม GY + Cont + รายเดือน 62 คน โดยตัดแผนก 6320 ออกตามสูตรมาตรฐาน)
+                      (รวม 7 พื้นที่การผลิต GY + Cont + รายเดือน 62 คน โดยตัดแผนก 6320 ออก)
                     </span>
                   </div>
                 </td>
-                <td className="py-3.5 px-3 text-center text-slate-300 font-mono">
-                  750 คน
+                <td className="py-3 px-3 text-center text-slate-300 font-mono text-xs">
+                  679 คน
                 </td>
-                <td className="py-3.5 px-4 text-center text-white font-mono">
+                <td className="py-3 px-4 text-center text-white font-mono font-bold">
                   {ohpaSummary.totalEmployeesCount} คน
                 </td>
-                <td className="py-3.5 px-4 text-right text-slate-200 font-mono bg-slate-800/80">
+                <td className="py-3 px-4 text-right text-slate-200 font-mono bg-slate-800/80">
                   {ohpaSummary.totalNormalHours.toLocaleString()} ชม.
                 </td>
-                <td className="py-3.5 px-4 text-right text-amber-300 font-mono bg-amber-950/80">
+                <td className="py-3 px-4 text-right text-amber-300 font-mono bg-amber-950/80">
                   +{ohpaSummary.totalOtHours.toLocaleString()} ชม.
                 </td>
-                <td className="py-3.5 px-4 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
+                <td className="py-3 px-4 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
                   {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
                 </td>
-                <td className="py-3.5 px-4 text-right text-emerald-400 font-mono text-xs">
+                <td className="py-3 px-4 text-right text-emerald-400 font-mono text-xs font-black">
                   100.0%
+                </td>
+              </tr>
+
+              {/* Row 2: Retread 6320 Excluded Stats */}
+              {(ohpaSummary.excluded6320GyCount > 0 || ohpaSummary.excluded6320ContCount > 0) && (
+                <tr className="bg-rose-950/80 text-rose-200 font-bold border-t border-rose-800/50 text-xs">
+                  <td className="py-2.5 px-4 flex items-center gap-2">
+                    <div className="p-0.5 px-1.5 rounded bg-rose-500 text-white font-black text-[10px]">
+                      EXCLUDED
+                    </div>
+                    <div>
+                      <span>🚫 ส่วนงานหล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH)</span>
+                      <span className="text-[10px] text-rose-300/80 block">
+                        (GY {ohpaSummary.excluded6320GyCount} คน: {ohpaSummary.excluded6320GyHours} ชม. | Cont {ohpaSummary.excluded6320ContCount} คน: {ohpaSummary.excluded6320ContHours} ชม.)
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-2.5 px-3 text-center text-rose-300 font-mono">
+                    71 คน
+                  </td>
+                  <td className="py-2.5 px-4 text-center font-mono">
+                    {ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน
+                  </td>
+                  <td className="py-2.5 px-4 text-right font-mono">
+                    {Math.round((ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.normalHours || 0) * 10) / 10} ชม.
+                  </td>
+                  <td className="py-2.5 px-4 text-right font-mono text-amber-300">
+                    +{Math.round((ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.otHours || 0) * 10) / 10} ชม.
+                  </td>
+                  <td className="py-2.5 px-4 text-right font-mono text-rose-300 font-black">
+                    {Math.round((ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours) * 10) / 10} ชม.
+                  </td>
+                  <td className="py-2.5 px-4 text-right text-rose-400 font-mono text-[11px]">
+                    (ไม่นับใน OPAH)
+                  </td>
+                </tr>
+              )}
+
+              {/* Row 3: All-Plant Grand Total (All 8 Areas, including 6320) */}
+              <tr className="bg-slate-950 text-white font-black border-t-2 border-slate-800 text-xs">
+                <td className="py-3 px-4 flex items-center gap-2">
+                  <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
+                    GRAND TOTAL
+                  </div>
+                  <div>
+                    <span>ยอดรวมทั้งสิ้นทั้งโรงงาน (รวมทุกแผนก 100%)</span>
+                    <span className="text-[10px] font-normal text-slate-400 block">
+                      (รวม 8 พื้นที่: 7 พื้นที่หลัก + แผนก 6320 หล่อดอกยาง)
+                    </span>
+                  </div>
+                </td>
+                <td className="py-3 px-3 text-center text-slate-300 font-mono">
+                  750 คน
+                </td>
+                <td className="py-3 px-4 text-center text-amber-300 font-mono font-black">
+                  {ohpaSummary.totalEmployeesCount + ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน
+                </td>
+                <td className="py-3 px-4 text-right text-slate-300 font-mono">
+                  {Math.round((ohpaSummary.totalNormalHours + (ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.normalHours || 0)) * 10) / 10} ชม.
+                </td>
+                <td className="py-3 px-4 text-right text-amber-300 font-mono">
+                  +{Math.round((ohpaSummary.totalOtHours + (ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.otHours || 0)) * 10) / 10} ชม.
+                </td>
+                <td className="py-3 px-4 text-right text-amber-300 font-mono font-black text-sm">
+                  {Math.round((ohpaSummary.totalWorkingHours + ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours) * 10) / 10} ชม.
+                </td>
+                <td className="py-3 px-4 text-right text-slate-400 font-mono">
+                  -
                 </td>
               </tr>
             </tbody>

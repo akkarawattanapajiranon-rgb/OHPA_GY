@@ -6,9 +6,7 @@ import { processScanRecords } from './parser';
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
   const cc = (r.costCenter || '').trim();
   const d = (r.dept || '').trim();
-  const cat = (r.category || '').trim().toLowerCase();
-  const m = (r.machine || '').trim().toLowerCase();
-  return cc === '6320' || d.includes('6320') || cat === 'retread' || m.includes('buffing') || m.includes('retread');
+  return cc === '6320' || d.startsWith('6320') || d.includes('6320');
 }
 
 export function isContDept6320(r: ContractorScanRecord): boolean {
