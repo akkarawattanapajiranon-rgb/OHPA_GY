@@ -7,6 +7,7 @@ import { DailyAdjustmentModal } from './components/DailyAdjustmentModal';
 
 import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset } from './data/default_scan_record';
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
+import defaultAdjustmentsRaw from './data/default_adjustments.json';
 import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
 import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
 import {
@@ -29,9 +30,13 @@ export default function App() {
   const [dailyAdjustments, setDailyAdjustments] = useState<DailyAdjustmentRecord[]>(() => {
     try {
       const saved = localStorage.getItem('ohpa_daily_adjustments');
-      return saved ? JSON.parse(saved) : [];
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      return (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
     } catch {
-      return [];
+      return (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
     }
   });
 

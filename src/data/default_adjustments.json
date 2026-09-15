@@ -1,0 +1,96 @@
+[
+  {
+    "id": "adj-0-03061",
+    "dateStr": "12/09/2026",
+    "empId": "03061",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-1-10199",
+    "dateStr": "12/09/2026",
+    "empId": "10199",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-2-12093",
+    "dateStr": "12/09/2026",
+    "empId": "12093",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-3-12141",
+    "dateStr": "12/09/2026",
+    "empId": "12141",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-4-12187",
+    "dateStr": "12/09/2026",
+    "empId": "12187",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-5-12341",
+    "dateStr": "12/09/2026",
+    "empId": "12341",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-6-12833",
+    "dateStr": "12/09/2026",
+    "empId": "12833",
+    "customStartTime": "11:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 11:00 - 19:00"
+  },
+  {
+    "id": "adj-7-11848",
+    "dateStr": "13/09/2026",
+    "empId": "11848",
+    "otMachineOverride": "Mixer 2",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT ที่ Mixer 2 (23:00 - 07:00)"
+  },
+  {
+    "id": "adj-8-12185",
+    "dateStr": "13/09/2026",
+    "empId": "12185",
+    "regularMachineOverride": "Chaffer Lay-up",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "ย้ายทำ Chaffer Lay-up (15:00 - 23:00)"
+  },
+  {
+    "id": "adj-9-10705",
+    "dateStr": "13/09/2026",
+    "empId": "10705",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT ที่ 54\" Band Building (23:00 - 07:00)"
+  }
+]

@@ -17,7 +17,26 @@ function scanFolderApiPlugin(): Plugin {
             fs.mkdirSync(scansDir, { recursive: true });
           }
 
-          // Auto-sync: Always check Downloads folder for new scan files (e.g. 2026xxxx.txt) and copy to scans/
+          // Auto-sync 1: Check network folder T:\10.30 A.M. Production Meeting\สแกนนิ้ว record for scan files
+          const networkDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record';
+          if (fs.existsSync(networkDir)) {
+            try {
+              const netFiles = fs.readdirSync(networkDir);
+              const matchingNet = netFiles.filter(f => /^(2026\d{4}|\d{8})\.txt$/i.test(f) || (f.endsWith('.txt') && f.includes('2026')));
+              for (const netFile of matchingNet) {
+                try {
+                  const src = path.join(networkDir, netFile);
+                  const dest = path.join(scansDir, netFile);
+                  const srcStat = fs.statSync(src);
+                  if (!fs.existsSync(dest) || srcStat.mtimeMs > fs.statSync(dest).mtimeMs) {
+                    fs.copyFileSync(src, dest);
+                  }
+                } catch (e) {}
+              }
+            } catch (e) {}
+          }
+
+          // Auto-sync 2: Check Downloads folder for new scan files (e.g. 2026xxxx.txt) and copy to scans/
           const userHome = process.env.USERPROFILE || 'C:\\Users\\aa11909';
           const downloadsDir = path.join(userHome, 'Downloads');
           if (fs.existsSync(downloadsDir)) {

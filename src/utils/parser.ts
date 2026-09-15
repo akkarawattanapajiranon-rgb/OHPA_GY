@@ -12,11 +12,21 @@ import {
 } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
 
-export function normalizeDateToMMDDYYYY(dateStr?: string): string {
+export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!dateStr) return '';
-  const clean = dateStr.trim();
+  const clean = String(dateStr).trim();
   if (clean.length === 8 && /^\d{8}$/.test(clean)) {
     return clean; // Already MMDDYYYY or YYYYMMDD
+  }
+  // Check Excel serial dates (e.g. 46277 -> 12/09/2026)
+  if (!isNaN(Number(clean)) && Number(clean) >= 30000 && Number(clean) <= 70000) {
+    const serial = Number(clean);
+    const utcDays = Math.floor(serial - 25569);
+    const dateInfo = new Date(utcDays * 86400 * 1000);
+    const mm = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(dateInfo.getUTCDate()).padStart(2, '0');
+    const yyyy = String(dateInfo.getUTCFullYear());
+    return `${mm}${dd}${yyyy}`;
   }
   // Check DD/MM/YYYY or DD-MM-YYYY
   const parts = clean.split(/[/.-]/);

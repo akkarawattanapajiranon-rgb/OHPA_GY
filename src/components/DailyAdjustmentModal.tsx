@@ -192,7 +192,23 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
           if (!rawEmpId) return;
 
           const cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
-          const dateStr = findVal(['วัน', 'date']) || currentDateFormatted;
+          const rawDate = findVal(['วัน', 'date']);
+          let dateStr = currentDateFormatted;
+
+          if (rawDate) {
+            const numDate = Number(rawDate);
+            if (!isNaN(numDate) && numDate >= 30000 && numDate <= 70000) {
+              const utcDays = Math.floor(numDate - 25569);
+              const dateInfo = new Date(utcDays * 86400 * 1000);
+              const mm = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+              const dd = String(dateInfo.getUTCDate()).padStart(2, '0');
+              const yyyy = String(dateInfo.getUTCFullYear());
+              dateStr = `${dd}/${mm}/${yyyy}`;
+            } else {
+              dateStr = rawDate;
+            }
+          }
+
           const machineTarget = findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'เครื่องจักร', 'โอที', 'ot', 'machine']);
           const timeStr = findVal(['เวลา', 'time']);
           const reason = findVal(['เหตุผล', 'หมายเหตุ', 'reason', 'note']);
@@ -203,31 +219,42 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
 
           if (timeStr) {
             isApproved = true;
-            // E.g. "11:00 - 19:00" or "11:00"
-            const timeMatches = timeStr.match(/\d{1,2}:\d{2}/g);
+            // E.g. "11:00 - 19:00" or "23.00 - 7.00"
+            const normTime = timeStr.replace(/\./g, ':');
+            const timeMatches = normTime.match(/\d{1,2}:\d{2}/g);
             if (timeMatches && timeMatches.length >= 1) {
-              customStart = timeMatches[0];
+              customStart = timeMatches[0].padStart(5, '0');
               if (timeMatches.length >= 2) {
-                customEnd = timeMatches[1];
+                customEnd = timeMatches[1].padStart(5, '0');
               }
             } else if (!isNaN(Number(timeStr))) {
-              customStart = `${timeStr}:00`;
+              customStart = `${timeStr.padStart(2, '0')}:00`;
             }
           }
 
           const empInfo = employeeMap[cleanId];
+
+          // Determine if target is a normal shift machine transfer vs cross-shift OT
+          const isShiftTransfer = Boolean(
+            machineTarget && timeStr && (
+              timeStr.includes('15') && timeStr.includes('23') ||
+              timeStr.includes('07') && timeStr.includes('15') ||
+              timeStr.includes('7.00') && timeStr.includes('15') ||
+              timeStr.includes('15.00') && timeStr.includes('23')
+            )
+          );
 
           parsedAdjustments.push({
             id: `import-${Date.now()}-${idx}-${cleanId}`,
             dateStr,
             empId: cleanId,
             empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
-            regularMachineOverride: machineTarget || undefined,
+            regularMachineOverride: (isShiftTransfer || (!timeStr && machineTarget)) ? machineTarget : undefined,
             otMachineOverride: machineTarget || undefined,
             customStartTime: customStart,
             customEndTime: customEnd,
             isApprovedTiming: isApproved || Boolean(timeStr),
-            reason: reason || (machineTarget ? `ไปทำที่ ${machineTarget}` : (timeStr ? `เวลาพิเศษ ${timeStr}` : undefined))
+            reason: reason || (machineTarget ? (timeStr ? `ทำที่ ${machineTarget} (${timeStr})` : `ไปทำที่ ${machineTarget}`) : (timeStr ? `เวลาพิเศษ ${timeStr}` : undefined))
           });
         });
 
