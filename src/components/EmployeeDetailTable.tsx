@@ -461,7 +461,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                         <div className="inline-flex flex-col items-center gap-0.5">
                           <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 font-semibold px-2 py-0.5 rounded text-[11px] border border-amber-200 shadow-xs">
                             <LogOut className="w-3 h-3 text-amber-600" />
-                            ลากลับก่อน ({r.effectiveWorkHours} ชม.)
+                            ลากลับก่อน {r.earlyLeaveHours ? `(${r.earlyLeaveHours} ชม.)` : ''}
                           </span>
                           <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 font-medium px-1.5 py-0.2 rounded text-[10px] border border-rose-200">
                             <AlertTriangle className="w-2.5 h-2.5 text-rose-500" />
@@ -471,7 +471,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                       ) : r.isEarlyLeave ? (
                         <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 font-semibold px-2 py-0.5 rounded text-[11px] border border-amber-200 shadow-xs">
                           <LogOut className="w-3 h-3 text-amber-600" />
-                          ลากลับก่อน ({r.effectiveWorkHours} ชม.)
+                          ลากลับก่อน {r.earlyLeaveHours ? `(${r.earlyLeaveHours} ชม.)` : ''}
                         </span>
                       ) : r.isLate ? (
                         <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 font-semibold px-2 py-0.5 rounded text-[11px] border border-rose-200">

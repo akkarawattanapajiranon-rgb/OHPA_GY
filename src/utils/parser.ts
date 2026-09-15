@@ -555,9 +555,38 @@ export function processScanRecords(
       normalWorkHours = 0;
     }
 
-    // Check Early Leave (worked less than 7.5 hours and no OT)
-    const isEarlyLeave = Boolean(inScan && outScan && effectiveWorkHours > 0 && effectiveWorkHours < 7.5 && otHours === 0 && !hasApprovedTiming);
-    const earlyLeaveHours = isEarlyLeave ? Math.round((8 - effectiveWorkHours) * 10) / 10 : 0;
+    // Check Early Leave (scan out before official shift end)
+    let isEarlyLeave = false;
+    let earlyLeaveHours = 0;
+
+    if (inScan && outScan && !hasApprovedTiming) {
+      const outHh = outScan.timestamp.getHours();
+      const outMm = outScan.timestamp.getMinutes();
+      const outMins = outHh * 60 + outMm;
+
+      if (shiftNum === 1) {
+        // Shift 1 end: 15:00 (Early leave if left before 14:53)
+        if (outMins < 14 * 60 + 53) {
+          isEarlyLeave = true;
+          earlyLeaveHours = Math.round(Math.max(0, (15 * 60 - outMins) / 60) * 10) / 10;
+        }
+      } else if (shiftNum === 2) {
+        // Shift 2 end: 23:00 (Early leave if left before 22:53)
+        if (outHh >= 12 && outMins < 22 * 60 + 53) {
+          isEarlyLeave = true;
+          earlyLeaveHours = Math.round(Math.max(0, (23 * 60 - outMins) / 60) * 10) / 10;
+        }
+      } else if (shiftNum === 3) {
+        // Shift 3 end: 07:00 (Early leave if left before 06:53)
+        if (outHh >= 22) {
+          isEarlyLeave = true;
+          earlyLeaveHours = Math.round(Math.max(0, ((7 + 24) * 60 - outMins) / 60) * 10) / 10;
+        } else if (outHh < 7 && outMins < 6 * 60 + 53) {
+          isEarlyLeave = true;
+          earlyLeaveHours = Math.round(Math.max(0, (7 * 60 - outMins) / 60) * 10) / 10;
+        }
+      }
+    }
 
     const machine = empInfo.machine || empInfo.position || '-';
     const position = empInfo.position || '-';
