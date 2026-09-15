@@ -136,6 +136,167 @@ function scanFolderApiPlugin(): Plugin {
         }
       });
 
+      // API to sync adjustments from T: drive Excel (Daily_Adjustments_Template.xlsx)
+      server.middlewares.use('/api/sync-adjustments', (req, res) => {
+        try {
+          const networkPath = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\ทำงานไม่ตรง ตำแหน่ง\\Daily_Adjustments_Template.xlsx';
+          const localPath = path.resolve(__dirname, 'Daily_Adjustments_Template.xlsx');
+          
+          let targetPath = '';
+          if (fs.existsSync(networkPath)) {
+            targetPath = networkPath;
+          } else if (fs.existsSync(localPath)) {
+            targetPath = localPath;
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              success: false,
+              message: 'ไม่พบไฟล์ Daily_Adjustments_Template.xlsx ทั้งบนไดรฟ์ T: และเครื่อง'
+            }));
+            return;
+          }
+
+          const stat = fs.statSync(targetPath);
+          const wb = XLSX.readFile(targetPath);
+          const wsName = wb.SheetNames[0];
+          const ws = wb.Sheets[wsName];
+          const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
+
+          let empMap: Record<string, any> = {};
+          const empMapPath = path.resolve(__dirname, 'src/data/default_emp_mapping.json');
+          if (fs.existsSync(empMapPath)) {
+            try {
+              empMap = JSON.parse(fs.readFileSync(empMapPath, 'utf8'));
+            } catch (e) {}
+          }
+
+          const parsedAdjustments: any[] = [];
+
+          rawRows.forEach((row: any, idx: number) => {
+            const keys = Object.keys(row);
+            const findVal = (keywords: string[]) => {
+              const matchKey = keys.find(k => keywords.some(kw => k.toLowerCase().includes(kw.toLowerCase())));
+              return matchKey && row[matchKey] !== undefined && row[matchKey] !== null ? String(row[matchKey]).trim() : '';
+            };
+
+            const rawEmpId = findVal(['รหัส', 'empid', 'emp id', 'id', 'emp']);
+            if (!rawEmpId) return;
+
+            const cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
+            const rawDate = findVal(['วัน', 'date']);
+            let dateStr = '';
+
+            if (rawDate) {
+              const numDate = Number(rawDate);
+              if (!isNaN(numDate) && numDate >= 30000 && numDate <= 70000) {
+                const utcDays = Math.floor(numDate - 25569);
+                const dateInfo = new Date(utcDays * 86400 * 1000);
+                const mm = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+                const dd = String(dateInfo.getUTCDate()).padStart(2, '0');
+                const yyyy = String(dateInfo.getUTCFullYear());
+                dateStr = `${dd}/${mm}/${yyyy}`;
+              } else {
+                dateStr = rawDate;
+              }
+            }
+
+            const machineTarget = findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'เครื่องจักร', 'โอที', 'ot', 'machine']);
+            const regMachine = findVal(['เครื่องจักรที่ทำเวลาปกติ', 'regular machine', 'กะปกติ', 'regular']);
+            const timeStr = findVal(['เวลา', 'time']);
+            const reason = findVal(['เหตุผล', 'หมายเหตุ', 'reason', 'note']);
+
+            let customStart: string | undefined = undefined;
+            let customEnd: string | undefined = undefined;
+            let isApproved = false;
+
+            if (timeStr) {
+              isApproved = true;
+              const normTime = timeStr.replace(/\./g, ':');
+              const timeMatches = normTime.match(/\d{1,2}:\d{2}/g);
+              if (timeMatches && timeMatches.length >= 1) {
+                customStart = timeMatches[0].padStart(5, '0');
+                if (timeMatches.length >= 2) {
+                  customEnd = timeMatches[1].padStart(5, '0');
+                }
+              } else if (!isNaN(Number(timeStr))) {
+                customStart = `${timeStr.padStart(2, '0')}:00`;
+              }
+            }
+
+            let finalOtMachine = machineTarget || undefined;
+            if (finalOtMachine) {
+              if (/3\s*roll/i.test(finalOtMachine)) finalOtMachine = '3-Roll Calender';
+              else if (/mixer\s*2/i.test(finalOtMachine)) finalOtMachine = 'Mixer 2';
+              else if (/chaffer/i.test(finalOtMachine)) finalOtMachine = 'Chaffer Lay-up';
+              else if (/54/i.test(finalOtMachine)) finalOtMachine = '54" Band Building';
+              else if (/72/i.test(finalOtMachine)) finalOtMachine = '72" Band Building';
+            }
+
+            let finalRegMachine = regMachine || undefined;
+            if (finalRegMachine) {
+              if (/chaffer/i.test(finalRegMachine)) finalRegMachine = 'Chaffer Lay-up';
+            }
+
+            const empInfo = empMap[cleanId];
+
+            if (!finalRegMachine && finalOtMachine && timeStr && (
+              (timeStr.includes('15') && timeStr.includes('23')) ||
+              (timeStr.includes('07') && timeStr.includes('15'))
+            )) {
+              finalRegMachine = finalOtMachine;
+            }
+
+            let defaultReason = reason;
+            if (!defaultReason) {
+              if (finalOtMachine && timeStr) {
+                defaultReason = `OT / ทำงานที่ ${finalOtMachine} (${timeStr})`;
+              } else if (timeStr) {
+                defaultReason = `เวลาพิเศษ ${timeStr}`;
+              } else if (finalOtMachine) {
+                defaultReason = `ย้ายทำ ${finalOtMachine}`;
+              }
+            }
+
+            parsedAdjustments.push({
+              id: `adj-${idx}-${cleanId}`,
+              dateStr: dateStr || '14/09/2026',
+              empId: cleanId,
+              empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
+              regularMachineOverride: finalRegMachine,
+              otMachineOverride: finalOtMachine,
+              customStartTime: customStart,
+              customEndTime: customEnd,
+              isApprovedTiming: isApproved,
+              reason: defaultReason
+            });
+          });
+
+          // Save to default_adjustments.json
+          const adjPath = path.resolve(__dirname, 'src/data/default_adjustments.json');
+          try {
+            fs.writeFileSync(adjPath, JSON.stringify(parsedAdjustments, null, 2), 'utf8');
+          } catch (writeErr) {
+            console.warn('Could not write default_adjustments.json:', writeErr);
+          }
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: true,
+            targetPath,
+            modifiedTime: stat.mtime.toISOString(),
+            count: parsedAdjustments.length,
+            adjustments: parsedAdjustments
+          }));
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: false,
+            message: err.message || 'เกิดข้อผิดพลาดในการอ่านไฟล์ Excel'
+          }));
+        }
+      });
+
       // API to fetch Stocking Tonnage Report 55012 from 10.124.129.34
       server.middlewares.use('/api/stocking-tonnage', (req, res) => {
         const urlObj = new URL(req.url || '', 'http://localhost');

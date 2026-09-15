@@ -9,7 +9,9 @@ import {
   Plus,
   Trash2,
   FileSpreadsheet,
-  Shuffle
+  Shuffle,
+  RefreshCw,
+  CheckCircle2
 } from 'lucide-react';
 
 interface DailyAdjustmentModalProps {
@@ -19,6 +21,8 @@ interface DailyAdjustmentModalProps {
   adjustments: DailyAdjustmentRecord[];
   onSaveAdjustments: (newAdjustments: DailyAdjustmentRecord[]) => void;
   employeeMap: Record<string, EmployeeInfo>;
+  onSyncFromExcel?: () => Promise<void> | void;
+  isSyncing?: boolean;
 }
 
 export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
@@ -27,7 +31,9 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
   currentDateFormatted,
   adjustments,
   onSaveAdjustments,
-  employeeMap
+  employeeMap,
+  onSyncFromExcel,
+  isSyncing = false
 }) => {
   const [localAdjustments, setLocalAdjustments] = useState<DailyAdjustmentRecord[]>(adjustments);
   const [newEmpId, setNewEmpId] = useState('');
@@ -307,34 +313,66 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
         {/* Content Body */}
         <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
-          {/* Action Bar: Template Download & File Upload */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-            <div>
-              <h4 className="text-xs font-bold text-blue-900 flex items-center gap-1.5 mb-1">
-                <FileSpreadsheet className="w-4 h-4 text-blue-600" />
-                ดาวน์โหลดแม่แบบ Excel / CSV
-              </h4>
-              <p className="text-[11px] text-blue-700/80 mb-2">
-                ดาวน์โหลดไฟล์ตัวอย่างเพื่อกรอกข้อมูลรายชื่อพนักงานที่ย้ายเครื่องหรือทำ OT ข้ามเครื่อง
-              </p>
+          {/* Action Bar: T: Drive Auto-Sync, Template Download & Manual File Upload */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-gradient-to-br from-indigo-50/80 via-blue-50/50 to-slate-50 p-4 rounded-xl border border-indigo-100/80 shadow-xs">
+            {/* Card 1: Network T: Drive Sync */}
+            <div className="flex flex-col justify-between p-3 bg-white rounded-lg border border-indigo-200/80 shadow-2xs">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+                    <RefreshCw className={`w-3.5 h-3.5 text-indigo-600 ${isSyncing ? 'animate-spin' : ''}`} />
+                    ดึงจากไฟล์ไดรฟ์ T: อัตโนมัติ
+                  </h4>
+                  <span className="text-[10px] px-1.5 py-0.2 bg-indigo-100 text-indigo-700 rounded-md font-semibold">
+                    ไดรฟ์ T:
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-snug mb-3">
+                  อ่านไฟล์ <code className="text-[10px] bg-slate-100 px-1 py-0.5 rounded text-indigo-800">Daily_Adjustments_Template.xlsx</code> บนไดรฟ์ T: ทันที
+                </p>
+              </div>
               <button
-                onClick={handleDownloadTemplate}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-blue-700 text-xs font-semibold rounded-lg border border-blue-200 hover:bg-blue-50 shadow-xs transition-colors cursor-pointer"
+                onClick={() => onSyncFromExcel && onSyncFromExcel()}
+                disabled={isSyncing}
+                className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white text-xs font-bold rounded-lg shadow-xs transition-all cursor-pointer disabled:opacity-50"
               >
-                <Download className="w-3.5 h-3.5" />
-                ดาวน์โหลด Template (.xlsx)
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span>{isSyncing ? 'กำลังดึงข้อมูล...' : '🔄 ซิงค์ข้อมูลจาก Excel ตอนนี้'}</span>
               </button>
             </div>
 
-            <div>
-              <h4 className="text-xs font-bold text-blue-900 flex items-center gap-1.5 mb-1">
-                <Upload className="w-4 h-4 text-blue-600" />
-                นำเข้าไฟล์บันทึกรายวัน (Excel / CSV)
-              </h4>
-              <p className="text-[11px] text-blue-700/80 mb-2">
-                เลือกไฟล์ Excel หรือ CSV เพื่ออัปเดตการย้ายเครื่องและ OT ของวันนี้อัตโนมัติ
-              </p>
-              <div className="flex items-center gap-2">
+            {/* Card 2: Template Download */}
+            <div className="flex flex-col justify-between p-3 bg-white rounded-lg border border-blue-200/80 shadow-2xs">
+              <div>
+                <h4 className="text-xs font-bold text-blue-900 flex items-center gap-1.5 mb-1">
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-blue-600" />
+                  แม่แบบบันทึก Excel
+                </h4>
+                <p className="text-[11px] text-slate-600 leading-snug mb-3">
+                  ดาวน์โหลดไฟล์ตัวอย่างและรายชื่อเครื่องจักรเพื่อนำไปกรอกบน Excel
+                </p>
+              </div>
+              <button
+                onClick={handleDownloadTemplate}
+                className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-blue-700 text-xs font-semibold rounded-lg border border-blue-200 hover:bg-blue-50 shadow-2xs transition-colors cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>ดาวน์โหลด Template (.xlsx)</span>
+              </button>
+            </div>
+
+            {/* Card 3: Manual Upload */}
+            <div className="flex flex-col justify-between p-3 bg-white rounded-lg border border-slate-200/80 shadow-2xs">
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5 mb-1">
+                  <Upload className="w-3.5 h-3.5 text-slate-600" />
+                  อัปโหลดไฟล์เอง (Manual)
+                </h4>
+                <p className="text-[11px] text-slate-600 leading-snug mb-3">
+                  เลือกไฟล์ Excel หรือ CSV จากเครื่องของคุณเพื่ออัปเดตข้อมูล
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -345,13 +383,13 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
                 />
                 <label
                   htmlFor="adjustment-upload"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 shadow-xs cursor-pointer transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-900 shadow-2xs cursor-pointer transition-colors"
                 >
                   <Upload className="w-3.5 h-3.5" />
-                  เลือกไฟล์อัปโหลด
+                  <span>เลือกไฟล์อัปโหลด</span>
                 </label>
                 {uploadStatus && (
-                  <span className="text-xs text-blue-800 font-medium">
+                  <span className="text-[11px] text-blue-800 font-medium text-center">
                     {uploadStatus}
                   </span>
                 )}

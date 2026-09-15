@@ -264,6 +264,40 @@ export default function App() {
     }
   };
 
+  const [isSyncingAdjustments, setIsSyncingAdjustments] = useState<boolean>(false);
+
+  const handleSyncAdjustments = async (openModal = false) => {
+    setIsSyncingAdjustments(true);
+    try {
+      const response = await fetch('/api/sync-adjustments');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && Array.isArray(data.adjustments)) {
+          setDailyAdjustments(data.adjustments);
+          try {
+            localStorage.setItem('ohpa_daily_adjustments', JSON.stringify(data.adjustments));
+          } catch (e) {}
+          setToastNotification({
+            type: 'success',
+            message: `🔄 ซิงค์ข้อมูลการย้ายเครื่อง/OT จาก Excel สำเร็จ (${data.adjustments.length} รายการ)`
+          });
+        } else if (data.message) {
+          setToastNotification({
+            type: 'error',
+            message: data.message
+          });
+        }
+      }
+    } catch (err: any) {
+      console.warn('Sync adjustments API error:', err);
+    } finally {
+      setIsSyncingAdjustments(false);
+      if (openModal) {
+        setIsAdjustmentModalOpen(true);
+      }
+    }
+  };
+
   // Count adjustments for current date
   const currentDateAdjustmentsCount = useMemo(() => {
     const cleanCurrentDate = dateStringFormatted.trim();
@@ -410,13 +444,14 @@ export default function App() {
           <div className="flex items-center gap-3 w-full xl:w-auto justify-end">
             {/* Daily Adjustment Trigger Button */}
             <button
-              onClick={() => setIsAdjustmentModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer"
-              title="บันทึกย้ายเครื่องกะปกติ, ทำ OT ข้ามเครื่อง หรือเวลาพิเศษตามที่หัวหน้างานสั่ง"
+              onClick={() => handleSyncAdjustments(true)}
+              disabled={isSyncingAdjustments}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer disabled:opacity-75"
+              title="กดเพื่อซิงค์ข้อมูลย้ายเครื่อง/OT ล่าสุดจากไฟล์ Excel (T: Drive) และเปิดหน้าต่างจัดการ"
             >
-              <Shuffle className="w-3.5 h-3.5" />
-              <span>ย้ายเครื่อง / OT / เวลาพิเศษ</span>
-              {currentDateAdjustmentsCount > 0 && (
+              <Shuffle className={`w-3.5 h-3.5 ${isSyncingAdjustments ? 'animate-spin' : ''}`} />
+              <span>{isSyncingAdjustments ? 'กำลังซิงค์ Excel...' : 'ย้ายเครื่อง / OT / เวลาพิเศษ'}</span>
+              {currentDateAdjustmentsCount > 0 && !isSyncingAdjustments && (
                 <span className="bg-white text-blue-700 text-[10px] px-1.5 py-0.2 rounded-full font-extrabold shadow-xs">
                   {currentDateAdjustmentsCount}
                 </span>
@@ -493,6 +528,8 @@ export default function App() {
         adjustments={dailyAdjustments}
         onSaveAdjustments={handleSaveAdjustments}
         employeeMap={employeeMapping}
+        onSyncFromExcel={() => handleSyncAdjustments(false)}
+        isSyncing={isSyncingAdjustments}
       />
     </div>
   );
