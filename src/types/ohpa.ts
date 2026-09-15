@@ -33,9 +33,13 @@ export interface OhpaShiftMetrics {
   shift: 1 | 2 | 3;
   shiftLabel: string;
   headcount: number;
+  gyHeadcount: number;
+  contractorHeadcount: number;
   normalHours: number;
   otHours: number;
   totalHours: number;
+  gyTotalHours: number;
+  contractorTotalHours: number;
   tonnageKg: number;
   tonnageTon: number;
   pallets: number;
@@ -45,6 +49,7 @@ export interface OhpaShiftMetrics {
 
 export interface OhpaDeptMetrics {
   dept: string;
+  isContractor?: boolean;
   headcount: number;
   normalHours: number;
   otHours: number;
@@ -54,15 +59,33 @@ export interface OhpaDeptMetrics {
 
 export interface OhpaSummary {
   productionDay: string;
+  // Total Plant (GY + Contractor)
   totalEmployeesCount: number;
   totalNormalHours: number;
   totalOtHours: number;
   totalWorkingHours: number;
+
+  // Goodyear Breakdown
+  gyEmployeesCount: number;
+  gyNormalHours: number;
+  gyOtHours: number;
+  gyTotalHours: number;
+  gyOhpaHoursPerTon: number;
+
+  // Contractor Breakdown
+  contractorEmployeesCount: number;
+  contractorNormalHours: number;
+  contractorOtHours: number;
+  contractorTotalHours: number;
+  contractorOhpaHoursPerTon: number;
+
+  // Tonnage & OHPA
   totalTonnageKg: number;
   totalTonnageTon: number;
   totalPallets: number;
   overallOhpaHoursPerTon: number;
   overallOhpaHoursPerPallet: number;
+
   shifts: OhpaShiftMetrics[];
   departmentBreakdown: OhpaDeptMetrics[];
 }

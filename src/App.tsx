@@ -266,12 +266,26 @@ export default function App() {
     }).length;
   }, [dailyAdjustments, dateStringFormatted]);
 
-  // Contractor count for current selected date
-  const currentContractorCount = useMemo(() => {
-    const clean = dateStringFormatted.replace(/^📅\s*วันที่\s*/, '').replace(/^วันที่\s*/, '').trim();
-    const entry = contractorRecordsByDate[clean];
-    return entry?.records?.length || 75;
+  // Contractor records for current selected date
+  const currentContractorDay = useMemo(() => {
+    const clean = dateStringFormatted.replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+    let entry = contractorRecordsByDate[clean];
+    if (!entry) {
+      const matchKey = Object.keys(contractorRecordsByDate).find(k => {
+        return normalizeDateToMMDDYYYY(k) === normalizeDateToMMDDYYYY(clean);
+      });
+      if (matchKey) entry = contractorRecordsByDate[matchKey];
+    }
+    return entry;
   }, [contractorRecordsByDate, dateStringFormatted]);
+
+  const currentContractorCount = useMemo(() => {
+    return currentContractorDay?.records?.length || 75;
+  }, [currentContractorDay]);
+
+  const currentContractorRecords = useMemo(() => {
+    return currentContractorDay?.records || [];
+  }, [currentContractorDay]);
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans pb-12">
@@ -442,6 +456,7 @@ export default function App() {
         {activeTab === 'PAGE_4_OHPA' && (
           <OhpaCalculationView
             records={records}
+            contractorRecords={currentContractorRecords}
             currentScanDateFormatted={dateStringFormatted}
             onSelectGlobalDate={handleSelectDateFromOhpa}
           />
