@@ -311,11 +311,11 @@ export const FileUploaderModal: React.FC<FileUploaderModalProps> = ({
                 </div>
 
                 <div className="bg-white p-2.5 rounded-xl border border-emerald-200/80 font-mono text-[11px] text-slate-700 flex items-center justify-between break-all">
-                  <span>OHPA\scans\</span>
+                  <span>T:\...\สแกนนิ้ว record\SCAN นิ้ว GY</span>
                   <button
                     onClick={onOpenFolderInExplorer}
                     className="ml-2 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-sans font-semibold flex items-center gap-1 transition-colors cursor-pointer shrink-0"
-                    title="เปิดโฟลเดอร์ scans ใน Windows Explorer"
+                    title="เปิดโฟลเดอร์ใน Windows Explorer"
                   >
                     <FolderOpen className="w-3.5 h-3.5 text-amber-500" />
                     <span>เปิดโฟลเดอร์</span>

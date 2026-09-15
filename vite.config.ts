@@ -17,24 +17,31 @@ function scanFolderApiPlugin(): Plugin {
             fs.mkdirSync(scansDir, { recursive: true });
           }
 
-          // Auto-sync 1: Check network folder T:\10.30 A.M. Production Meeting\สแกนนิ้ว record for scan files
-          const networkDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record';
-          if (fs.existsSync(networkDir)) {
-            try {
-              const netFiles = fs.readdirSync(networkDir);
-              const matchingNet = netFiles.filter(f => /^(2026\d{4}|\d{8})\.txt$/i.test(f) || (f.endsWith('.txt') && f.includes('2026')));
-              for (const netFile of matchingNet) {
-                try {
-                  const src = path.join(networkDir, netFile);
-                  const dest = path.join(scansDir, netFile);
-                  const srcStat = fs.statSync(src);
-                  if (!fs.existsSync(dest) || srcStat.mtimeMs > fs.statSync(dest).mtimeMs) {
-                    fs.copyFileSync(src, dest);
-                  }
-                } catch (e) {}
-              }
-            } catch (e) {}
-          }
+          // Auto-sync 1: Check primary network folder T:\10.30 A.M. Production Meeting\สแกนนิ้ว record\SCAN นิ้ว GY
+          const networkScanDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\SCAN นิ้ว GY';
+          const networkBaseDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record';
+
+          const syncFromFolder = (sourceDir: string) => {
+            if (fs.existsSync(sourceDir)) {
+              try {
+                const dirFiles = fs.readdirSync(sourceDir);
+                const matchingFiles = dirFiles.filter(f => /^(2026\d{4}|\d{8})\.txt$/i.test(f) || (f.endsWith('.txt') && f.includes('2026')));
+                for (const netFile of matchingFiles) {
+                  try {
+                    const src = path.join(sourceDir, netFile);
+                    const dest = path.join(scansDir, netFile);
+                    const srcStat = fs.statSync(src);
+                    if (!fs.existsSync(dest) || srcStat.mtimeMs > fs.statSync(dest).mtimeMs) {
+                      fs.copyFileSync(src, dest);
+                    }
+                  } catch (e) {}
+                }
+              } catch (e) {}
+            }
+          };
+
+          syncFromFolder(networkScanDir);
+          syncFromFolder(networkBaseDir);
 
           // Auto-sync 2: Check Downloads folder for new scan files (e.g. 2026xxxx.txt) and copy to scans/
           const userHome = process.env.USERPROFILE || 'C:\\Users\\aa11909';
@@ -112,13 +119,15 @@ function scanFolderApiPlugin(): Plugin {
       // API to open folder in Windows Explorer
       server.middlewares.use('/api/open-folder', (req, res) => {
         try {
+          const networkScanDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\SCAN นิ้ว GY';
           const scansDir = path.resolve(__dirname, 'scans');
-          if (!fs.existsSync(scansDir)) {
-            fs.mkdirSync(scansDir, { recursive: true });
+          const targetDir = fs.existsSync(networkScanDir) ? networkScanDir : scansDir;
+          if (!fs.existsSync(targetDir)) {
+            fs.mkdirSync(targetDir, { recursive: true });
           }
-          exec(`explorer "${scansDir}"`);
+          exec(`explorer "${targetDir}"`);
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ success: true, folderPath: scansDir }));
+          res.end(JSON.stringify({ success: true, folderPath: targetDir }));
         } catch (err: any) {
           res.statusCode = 500;
           res.setHeader('Content-Type', 'application/json');
