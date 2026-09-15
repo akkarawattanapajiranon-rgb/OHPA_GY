@@ -48,7 +48,7 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
     hoursPerPerson = 0;
   }
 
-  const count = 62;
+  const count = 61;
   const totalHours = count * hoursPerPerson;
 
   const wasCount = 9;
@@ -889,9 +889,9 @@ export function calculateOhpaSummary(
   // 12. Add Monthly Staff (Goodyear 62 + WAS 8) and B-end (Bead) to Non-MFG : Others
   const aOther = areaMap['Non-MFG : Others'];
 
-  // 12.1 Goodyear Monthly Staff (62 persons)
+  // 12.1 Goodyear Monthly Staff (61 persons)
   if (monthlyStaff.count > 0) {
-    const gyMonthlyKey = `พนักงานรายเดือน GY (Goodyear Monthly Staff - 62 คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    const gyMonthlyKey = `พนักงานรายเดือน GY (Goodyear Monthly Staff - ${monthlyStaff.count} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
     deptMap[gyMonthlyKey] = {
       isContractor: false,
       isMonthly: true,

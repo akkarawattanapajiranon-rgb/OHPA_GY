@@ -174,7 +174,7 @@ export interface OhpaSummary {
   contractorTotalHours: number;
   contractorOpahLbsPerHour: number;
 
-  // Monthly Staff (62 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  // Monthly Staff (61 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
   monthlyStaff: MonthlyStaffMetrics;
 
   // Excluded Dept 6320 Stats
