@@ -290,6 +290,25 @@ export function processScanRecords(
     const ins = empScans.filter(s => s.io === 'I');
     const outs = empScans.filter(s => s.io === 'O');
 
+    // Filter out accidental double-punch in morning checkout (04:00 - 08:30)
+    // If all scans occurred within 30 mins in the morning and there is an 'O' scan, it's a clock-out from previous night
+    if (empScans.length > 0) {
+      const allMorning = empScans.every(s => {
+        const hh = s.timestamp.getHours();
+        const mm = s.timestamp.getMinutes();
+        const m = hh * 60 + mm;
+        return m >= 4 * 60 && m <= 8 * 60 + 30;
+      });
+      if (allMorning) {
+        const minTime = Math.min(...empScans.map(s => s.timestamp.getTime()));
+        const maxTime = Math.max(...empScans.map(s => s.timestamp.getTime()));
+        const spanMins = (maxTime - minTime) / (60 * 1000);
+        if (spanMins <= 30 && outs.length > 0) {
+          return; // Skip ghost shift record
+        }
+      }
+    }
+
     const inScan = ins.length > 0 ? ins[0] : null;
 
     // Pick best matching out scan
@@ -791,13 +810,46 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
     const dd = parseInt(dayStr.slice(2, 4), 10);
     const yyyy = parseInt(dayStr.slice(4, 8), 10);
     const curDate = new Date(yyyy, mm - 1, dd);
+    const prevDate = new Date(curDate.getTime() - 24 * 3600 * 1000);
+    const prevDayStr = `${String(prevDate.getMonth() + 1).padStart(2, '0')}${String(prevDate.getDate()).padStart(2, '0')}${prevDate.getFullYear()}`;
     const nextDate = new Date(curDate.getTime() + 24 * 3600 * 1000);
     const nextDayStr = `${String(nextDate.getMonth() + 1).padStart(2, '0')}${String(nextDate.getDate()).padStart(2, '0')}${nextDate.getFullYear()}`;
+
+    const isMorningCheckoutOfPrevNight = (empId: string, event: RawScanRecord) => {
+      const hh = event.timestamp.getHours();
+      const mm = event.timestamp.getMinutes();
+      const mins = hh * 60 + mm;
+      if (mins < 4 * 60 || mins > 8 * 60 + 30) return false;
+
+      // Had night shift entry (>= 17:00) on D-1?
+      const hadNightShiftPrevDay = allEvents.some(item =>
+        item.parsed.empId === empId &&
+        item.parsed.dateStr === prevDayStr &&
+        item.parsed.io === 'I' &&
+        item.parsed.timestamp.getHours() >= 17
+      );
+      if (!hadNightShiftPrevDay) return false;
+
+      // Has a real shift out later on day D (>= 12:00)?
+      const hasRealDayShiftOut = allEvents.some(item =>
+        item.parsed.empId === empId &&
+        item.parsed.dateStr === dayStr &&
+        item.parsed.io === 'O' &&
+        item.parsed.timestamp.getHours() >= 12
+      );
+
+      return !hasRealDayShiftOut;
+    };
 
     // Operational day D events
     const dayLines = allEvents.filter(item => {
       const e = item.parsed;
       if (e.dateStr === dayStr) {
+        // Exclude morning checkout punch belonging to previous night's shift
+        if (isMorningCheckoutOfPrevNight(e.empId, e)) {
+          return false;
+        }
+
         if (e.io === 'O') {
           const hh = e.timestamp.getHours();
           const mm = e.timestamp.getMinutes();
