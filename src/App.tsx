@@ -42,12 +42,19 @@ export default function App() {
 
   const [dailyAdjustments, setDailyAdjustments] = useState<DailyAdjustmentRecord[]>(() => {
     try {
+      const defaults = (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
       const saved = localStorage.getItem('ohpa_daily_adjustments');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const existingKeys = new Set(parsed.map((a: DailyAdjustmentRecord) => `${a.dateStr}_${(a.empId || '').replace(/\D/g, '').padStart(5, '0')}`));
+          const defaultsToAdd = defaults.filter(
+            d => !existingKeys.has(`${d.dateStr}_${(d.empId || '').replace(/\D/g, '').padStart(5, '0')}`)
+          );
+          return [...parsed, ...defaultsToAdd];
+        }
       }
-      return (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
+      return defaults;
     } catch {
       return (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
     }

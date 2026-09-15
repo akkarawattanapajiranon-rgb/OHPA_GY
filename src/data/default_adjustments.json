@@ -92,5 +92,36 @@
     "customEndTime": "07:00",
     "isApprovedTiming": true,
     "reason": "OT ที่ 54\" Band Building (23:00 - 07:00)"
+  },
+  {
+    "id": "adj-10-12674",
+    "dateStr": "14/09/2026",
+    "empId": "12674",
+    "regularMachineOverride": "Chaffer Lay-up",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "ย้ายทำ Chaffer Lay-up (15:00 - 23:00)"
+  },
+  {
+    "id": "adj-11-12676",
+    "dateStr": "14/09/2026",
+    "empId": "12676",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT ที่ Chaffer Lay-up (15:00 - 23:00)"
+  },
+  {
+    "id": "adj-12-12945",
+    "dateStr": "14/09/2026",
+    "empId": "12945",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "20:00",
+    "isApprovedTiming": true,
+    "reason": "OT ที่ 3-Roll Calender (15:00 - 20:00)"
   }
 ]
