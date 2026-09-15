@@ -4,6 +4,8 @@ import { EmployeeDetailTable } from './components/EmployeeDetailTable';
 import { ManpowerGapTable } from './components/ManpowerGapTable';
 import { FileUploaderModal } from './components/FileUploaderModal';
 import { DailyAdjustmentModal } from './components/DailyAdjustmentModal';
+import { AdminLoginModal } from './components/AdminLoginModal';
+import { AdminSettingsModal } from './components/AdminSettingsModal';
 import { OhpaCalculationView } from './components/OhpaCalculationView';
 import { ContractorScanRecordsView } from './components/ContractorScanRecordsView';
 
@@ -68,6 +70,80 @@ export default function App() {
   const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
   const [toastNotification, setToastNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Admin Security & Authentication State
+  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('ohpa_is_admin') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [adminPasswordHash, setAdminPasswordHash] = useState<string>(() => {
+    try {
+      return localStorage.getItem('ohpa_admin_password') || '1234';
+    } catch {
+      return '1234';
+    }
+  });
+  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
+  const [isAdminSettingsModalOpen, setIsAdminSettingsModalOpen] = useState<boolean>(false);
+  const [pendingAdminAction, setPendingAdminAction] = useState<(() => void) | null>(null);
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdmin(true);
+    try {
+      sessionStorage.setItem('ohpa_is_admin', 'true');
+    } catch {}
+    setToastNotification({
+      type: 'success',
+      message: '👑 เข้าสู่ระบบผู้ดูแลระบบ (Admin Mode) สำเร็จ'
+    });
+    if (pendingAdminAction) {
+      pendingAdminAction();
+      setPendingAdminAction(null);
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdmin(false);
+    try {
+      sessionStorage.removeItem('ohpa_is_admin');
+    } catch {}
+    setToastNotification({
+      type: 'success',
+      message: '🔒 ออกจากระบบ Admin เรียบร้อยแล้ว (โหมดอ่านอย่างเดียว)'
+    });
+  };
+
+  const handleUpdateAdminPassword = (newPass: string) => {
+    setAdminPasswordHash(newPass);
+    try {
+      localStorage.setItem('ohpa_admin_password', newPass);
+    } catch {}
+    setToastNotification({
+      type: 'success',
+      message: 'เปลี่ยนรหัสผ่าน Admin เรียบร้อยแล้ว'
+    });
+  };
+
+  const handleOpenUploadProtected = () => {
+    if (isAdmin) {
+      setIsUploadModalOpen(true);
+    } else {
+      setPendingAdminAction(() => () => setIsUploadModalOpen(true));
+      setIsAdminLoginModalOpen(true);
+    }
+  };
+
+  const handleOpenAdjustmentProtected = () => {
+    if (isAdmin) {
+      handleSyncAdjustments(true);
+    } else {
+      setPendingAdminAction(() => () => handleSyncAdjustments(true));
+      setIsAdminLoginModalOpen(true);
+    }
+  };
 
   // Auto clear toast after 4s
   useEffect(() => {
@@ -338,14 +414,17 @@ export default function App() {
         totalRecords={records.length}
         presets={presets}
         isLoadingFolder={isLoadingFolder}
+        isAdmin={isAdmin}
         onSelectPreset={handleSelectPreset}
         onFetchFolderScans={() => {
           handleFetchFolderScans();
           handleFetchContractorData();
         }}
         onOpenFolderInExplorer={handleOpenFolderInExplorer}
-        onOpenUploadModal={() => setIsUploadModalOpen(true)}
+        onOpenUploadModal={handleOpenUploadProtected}
         onResetToDefault={handleResetToDefault}
+        onOpenAdminLogin={() => setIsAdminLoginModalOpen(true)}
+        onOpenAdminSettings={() => setIsAdminSettingsModalOpen(true)}
       />
 
       {/* Floating Toast Notification */}
@@ -444,10 +523,10 @@ export default function App() {
           <div className="flex items-center gap-3 w-full xl:w-auto justify-end">
             {/* Daily Adjustment Trigger Button */}
             <button
-              onClick={() => handleSyncAdjustments(true)}
+              onClick={handleOpenAdjustmentProtected}
               disabled={isSyncingAdjustments}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer disabled:opacity-75"
-              title="กดเพื่อซิงค์ข้อมูลย้ายเครื่อง/OT ล่าสุดจากไฟล์ Excel (T: Drive) และเปิดหน้าต่างจัดการ"
+              title="กดเพื่อจัดการข้อมูลย้ายเครื่อง/OT (ต้องใช้สิทธิ์แอดมิน)"
             >
               <Shuffle className={`w-3.5 h-3.5 ${isSyncingAdjustments ? 'animate-spin' : ''}`} />
               <span>{isSyncingAdjustments ? 'กำลังซิงค์ Excel...' : 'ย้ายเครื่อง / OT / เวลาพิเศษ'}</span>
@@ -530,6 +609,26 @@ export default function App() {
         employeeMap={employeeMapping}
         onSyncFromExcel={() => handleSyncAdjustments(false)}
         isSyncing={isSyncingAdjustments}
+      />
+
+      {/* Admin Authentication Login Modal */}
+      <AdminLoginModal
+        isOpen={isAdminLoginModalOpen}
+        onClose={() => {
+          setIsAdminLoginModalOpen(false);
+          setPendingAdminAction(null);
+        }}
+        onLoginSuccess={handleAdminLoginSuccess}
+        adminPasswordHash={adminPasswordHash}
+      />
+
+      {/* Admin Control / Settings Modal */}
+      <AdminSettingsModal
+        isOpen={isAdminSettingsModalOpen}
+        onClose={() => setIsAdminSettingsModalOpen(false)}
+        onLogout={handleAdminLogout}
+        currentPasswordHash={adminPasswordHash}
+        onUpdatePassword={handleUpdateAdminPassword}
       />
     </div>
   );
