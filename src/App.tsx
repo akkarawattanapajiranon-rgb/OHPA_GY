@@ -459,6 +459,10 @@ export default function App() {
             contractorRecords={currentContractorRecords}
             currentScanDateFormatted={dateStringFormatted}
             onSelectGlobalDate={handleSelectDateFromOhpa}
+            allScanPresets={presets}
+            contractorRecordsByDate={contractorRecordsByDate}
+            employeeMapping={employeeMapping}
+            dailyAdjustments={dailyAdjustments}
           />
         )}
       </main>

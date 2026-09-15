@@ -66,6 +66,38 @@ export interface OhpaDeptMetrics {
   percentageOfTotalHours: number;
 }
 
+export interface DailyMtdItem {
+  day: number;
+  dateStr: string; // e.g. "01/09/2026"
+  dayName: string; // e.g. "วันอังคาร"
+  gyHeadcount: number;
+  gyHours: number;
+  contractorHeadcount: number;
+  contractorHours: number;
+  monthlyHours: number;
+  totalHours: number;
+  cumulativeTotalHours: number;
+  stockingKg?: number;
+  stockingLbs?: number;
+}
+
+export interface MtdOhpaSummary {
+  targetDate: string; // e.g. "14/09/2026"
+  daysCount: number; // e.g. 14
+  mtdTotalHours: number;
+  mtdGyHours: number;
+  mtdContractorHours: number;
+  mtdMonthlyHours: number;
+  mtdStockingKg: number;
+  mtdStockingLbs: number;
+  mtdStockingTon: number;
+  mtdPallets: number;
+  mtdOpahLbsPerHour: number;
+  mtdGyOpahLbsPerHour: number;
+  mtdContractorOpahLbsPerHour: number;
+  dailyItems: DailyMtdItem[];
+}
+
 export interface OhpaSummary {
   productionDay: string;
   // Total Plant (GY + Contractor + Monthly, excluding Dept 6320)
@@ -106,6 +138,9 @@ export interface OhpaSummary {
 
   shifts: OhpaShiftMetrics[];
   departmentBreakdown: OhpaDeptMetrics[];
+
+  // Month-To-Date (MTD) metrics from day 1 to selected date
+  mtd?: MtdOhpaSummary;
 }
 
 

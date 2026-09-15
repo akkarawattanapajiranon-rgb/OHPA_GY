@@ -1,6 +1,7 @@
-import { ParsedShiftRecord } from '../types/attendance';
+import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, MonthlyStaffMetrics } from '../types/ohpa';
+import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
+import { processScanRecords } from './parser';
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
   const cc = (r.costCenter || '').trim();
@@ -59,11 +60,162 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   };
 }
 
+export function calculateMtdSummary(
+  targetDateStr: string,
+  currentGyRecords: ParsedShiftRecord[],
+  currentContRecords: ContractorScanRecord[],
+  tonnageReport: StockingTonnageReport | null,
+  allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
+  contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
+  employeeMapping: Record<string, EmployeeInfo> = {},
+  dailyAdjustments: DailyAdjustmentRecord[] = []
+): MtdOhpaSummary {
+  const clean = (targetDateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const parts = clean.split(/[/.-]/);
+  let targetDay = 14, targetMonth = 9, targetYear = 2026;
+  if (parts.length === 3) {
+    if (parts[2].length === 4) {
+      targetDay = parseInt(parts[0], 10) || 14;
+      targetMonth = parseInt(parts[1], 10) || 9;
+      targetYear = parseInt(parts[2], 10) || 2026;
+    } else if (parts[0].length === 4) {
+      targetYear = parseInt(parts[0], 10) || 2026;
+      targetMonth = parseInt(parts[1], 10) || 9;
+      targetDay = parseInt(parts[2], 10) || 14;
+    }
+  }
+
+  const dailyItems: DailyMtdItem[] = [];
+  let mtdTotalHours = 0;
+  let mtdGyHours = 0;
+  let mtdContractorHours = 0;
+  let mtdMonthlyHours = 0;
+
+  const dayNames = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+
+  for (let d = 1; d <= targetDay; d++) {
+    const dPad = String(d).padStart(2, '0');
+    const mPad = String(targetMonth).padStart(2, '0');
+    const dayDateStr = `${dPad}/${mPad}/${targetYear}`;
+    const dt = new Date(targetYear, targetMonth - 1, d);
+    const dayOfWeek = dt.getDay();
+    const dayName = dayNames[dayOfWeek];
+
+    let gyHeadcount = 0;
+    let gyHours = 0;
+
+    let contractorHeadcount = 0;
+    let contractorHours = 0;
+
+    // 1. Goodyear Data
+    if (d === targetDay) {
+      const active = currentGyRecords.filter(r => !isGyDept6320(r));
+      gyHeadcount = active.length;
+      gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
+    } else {
+      const preset = allScanPresets.find(p => {
+        const pName = p.name || '';
+        const pDate = p.dateFormatted || '';
+        if (pName.includes(`${targetYear}${mPad}${dPad}`) || pName.includes(`${mPad}${dPad}${targetYear}`)) return true;
+        if (pDate.includes(dayDateStr) || pDate.includes(`${d}/${targetMonth}/${targetYear}`)) return true;
+        return false;
+      });
+
+      if (preset && preset.content) {
+        const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
+        const active = parsed.records.filter(r => !isGyDept6320(r));
+        gyHeadcount = active.length;
+        gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
+      }
+    }
+
+    // 2. Contractor Data
+    if (d === targetDay) {
+      const active = currentContRecords.filter(r => (r.hasScannedIn || r.totalHours > 0) && !isContDept6320(r));
+      contractorHeadcount = active.length;
+      contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
+    } else {
+      const contEntry = contractorRecordsByDate[`${d}/${targetMonth}/${targetYear}`] ||
+        contractorRecordsByDate[dayDateStr] ||
+        contractorRecordsByDate[`${targetYear}-${mPad}-${dPad}`];
+
+      if (contEntry && contEntry.records) {
+        const active = contEntry.records.filter(r => (r.hasScannedIn || r.totalHours > 0) && !isContDept6320(r));
+        contractorHeadcount = active.length;
+        contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
+      }
+    }
+
+    // 3. Monthly Staff Data
+    const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
+    const monthlyHours = monthlyStaff.totalHours;
+
+    const dayTotalHours = gyHours + contractorHours + monthlyHours;
+
+    mtdGyHours += gyHours;
+    mtdContractorHours += contractorHours;
+    mtdMonthlyHours += monthlyHours;
+    mtdTotalHours += dayTotalHours;
+
+    dailyItems.push({
+      day: d,
+      dateStr: dayDateStr,
+      dayName,
+      gyHeadcount,
+      gyHours: Math.round(gyHours * 10) / 10,
+      contractorHeadcount,
+      contractorHours: Math.round(contractorHours * 10) / 10,
+      monthlyHours: Math.round(monthlyHours * 10) / 10,
+      totalHours: Math.round(dayTotalHours * 10) / 10,
+      cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10
+    });
+  }
+
+  const LBS_FACTOR = 2.2046;
+  const mtdStockingKg = tonnageReport?.total?.mtdTonnage || (tonnageReport?.total?.dailyTotalTonnage ? tonnageReport.total.dailyTotalTonnage * targetDay : 0);
+  const mtdStockingLbs = Math.round(mtdStockingKg * LBS_FACTOR * 100) / 100;
+  const mtdStockingTon = Math.round((mtdStockingKg / 1000) * 1000) / 1000;
+  const mtdPallets = tonnageReport?.total?.mtdPallets || 0;
+
+  const mtdOpahLbsPerHour = mtdTotalHours > 0
+    ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdTotalHours) * 100) / 100
+    : 0;
+
+  const mtdGyOpahLbsPerHour = mtdGyHours > 0
+    ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdGyHours) * 100) / 100
+    : 0;
+
+  const mtdContractorOpahLbsPerHour = mtdContractorHours > 0
+    ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdContractorHours) * 100) / 100
+    : 0;
+
+  return {
+    targetDate: clean || `${String(targetDay).padStart(2, '0')}/${String(targetMonth).padStart(2, '0')}/${targetYear}`,
+    daysCount: targetDay,
+    mtdTotalHours: Math.round(mtdTotalHours * 10) / 10,
+    mtdGyHours: Math.round(mtdGyHours * 10) / 10,
+    mtdContractorHours: Math.round(mtdContractorHours * 10) / 10,
+    mtdMonthlyHours: Math.round(mtdMonthlyHours * 10) / 10,
+    mtdStockingKg,
+    mtdStockingLbs,
+    mtdStockingTon,
+    mtdPallets,
+    mtdOpahLbsPerHour,
+    mtdGyOpahLbsPerHour,
+    mtdContractorOpahLbsPerHour,
+    dailyItems
+  };
+}
+
 export function calculateOhpaSummary(
   records: ParsedShiftRecord[],
   contractorRecords: ContractorScanRecord[] = [],
   tonnageReport: StockingTonnageReport | null,
-  productionDayFormatted: string
+  productionDayFormatted: string,
+  allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
+  contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
+  employeeMapping: Record<string, EmployeeInfo> = {},
+  dailyAdjustments: DailyAdjustmentRecord[] = []
 ): OhpaSummary {
   // 1. Separate Department 6320 (Retread) from Goodyear
   const gyActiveRecords = records.filter(r => !isGyDept6320(r));
@@ -337,39 +489,51 @@ export function calculateOhpaSummary(
     }))
     .sort((a, b) => b.totalHours - a.totalHours);
 
-  return {
-    productionDay: productionDayFormatted,
-    totalEmployeesCount,
-    totalNormalHours: Math.round(totalNormalHours * 10) / 10,
-    totalOtHours: Math.round(totalOtHours * 10) / 10,
-    totalWorkingHours: Math.round(totalWorkingHours * 10) / 10,
+    const mtd = calculateMtdSummary(
+      productionDayFormatted,
+      records,
+      contractorRecords,
+      tonnageReport,
+      allScanPresets,
+      contractorRecordsByDate,
+      employeeMapping,
+      dailyAdjustments
+    );
 
-    gyEmployeesCount,
-    gyNormalHours: Math.round(gyNormalHours * 10) / 10,
-    gyOtHours: Math.round(gyOtHours * 10) / 10,
-    gyTotalHours: Math.round(gyTotalHours * 10) / 10,
-    gyOpahLbsPerHour,
+    return {
+      productionDay: productionDayFormatted,
+      totalEmployeesCount,
+      totalNormalHours: Math.round(totalNormalHours * 10) / 10,
+      totalOtHours: Math.round(totalOtHours * 10) / 10,
+      totalWorkingHours: Math.round(totalWorkingHours * 10) / 10,
 
-    contractorEmployeesCount,
-    contractorNormalHours: Math.round(contractorNormalHours * 10) / 10,
-    contractorOtHours: Math.round(contractorOtHours * 10) / 10,
-    contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
-    contractorOpahLbsPerHour,
+      gyEmployeesCount,
+      gyNormalHours: Math.round(gyNormalHours * 10) / 10,
+      gyOtHours: Math.round(gyOtHours * 10) / 10,
+      gyTotalHours: Math.round(gyTotalHours * 10) / 10,
+      gyOpahLbsPerHour,
 
-    monthlyStaff,
+      contractorEmployeesCount,
+      contractorNormalHours: Math.round(contractorNormalHours * 10) / 10,
+      contractorOtHours: Math.round(contractorOtHours * 10) / 10,
+      contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
+      contractorOpahLbsPerHour,
 
-    excluded6320GyCount,
-    excluded6320GyHours: Math.round(excluded6320GyHours * 10) / 10,
-    excluded6320ContCount,
-    excluded6320ContHours: Math.round(excluded6320ContHours * 10) / 10,
+      monthlyStaff,
 
-    totalTonnageKg,
-    totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
-    totalTonnageLbs,
-    totalPallets,
-    overallOpahLbsPerHour,
-    shifts,
-    departmentBreakdown
-  };
-}
+      excluded6320GyCount,
+      excluded6320GyHours: Math.round(excluded6320GyHours * 10) / 10,
+      excluded6320ContCount,
+      excluded6320ContHours: Math.round(excluded6320ContHours * 10) / 10,
+
+      totalTonnageKg,
+      totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
+      totalTonnageLbs,
+      totalPallets,
+      overallOpahLbsPerHour,
+      shifts,
+      departmentBreakdown,
+      mtd
+    };
+  }
 
