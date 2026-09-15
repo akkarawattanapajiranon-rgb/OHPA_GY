@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
+import * as XLSX from 'xlsx';
 
 function scanFolderApiPlugin(): Plugin {
   return {
@@ -299,6 +300,235 @@ function scanFolderApiPlugin(): Plugin {
         });
 
         clientReq.end();
+      });
+
+      // API to fetch Contractor (WAS) records
+      server.middlewares.use('/api/contractor-data', (req, res) => {
+        try {
+          const wasScansDir = path.resolve(__dirname, 'scans_was');
+          if (!fs.existsSync(wasScansDir)) {
+            fs.mkdirSync(wasScansDir, { recursive: true });
+          }
+
+          const networkBaseDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record';
+          const networkWasScanDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\SCAN นิ้ว WAS';
+
+          // Sync Name list WAS
+          if (fs.existsSync(networkBaseDir)) {
+            try {
+              const files = fs.readdirSync(networkBaseDir);
+              const nameListFile = files.find(f => f.toLowerCase().includes('name list was'));
+              if (nameListFile) {
+                const src = path.join(networkBaseDir, nameListFile);
+                const dest = path.join(wasScansDir, nameListFile);
+                if (!fs.existsSync(dest) || fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs) {
+                  fs.copyFileSync(src, dest);
+                }
+              }
+            } catch (e) {}
+          }
+
+          // Sync scan records
+          if (fs.existsSync(networkWasScanDir)) {
+            try {
+              const files = fs.readdirSync(networkWasScanDir);
+              for (const f of files) {
+                if (f.endsWith('.xls') || f.endsWith('.xlsx') || f.endsWith('.csv') || f.endsWith('.txt')) {
+                  const src = path.join(networkWasScanDir, f);
+                  const dest = path.join(wasScansDir, f);
+                  if (!fs.existsSync(dest) || fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs) {
+                    fs.copyFileSync(src, dest);
+                  }
+                }
+              }
+            } catch (e) {}
+          }
+
+          const findFile = (dir1: string, dir2: string, pattern: string) => {
+            if (fs.existsSync(dir1)) {
+              const f = fs.readdirSync(dir1).find(x => x.toLowerCase().includes(pattern.toLowerCase()));
+              if (f) return path.join(dir1, f);
+            }
+            if (fs.existsSync(dir2)) {
+              const f = fs.readdirSync(dir2).find(x => x.toLowerCase().includes(pattern.toLowerCase()));
+              if (f) return path.join(dir2, f);
+            }
+            return null;
+          };
+
+          const nameListPath = findFile(networkBaseDir, wasScansDir, 'name list was');
+          const scanFilePath = findFile(networkWasScanDir, wasScansDir, 'รายงานการทำงาน');
+
+          if (!nameListPath && !scanFilePath) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, message: 'ไม่พบไฟล์ Contractor ในโฟลเดอร์ T: หรือ scans_was' }));
+            return;
+          }
+
+          // Parse employee mapping
+          const contractorMapping: Record<string, any> = {};
+          if (nameListPath && fs.existsSync(nameListPath)) {
+            const buf = fs.readFileSync(nameListPath);
+            const wb = XLSX.read(buf, { type: 'buffer' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+            for (let i = 3; i < data.length; i++) {
+              const row = data[i];
+              if (!row || !row[1]) continue;
+              const empCode = String(row[1]).trim();
+              contractorMapping[empCode] = {
+                empCode,
+                nameEn: String(row[2] || '').trim(),
+                nameTh: String(row[3] || '').trim(),
+                position: String(row[4] || '').trim(),
+                location: String(row[5] || '').trim(),
+                closing: String(row[6] || '').trim(),
+                department: String(row[7] || '').trim(),
+                type: String(row[9] || '').trim()
+              };
+            }
+          }
+
+          // Parse scan records
+          const recordsByDate: Record<string, any> = {};
+          if (scanFilePath && fs.existsSync(scanFilePath)) {
+            const buf = fs.readFileSync(scanFilePath);
+            const wb = XLSX.read(buf, { type: 'buffer' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+
+            const excelDateToDateObj = (serial: any) => {
+              if (typeof serial === 'number') {
+                const utc_days = Math.floor(serial - 25569);
+                const utc_value = utc_days * 86400;
+                const d = new Date(utc_value * 1000);
+                const day = d.getUTCDate();
+                const month = d.getUTCMonth() + 1;
+                const year = d.getUTCFullYear();
+                const pad = (n: number) => String(n).padStart(2, '0');
+                return {
+                  iso: `${year}-${pad(month)}-${pad(day)}`,
+                  formattedThai: `วันที่ ${day}/${month}/${year}`,
+                  formattedShort: `${day}/${month}/${year}`
+                };
+              }
+              return {
+                iso: String(serial),
+                formattedThai: `วันที่ ${serial}`,
+                formattedShort: String(serial)
+              };
+            };
+
+            for (let i = 1; i < data.length; i++) {
+              const row = data[i];
+              if (!row || !row[0]) continue;
+
+              const empCode = String(row[0]).trim();
+              const scanNameTh = String(row[1] || '').trim();
+              const serialDate = row[2];
+              const shiftRaw = String(row[3] || '').trim();
+              const scanIn = row[4] ? String(row[4]).trim() : '';
+              const scanOut = row[5] ? String(row[5]).trim() : '';
+              const late = row[6] ? String(row[6]).trim() : '';
+              const earlyOut = row[7] ? String(row[7]).trim() : '';
+              const absent = row[8] ? String(row[8]).trim() : '';
+              const remark = row[9] ? String(row[9]).trim() : '';
+              const deptRaw = row[10] ? String(row[10]).trim() : '';
+              const isWorkDay = row[11] === 1 || row[11] === '1';
+              const otHours = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
+
+              const dateInfo = excelDateToDateObj(serialDate);
+              const dateKey = dateInfo.formattedShort;
+
+              let shiftNumber = 1;
+              let shiftLabel = 'กะ 1 (07:00 - 15:00)';
+              if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
+                shiftNumber = 2;
+                shiftLabel = 'กะ 2 (15:00 - 23:00)';
+              } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
+                shiftNumber = 3;
+                shiftLabel = 'กะ 3 (23:00 - 07:00)';
+              }
+
+              const hasScannedIn = Boolean(scanIn);
+              const normalHours = (hasScannedIn && isWorkDay) ? 8 : (hasScannedIn ? 0 : 0);
+              const totalHours = normalHours + otHours;
+
+              const empInfo = contractorMapping[empCode] || {
+                empCode,
+                nameEn: '',
+                nameTh: scanNameTh,
+                position: 'Contractor',
+                location: deptRaw,
+                closing: '',
+                department: 'MFG',
+                type: 'Hourly'
+              };
+
+              let status = 'ปกติ';
+              if (!hasScannedIn) {
+                status = remark || (absent ? 'ขาดงาน' : 'วันหยุด');
+              } else if (late) {
+                status = `มาสาย (${late})`;
+              } else if (otHours > 0) {
+                status = `ปกติ (+OT ${otHours} ชม.)`;
+              }
+
+              const record = {
+                empCode,
+                nameTh: empInfo.nameTh || scanNameTh,
+                nameEn: empInfo.nameEn,
+                position: empInfo.position,
+                location: empInfo.location || deptRaw,
+                closing: empInfo.closing,
+                department: empInfo.department,
+                type: empInfo.type,
+                shiftRaw,
+                shiftNumber,
+                shiftLabel,
+                scanIn,
+                scanOut,
+                late,
+                earlyOut,
+                absent,
+                remark,
+                deptRaw,
+                isWorkDay,
+                hasScannedIn,
+                normalHours,
+                otHours,
+                totalHours,
+                status,
+                date: dateInfo.iso,
+                dateFormatted: dateInfo.formattedThai,
+                dateShort: dateInfo.formattedShort
+              };
+
+              if (!recordsByDate[dateKey]) {
+                recordsByDate[dateKey] = {
+                  dateFormatted: dateInfo.formattedThai,
+                  dateShort: dateKey,
+                  isoDate: dateInfo.iso,
+                  records: []
+                };
+              }
+              recordsByDate[dateKey].records.push(record);
+            }
+          }
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: true,
+            employeeCount: Object.keys(contractorMapping).length,
+            datesCount: Object.keys(recordsByDate).length,
+            contractorMapping,
+            recordsByDate
+          }));
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ success: false, message: err.message }));
+        }
       });
     }
   };

@@ -5,12 +5,15 @@ import { ManpowerGapTable } from './components/ManpowerGapTable';
 import { FileUploaderModal } from './components/FileUploaderModal';
 import { DailyAdjustmentModal } from './components/DailyAdjustmentModal';
 import { OhpaCalculationView } from './components/OhpaCalculationView';
+import { ContractorScanRecordsView } from './components/ContractorScanRecordsView';
 
 import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset } from './data/default_scan_record';
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
 import defaultAdjustmentsRaw from './data/default_adjustments.json';
+import { DEFAULT_CONTRACTOR_MAPPING, DEFAULT_CONTRACTOR_RECORDS_BY_DATE } from './data/default_contractor_data';
 import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
 import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
+import { ContractorScanRecord } from './types/contractor';
 import {
   TableProperties,
   UserCheck,
@@ -18,7 +21,9 @@ import {
   Shuffle,
   CheckCircle2,
   AlertCircle,
-  Calculator
+  Calculator,
+  HardHat,
+  Users
 } from 'lucide-react';
 
 export default function App() {
@@ -28,6 +33,12 @@ export default function App() {
   const [employeeMapping, setEmployeeMapping] = useState<Record<string, EmployeeInfo>>(
     defaultEmpMappingRaw as Record<string, EmployeeInfo>
   );
+
+  // Contractor (WAS) state
+  const [contractorRecordsByDate, setContractorRecordsByDate] = useState<
+    Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>
+  >(DEFAULT_CONTRACTOR_RECORDS_BY_DATE);
+  const [isContractorLoading, setIsContractorLoading] = useState<boolean>(false);
 
   const [dailyAdjustments, setDailyAdjustments] = useState<DailyAdjustmentRecord[]>(() => {
     try {
@@ -45,7 +56,7 @@ export default function App() {
   const [selectedShiftFilter, setSelectedShiftFilter] = useState<number | 'ALL'>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
-  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_MANPOWER' | 'PAGE_3_OHPA'>('PAGE_1_DETAILS');
+  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_CONTRACTOR' | 'PAGE_3_MANPOWER' | 'PAGE_4_OHPA'>('PAGE_1_DETAILS');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
@@ -61,9 +72,10 @@ export default function App() {
     }
   }, [toastNotification]);
 
-  // Initial auto-fetch from scans folder on load
+  // Initial auto-fetch from scans folder & contractor data on load
   useEffect(() => {
     handleFetchFolderScans();
+    handleFetchContractorData();
   }, []);
 
   // Core processing - 1 row per employee, 100% sync with Standard HC
@@ -179,26 +191,45 @@ export default function App() {
         return { success: false, message: msg };
       }
     } catch (err: any) {
-      const msg = err.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
-      setToastNotification({ type: 'error', message: `ดึงข้อมูลไม่สำเร็จ: ${msg}` });
-      return { success: false, message: msg };
+      const errMsg = err.message || 'ไม่สามารถเชื่อมต่อ Local API ได้';
+      setToastNotification({ type: 'error', message: `เกิดข้อผิดพลาด: ${errMsg}` });
+      return { success: false, message: errMsg };
     } finally {
       setIsLoadingFolder(false);
     }
   };
 
-  // Open scans/ folder in Windows Explorer
+  // Fetch Contractor data from /api/contractor-data
+  const handleFetchContractorData = async () => {
+    setIsContractorLoading(true);
+    try {
+      const response = await fetch('/api/contractor-data');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.recordsByDate && Object.keys(data.recordsByDate).length > 0) {
+          setContractorRecordsByDate(data.recordsByDate);
+          setToastNotification({
+            type: 'success',
+            message: `ดึงข้อมูล Contractor สำเร็จ! (${data.employeeCount} คน, ${data.datesCount} วัน)`
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('Could not fetch live contractor data, using bundled cache.', e);
+    } finally {
+      setIsContractorLoading(false);
+    }
+  };
+
   const handleOpenFolderInExplorer = async () => {
     try {
       await fetch('/api/open-folder');
     } catch (e) {
-      console.error('Cannot open explorer folder:', e);
+      console.warn('Could not open folder via API');
     }
   };
 
-  // Batch upload picked files from local folder
-  const handleBatchUploadFiles = (files: { fileName: string; content: string }[]) => {
-    if (files.length === 0) return;
+  const handleBatchUploadFiles = (files: RawScanFileItem[]) => {
     const newPresets = createPresetsFromScanFiles(files);
     if (newPresets.length > 0) {
       setPresets(newPresets);
@@ -208,7 +239,7 @@ export default function App() {
       setSelectedDeptFilter('ALL');
       setToastNotification({
         type: 'success',
-        message: `นำเข้าข้อมูล ${files.length} ไฟล์สำเร็จ! (${newPresets.length} วัน)`
+        message: `นำเข้าสำเร็จ ${files.length} ไฟล์ (ตรวจพบ ${newPresets.length} วัน)`
       });
     }
   };
@@ -217,24 +248,34 @@ export default function App() {
     setDailyAdjustments(newAdjustments);
     try {
       localStorage.setItem('ohpa_daily_adjustments', JSON.stringify(newAdjustments));
-    } catch (e) {
-      console.error('Error saving adjustments:', e);
+      setToastNotification({
+        type: 'success',
+        message: 'บันทึกการปรับปรุงข้อมูลตำแหน่ง/OT สำเร็จ'
+      });
+    } catch (err) {
+      console.error('Failed to save to localStorage:', err);
     }
-    setToastNotification({
-      type: 'success',
-      message: `บันทึกรายการปรับเปลี่ยนเรียบร้อย (${newAdjustments.length} รายการ)`
-    });
   };
 
-  const normCurrentDate = normalizeDateToMMDDYYYY(dateStringFormatted);
-  const currentDateAdjustmentsCount = dailyAdjustments.filter(a => {
-    const norm = normalizeDateToMMDDYYYY(a.dateStr);
-    return !norm || norm === normCurrentDate;
-  }).length;
+  // Count adjustments for current date
+  const currentDateAdjustmentsCount = useMemo(() => {
+    const cleanCurrentDate = dateStringFormatted.trim();
+    return dailyAdjustments.filter(a => {
+      const adjDate = (a.dateStr || '').trim();
+      return adjDate === cleanCurrentDate || adjDate === '' || adjDate === 'ALL';
+    }).length;
+  }, [dailyAdjustments, dateStringFormatted]);
+
+  // Contractor count for current selected date
+  const currentContractorCount = useMemo(() => {
+    const clean = dateStringFormatted.replace(/^📅\s*วันที่\s*/, '').replace(/^วันที่\s*/, '').trim();
+    const entry = contractorRecordsByDate[clean];
+    return entry?.records?.length || 75;
+  }, [contractorRecordsByDate, dateStringFormatted]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-12">
-      {/* Navbar Header */}
+    <div className="min-h-screen bg-slate-100 flex flex-col font-sans pb-12">
+      {/* Top Navigation */}
       <Navbar
         fileName={selectedFileId}
         scanDate={dateStringFormatted}
@@ -245,6 +286,7 @@ export default function App() {
         onSelectPreset={handleSelectPreset}
         onFetchFolderScans={() => {
           handleFetchFolderScans();
+          handleFetchContractorData();
         }}
         onOpenFolderInExplorer={handleOpenFolderInExplorer}
         onOpenUploadModal={() => setIsUploadModalOpen(true)}
@@ -273,10 +315,10 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
-        {/* Tab Navigation (3 Pages) */}
+        {/* Tab Navigation (4 Pages) */}
         <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col xl:flex-row items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-            {/* Page 1 Tab */}
+            {/* Page 1 Tab: GY Scans */}
             <button
               onClick={() => setActiveTab('PAGE_1_DETAILS')}
               className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
@@ -294,32 +336,50 @@ export default function App() {
               </span>
             </button>
 
-            {/* Page 2 Tab */}
+            {/* Page 2 Tab: Contractor WAS Scans */}
             <button
-              onClick={() => setActiveTab('PAGE_2_MANPOWER')}
+              onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
               className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_2_MANPOWER'
+                activeTab === 'PAGE_2_CONTRACTOR'
+                  ? 'bg-teal-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <HardHat className="w-4 h-4" />
+              <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (Cont)</span>
+              <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
+                activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
+              }`}>
+                {currentContractorCount} คน
+              </span>
+            </button>
+
+            {/* Page 3 Tab: Standard Manpower Comparison */}
+            <button
+              onClick={() => setActiveTab('PAGE_3_MANPOWER')}
+              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'PAGE_3_MANPOWER'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <UserCheck className="w-4 h-4" />
-              <span>หน้า 2: ตารางเปรียบเทียบ Standard HC</span>
+              <span>หน้า 3: ตารางเปรียบเทียบ Standard HC</span>
             </button>
 
-            {/* Page 3 Tab: OPHA CAL */}
+            {/* Page 4 Tab: OPHA CAL */}
             <button
-              onClick={() => setActiveTab('PAGE_3_OHPA')}
+              onClick={() => setActiveTab('PAGE_4_OHPA')}
               className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_3_OHPA'
+                activeTab === 'PAGE_4_OHPA'
                   ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Calculator className="w-4 h-4" />
-              <span>หน้า 3: OPHA CAL</span>
+              <span>หน้า 4: OPHA CAL</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                activeTab === 'PAGE_3_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
+                activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
               }`}>
                 55012
               </span>
@@ -349,7 +409,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab 1: Employee Detail Table */}
+        {/* Tab 1: GY Employee Detail Table */}
         {activeTab === 'PAGE_1_DETAILS' && (
           <EmployeeDetailTable
             records={records}
@@ -362,13 +422,24 @@ export default function App() {
           />
         )}
 
-        {/* Tab 2: Standard HC Comparison Table */}
-        {activeTab === 'PAGE_2_MANPOWER' && (
+        {/* Tab 2: Contractor (WAS) Detail Table */}
+        {activeTab === 'PAGE_2_CONTRACTOR' && (
+          <ContractorScanRecordsView
+            recordsByDate={contractorRecordsByDate}
+            currentDateFormatted={dateStringFormatted}
+            onRefreshData={handleFetchContractorData}
+            isLoading={isContractorLoading}
+            onSelectDate={handleSelectDateFromOhpa}
+          />
+        )}
+
+        {/* Tab 3: Standard HC Comparison Table */}
+        {activeTab === 'PAGE_3_MANPOWER' && (
           <ManpowerGapTable data={manpowerComparison} />
         )}
 
-        {/* Tab 3: OHPA Calculation View */}
-        {activeTab === 'PAGE_3_OHPA' && (
+        {/* Tab 4: OHPA Calculation View */}
+        {activeTab === 'PAGE_4_OHPA' && (
           <OhpaCalculationView
             records={records}
             currentScanDateFormatted={dateStringFormatted}
