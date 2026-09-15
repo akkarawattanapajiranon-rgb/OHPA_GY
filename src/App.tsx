@@ -265,7 +265,7 @@ export default function App() {
               }`}
             >
               <TableProperties className="w-4 h-4" />
-              <span>หน้า 1: ตารางรายบุคคล (ไม่ซ้ำรายชื่อ)</span>
+              <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (GY)</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                 activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
               }`}>
