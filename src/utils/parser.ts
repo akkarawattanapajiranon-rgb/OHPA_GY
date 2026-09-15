@@ -331,8 +331,30 @@ export function processScanRecords(
     // Determine shift
     let shiftNum: ShiftType = 1;
     let isPreShiftReliefOt = false;
+    const isEmp01454 = empId === '01454' || empId === '1454' || (Boolean(empInfo.nameTH) && empInfo.nameTH.includes('มนตรี') && empInfo.nameTH.includes('สุขสนิท'));
 
-    if (inScan && outScan) {
+    if (isEmp01454) {
+      // Special Case: Employee 01454 (มนตรี สุขสนิท)
+      // Works Shift 1 (morning), but regularly clocks in early between 02:00 - 05:00 and leaves ~15:00.
+      if (inScan && outScan) {
+        const inHh = inScan.timestamp.getHours();
+        const outHh = outScan.timestamp.getHours();
+        if (inHh <= 11 && outHh >= 12 && outHh <= 19) {
+          shiftNum = 1;
+        } else {
+          shiftNum = determineShift(inScan.timestamp);
+        }
+      } else if (inScan) {
+        const inHh = inScan.timestamp.getHours();
+        if (inHh >= 1 && inHh <= 11) {
+          shiftNum = 1;
+        } else {
+          shiftNum = determineShift(inScan.timestamp);
+        }
+      } else if (outScan) {
+        shiftNum = determineShiftFromOut(outScan.timestamp);
+      }
+    } else if (inScan && outScan) {
       const inHh = inScan.timestamp.getHours();
       const inMm = inScan.timestamp.getMinutes();
       const outHh = outScan.timestamp.getHours();
@@ -388,6 +410,19 @@ export function processScanRecords(
       } else {
         isLate = false;
         lateMinutes = 0;
+      }
+    } else if (isEmp01454 && shiftNum === 1) {
+      // Special 01454: early morning arrival (02:00 - 07:07) is NOT late
+      if (inScan) {
+        const inHh = inScan.timestamp.getHours();
+        const inMm = inScan.timestamp.getMinutes();
+        if (inHh > 7 || (inHh === 7 && inMm > 7)) {
+          isLate = true;
+          lateMinutes = (inHh - 7) * 60 + inMm;
+        } else {
+          isLate = false;
+          lateMinutes = 0;
+        }
       }
     } else if (isPreShiftReliefOt) {
       // Arrived early before shift start for break relief OT -> on time
@@ -459,6 +494,19 @@ export function processScanRecords(
           normalWorkHours = effectiveWorkHours;
           otHours = 0;
         }
+      } else if (isEmp01454 && shiftNum === 1) {
+        // Special 01454: Pre-shift OT before 07:00 (e.g. in at 02:51 -> 4h OT; in at 04:57 -> 2h OT)
+        if (inMins < 7 * 60) {
+          const preMins = 7 * 60 - inMins;
+          preOtHours = Math.floor((preMins + 15) / 60);
+        }
+        // Post-shift OT after 15:00
+        const minsPastShift = outMins - 15 * 60;
+        if (minsPastShift >= 45) {
+          postOtHours = Math.floor((minsPastShift + 15) / 60);
+        }
+        otHours = preOtHours + postOtHours;
+        normalWorkHours = Math.min(8, Math.max(0, effectiveWorkHours - otHours));
       } else {
         // 1. Pre-shift Break Relief OT (Only when scheduled for break relief)
         if (shiftNum === 2 && isPreShiftReliefOt) {
