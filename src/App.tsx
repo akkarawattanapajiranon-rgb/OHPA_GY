@@ -157,7 +157,7 @@ export default function App() {
 
   // Initial auto-fetch from scans folder & contractor data on load
   useEffect(() => {
-    handleFetchFolderScans();
+    handleFetchFolderScans(false);
     handleFetchContractorData();
   }, []);
 
@@ -232,14 +232,16 @@ export default function App() {
   };
 
   // Fetch scans directly from scans/ folder
-  const handleFetchFolderScans = async (): Promise<{ success: boolean; message: string; fileCount?: number }> => {
+  const handleFetchFolderScans = async (isManual = true): Promise<{ success: boolean; message: string; fileCount?: number }> => {
     setIsLoadingFolder(true);
     try {
       const response = await fetch('/api/scan-folder');
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const errMsg = errorData.error || `HTTP error ${response.status}`;
-        setToastNotification({ type: 'error', message: `ดึงข้อมูลไม่สำเร็จ: ${errMsg}` });
+        if (isManual) {
+          setToastNotification({ type: 'error', message: `ดึงข้อมูลไม่สำเร็จ: ${errMsg}` });
+        }
         return { success: false, message: errMsg };
       }
 
@@ -248,7 +250,9 @@ export default function App() {
 
       if (files.length === 0) {
         const msg = 'ไม่พบไฟล์สแกนในโฟลเดอร์ scans (กรุณาวางไฟล์ .txt ในโฟลเดอร์ scans แล้วกดใหม่อีกครั้ง)';
-        setToastNotification({ type: 'error', message: msg });
+        if (isManual) {
+          setToastNotification({ type: 'error', message: msg });
+        }
         return { success: false, message: msg };
       }
 
@@ -262,7 +266,9 @@ export default function App() {
         setSelectedDeptFilter('ALL');
 
         const successMsg = `ดึงข้อมูลจากโฟลเดอร์สำเร็จ! (${files.length} ไฟล์, ประมวลผลได้ ${newPresets.length} วัน)`;
-        setToastNotification({ type: 'success', message: successMsg });
+        if (isManual) {
+          setToastNotification({ type: 'success', message: successMsg });
+        }
         return {
           success: true,
           message: successMsg,
@@ -270,12 +276,16 @@ export default function App() {
         };
       } else {
         const msg = 'อ่านไฟล์สำเร็จ แต่ไม่พบรูปแบบบันทึกเวลาที่ถูกต้องในไฟล์';
-        setToastNotification({ type: 'error', message: msg });
+        if (isManual) {
+          setToastNotification({ type: 'error', message: msg });
+        }
         return { success: false, message: msg };
       }
     } catch (err: any) {
       const errMsg = err.message || 'ไม่สามารถเชื่อมต่อ Local API ได้';
-      setToastNotification({ type: 'error', message: `เกิดข้อผิดพลาด: ${errMsg}` });
+      if (isManual) {
+        setToastNotification({ type: 'error', message: `เกิดข้อผิดพลาด: ${errMsg}` });
+      }
       return { success: false, message: errMsg };
     } finally {
       setIsLoadingFolder(false);
