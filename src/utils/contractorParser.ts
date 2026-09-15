@@ -1,6 +1,43 @@
 import * as XLSX from 'xlsx';
 import { ContractorEmployeeInfo, ContractorScanRecord, ContractorDaySummary } from '../types/contractor';
 
+/**
+ * Normalize any date format (e.g. "1/9/2026", "01/09/2026", "2026-09-01", "📅 วันที่ 1/9/2026") to "D/M/YYYY"
+ */
+export function normalizeToDMY(input: any): string {
+  if (!input) return '';
+  const str = String(input).trim();
+  const clean = str.replace(/^[📅📄s]*วันที่s*/, '').trim();
+
+  // Match D/M/YYYY or DD/MM/YYYY
+  const dmyMatch = clean.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})/);
+  if (dmyMatch) {
+    const d = parseInt(dmyMatch[1], 10);
+    const m = parseInt(dmyMatch[2], 10);
+    const y = dmyMatch[3];
+    return `${d}/${m}/${y}`;
+  }
+
+  // Match YYYY-MM-DD
+  const ymdMatch = clean.match(/^(\d{4})[/.-](\d{1,2})[/.-](\d{1,2})/);
+  if (ymdMatch) {
+    const y = ymdMatch[1];
+    const m = parseInt(ymdMatch[2], 10);
+    const d = parseInt(ymdMatch[3], 10);
+    return `${d}/${m}/${y}`;
+  }
+
+  // Match MMDDYYYY (8 digits)
+  if (/^\d{8}$/.test(clean)) {
+    const m = parseInt(clean.slice(0, 2), 10);
+    const d = parseInt(clean.slice(2, 4), 10);
+    const y = clean.slice(4, 8);
+    return `${d}/${m}/${y}`;
+  }
+
+  return clean;
+}
+
 export function normalizeContractorDate(serialOrStr: any): {
   iso: string;
   formattedThai: string;
@@ -21,20 +58,18 @@ export function normalizeContractorDate(serialOrStr: any): {
     };
   }
 
-  if (typeof serialOrStr === 'string') {
-    const clean = serialOrStr.trim();
-    const slashParts = clean.split('/');
-    if (slashParts.length === 3) {
-      const d = parseInt(slashParts[0], 10);
-      const m = parseInt(slashParts[1], 10);
-      const y = parseInt(slashParts[2], 10);
-      const pad = (n: number) => String(n).padStart(2, '0');
-      return {
-        iso: `${y}-${pad(m)}-${pad(d)}`,
-        formattedThai: `วันที่ ${d}/${m}/${y}`,
-        formattedShort: `${d}/${m}/${y}`
-      };
-    }
+  const dmy = normalizeToDMY(serialOrStr);
+  const parts = dmy.split('/');
+  if (parts.length === 3) {
+    const d = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const y = parts[2];
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return {
+      iso: `${y}-${pad(m)}-${pad(d)}`,
+      formattedThai: `วันที่ ${d}/${m}/${y}`,
+      formattedShort: `${d}/${m}/${y}`
+    };
   }
 
   return {
@@ -45,28 +80,25 @@ export function normalizeContractorDate(serialOrStr: any): {
 }
 
 export function getContractorDaySummary(
-  dateKey: string,
+  targetDate: string,
   recordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>
 ): ContractorDaySummary | null {
   if (!recordsByDate || Object.keys(recordsByDate).length === 0) return null;
 
-  // Try exact key
-  let entry = recordsByDate[dateKey];
+  const targetNorm = normalizeToDMY(targetDate);
+
+  // 1. Try exact match on key
+  let entry = recordsByDate[targetDate] || recordsByDate[targetNorm];
+
+  // 2. Try normalized match across all keys
   if (!entry) {
-    const clean = dateKey.replace(/^📅s*วันที่s*/, '').replace(/^วันที่s*/, '').trim();
-    entry = recordsByDate[clean];
-  }
-  if (!entry) {
-    // Search keys
-    const matchKey = Object.keys(recordsByDate).find(k => {
-      const cleanK = k.replace(/^📅s*วันที่s*/, '').replace(/^วันที่s*/, '').trim();
-      const cleanInput = dateKey.replace(/^📅s*วันที่s*/, '').replace(/^วันที่s*/, '').trim();
-      return cleanK === cleanInput || cleanInput.includes(cleanK) || cleanK.includes(cleanInput);
+    const foundKey = Object.keys(recordsByDate).find(k => {
+      return normalizeToDMY(k) === targetNorm;
     });
-    if (matchKey) entry = recordsByDate[matchKey];
+    if (foundKey) entry = recordsByDate[foundKey];
   }
 
-  // Fallback to first available entry if not found
+  // 3. Fallback to latest date if not found
   if (!entry) {
     const keys = Object.keys(recordsByDate);
     if (keys.length > 0) entry = recordsByDate[keys[0]];

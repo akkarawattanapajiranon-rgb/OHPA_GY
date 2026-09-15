@@ -6,23 +6,19 @@ import {
   Clock,
   CheckCircle2,
   AlertTriangle,
-  UserCheck,
   Building2,
   Calendar,
-  Layers,
-  ArrowUpDown,
-  RefreshCw,
-  FolderOpen
+  RefreshCw
 } from 'lucide-react';
 import { ContractorScanRecord, ContractorDaySummary } from '../types/contractor';
-import { exportContractorRecordsToExcel, getContractorDaySummary } from '../utils/contractorParser';
+import { exportContractorRecordsToExcel, getContractorDaySummary, normalizeToDMY } from '../utils/contractorParser';
 
 interface ContractorScanRecordsViewProps {
   recordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>;
   currentDateFormatted: string;
   onRefreshData?: () => void;
   isLoading?: boolean;
-  onSelectDate?: (dateShort: string) => void;
+  onSelectDate?: (dateFormatted: string) => void;
 }
 
 export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps> = ({
@@ -36,33 +32,36 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
   const [selectedShift, setSelectedShift] = useState<'ALL' | 1 | 2 | 3>('ALL');
   const [selectedLocation, setSelectedLocation] = useState<string>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<'ALL' | 'IN' | 'OT' | 'ABSENT' | 'LATE'>('ALL');
-  const [selectedDateKey, setSelectedDateKey] = useState<string>(() => {
-    const clean = currentDateFormatted.replace(/^📅s*วันที่s*/, '').replace(/^วันที่s*/, '').trim();
-    if (recordsByDate[clean]) return clean;
-    const keys = Object.keys(recordsByDate);
-    return keys[0] || '1/9/2026';
-  });
 
-  // Sync with currentDateFormatted prop when changed
-  React.useEffect(() => {
-    const clean = currentDateFormatted.replace(/^📅s*วันที่s*/, '').replace(/^วันที่s*/, '').trim();
-    if (recordsByDate[clean]) {
-      setSelectedDateKey(clean);
-    } else {
-      const matchKey = Object.keys(recordsByDate).find(k => k === clean || clean.includes(k) || k.includes(clean));
-      if (matchKey) setSelectedDateKey(matchKey);
-    }
-  }, [currentDateFormatted, recordsByDate]);
-
-  // Available dates list
-  const availableDateKeys = useMemo(() => {
-    return Object.keys(recordsByDate);
+  // Sort available date keys in descending order (latest date first)
+  const sortedDateKeys = useMemo(() => {
+    return Object.keys(recordsByDate).sort((a, b) => {
+      const pA = a.split('/').map(n => parseInt(n, 10));
+      const pB = b.split('/').map(n => parseInt(n, 10));
+      if (pA.length === 3 && pB.length === 3) {
+        const timeA = new Date(pA[2], pA[1] - 1, pA[0]).getTime();
+        const timeB = new Date(pB[2], pB[1] - 1, pB[0]).getTime();
+        return timeB - timeA;
+      }
+      return b.localeCompare(a);
+    });
   }, [recordsByDate]);
+
+  // Active date key matched directly to Navbar currentDateFormatted
+  const activeDateKey = useMemo(() => {
+    const targetNorm = normalizeToDMY(currentDateFormatted);
+    if (recordsByDate[targetNorm]) return targetNorm;
+
+    const match = sortedDateKeys.find(k => normalizeToDMY(k) === targetNorm);
+    if (match) return match;
+
+    return sortedDateKeys[0] || '1/9/2026';
+  }, [currentDateFormatted, recordsByDate, sortedDateKeys]);
 
   // Current day summary
   const daySummary: ContractorDaySummary | null = useMemo(() => {
-    return getContractorDaySummary(selectedDateKey, recordsByDate);
-  }, [selectedDateKey, recordsByDate]);
+    return getContractorDaySummary(activeDateKey, recordsByDate);
+  }, [activeDateKey, recordsByDate]);
 
   const rawRecords = useMemo(() => {
     return daySummary?.records || [];
@@ -146,7 +145,6 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
   }, [filteredRecords]);
 
   const handleDateChange = (newDateKey: string) => {
-    setSelectedDateKey(newDateKey);
     if (onSelectDate) {
       onSelectDate(newDateKey);
     }
@@ -155,7 +153,7 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
   const handleExport = () => {
     exportContractorRecordsToExcel(
       filteredRecords,
-      daySummary?.dateFormatted || selectedDateKey,
+      daySummary?.dateFormatted || activeDateKey,
       'Contractor_WAS_Scan_Records'
     );
   };
@@ -182,17 +180,18 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
             </p>
           </div>
 
-          {/* Date Selector & Action Buttons */}
+          {/* Date Selector & Action Buttons - Fully synced with top Navbar */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center bg-slate-800/90 border border-teal-500/40 rounded-xl px-3 py-1.5 shadow-sm">
               <Calendar className="w-4 h-4 text-teal-400 mr-2" />
               <span className="text-xs text-slate-400 mr-2 font-medium">วันที่:</span>
               <select
-                value={selectedDateKey}
+                value={activeDateKey}
                 onChange={(e) => handleDateChange(e.target.value)}
                 className="bg-transparent text-white font-semibold text-sm outline-none cursor-pointer pr-2"
+                title="เปลี่ยนวันที่ (เชื่อมโยงกับวันที่ด้านบน Navbar อัตโนมัติ)"
               >
-                {availableDateKeys.map(k => (
+                {sortedDateKeys.map(k => (
                   <option key={k} value={k} className="bg-slate-800 text-white">
                     📅 {k}
                   </option>
@@ -204,7 +203,7 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
               <button
                 onClick={onRefreshData}
                 disabled={isLoading}
-                className="flex items-center gap-2 px-3.5 py-2 bg-slate-700/80 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-xl border border-slate-600 transition shadow-sm"
+                className="flex items-center gap-2 px-3.5 py-2 bg-slate-700/80 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-xl border border-slate-600 transition shadow-sm cursor-pointer"
                 title="รีเฟรชข้อมูลจาก T: Drive"
               >
                 <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-teal-400' : ''}`} />
@@ -214,7 +213,7 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
 
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl shadow-md transition"
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl shadow-md transition cursor-pointer"
             >
               <Download className="w-4 h-4" />
               <span>ส่งออก Excel</span>
@@ -307,25 +306,25 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium">
               <button
                 onClick={() => setSelectedShift('ALL')}
-                className={`px-3 py-1.5 rounded-lg transition ${selectedShift === 'ALL' ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${selectedShift === 'ALL' ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
               >
                 ทุกกะ
               </button>
               <button
                 onClick={() => setSelectedShift(1)}
-                className={`px-3 py-1.5 rounded-lg transition ${selectedShift === 1 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${selectedShift === 1 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
               >
                 กะ 1 (เช้า)
               </button>
               <button
                 onClick={() => setSelectedShift(2)}
-                className={`px-3 py-1.5 rounded-lg transition ${selectedShift === 2 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${selectedShift === 2 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
               >
                 กะ 2 (บ่าย)
               </button>
               <button
                 onClick={() => setSelectedShift(3)}
-                className={`px-3 py-1.5 rounded-lg transition ${selectedShift === 3 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${selectedShift === 3 ? 'bg-white dark:bg-slate-700 shadow-sm text-teal-600 dark:text-teal-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
               >
                 กะ 3 (ดึก)
               </button>

@@ -105,11 +105,11 @@ export default function App() {
   };
 
   const handleSelectDateFromOhpa = (dateFormatted: string) => {
-    const cleanDate = dateFormatted.trim();
+    const cleanDate = dateFormatted.replace(/^[📅📄\s]*วันที่\s*/, '').trim();
     const matchingPreset = presets.find(p => {
       if (p.dateFormatted && p.dateFormatted.trim() === cleanDate) return true;
-      if (p.name && p.name.includes(cleanDate)) return true;
-      const normP = normalizeDateToMMDDYYYY(p.dateFormatted || p.id);
+      if (p.name && (p.name.includes(cleanDate) || cleanDate.includes(p.name))) return true;
+      const normP = normalizeDateToMMDDYYYY(p.dateFormatted || p.name || p.id);
       const normInput = normalizeDateToMMDDYYYY(cleanDate);
       return Boolean(normP && normInput && normP === normInput);
     });
