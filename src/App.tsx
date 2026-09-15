@@ -4,6 +4,7 @@ import { EmployeeDetailTable } from './components/EmployeeDetailTable';
 import { ManpowerGapTable } from './components/ManpowerGapTable';
 import { FileUploaderModal } from './components/FileUploaderModal';
 import { DailyAdjustmentModal } from './components/DailyAdjustmentModal';
+import { OhpaCalculationView } from './components/OhpaCalculationView';
 
 import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset } from './data/default_scan_record';
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
@@ -16,7 +17,8 @@ import {
   Calendar,
   Shuffle,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Calculator
 } from 'lucide-react';
 
 export default function App() {
@@ -43,7 +45,7 @@ export default function App() {
   const [selectedShiftFilter, setSelectedShiftFilter] = useState<number | 'ALL'>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
-  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_MANPOWER'>('PAGE_1_DETAILS');
+  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_MANPOWER' | 'PAGE_3_OHPA'>('PAGE_1_DETAILS');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
@@ -252,13 +254,13 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
-        {/* Tab Navigation (2 Pages Only) */}
-        <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+        {/* Tab Navigation (3 Pages) */}
+        <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col xl:flex-row items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
             {/* Page 1 Tab */}
             <button
               onClick={() => setActiveTab('PAGE_1_DETAILS')}
-              className={`flex-1 sm:flex-none py-2.5 px-5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                 activeTab === 'PAGE_1_DETAILS'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -276,18 +278,36 @@ export default function App() {
             {/* Page 2 Tab */}
             <button
               onClick={() => setActiveTab('PAGE_2_MANPOWER')}
-              className={`flex-1 sm:flex-none py-2.5 px-5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                 activeTab === 'PAGE_2_MANPOWER'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <UserCheck className="w-4 h-4" />
-              <span>หน้า 2: ตารางเปรียบเทียบ Standard HC vs สแกนนิ้วจริง</span>
+              <span>หน้า 2: ตารางเปรียบเทียบ Standard HC</span>
+            </button>
+
+            {/* Page 3 Tab: OPHA CAL */}
+            <button
+              onClick={() => setActiveTab('PAGE_3_OHPA')}
+              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'PAGE_3_OHPA'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Calculator className="w-4 h-4" />
+              <span>หน้า 3: OPHA CAL</span>
+              <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
+                activeTab === 'PAGE_3_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
+              }`}>
+                55012
+              </span>
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full xl:w-auto justify-end">
             {/* Daily Adjustment Trigger Button */}
             <button
               onClick={() => setIsAdjustmentModalOpen(true)}
@@ -303,7 +323,7 @@ export default function App() {
               )}
             </button>
 
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 px-2 py-1 bg-slate-50 rounded-xl border border-slate-200">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 px-2.5 py-1.5 bg-slate-50 rounded-xl border border-slate-200">
               <Calendar className="w-3.5 h-3.5 text-blue-500" />
               <span>วันที่: <strong className="text-slate-800">{dateStringFormatted}</strong></span>
             </div>
@@ -326,6 +346,14 @@ export default function App() {
         {/* Tab 2: Standard HC Comparison Table */}
         {activeTab === 'PAGE_2_MANPOWER' && (
           <ManpowerGapTable data={manpowerComparison} />
+        )}
+
+        {/* Tab 3: OHPA Calculation View */}
+        {activeTab === 'PAGE_3_OHPA' && (
+          <OhpaCalculationView
+            records={records}
+            currentScanDateFormatted={dateStringFormatted}
+          />
         )}
       </main>
 
