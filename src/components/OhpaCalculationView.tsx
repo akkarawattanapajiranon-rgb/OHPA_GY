@@ -168,7 +168,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': 'พนักงานรวมทั้งโรงงาน (GY + Contractor + Monthly)', 'ค่า': ohpaSummary.totalEmployeesCount + ' คน' },
       { 'หัวข้อ (KPI)': '- พนักงานประจำ Goodyear (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.gyEmployeesCount + ' คน (' + ohpaSummary.gyTotalHours.toLocaleString() + ' ชม.)' },
       { 'หัวข้อ (KPI)': '- พนักงานผู้รับเหมา Contractor WAS (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.contractorEmployeesCount + ' คน (' + ohpaSummary.contractorTotalHours.toLocaleString() + ' ชม.)' },
-      { 'หัวข้อ (KPI)': '- พนักงานรายเดือน (Monthly Staff 62 คน)', 'ค่า': `${ohpaSummary.monthlyStaff.count} คน (${ohpaSummary.monthlyStaff.totalHours} ชม. @ ${ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน)` },
+      { 'หัวข้อ (KPI)': '- พนักงานรายเดือน (Monthly Staff: GY 62 + WAS 8 = 70 คน)', 'ค่า': `${ohpaSummary.monthlyStaff.combinedCount || 70} คน (${(ohpaSummary.monthlyStaff.combinedTotalHours || (ohpaSummary.monthlyStaff.totalHours + (ohpaSummary.monthlyStaff.wasTotalHours || 0)))} ชม. @ ${ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน)` },
       { 'หัวข้อ (KPI)': '🚫 พนักงานแผนก 6320 ที่ตัดออก (GY + Cont)', 'ค่า': `${ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน (${(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.)` },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น (รวมรายเดือน)', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงาน OT รวมทั้งสิ้น', 'ค่า': ohpaSummary.totalOtHours.toLocaleString() + ' ชม.' },
@@ -662,7 +662,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <span className="font-bold text-teal-900 text-[10px] block">Cont: {ohpaSummary.contractorTotalHours.toLocaleString()}h</span>
                 </div>
                 <div className="bg-purple-50/70 p-1.5 px-2 rounded-lg">
-                  <span className="font-bold text-purple-900 text-[10px] block">รายเดือน: {ohpaSummary.monthlyStaff.totalHours.toLocaleString()}h</span>
+                  <span className="font-bold text-purple-900 text-[10px] block">รายเดือน: {(ohpaSummary.monthlyStaff.combinedTotalHours || (ohpaSummary.monthlyStaff.totalHours + (ohpaSummary.monthlyStaff.wasTotalHours || 0))).toLocaleString()}h</span>
                 </div>
               </div>
             </div>
@@ -1408,24 +1408,30 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                   {area.departments.map((sub, sIdx) => (
                                     <tr key={sub.dept + sIdx} className="hover:bg-slate-50/80">
                                       <td className="py-1.5 px-3 font-medium text-slate-800 flex items-center gap-2">
-                                        {sub.isMonthly ? (
-                                          <Briefcase className="w-3 h-3 text-purple-600 shrink-0" />
+                                        {sub.isBead ? (
+                                          <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                        ) : sub.isMonthly ? (
+                                          <Briefcase className={`w-3.5 h-3.5 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
                                         ) : sub.isContractor ? (
-                                          <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
+                                          <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                                         ) : (
-                                          <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
+                                          <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                                         )}
                                         <span>{sub.dept}</span>
                                       </td>
                                       <td className="py-1.5 px-3 text-center">
                                         <span className={`px-2 py-0.2 rounded-full font-bold text-[10px] ${
-                                          sub.isMonthly
-                                            ? 'bg-purple-100 text-purple-800'
+                                          sub.isBead
+                                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                            : sub.isMonthly && sub.isContractor
+                                            ? 'bg-teal-100 text-teal-800 border border-teal-200'
+                                            : sub.isMonthly
+                                            ? 'bg-purple-100 text-purple-800 border border-purple-200'
                                             : sub.isContractor
                                             ? 'bg-teal-100 text-teal-800'
                                             : 'bg-blue-100 text-blue-800'
                                         }`}>
-                                          {sub.isMonthly ? 'Monthly' : sub.isContractor ? 'Contractor' : 'Goodyear'}
+                                          {sub.isBead ? 'Bead (+)' : sub.isMonthly ? (sub.isContractor ? 'WAS Monthly' : 'GY Monthly') : sub.isContractor ? 'Contractor' : 'Goodyear'}
                                         </span>
                                       </td>
                                       <td className="py-1.5 px-3 text-center font-bold text-slate-700">

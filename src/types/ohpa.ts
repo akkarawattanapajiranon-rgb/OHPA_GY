@@ -52,12 +52,17 @@ export interface MonthlyStaffMetrics {
   hoursPerPerson: number;
   totalHours: number;
   dayName: string;
+  wasCount?: number;
+  wasTotalHours?: number;
+  combinedCount?: number;
+  combinedTotalHours?: number;
 }
 
 export interface OhpaDeptMetrics {
   dept: string;
   isContractor?: boolean;
   isMonthly?: boolean;
+  isBead?: boolean;
   isExcluded6320?: boolean;
   headcount: number;
   normalHours: number;
@@ -70,6 +75,7 @@ export interface OhpaAreaDeptItem {
   dept: string;
   isContractor: boolean;
   isMonthly?: boolean;
+  isBead?: boolean;
   headcount: number;
   normalHours: number;
   otHours: number;

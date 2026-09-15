@@ -51,11 +51,18 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   const count = 62;
   const totalHours = count * hoursPerPerson;
 
+  const wasCount = 8;
+  const wasTotalHours = wasCount * hoursPerPerson;
+
   return {
     count,
     hoursPerPerson,
     totalHours,
-    dayName: dayNames[dayOfWeek]
+    dayName: dayNames[dayOfWeek],
+    wasCount,
+    wasTotalHours,
+    combinedCount: count + wasCount,
+    combinedTotalHours: totalHours + wasTotalHours
   };
 }
 
@@ -149,18 +156,20 @@ export function calculateMtdSummary(
       }
     }
 
-    // 3. Monthly Staff Data
+    // 3. Monthly Staff Data (Goodyear 62 + WAS 8)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
-    const monthlyHours = monthlyStaff.totalHours;
+    const gyMonthlyHours = monthlyStaff.totalHours;
+    const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (8 * monthlyStaff.hoursPerPerson);
+    const combinedMonthlyHours = gyMonthlyHours + wasMonthlyHours;
 
-    const dayTotalHours = gyHours + contractorHours + monthlyHours;
+    const dayTotalHours = gyHours + contractorHours + combinedMonthlyHours;
     const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
     const beadAddHours = pdiBeadReport?.beadDailyTotals?.[d] || 0;
     const dayOpahHours = Math.max(0, dayTotalHours - pdiDeductHours + beadAddHours);
 
     mtdGyHours += gyHours;
     mtdContractorHours += contractorHours;
-    mtdMonthlyHours += monthlyHours;
+    mtdMonthlyHours += combinedMonthlyHours;
     mtdTotalHours += dayTotalHours;
     mtdPdiDeductHours += pdiDeductHours;
     mtdBeadAddHours += beadAddHours;
@@ -174,7 +183,7 @@ export function calculateMtdSummary(
       gyHours: Math.round(gyHours * 10) / 10,
       contractorHeadcount,
       contractorHours: Math.round(contractorHours * 10) / 10,
-      monthlyHours: Math.round(monthlyHours * 10) / 10,
+      monthlyHours: Math.round(combinedMonthlyHours * 10) / 10,
       totalHours: Math.round(dayTotalHours * 10) / 10,
       pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
       beadAddHours: Math.round(beadAddHours * 10) / 10,
@@ -259,14 +268,18 @@ export function calculateOhpaSummary(
   const excluded6320ContCount = cont6320Records.length;
   const excluded6320ContHours = cont6320Records.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
 
-  // 3. Monthly Staff (62 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  // 3. Monthly Staff (GY 62 persons + WAS 8 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
   const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
+  const wasMonthlyCount = monthlyStaff.wasCount ?? 8;
+  const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (wasMonthlyCount * monthlyStaff.hoursPerPerson);
+  const combinedMonthlyCount = monthlyStaff.count + wasMonthlyCount;
+  const combinedMonthlyHours = monthlyStaff.totalHours + wasMonthlyHours;
 
-  // 4. Grand Total (GY active + Contractor active + Monthly staff)
-  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + monthlyStaff.count;
-  const totalNormalHours = gyNormalHours + contractorNormalHours + monthlyStaff.totalHours;
+  // 4. Grand Total (GY active + Contractor active + GY Monthly + WAS Monthly)
+  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + combinedMonthlyCount;
+  const totalNormalHours = gyNormalHours + contractorNormalHours + combinedMonthlyHours;
   const totalOtHours = gyOtHours + contractorOtHours;
-  const totalWorkingHours = gyTotalHours + contractorTotalHours + monthlyStaff.totalHours;
+  const totalWorkingHours = gyTotalHours + contractorTotalHours + combinedMonthlyHours;
 
   // 4.1 PDI Deduct & B-end (Bead) Addition for OPAH
   const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
@@ -786,7 +799,7 @@ export function calculateOhpaSummary(
   };
 
   // 10. Process All Goodyear Records (Active + 6320) into Areas & Depts
-  const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
+  const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isBead?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
   records.forEach(r => {
     const isExcluded = isGyDept6320(r);
@@ -873,10 +886,13 @@ export function calculateOhpaSummary(
     a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 12. Add Monthly Staff
+  // 12. Add Monthly Staff (Goodyear 62 + WAS 8) and B-end (Bead) to Non-MFG : Others
+  const aOther = areaMap['Non-MFG : Others'];
+
+  // 12.1 Goodyear Monthly Staff (62 persons)
   if (monthlyStaff.count > 0) {
-    const monthlyKey = `พนักงานรายเดือน (Monthly Staff - 62 คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
-    deptMap[monthlyKey] = {
+    const gyMonthlyKey = `พนักงานรายเดือน GY (Goodyear Monthly Staff - 62 คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    deptMap[gyMonthlyKey] = {
       isContractor: false,
       isMonthly: true,
       headcount: monthlyStaff.count,
@@ -885,17 +901,67 @@ export function calculateOhpaSummary(
       totalHours: monthlyStaff.totalHours
     };
 
-    const aOther = areaMap['Non-MFG : Others'];
-    aOther.monthlyHc = monthlyStaff.count;
-    aOther.monthlyNormal = monthlyStaff.totalHours;
-    aOther.deptMap['Monthly Staff'] = {
-      dept: monthlyKey,
+    aOther.monthlyHc += monthlyStaff.count;
+    aOther.monthlyNormal += monthlyStaff.totalHours;
+    aOther.deptMap['GY Monthly Staff'] = {
+      dept: gyMonthlyKey,
       isContractor: false,
       isMonthly: true,
       headcount: monthlyStaff.count,
       normalHours: monthlyStaff.totalHours,
       otHours: 0,
       totalHours: monthlyStaff.totalHours
+    };
+  }
+
+  // 12.2 WAS Monthly Staff (8 persons)
+  if (wasMonthlyCount > 0) {
+    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${wasMonthlyCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    deptMap[wasMonthlyKey] = {
+      isContractor: true,
+      isMonthly: true,
+      headcount: wasMonthlyCount,
+      normalHours: wasMonthlyHours,
+      otHours: 0,
+      totalHours: wasMonthlyHours
+    };
+
+    aOther.monthlyHc += wasMonthlyCount;
+    aOther.monthlyNormal += wasMonthlyHours;
+    aOther.deptMap['WAS Monthly Staff'] = {
+      dept: wasMonthlyKey,
+      isContractor: true,
+      isMonthly: true,
+      headcount: wasMonthlyCount,
+      normalHours: wasMonthlyHours,
+      otHours: 0,
+      totalHours: wasMonthlyHours
+    };
+  }
+
+  // 12.3 B-end (Bead) Hours Addition
+  if (beadAddHours > 0) {
+    const beadKey = `B-end Bead (ชั่วโมงบวกเพิ่ม OPAH - Bead Component)`;
+    deptMap[beadKey] = {
+      isContractor: false,
+      isMonthly: false,
+      isBead: true,
+      headcount: 0,
+      normalHours: beadAddHours,
+      otHours: 0,
+      totalHours: beadAddHours
+    };
+
+    aOther.monthlyNormal += beadAddHours;
+    aOther.deptMap['B-end Bead'] = {
+      dept: beadKey,
+      isContractor: false,
+      isMonthly: false,
+      isBead: true,
+      headcount: 0,
+      normalHours: beadAddHours,
+      otHours: 0,
+      totalHours: beadAddHours
     };
   }
 
