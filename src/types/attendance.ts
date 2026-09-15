@@ -51,6 +51,7 @@ export interface ParsedShiftRecord {
   nameTH: string;
   nameEN: string;
   dept: string;
+  costCenter?: string;
   position: string;
   category?: string;
   machine?: string;

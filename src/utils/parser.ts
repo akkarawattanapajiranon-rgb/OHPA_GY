@@ -542,6 +542,7 @@ export function processScanRecords(
       machine,
       position,
       category: empInfo.category || 'Other',
+      costCenter: empInfo.costCenter,
       dept,
       shift: shiftNum,
       shiftLabel,

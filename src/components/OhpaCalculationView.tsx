@@ -20,7 +20,10 @@ import {
   Users,
   HardHat,
   Building2,
-  CheckCircle2
+  CheckCircle2,
+  Briefcase,
+  ShieldBan,
+  Info
 } from 'lucide-react';
 
 interface OhpaCalculationViewProps {
@@ -111,7 +114,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     fetchTonnageData(undefined, currentScanDateFormatted);
   };
 
-  // Compute Combined OHPA Summary (Goodyear + Contractor)
+  // Compute Combined OPAH Summary (Goodyear + Contractor + Monthly staff, excluding 6320)
   const ohpaSummary = useMemo(() => {
     const displayDate = tonnageReport?.productionDay || currentScanDateFormatted || '-';
     return calculateOhpaSummary(records, contractorRecords, tonnageReport, displayDate);
@@ -124,17 +127,19 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
     // Sheet 1: OPAH KPI Summary
     const summaryData = [
-      { 'หัวข้อ (KPI)': 'วันที่ผลิต (Production Day)', 'ค่า': ohpaSummary.productionDay },
-      { 'หัวข้อ (KPI)': 'พนักงานรวมทั้งโรงงาน (GY + Contractor)', 'ค่า': ohpaSummary.totalEmployeesCount + ' คน' },
-      { 'หัวข้อ (KPI)': '- พนักงานประจำ Goodyear (GY)', 'ค่า': ohpaSummary.gyEmployeesCount + ' คน (' + ohpaSummary.gyTotalHours.toLocaleString() + ' ชม.)' },
-      { 'หัวข้อ (KPI)': '- พนักงานผู้รับเหมา Contractor (WAS)', 'ค่า': ohpaSummary.contractorEmployeesCount + ' คน (' + ohpaSummary.contractorTotalHours.toLocaleString() + ' ชม.)' },
-      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
+      { 'หัวข้อ (KPI)': 'วันที่ผลิต (Production Day)', 'ค่า': ohpaSummary.productionDay + ` (${ohpaSummary.monthlyStaff.dayName})` },
+      { 'หัวข้อ (KPI)': 'พนักงานรวมทั้งโรงงาน (GY + Contractor + Monthly)', 'ค่า': ohpaSummary.totalEmployeesCount + ' คน' },
+      { 'หัวข้อ (KPI)': '- พนักงานประจำ Goodyear (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.gyEmployeesCount + ' คน (' + ohpaSummary.gyTotalHours.toLocaleString() + ' ชม.)' },
+      { 'หัวข้อ (KPI)': '- พนักงานผู้รับเหมา Contractor WAS (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.contractorEmployeesCount + ' คน (' + ohpaSummary.contractorTotalHours.toLocaleString() + ' ชม.)' },
+      { 'หัวข้อ (KPI)': '- พนักงานรายเดือน (Monthly Staff 62 คน)', 'ค่า': `${ohpaSummary.monthlyStaff.count} คน (${ohpaSummary.monthlyStaff.totalHours} ชม. @ ${ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน)` },
+      { 'หัวข้อ (KPI)': '🚫 พนักงานแผนก 6320 ที่ตัดออก (GY + Cont)', 'ค่า': `${ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน (${(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.)` },
+      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น (รวมรายเดือน)', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงาน OT รวมทั้งสิ้น', 'ค่า': ohpaSummary.totalOtHours.toLocaleString() + ' ชม.' },
-      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานรวมทั้งโรงงาน (Total Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
+      { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานรวมทั้งโรงงาน (Total Working Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวม (kg)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg' },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวม (lbs = kg x 2.2046)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
       { 'หัวข้อ (KPI)': 'ยอดตัน (Metric Tons)', 'ค่า': ohpaSummary.totalTonnageTon + ' Tons' },
-      { 'หัวข้อ (KPI)': 'Overall Plant OPAH [(kg x 2.2046) / Total Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '⭐ Overall Plant OPAH [(kg x 2.2046) / Total Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- OPAH ส่วน Goodyear', 'ค่า': ohpaSummary.gyOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- OPAH ส่วน Contractor', 'ค่า': ohpaSummary.contractorOpahLbsPerHour + ' lbs/ชม.' },
     ];
@@ -189,7 +194,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     // Sheet 4: Department Breakdown
     const deptData = ohpaSummary.departmentBreakdown.map(d => ({
       'แผนก / ฝ่าย': d.dept,
-      'ประเภท': d.isContractor ? 'Contractor WAS' : 'Goodyear Employee',
+      'ประเภท': d.isMonthly ? 'Monthly Staff' : d.isContractor ? 'Contractor WAS' : 'Goodyear Employee',
       'จำนวนคน (คน)': d.headcount,
       'ชม.ปกติ (ชม.)': d.normalHours,
       'ชม. OT (ชม.)': d.otHours,
@@ -211,19 +216,22 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <Calculator className="w-6 h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-black text-slate-900 tracking-tight">
                 OPAH CAL & Daily Stocking Tonnage Report
               </h2>
               <span className="bg-blue-100 text-blue-700 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
                 55012
               </span>
-              <span className="bg-teal-100 text-teal-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-teal-300/40">
-                GY + Contractor
+              <span className="bg-purple-100 text-purple-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-purple-300/40">
+                + รายเดือน 62 คน
+              </span>
+              <span className="bg-rose-100 text-rose-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-300/40">
+                ตัดแผนก 6320 ออก
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Total Working Hours (กำลังพลรวม GY + Contractor WAS ~750 คน)
+              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Total Working Hours (ตัดแผนก 6320 ออกทั้ง GY + Cont และรวมพนักงานรายเดือน 62 คน)
             </p>
           </div>
         </div>
@@ -281,6 +289,25 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
+      {/* Logic Callout Banner */}
+      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-4 shadow-md border border-indigo-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 bg-indigo-500/20 rounded-xl border border-indigo-400/30 text-indigo-300">
+            <Info className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-bold text-amber-300 block">เงื่อนไขการคำนวณ OPAH พิเศษ:</span>
+            <span className="text-slate-300">
+              1. <strong>ตัดแผนก 6320 (Retread)</strong> ออกทั้ง GY ({ohpaSummary.excluded6320GyCount} คน) และ Cont ({ohpaSummary.excluded6320ContCount} คน) &nbsp;|&nbsp;
+              2. <strong>เพิ่มพนักงานรายเดือน 62 คน</strong> ({ohpaSummary.monthlyStaff.dayName} คิด {ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน = +{ohpaSummary.monthlyStaff.totalHours} ชม.)
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl text-[11px] font-mono shrink-0">
+          <span>ตัด 6320 ออก: <strong>-{(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.</strong></span>
+        </div>
+      </div>
+
       {fetchError && (
         <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl text-xs flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
@@ -300,7 +327,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           </div>
           <div className="flex items-center justify-between z-10">
             <span className="text-xs font-bold text-blue-100 uppercase tracking-wider">
-              Overall Plant OPAH (รวม GY + Cont)
+              OVERALL PLANT OPAH (รวม GY + CONT)
             </span>
             <span className="p-2 bg-white/15 backdrop-blur-xs rounded-xl">
               <Sparkles className="w-4 h-4 text-amber-300" />
@@ -313,7 +340,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </span>
               <span className="text-sm font-bold text-blue-200">lbs / ชม.</span>
             </div>
-            <p className="text-xs text-blue-100/90 mt-2">
+            <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">
               สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม. = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
             </p>
           </div>
@@ -333,42 +360,48 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <Clock className="w-5 h-5" />
             </div>
           </div>
-          <div className="my-4">
+          <div className="my-3">
             <div className="flex items-baseline gap-2">
               <span className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
                 {ohpaSummary.totalWorkingHours.toLocaleString()}
               </span>
               <span className="text-sm font-bold text-slate-500">ชม.</span>
             </div>
-            {/* Breakdown GY vs Contractor */}
-            <div className="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-slate-100 text-xs">
-              <div className="bg-blue-50/60 p-2 rounded-xl">
-                <span className="font-bold text-blue-900 flex items-center gap-1">
-                  <Building2 className="w-3 h-3 text-blue-600" />
-                  Goodyear ({ohpaSummary.gyEmployeesCount} คน):
+            {/* 3 Breakdown Cards: GY, Contractor, Monthly */}
+            <div className="grid grid-cols-3 gap-1.5 mt-3 pt-2.5 border-t border-slate-100 text-xs">
+              <div className="bg-blue-50/70 p-2 rounded-xl">
+                <span className="font-bold text-blue-900 flex items-center gap-1 text-[11px]">
+                  <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
+                  GY ({ohpaSummary.gyEmployeesCount} คน):
                 </span>
-                <span className="text-slate-700 font-bold text-xs mt-0.5 block">
+                <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
                   {ohpaSummary.gyTotalHours.toLocaleString()} ชม.
-                  <span className="text-[10px] text-slate-500 font-normal"> (OT +{ohpaSummary.gyOtHours})</span>
                 </span>
               </div>
-              <div className="bg-teal-50/60 p-2 rounded-xl">
-                <span className="font-bold text-teal-900 flex items-center gap-1">
-                  <HardHat className="w-3 h-3 text-teal-600" />
-                  Contractor ({ohpaSummary.contractorEmployeesCount} คน):
+              <div className="bg-teal-50/70 p-2 rounded-xl">
+                <span className="font-bold text-teal-900 flex items-center gap-1 text-[11px]">
+                  <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
+                  Cont ({ohpaSummary.contractorEmployeesCount} คน):
                 </span>
-                <span className="text-slate-700 font-bold text-xs mt-0.5 block">
+                <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
                   {ohpaSummary.contractorTotalHours.toLocaleString()} ชม.
-                  <span className="text-[10px] text-slate-500 font-normal"> (OT +{ohpaSummary.contractorOtHours})</span>
+                </span>
+              </div>
+              <div className="bg-purple-50/70 p-2 rounded-xl">
+                <span className="font-bold text-purple-900 flex items-center gap-1 text-[11px]">
+                  <Briefcase className="w-3 h-3 text-purple-600 shrink-0" />
+                  รายเดือน ({ohpaSummary.monthlyStaff.count} คน):
+                </span>
+                <span className="text-slate-700 font-bold text-[11px] mt-0.5 block">
+                  {ohpaSummary.monthlyStaff.totalHours.toLocaleString()} ชม.
                 </span>
               </div>
             </div>
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>กำลังพลรวมทั้งโรงงาน:</span>
-            <span className="font-extrabold text-slate-800 flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-blue-600" />
-              {ohpaSummary.totalEmployeesCount.toLocaleString()} คน
+          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>กำลังพลรวม: <strong>{ohpaSummary.totalEmployeesCount.toLocaleString()} คน</strong></span>
+            <span className="text-rose-600 font-semibold text-[11px]">
+              (ตัด 6320 ออก {ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน)
             </span>
           </div>
         </div>
@@ -581,7 +614,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               {ohpaSummary.departmentBreakdown.map((dept, idx) => (
                 <tr key={dept.dept + idx} className="hover:bg-slate-50 transition-colors">
                   <td className="py-2.5 px-4 font-semibold text-slate-800 flex items-center gap-2">
-                    {dept.isContractor ? (
+                    {dept.isMonthly ? (
+                      <Briefcase className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                    ) : dept.isContractor ? (
                       <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                     ) : (
                       <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
@@ -590,11 +625,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </td>
                   <td className="py-2.5 px-4 text-center">
                     <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                      dept.isContractor
+                      dept.isMonthly
+                        ? 'bg-purple-100 text-purple-800 border border-purple-300/40'
+                        : dept.isContractor
                         ? 'bg-teal-100 text-teal-800 border border-teal-300/40'
                         : 'bg-blue-100 text-blue-800 border border-blue-300/40'
                     }`}>
-                      {dept.isContractor ? 'Contractor' : 'Goodyear'}
+                      {dept.isMonthly ? 'Monthly Staff' : dept.isContractor ? 'Contractor' : 'Goodyear'}
                     </span>
                   </td>
                   <td className="py-2.5 px-4 text-center">
@@ -609,7 +646,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     <div className="flex items-center justify-end gap-2">
                       <div className="w-16 bg-slate-200 rounded-full h-1.5 overflow-hidden">
                         <div
-                          className={`h-1.5 rounded-full ${dept.isContractor ? 'bg-teal-500' : 'bg-blue-600'}`}
+                          className={`h-1.5 rounded-full ${
+                            dept.isMonthly ? 'bg-purple-600' : dept.isContractor ? 'bg-teal-500' : 'bg-blue-600'
+                          }`}
                           style={{ width: Math.min(100, dept.percentageOfTotalHours) + '%' }}
                         ></div>
                       </div>

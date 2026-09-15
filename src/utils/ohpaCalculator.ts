@@ -1,6 +1,63 @@
 import { ParsedShiftRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics } from '../types/ohpa';
+import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, MonthlyStaffMetrics } from '../types/ohpa';
+
+export function isGyDept6320(r: ParsedShiftRecord): boolean {
+  const cc = (r.costCenter || '').trim();
+  const d = (r.dept || '').trim();
+  const cat = (r.category || '').trim().toLowerCase();
+  const m = (r.machine || '').trim().toLowerCase();
+  return cc === '6320' || d.includes('6320') || cat === 'retread' || m.includes('buffing') || m.includes('retread');
+}
+
+export function isContDept6320(r: ContractorScanRecord): boolean {
+  const closing = (r.closing || '').trim();
+  const loc = (r.location || '').trim().toLowerCase();
+  const dept = (r.department || '').trim();
+  return closing === '6320' || loc === 'retread' || dept.includes('6320');
+}
+
+export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
+  const clean = (dateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const parts = clean.split(/[/.-]/);
+  let d = 14, m = 9, y = 2026;
+  if (parts.length === 3) {
+    if (parts[2].length === 4) {
+      d = parseInt(parts[0], 10) || 14;
+      m = parseInt(parts[1], 10) || 9;
+      y = parseInt(parts[2], 10) || 2026;
+    } else if (parts[0].length === 4) {
+      y = parseInt(parts[0], 10) || 2026;
+      m = parseInt(parts[1], 10) || 9;
+      d = parseInt(parts[2], 10) || 14;
+    }
+  }
+  const dt = new Date(y, m - 1, d);
+  const dayOfWeek = dt.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+  const dayNames = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+
+  let hoursPerPerson = 0;
+  if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+    // วันจันทร์ - ศุกร์: คิด 8 ชม.
+    hoursPerPerson = 8;
+  } else if (dayOfWeek === 6) {
+    // วันเสาร์: คิด 4 ชม.
+    hoursPerPerson = 4;
+  } else {
+    // วันอาทิตย์: วันหยุด (0 ชม.)
+    hoursPerPerson = 0;
+  }
+
+  const count = 62;
+  const totalHours = count * hoursPerPerson;
+
+  return {
+    count,
+    hoursPerPerson,
+    totalHours,
+    dayName: dayNames[dayOfWeek]
+  };
+}
 
 export function calculateOhpaSummary(
   records: ParsedShiftRecord[],
@@ -8,33 +65,48 @@ export function calculateOhpaSummary(
   tonnageReport: StockingTonnageReport | null,
   productionDayFormatted: string
 ): OhpaSummary {
-  // 1. Goodyear Stats
-  const gyEmployeesCount = records.length;
-  const gyNormalHours = records.reduce((sum, r) => sum + (r.normalWorkHours || 0), 0);
-  const gyOtHours = records.reduce((sum, r) => sum + (r.otHours || 0), 0);
+  // 1. Separate Department 6320 (Retread) from Goodyear
+  const gyActiveRecords = records.filter(r => !isGyDept6320(r));
+  const gy6320Records = records.filter(r => isGyDept6320(r));
+
+  const gyEmployeesCount = gyActiveRecords.length;
+  const gyNormalHours = gyActiveRecords.reduce((sum, r) => sum + (r.normalWorkHours || 0), 0);
+  const gyOtHours = gyActiveRecords.reduce((sum, r) => sum + (r.otHours || 0), 0);
   const gyTotalHours = gyNormalHours + gyOtHours;
 
-  // 2. Contractor Stats
-  const activeContractorRecords = contractorRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
-  const contractorEmployeesCount = activeContractorRecords.length;
-  const contractorNormalHours = activeContractorRecords.reduce((sum, r) => sum + (r.normalHours || 0), 0);
-  const contractorOtHours = activeContractorRecords.reduce((sum, r) => sum + (r.otHours || 0), 0);
+  const excluded6320GyCount = gy6320Records.length;
+  const excluded6320GyHours = gy6320Records.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
+
+  // 2. Separate Department 6320 (Retread) from Contractor
+  const rawContActive = contractorRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
+  const contActiveRecords = rawContActive.filter(r => !isContDept6320(r));
+  const cont6320Records = rawContActive.filter(r => isContDept6320(r));
+
+  const contractorEmployeesCount = contActiveRecords.length;
+  const contractorNormalHours = contActiveRecords.reduce((sum, r) => sum + (r.normalHours || 0), 0);
+  const contractorOtHours = contActiveRecords.reduce((sum, r) => sum + (r.otHours || 0), 0);
   const contractorTotalHours = contractorNormalHours + contractorOtHours;
 
-  // 3. Grand Total (GY + Contractor)
-  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount;
-  const totalNormalHours = gyNormalHours + contractorNormalHours;
-  const totalOtHours = gyOtHours + contractorOtHours;
-  const totalWorkingHours = gyTotalHours + contractorTotalHours;
+  const excluded6320ContCount = cont6320Records.length;
+  const excluded6320ContHours = cont6320Records.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
 
-  // 4. Tonnage & Pounds (lbs)
+  // 3. Monthly Staff (62 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
+
+  // 4. Grand Total (GY active + Contractor active + Monthly staff)
+  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + monthlyStaff.count;
+  const totalNormalHours = gyNormalHours + contractorNormalHours + monthlyStaff.totalHours;
+  const totalOtHours = gyOtHours + contractorOtHours;
+  const totalWorkingHours = gyTotalHours + contractorTotalHours + monthlyStaff.totalHours;
+
+  // 5. Tonnage & Pounds (lbs)
   const LBS_CONVERSION_FACTOR = 2.2046;
   const totalTonnageKg = tonnageReport?.total?.dailyTotalTonnage || 0;
   const totalTonnageTon = totalTonnageKg / 1000;
   const totalTonnageLbs = Math.round(totalTonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
   const totalPallets = tonnageReport?.total?.dailyTotalPallets || 0;
 
-  // 5. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Total working hour (lbs/hr)
+  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Total working hour (lbs/hr)
   const overallOpahLbsPerHour = totalWorkingHours > 0
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / totalWorkingHours) * 100) / 100
     : 0;
@@ -47,18 +119,18 @@ export function calculateOhpaSummary(
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / contractorTotalHours) * 100) / 100
     : 0;
 
-  // 6. Shift Breakdown (Combining GY + Contractor for each shift)
+  // 7. Shift Breakdown (Combining GY non-6320 + Contractor non-6320 for each shift)
   const shiftList: (1 | 2 | 3)[] = [1, 2, 3];
   const shifts: OhpaShiftMetrics[] = shiftList.map(shiftNum => {
     // GY records for this shift
-    const gyShiftRecs = records.filter(r => r.shift === shiftNum);
+    const gyShiftRecs = gyActiveRecords.filter(r => r.shift === shiftNum);
     const gyHc = gyShiftRecs.length;
     const gyNorm = gyShiftRecs.reduce((sum, r) => sum + (r.normalWorkHours || 0), 0);
     const gyOt = gyShiftRecs.reduce((sum, r) => sum + (r.otHours || 0), 0);
     const gyTot = gyNorm + gyOt;
 
     // Contractor records for this shift
-    const contShiftRecs = activeContractorRecords.filter(r => r.shiftNumber === shiftNum);
+    const contShiftRecs = contActiveRecords.filter(r => r.shiftNumber === shiftNum);
     const contHc = contShiftRecs.length;
     const contNorm = contShiftRecs.reduce((sum, r) => sum + (r.normalHours || 0), 0);
     const contOt = contShiftRecs.reduce((sum, r) => sum + (r.otHours || 0), 0);
@@ -117,11 +189,11 @@ export function calculateOhpaSummary(
     };
   });
 
-  // 7. Department Breakdown (GY Departments + Contractor Departments)
-  const deptMap: Record<string, { isContractor: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
+  // 8. Department Breakdown
+  const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
-  // GY Depts
-  records.forEach(r => {
+  // GY Active Depts (non-6320)
+  gyActiveRecords.forEach(r => {
     const d = r.dept || 'ไม่ระบุแผนก (GY)';
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: false, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
@@ -132,8 +204,8 @@ export function calculateOhpaSummary(
     deptMap[d].totalHours += ((r.normalWorkHours || 0) + (r.otHours || 0));
   });
 
-  // Contractor Depts
-  activeContractorRecords.forEach(r => {
+  // Contractor Active Depts (non-6320)
+  contActiveRecords.forEach(r => {
     const d = `Contractor WAS (${r.location || r.closing || 'MFG'})`;
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: true, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
@@ -144,10 +216,25 @@ export function calculateOhpaSummary(
     deptMap[d].totalHours += ((r.normalHours || 0) + (r.otHours || 0));
   });
 
+  // Add Monthly Staff row
+  if (monthlyStaff.count > 0) {
+    const monthlyKey = `พนักงานรายเดือน (Monthly Staff - 62 คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    deptMap[monthlyKey] = {
+      isContractor: false,
+      isMonthly: true,
+      headcount: monthlyStaff.count,
+      normalHours: monthlyStaff.totalHours,
+      otHours: 0,
+      totalHours: monthlyStaff.totalHours
+    };
+  }
+
   const departmentBreakdown: OhpaDeptMetrics[] = Object.entries(deptMap)
     .map(([dept, val]) => ({
       dept,
       isContractor: val.isContractor,
+      isMonthly: val.isMonthly,
+      isExcluded6320: val.isExcluded6320,
       headcount: val.headcount,
       normalHours: Math.round(val.normalHours * 10) / 10,
       otHours: Math.round(val.otHours * 10) / 10,
@@ -177,6 +264,13 @@ export function calculateOhpaSummary(
     contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
     contractorOpahLbsPerHour,
 
+    monthlyStaff,
+
+    excluded6320GyCount,
+    excluded6320GyHours: Math.round(excluded6320GyHours * 10) / 10,
+    excluded6320ContCount,
+    excluded6320ContHours: Math.round(excluded6320ContHours * 10) / 10,
+
     totalTonnageKg,
     totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
     totalTonnageLbs,
@@ -186,3 +280,4 @@ export function calculateOhpaSummary(
     departmentBreakdown
   };
 }
+

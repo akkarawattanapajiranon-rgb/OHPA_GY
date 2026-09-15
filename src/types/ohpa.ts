@@ -47,9 +47,18 @@ export interface OhpaShiftMetrics {
   opahLbsPerHour: number;
 }
 
+export interface MonthlyStaffMetrics {
+  count: number;
+  hoursPerPerson: number;
+  totalHours: number;
+  dayName: string;
+}
+
 export interface OhpaDeptMetrics {
   dept: string;
   isContractor?: boolean;
+  isMonthly?: boolean;
+  isExcluded6320?: boolean;
   headcount: number;
   normalHours: number;
   otHours: number;
@@ -59,25 +68,34 @@ export interface OhpaDeptMetrics {
 
 export interface OhpaSummary {
   productionDay: string;
-  // Total Plant (GY + Contractor)
+  // Total Plant (GY + Contractor + Monthly, excluding Dept 6320)
   totalEmployeesCount: number;
   totalNormalHours: number;
   totalOtHours: number;
   totalWorkingHours: number;
 
-  // Goodyear Breakdown
+  // Goodyear Breakdown (excluding 6320)
   gyEmployeesCount: number;
   gyNormalHours: number;
   gyOtHours: number;
   gyTotalHours: number;
   gyOpahLbsPerHour: number;
 
-  // Contractor Breakdown
+  // Contractor Breakdown (excluding 6320)
   contractorEmployeesCount: number;
   contractorNormalHours: number;
   contractorOtHours: number;
   contractorTotalHours: number;
   contractorOpahLbsPerHour: number;
+
+  // Monthly Staff (62 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  monthlyStaff: MonthlyStaffMetrics;
+
+  // Excluded Dept 6320 Stats
+  excluded6320GyCount: number;
+  excluded6320GyHours: number;
+  excluded6320ContCount: number;
+  excluded6320ContHours: number;
 
   // Tonnage & OPAH
   totalTonnageKg: number;
@@ -89,4 +107,5 @@ export interface OhpaSummary {
   shifts: OhpaShiftMetrics[];
   departmentBreakdown: OhpaDeptMetrics[];
 }
+
 
