@@ -381,7 +381,7 @@ export default function App() {
               <span>หน้า 3: ตารางเปรียบเทียบ Standard HC</span>
             </button>
 
-            {/* Page 4 Tab: OPHA CAL */}
+            {/* Page 4 Tab: OPAH CAL */}
             <button
               onClick={() => setActiveTab('PAGE_4_OHPA')}
               className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
@@ -391,7 +391,7 @@ export default function App() {
               }`}
             >
               <Calculator className="w-4 h-4" />
-              <span>หน้า 4: OPHA CAL</span>
+              <span>หน้า 4: OPAH CAL</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                 activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
               }`}>

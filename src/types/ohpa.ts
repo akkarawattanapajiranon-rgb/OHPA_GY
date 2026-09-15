@@ -42,9 +42,9 @@ export interface OhpaShiftMetrics {
   contractorTotalHours: number;
   tonnageKg: number;
   tonnageTon: number;
+  tonnageLbs: number;
   pallets: number;
-  ohpaHoursPerTon: number;
-  ohpaHoursPerPallet: number;
+  opahLbsPerHour: number;
 }
 
 export interface OhpaDeptMetrics {
@@ -70,22 +70,23 @@ export interface OhpaSummary {
   gyNormalHours: number;
   gyOtHours: number;
   gyTotalHours: number;
-  gyOhpaHoursPerTon: number;
+  gyOpahLbsPerHour: number;
 
   // Contractor Breakdown
   contractorEmployeesCount: number;
   contractorNormalHours: number;
   contractorOtHours: number;
   contractorTotalHours: number;
-  contractorOhpaHoursPerTon: number;
+  contractorOpahLbsPerHour: number;
 
-  // Tonnage & OHPA
+  // Tonnage & OPAH
   totalTonnageKg: number;
   totalTonnageTon: number;
+  totalTonnageLbs: number;
   totalPallets: number;
-  overallOhpaHoursPerTon: number;
-  overallOhpaHoursPerPallet: number;
+  overallOpahLbsPerHour: number;
 
   shifts: OhpaShiftMetrics[];
   departmentBreakdown: OhpaDeptMetrics[];
 }
+

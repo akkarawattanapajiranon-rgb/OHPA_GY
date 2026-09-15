@@ -122,7 +122,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
     const wb = XLSX.utils.book_new();
 
-    // Sheet 1: OHPA KPI Summary
+    // Sheet 1: OPAH KPI Summary
     const summaryData = [
       { 'หัวข้อ (KPI)': 'วันที่ผลิต (Production Day)', 'ค่า': ohpaSummary.productionDay },
       { 'หัวข้อ (KPI)': 'พนักงานรวมทั้งโรงงาน (GY + Contractor)', 'ค่า': ohpaSummary.totalEmployeesCount + ' คน' },
@@ -131,13 +131,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงาน OT รวมทั้งสิ้น', 'ค่า': ohpaSummary.totalOtHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานรวมทั้งโรงงาน (Total Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
-      { 'หัวข้อ (KPI)': 'ยอดตันที่ Stock รวม (Daily Total Tonnage)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg (' + ohpaSummary.totalTonnageTon + ' Tons)' },
-      { 'หัวข้อ (KPI)': 'Overall Plant OHPA (ชม.รวม / ตัน)', 'ค่า': ohpaSummary.overallOhpaHoursPerTon + ' ชม./ตัน' },
-      { 'หัวข้อ (KPI)': '- OHPA เฉพาะส่วน Goodyear', 'ค่า': ohpaSummary.gyOhpaHoursPerTon + ' ชม./ตัน' },
-      { 'หัวข้อ (KPI)': '- OHPA เฉพาะส่วน Contractor', 'ค่า': ohpaSummary.contractorOhpaHoursPerTon + ' ชม./ตัน' },
+      { 'หัวข้อ (KPI)': 'ยอด Stocking รวม (kg)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg' },
+      { 'หัวข้อ (KPI)': 'ยอด Stocking รวม (lbs = kg x 2.2046)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
+      { 'หัวข้อ (KPI)': 'ยอดตัน (Metric Tons)', 'ค่า': ohpaSummary.totalTonnageTon + ' Tons' },
+      { 'หัวข้อ (KPI)': 'Overall Plant OPAH [(kg x 2.2046) / Total Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '- OPAH ส่วน Goodyear', 'ค่า': ohpaSummary.gyOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '- OPAH ส่วน Contractor', 'ค่า': ohpaSummary.contractorOpahLbsPerHour + ' lbs/ชม.' },
     ];
     const ws1 = XLSX.utils.json_to_sheet(summaryData);
-    XLSX.utils.book_append_sheet(wb, ws1, 'OHPA_KPI_Summary');
+    XLSX.utils.book_append_sheet(wb, ws1, 'OPAH_KPI_Summary');
 
     // Sheet 2: Stocking Tonnage Report 55012
     if (tonnageReport.rows && tonnageReport.rows.length > 0) {
@@ -176,9 +178,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'ชม.รวมทั้งหมด (ชม.)': s.totalHours,
       'GY ชม.รวม': s.gyTotalHours,
       'Cont ชม.รวม': s.contractorTotalHours,
-      'Tonnage (kg)': s.tonnageKg,
-      'Tonnage (Tons)': s.tonnageTon,
-      'OHPA (ชม./ตัน)': s.ohpaHoursPerTon,
+      'Stocking (kg)': s.tonnageKg,
+      'Stocking (lbs)': s.tonnageLbs,
+      'Stocking (Tons)': s.tonnageTon,
+      'OPAH (lbs/ชม.)': s.opahLbsPerHour,
     }));
     const ws3 = XLSX.utils.json_to_sheet(shiftData);
     XLSX.utils.book_append_sheet(wb, ws3, 'Shift_Breakdown');
@@ -196,7 +199,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws4 = XLSX.utils.json_to_sheet(deptData);
     XLSX.utils.book_append_sheet(wb, ws4, 'Department_Breakdown');
 
-    XLSX.writeFile(wb, 'OHPA_CAL_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
+    XLSX.writeFile(wb, 'OPAH_CAL_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
   };
 
   return (
@@ -210,7 +213,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                OHPA CAL & Daily Stocking Tonnage Report
+                OPAH CAL & Daily Stocking Tonnage Report
               </h2>
               <span className="bg-blue-100 text-blue-700 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
                 55012
@@ -220,7 +223,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              คำนวณอัตราส่วนชั่วโมงทำงานรวมทั้งโรงงาน (Goodyear + Contractor WAS รวม ~750 คน) เทียบกับยอด Stocking Tonnage (55012)
+              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Total Working Hours (กำลังพลรวม GY + Contractor WAS ~750 คน)
             </p>
           </div>
         </div>
@@ -290,14 +293,14 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
       {/* Primary KPI Summary Cards (3 Main Cards) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Card 1: Combined Plant OHPA Ratio */}
+        {/* Card 1: Combined Plant OPAH Ratio */}
         <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 text-white p-6 rounded-3xl shadow-lg shadow-blue-500/15 relative overflow-hidden flex flex-col justify-between">
           <div className="absolute right-0 top-0 translate-x-3 -translate-y-3 opacity-15">
             <Flame className="w-32 h-32" />
           </div>
           <div className="flex items-center justify-between z-10">
             <span className="text-xs font-bold text-blue-100 uppercase tracking-wider">
-              Overall Plant OHPA (รวม GY + Cont)
+              Overall Plant OPAH (รวม GY + Cont)
             </span>
             <span className="p-2 bg-white/15 backdrop-blur-xs rounded-xl">
               <Sparkles className="w-4 h-4 text-amber-300" />
@@ -306,16 +309,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <div className="my-4 z-10">
             <div className="flex items-baseline gap-2">
               <span className="text-4xl lg:text-5xl font-black tracking-tight">
-                {ohpaSummary.overallOhpaHoursPerTon.toLocaleString()}
+                {ohpaSummary.overallOpahLbsPerHour.toLocaleString()}
               </span>
-              <span className="text-sm font-bold text-blue-200">ชม. / ตัน</span>
+              <span className="text-sm font-bold text-blue-200">lbs / ชม.</span>
             </div>
             <p className="text-xs text-blue-100/90 mt-2">
-              สูตร: ชม.ทำงานรวมทั้งโรงงาน ({ohpaSummary.totalWorkingHours.toLocaleString()} ชม.) ÷ ยอดตัน ({ohpaSummary.totalTonnageTon.toLocaleString()} ตัน)
+              สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม. = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
             </p>
           </div>
           <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-blue-100 z-10">
-            <span>GY: <strong>{ohpaSummary.gyOhpaHoursPerTon}</strong> | Cont: <strong>{ohpaSummary.contractorOhpaHoursPerTon}</strong></span>
+            <span>GY: <strong>{ohpaSummary.gyOpahLbsPerHour}</strong> lbs/ชม. | Cont: <strong>{ohpaSummary.contractorOpahLbsPerHour}</strong> lbs/ชม.</span>
             <span className="font-extrabold">{ohpaSummary.productionDay}</span>
           </div>
         </div>
@@ -374,7 +377,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              ยอด Stocking Tonnage รวม (Daily Total)
+              ยอด Stocking รวม (Daily Total)
             </span>
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
               <Weight className="w-5 h-5" />
@@ -388,7 +391,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <span className="text-sm font-bold text-emerald-600">kg</span>
             </div>
             <p className="text-xs font-bold text-slate-600 mt-2">
-              = <span className="text-emerald-700 text-sm">{ohpaSummary.totalTonnageTon.toLocaleString()}</span> Metric Tons (ตัน)
+              = <span className="text-emerald-700 text-sm">{ohpaSummary.totalTonnageLbs.toLocaleString()}</span> lbs (ปอนด์) | <span className="text-slate-500">{ohpaSummary.totalTonnageTon.toLocaleString()} ตัน</span>
             </p>
           </div>
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -412,7 +415,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 ประสิทธิภาพแยกตามกะ (Shift Performance Breakdown - รวม GY + Contractor)
               </h3>
               <p className="text-xs text-slate-500">
-                เปรียบเทียบชั่วโมงทำงาน กำลังพล ยอดตัน และค่า OHPA แต่ละกะ
+                เปรียบเทียบชั่วโมงทำงาน กำลังพล ยอด Stocking และค่า OPAH แต่ละกะ
               </p>
             </div>
           </div>
@@ -452,15 +455,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <span><strong>{s.gyTotalHours}</strong> ชม. / <strong>{s.contractorTotalHours}</strong> ชม.</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-500">ยอดตัน (Tonnage):</span>
-                  <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageTon} T)</strong>
+                  <span className="text-slate-500">ยอด Stocking:</span>
+                  <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageLbs.toLocaleString()} lbs)</strong>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-4 rounded-b-2xl flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase">OHPA ประจำกะ:</span>
+                <span className="text-xs font-bold text-slate-500 uppercase">OPAH ประจำกะ:</span>
                 <span className="text-xl font-black text-indigo-700">
-                  {s.ohpaHoursPerTon} <span className="text-xs font-semibold text-slate-500">ชม./ตัน</span>
+                  {s.opahLbsPerHour} <span className="text-xs font-semibold text-slate-500">lbs/ชม.</span>
                 </span>
               </div>
             </div>

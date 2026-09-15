@@ -27,26 +27,24 @@ export function calculateOhpaSummary(
   const totalOtHours = gyOtHours + contractorOtHours;
   const totalWorkingHours = gyTotalHours + contractorTotalHours;
 
-  // 4. Tonnage
+  // 4. Tonnage & Pounds (lbs)
+  const LBS_CONVERSION_FACTOR = 2.2046;
   const totalTonnageKg = tonnageReport?.total?.dailyTotalTonnage || 0;
   const totalTonnageTon = totalTonnageKg / 1000;
+  const totalTonnageLbs = Math.round(totalTonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
   const totalPallets = tonnageReport?.total?.dailyTotalPallets || 0;
 
-  // 5. OHPA Ratios (ชม./ตัน)
-  const overallOhpaHoursPerTon = totalTonnageTon > 0
-    ? Math.round((totalWorkingHours / totalTonnageTon) * 100) / 100
+  // 5. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Total working hour (lbs/hr)
+  const overallOpahLbsPerHour = totalWorkingHours > 0
+    ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / totalWorkingHours) * 100) / 100
     : 0;
 
-  const gyOhpaHoursPerTon = totalTonnageTon > 0
-    ? Math.round((gyTotalHours / totalTonnageTon) * 100) / 100
+  const gyOpahLbsPerHour = gyTotalHours > 0
+    ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / gyTotalHours) * 100) / 100
     : 0;
 
-  const contractorOhpaHoursPerTon = totalTonnageTon > 0
-    ? Math.round((contractorTotalHours / totalTonnageTon) * 100) / 100
-    : 0;
-
-  const overallOhpaHoursPerPallet = totalPallets > 0
-    ? Math.round((totalWorkingHours / totalPallets) * 100) / 100
+  const contractorOpahLbsPerHour = contractorTotalHours > 0
+    ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / contractorTotalHours) * 100) / 100
     : 0;
 
   // 6. Shift Breakdown (Combining GY + Contractor for each shift)
@@ -89,12 +87,9 @@ export function calculateOhpaSummary(
     }
 
     const tonnageTon = tonnageKg / 1000;
-    const ohpaHoursPerTon = tonnageTon > 0
-      ? Math.round((totalHours / tonnageTon) * 100) / 100
-      : 0;
-
-    const ohpaHoursPerPallet = pallets > 0
-      ? Math.round((totalHours / pallets) * 100) / 100
+    const tonnageLbs = Math.round(tonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
+    const opahLbsPerHour = totalHours > 0
+      ? Math.round(((tonnageKg * LBS_CONVERSION_FACTOR) / totalHours) * 100) / 100
       : 0;
 
     const shiftLabel = shiftNum === 1
@@ -116,9 +111,9 @@ export function calculateOhpaSummary(
       contractorTotalHours: Math.round(contTot * 10) / 10,
       tonnageKg,
       tonnageTon: Math.round(tonnageTon * 1000) / 1000,
+      tonnageLbs,
       pallets,
-      ohpaHoursPerTon,
-      ohpaHoursPerPallet
+      opahLbsPerHour
     };
   });
 
@@ -174,19 +169,19 @@ export function calculateOhpaSummary(
     gyNormalHours: Math.round(gyNormalHours * 10) / 10,
     gyOtHours: Math.round(gyOtHours * 10) / 10,
     gyTotalHours: Math.round(gyTotalHours * 10) / 10,
-    gyOhpaHoursPerTon,
+    gyOpahLbsPerHour,
 
     contractorEmployeesCount,
     contractorNormalHours: Math.round(contractorNormalHours * 10) / 10,
     contractorOtHours: Math.round(contractorOtHours * 10) / 10,
     contractorTotalHours: Math.round(contractorTotalHours * 10) / 10,
-    contractorOhpaHoursPerTon,
+    contractorOpahLbsPerHour,
 
     totalTonnageKg,
     totalTonnageTon: Math.round(totalTonnageTon * 1000) / 1000,
+    totalTonnageLbs,
     totalPallets,
-    overallOhpaHoursPerTon,
-    overallOhpaHoursPerPallet,
+    overallOpahLbsPerHour,
     shifts,
     departmentBreakdown
   };
