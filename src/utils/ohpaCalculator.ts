@@ -433,7 +433,7 @@ export function calculateOhpaSummary(
     };
   });
 
-  // 8. Area Classification Helper
+  // 8. Area Classification Helper (8 Exact User-Specified Areas)
   const classifyArea = (
     category?: string,
     dept?: string,
@@ -442,119 +442,174 @@ export function calculateOhpaSummary(
     location?: string,
     closing?: string,
     isMonthly?: boolean
-  ): { key: 'BCA' | 'Consumer' | 'Aero' | 'Eng' | 'อื่นๆ'; name: string; label: string; icon: string; order: number } => {
+  ): { key: string; name: string; label: string; icon: string; order: number; headcountStandard: number; isExcluded6320?: boolean } => {
     if (isMonthly) {
       return {
-        key: 'อื่นๆ',
-        name: 'อื่นๆ (Quality / Retread / Support & Staff)',
-        label: 'อื่นๆ / สนับสนุน',
+        key: 'Non-MFG : Others',
+        name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+        label: 'Others',
         icon: '📦',
-        order: 5
+        headcountStandard: 6,
+        order: 8
       };
     }
 
-    const cat = (category || '').toLowerCase();
-    const d = (dept || costCenter || closing || '').toUpperCase();
-    const p = (pbu || '').toLowerCase();
-    const loc = (location || '').toUpperCase();
+    const d = String(dept || costCenter || closing || '').toUpperCase().trim();
+    const c = String(category || '').toLowerCase().trim();
+    const loc = String(location || '').toUpperCase().trim();
+    const cls = String(closing || '').toUpperCase().trim();
 
-    // 1. BCA
+    // Extract department / costCenter code like 3200, A5110, S5110, etc.
+    const codeMatch = d.match(/([A-Z]?\d{4})/i) || cls.match(/([A-Z]?\d{4})/i);
+    const code = codeMatch ? codeMatch[1].toUpperCase() : d;
+
+    // 1. Bias Aero (121 คน): แผนก A5110, A5120, A5130
     if (
-      cat.includes('bca') ||
-      d.includes('3200') ||
-      d.includes('3300') ||
-      p.includes('bca') ||
-      p.includes('shared') ||
+      ['A5110', 'A5120', 'A5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('bias aero') ||
+      loc.includes('BTA') ||
+      loc.includes('BIAS AERO') ||
+      (c.includes('aero') && !c.includes('radial') && !loc.includes('STA'))
+    ) {
+      return {
+        key: 'Bias Aero',
+        name: 'Bias Aero (แผนก A5110, A5120, A5130)',
+        label: 'Bias Aero',
+        icon: '✈️',
+        headcountStandard: 121,
+        order: 3
+      };
+    }
+
+    // 2. Radial Aero (74 คน): แผนก S5110, S5120, S5130
+    if (
+      ['S5110', 'S5120', 'S5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('radial aero') ||
+      loc.includes('STA') ||
+      loc.includes('RADIAL AERO') ||
+      (c.includes('radial') && c.includes('aero'))
+    ) {
+      return {
+        key: 'Radial Aero',
+        name: 'Radial Aero (แผนก S5110, S5120, S5130)',
+        label: 'Radial Aero',
+        icon: '🛫',
+        headcountStandard: 74,
+        order: 4
+      };
+    }
+
+    // 3. BCA (208 คน): แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300
+    if (
+      ['3200', '3300', '3700', '4110', '4120', '4130', '4200', '4300'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('bca') ||
       loc.includes('BTB') ||
-      loc.includes('BCA')
+      loc.includes('BCA') ||
+      c.includes('banbury') ||
+      c.includes('calender') ||
+      c.includes('stock prep')
     ) {
       return {
         key: 'BCA',
-        name: 'BCA (Banbury / Mixing / Calender / Extruder)',
-        label: 'BCA (เตรียมวัตถุดิบ)',
+        name: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
+        label: 'BCA',
         icon: '🏢',
+        headcountStandard: 208,
         order: 1
       };
     }
 
-    // 2. Consumer
+    // 4. Consumer (148 คน): แผนก 4140, 5110, 5120, 5130
     if (
-      cat.includes('consumer') ||
-      d.includes('5110') ||
-      d.includes('5120') ||
-      d.includes('5130') ||
-      d.includes('4110') ||
-      d.includes('4120') ||
-      d.includes('4130') ||
-      d.includes('4300') ||
-      d.includes('4200') ||
+      ['4140', '5110', '5120', '5130'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('consumer') ||
       loc.includes('BTC') ||
       loc.includes('CONSUMER')
     ) {
       return {
         key: 'Consumer',
-        name: 'Consumer (Building / Curing / Final Finish)',
-        label: 'Consumer (ยางรถยนต์นั่ง)',
+        name: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
+        label: 'Consumer',
         icon: '🚗',
+        headcountStandard: 148,
         order: 2
       };
     }
 
-    // 3. Aero
+    // 5. Retread (71 คน): แผนก 6320 และส่วนงานหล่อดอกยาง
     if (
-      cat.includes('aero') ||
-      d.startsWith('A') ||
-      d.includes('1850') ||
-      p.includes('aero') ||
-      loc.includes('BTA') ||
-      loc.includes('AERO')
+      ['6320'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('retread') ||
+      loc.includes('RETREAD') ||
+      d.includes('หล่อดอก')
     ) {
       return {
-        key: 'Aero',
-        name: 'Aero (Aviation Radial & Bias Tire)',
-        label: 'Aero (ยางเครื่องบิน)',
-        icon: '✈️',
-        order: 3
+        key: 'Retread',
+        name: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
+        label: 'Retread (หล่อดอก)',
+        icon: '🔄',
+        headcountStandard: 71,
+        order: 5,
+        isExcluded6320: true
       };
     }
 
-    // 4. Engineering
+    // 6. Non-MFG : Engineering (65 คน): แผนก 1100, 1110, 1161, 1164, 1210, S1100
     if (
-      cat.includes('engineering') ||
-      d.includes('1110') ||
-      d.includes('1120') ||
-      d.includes('1100') ||
-      d.includes('1130') ||
-      d.includes('1140') ||
-      d.includes('1200') ||
-      loc.includes('ENG')
+      ['1100', '1110', '1161', '1164', '1210', 'S1100'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('engineering') ||
+      loc.includes('ENG') ||
+      loc.includes('ENGINEERING') ||
+      c.includes('maintenance')
     ) {
       return {
-        key: 'Eng',
-        name: 'Engineering & Maintenance (ซ่อมบำรุง / วิศวกรรม)',
-        label: 'Engineering (วิศวกรรม)',
+        key: 'Non-MFG : Engineering',
+        name: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
+        label: 'Engineering',
         icon: '🔧',
-        order: 4
+        headcountStandard: 65,
+        order: 6
       };
     }
 
-    // 5. อื่นๆ (Others)
+    // 7. Non-MFG : Quality (57 คน): แผนก 1021, 1022, 1040, S1040
+    if (
+      ['1021', '1022', '1040', 'S1040'].some(k => code === k || d.startsWith(k) || cls.startsWith(k)) ||
+      c.includes('quality') ||
+      loc.includes('Q-TECH') ||
+      loc.includes('QUALITY') ||
+      c.includes('q-tech')
+    ) {
+      return {
+        key: 'Non-MFG : Quality',
+        name: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
+        label: 'Quality',
+        icon: '🔬',
+        headcountStandard: 57,
+        order: 7
+      };
+    }
+
+    // 8. Non-MFG : Others (6 คน): แผนก 1860
     return {
-      key: 'อื่นๆ',
-      name: 'อื่นๆ (Quality / Retread / Warehouse / Support)',
-      label: 'อื่นๆ / สนับสนุน',
+      key: 'Non-MFG : Others',
+      name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+      label: 'Others',
       icon: '📦',
-      order: 5
+      headcountStandard: 6,
+      order: 8
     };
   };
 
-  // 9. Area Breakdown Map
+  // 9. Area Breakdown Map (8 Exact Categories)
   const areaMap: Record<string, {
     areaKey: string;
     areaName: string;
     areaLabel: string;
     icon: string;
     order: number;
+    headcountStandard: number;
+    isExcluded6320?: boolean;
     gyHc: number;
     contHc: number;
     monthlyHc: number;
@@ -565,12 +620,13 @@ export function calculateOhpaSummary(
     monthlyNormal: number;
     deptMap: Record<string, OhpaAreaDeptItem>;
   }> = {
-    BCA: {
+    'BCA': {
       areaKey: 'BCA',
-      areaName: 'BCA (Banbury / Mixing / Calender / Extruder)',
-      areaLabel: 'BCA (เตรียมวัตถุดิบ)',
+      areaName: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
+      areaLabel: 'BCA',
       icon: '🏢',
       order: 1,
+      headcountStandard: 208,
       gyHc: 0,
       contHc: 0,
       monthlyHc: 0,
@@ -581,12 +637,13 @@ export function calculateOhpaSummary(
       monthlyNormal: 0,
       deptMap: {}
     },
-    Consumer: {
+    'Consumer': {
       areaKey: 'Consumer',
-      areaName: 'Consumer (Building / Curing / Final Finish)',
-      areaLabel: 'Consumer (ยางรถยนต์นั่ง)',
+      areaName: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
+      areaLabel: 'Consumer',
       icon: '🚗',
       order: 2,
+      headcountStandard: 148,
       gyHc: 0,
       contHc: 0,
       monthlyHc: 0,
@@ -597,12 +654,13 @@ export function calculateOhpaSummary(
       monthlyNormal: 0,
       deptMap: {}
     },
-    Aero: {
-      areaKey: 'Aero',
-      areaName: 'Aero (Aviation Radial & Bias Tire)',
-      areaLabel: 'Aero (ยางเครื่องบิน)',
+    'Bias Aero': {
+      areaKey: 'Bias Aero',
+      areaName: 'Bias Aero (แผนก A5110, A5120, A5130)',
+      areaLabel: 'Bias Aero',
       icon: '✈️',
       order: 3,
+      headcountStandard: 121,
       gyHc: 0,
       contHc: 0,
       monthlyHc: 0,
@@ -613,12 +671,13 @@ export function calculateOhpaSummary(
       monthlyNormal: 0,
       deptMap: {}
     },
-    Eng: {
-      areaKey: 'Eng',
-      areaName: 'Engineering & Maintenance (ซ่อมบำรุง / วิศวกรรม)',
-      areaLabel: 'Engineering (วิศวกรรม)',
-      icon: '🔧',
+    'Radial Aero': {
+      areaKey: 'Radial Aero',
+      areaName: 'Radial Aero (แผนก S5110, S5120, S5130)',
+      areaLabel: 'Radial Aero',
+      icon: '🛫',
       order: 4,
+      headcountStandard: 74,
       gyHc: 0,
       contHc: 0,
       monthlyHc: 0,
@@ -629,12 +688,65 @@ export function calculateOhpaSummary(
       monthlyNormal: 0,
       deptMap: {}
     },
-    'อื่นๆ': {
-      areaKey: 'อื่นๆ',
-      areaName: 'อื่นๆ (Quality / Retread / Warehouse / Support)',
-      areaLabel: 'อื่นๆ / สนับสนุน',
-      icon: '📦',
+    'Retread': {
+      areaKey: 'Retread',
+      areaName: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
+      areaLabel: 'Retread (หล่อดอก)',
+      icon: '🔄',
       order: 5,
+      headcountStandard: 71,
+      isExcluded6320: true,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Engineering': {
+      areaKey: 'Non-MFG : Engineering',
+      areaName: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
+      areaLabel: 'Engineering',
+      icon: '🔧',
+      order: 6,
+      headcountStandard: 65,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Quality': {
+      areaKey: 'Non-MFG : Quality',
+      areaName: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
+      areaLabel: 'Quality',
+      icon: '🔬',
+      order: 7,
+      headcountStandard: 57,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Others': {
+      areaKey: 'Non-MFG : Others',
+      areaName: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+      areaLabel: 'Others',
+      icon: '📦',
+      order: 8,
+      headcountStandard: 6,
       gyHc: 0,
       contHc: 0,
       monthlyHc: 0,
@@ -647,10 +759,11 @@ export function calculateOhpaSummary(
     }
   };
 
-  // 10. Process GY Active Records into Areas & Depts
+  // 10. Process All Goodyear Records (Active + 6320) into Areas & Depts
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
-  gyActiveRecords.forEach(r => {
+  records.forEach(r => {
+    const isExcluded = isGyDept6320(r);
     const d = r.dept || 'ไม่ระบุแผนก (GY)';
     const nHours = r.normalWorkHours || 0;
     const otH = r.otHours || 0;
@@ -658,7 +771,7 @@ export function calculateOhpaSummary(
 
     // Dept map
     if (!deptMap[d]) {
-      deptMap[d] = { isContractor: false, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
+      deptMap[d] = { isContractor: false, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
     deptMap[d].headcount++;
     deptMap[d].normalHours += nHours;
@@ -667,7 +780,7 @@ export function calculateOhpaSummary(
 
     // Area map
     const areaInfo = classifyArea(r.category, r.dept, r.costCenter, '', '', '');
-    const a = areaMap[areaInfo.key] || areaMap['อื่นๆ'];
+    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
     a.gyHc++;
     a.gyNormal += nHours;
     a.gyOt += otH;
@@ -690,8 +803,9 @@ export function calculateOhpaSummary(
     a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 11. Process Contractor Active Records into Areas & Depts
-  contActiveRecords.forEach(r => {
+  // 11. Process All Contractor Records (Active + 6320) into Areas & Depts
+  rawContActive.forEach(r => {
+    const isExcluded = isContDept6320(r);
     const d = `Contractor WAS (${r.location || r.closing || 'MFG'})`;
     const nHours = r.normalHours || 0;
     const otH = r.otHours || 0;
@@ -699,7 +813,7 @@ export function calculateOhpaSummary(
 
     // Dept map
     if (!deptMap[d]) {
-      deptMap[d] = { isContractor: true, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
+      deptMap[d] = { isContractor: true, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
     deptMap[d].headcount++;
     deptMap[d].normalHours += nHours;
@@ -708,7 +822,7 @@ export function calculateOhpaSummary(
 
     // Area map
     const areaInfo = classifyArea('', r.department, r.closing, '', r.location, r.closing);
-    const a = areaMap[areaInfo.key] || areaMap['อื่นๆ'];
+    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
     a.contHc++;
     a.contNormal += nHours;
     a.contOt += otH;
@@ -743,7 +857,7 @@ export function calculateOhpaSummary(
       totalHours: monthlyStaff.totalHours
     };
 
-    const aOther = areaMap['อื่นๆ'];
+    const aOther = areaMap['Non-MFG : Others'];
     aOther.monthlyHc = monthlyStaff.count;
     aOther.monthlyNormal = monthlyStaff.totalHours;
     aOther.deptMap['Monthly Staff'] = {
@@ -782,6 +896,8 @@ export function calculateOhpaSummary(
         areaLabel: a.areaLabel,
         icon: a.icon,
         order: a.order,
+        headcountStandard: a.headcountStandard,
+        isExcluded6320: a.isExcluded6320,
         totalHeadcount: totHc,
         gyHeadcount: a.gyHc,
         contractorHeadcount: a.contHc,
@@ -796,7 +912,7 @@ export function calculateOhpaSummary(
         contractorOtHours: Math.round(a.contOt * 10) / 10,
         contractorTotalHours: Math.round(contTot * 10) / 10,
         monthlyHours: a.monthlyNormal > 0 ? Math.round(a.monthlyNormal * 10) / 10 : undefined,
-        percentageOfTotalHours: totalWorkingHours > 0
+        percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
           ? Math.round((totH / totalWorkingHours) * 1000) / 10
           : 0,
         departments: subDepts

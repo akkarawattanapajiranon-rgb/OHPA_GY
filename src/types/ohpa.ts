@@ -77,11 +77,13 @@ export interface OhpaAreaDeptItem {
 }
 
 export interface OhpaAreaMetrics {
-  areaKey: 'BCA' | 'Consumer' | 'Aero' | 'Eng' | 'อื่นๆ' | string;
+  areaKey: 'BCA' | 'Consumer' | 'Bias Aero' | 'Radial Aero' | 'Retread' | 'Non-MFG : Engineering' | 'Non-MFG : Quality' | 'Non-MFG : Others' | string;
   areaName: string;
   areaLabel: string;
+  headcountStandard?: number;
   icon: string;
   order: number;
+  isExcluded6320?: boolean;
   totalHeadcount: number;
   gyHeadcount: number;
   contractorHeadcount: number;

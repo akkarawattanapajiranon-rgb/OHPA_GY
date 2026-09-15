@@ -232,18 +232,21 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws3 = XLSX.utils.json_to_sheet(shiftData);
     XLSX.utils.book_append_sheet(wb, ws3, 'Shift_Breakdown');
 
-    // Sheet 4: Area Breakdown (BCA, Consumer, Aero, Eng, อื่นๆ)
+    // Sheet 4: Area Breakdown (8 Exact Areas: BCA, Consumer, Bias Aero, Radial Aero, Retread, Eng, Quality, Others)
     const areaData = (ohpaSummary.areaBreakdown || []).map(a => ({
       'พื้นที่ / กลุ่มโรงงาน': a.areaName,
-      'จำนวนคนรวม (คน)': a.totalHeadcount,
+      'เป้าหมายกำลังพล Master (คน)': a.headcountStandard || '-',
+      'สแกนนิ้วจริงรวม (คน)': a.totalHeadcount,
       'Goodyear (คน)': a.gyHeadcount,
       'Contractor (คน)': a.contractorHeadcount,
+      'พนักงานรายเดือน (คน)': a.monthlyHeadcount || 0,
       'ชม.ปกติ (ชม.)': a.normalHours,
       'ชม. OT (ชม.)': a.otHours,
       'ชม.รวมทั้งหมด (ชม.)': a.totalHours,
       'Goodyear ชม.รวม': a.gyTotalHours,
       'Contractor ชม.รวม': a.contractorTotalHours,
-      '% สัดส่วน': a.percentageOfTotalHours + '%'
+      'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH',
+      '% สัดส่วน': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
     }));
     const ws4 = XLSX.utils.json_to_sheet(areaData);
     XLSX.utils.book_append_sheet(wb, ws4, 'Area_Breakdown');
@@ -804,7 +807,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
-      {/* Area Working Hours & OT Summary (BCA, Consumer, Aero, Eng, อื่นๆ) */}
+      {/* Area Working Hours & OT Summary (8 Exact Production Areas) */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
@@ -813,13 +816,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                สรุปชั่วโมงทำงานและ OT แยกตามพื้นที่ (Area Working Hours & OT Summary)
+                สรุปชั่วโมงทำงานและ OT แยกตาม 8 พื้นที่หลัก (Area Working Hours & OT Summary)
                 <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-200/60">
-                  5 พื้นที่หลัก
+                  8 พื้นที่โรงงาน
                 </span>
               </h3>
               <p className="text-xs text-slate-500">
-                รวมชั่วโมงทำงานปกติ, ชั่วโมง OT และกำลังพลจริงแยกตามพื้นที่: <strong>BCA</strong>, <strong>Consumer</strong>, <strong>Aero</strong>, <strong>Engineering</strong> และ <strong>อื่นๆ</strong>
+                จำแนกชั่วโมงทำงานและ OT ตามโครงสร้างองค์กร: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong>
               </p>
             </div>
           </div>
@@ -843,57 +846,88 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           </div>
         </div>
 
-        {/* 5 Area Summary Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* 8 Area Summary Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-2.5">
           {(ohpaSummary.areaBreakdown || []).map((area) => {
             const isBCA = area.areaKey === 'BCA';
             const isConsumer = area.areaKey === 'Consumer';
-            const isAero = area.areaKey === 'Aero';
-            const isEng = area.areaKey === 'Eng';
+            const isBiasAero = area.areaKey === 'Bias Aero';
+            const isRadialAero = area.areaKey === 'Radial Aero';
+            const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
+            const isEng = area.areaKey === 'Non-MFG : Engineering';
+            const isQuality = area.areaKey === 'Non-MFG : Quality';
 
             const cardBorder = isBCA
               ? 'border-amber-200 bg-amber-50/40 hover:bg-amber-50/70'
               : isConsumer
               ? 'border-blue-200 bg-blue-50/40 hover:bg-blue-50/70'
-              : isAero
+              : isBiasAero
               ? 'border-sky-200 bg-sky-50/40 hover:bg-sky-50/70'
+              : isRadialAero
+              ? 'border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/70'
+              : isRetread
+              ? 'border-rose-200 bg-rose-50/30 hover:bg-rose-50/60'
               : isEng
               ? 'border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50/70'
+              : isQuality
+              ? 'border-teal-200 bg-teal-50/40 hover:bg-teal-50/70'
               : 'border-purple-200 bg-purple-50/40 hover:bg-purple-50/70';
 
             const badgeBg = isBCA
               ? 'bg-amber-500 text-white'
               : isConsumer
               ? 'bg-blue-600 text-white'
-              : isAero
+              : isBiasAero
               ? 'bg-sky-600 text-white'
+              : isRadialAero
+              ? 'bg-indigo-600 text-white'
+              : isRetread
+              ? 'bg-rose-600 text-white'
               : isEng
               ? 'bg-emerald-600 text-white'
+              : isQuality
+              ? 'bg-teal-600 text-white'
               : 'bg-purple-600 text-white';
 
             return (
               <div
                 key={area.areaKey}
                 onClick={() => toggleArea(area.areaKey)}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer shadow-2xs ${cardBorder}`}
+                className={`p-3 rounded-2xl border transition-all cursor-pointer shadow-2xs flex flex-col justify-between ${cardBorder}`}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${badgeBg}`}>
-                    {area.areaKey}
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-600">
-                    {area.percentageOfTotalHours}%
-                  </span>
+                <div>
+                  <div className="flex items-center justify-between mb-1 gap-1">
+                    <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-md truncate ${badgeBg}`} title={area.areaKey}>
+                      {area.areaLabel}
+                    </span>
+                    {area.isExcluded6320 ? (
+                      <span className="text-[9px] font-bold text-rose-600 bg-rose-100 px-1 py-0.2 rounded">
+                        ตัด 6320
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold text-slate-600">
+                        {area.percentageOfTotalHours}%
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-[10px] text-slate-500 font-medium">
+                    เป้า: <strong className="text-slate-700">{area.headcountStandard || '-'} คน</strong>
+                  </div>
+
+                  <div className="text-base font-black text-slate-900 font-mono leading-tight mt-1">
+                    {area.totalHours.toLocaleString()} <span className="text-[10px] font-sans font-normal text-slate-500">ชม.</span>
+                  </div>
                 </div>
-                <div className="text-lg font-black text-slate-900 font-mono leading-tight">
-                  {area.totalHours.toLocaleString()} <span className="text-[11px] font-sans font-normal text-slate-500">ชม.</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
-                  <span>ปกติ: {area.normalHours.toLocaleString()}</span>
-                  <span className="text-amber-700 font-bold">OT: +{area.otHours.toLocaleString()}</span>
-                </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
-                  กำลังพล: <strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} | Cont {area.contractorHeadcount})
+
+                <div className="mt-2 pt-1.5 border-t border-slate-200/60 text-[10px]">
+                  <div className="flex items-center justify-between text-slate-600">
+                    <span>ปกติ: {area.normalHours}</span>
+                    <span className="text-amber-700 font-bold">+{area.otHours}</span>
+                  </div>
+                  <div className="text-slate-500 mt-0.5 text-[9px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
+                    สแกน: <strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount}/Cont {area.contractorHeadcount})
+                  </div>
                 </div>
               </div>
             );
@@ -905,12 +939,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-900 text-white font-bold">
-                <th className="py-3 px-4 min-w-[240px]">พื้นที่ / กลุ่มโรงงาน (Area / Section)</th>
-                <th className="py-3 px-4 text-center">กำลังพลรวม (Headcount)</th>
+                <th className="py-3 px-4 min-w-[280px]">พื้นที่ / กลุ่มโรงงาน (8 Production Areas)</th>
+                <th className="py-3 px-3 text-center w-24">เป้าหมาย Master</th>
+                <th className="py-3 px-4 text-center">สแกนจริงรวม (Headcount)</th>
                 <th className="py-3 px-4 text-right bg-slate-800/80">ชม.ปกติ (Normal)</th>
                 <th className="py-3 px-4 text-right bg-amber-950/60 text-amber-300">ชม. OT (OT Hours)</th>
                 <th className="py-3 px-4 text-right bg-indigo-950/80 text-indigo-200 font-black">ชม.รวมทั้งหมด (Total Hours)</th>
-                <th className="py-3 px-4 text-right min-w-[160px]">% สัดส่วนชั่วโมง</th>
+                <th className="py-3 px-4 text-right min-w-[150px]">% สัดส่วนชั่วโมง</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -918,17 +953,26 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 const isExpanded = Boolean(expandedAreas[area.areaKey]);
                 const isBCA = area.areaKey === 'BCA';
                 const isConsumer = area.areaKey === 'Consumer';
-                const isAero = area.areaKey === 'Aero';
-                const isEng = area.areaKey === 'Eng';
+                const isBiasAero = area.areaKey === 'Bias Aero';
+                const isRadialAero = area.areaKey === 'Radial Aero';
+                const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
+                const isEng = area.areaKey === 'Non-MFG : Engineering';
+                const isQuality = area.areaKey === 'Non-MFG : Quality';
 
                 const progressColor = isBCA
                   ? 'bg-amber-500'
                   : isConsumer
                   ? 'bg-blue-600'
-                  : isAero
+                  : isBiasAero
                   ? 'bg-sky-500'
+                  : isRadialAero
+                  ? 'bg-indigo-600'
+                  : isRetread
+                  ? 'bg-rose-500'
                   : isEng
                   ? 'bg-emerald-600'
+                  : isQuality
+                  ? 'bg-teal-600'
                   : 'bg-purple-600';
 
                 const rowBg = isExpanded
@@ -937,20 +981,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   ? 'hover:bg-amber-50/30'
                   : isConsumer
                   ? 'hover:bg-blue-50/30'
-                  : isAero
+                  : isBiasAero
                   ? 'hover:bg-sky-50/30'
+                  : isRadialAero
+                  ? 'hover:bg-indigo-50/30'
+                  : isRetread
+                  ? 'hover:bg-rose-50/30 bg-rose-50/15'
                   : isEng
                   ? 'hover:bg-emerald-50/30'
+                  : isQuality
+                  ? 'hover:bg-teal-50/30'
                   : 'hover:bg-purple-50/30';
 
                 const iconElem = isBCA ? (
                   <Factory className="w-4 h-4 text-amber-600 shrink-0" />
                 ) : isConsumer ? (
                   <Car className="w-4 h-4 text-blue-600 shrink-0" />
-                ) : isAero ? (
+                ) : isBiasAero ? (
                   <Plane className="w-4 h-4 text-sky-600 shrink-0" />
+                ) : isRadialAero ? (
+                  <Plane className="w-4 h-4 text-indigo-600 shrink-0" />
+                ) : isRetread ? (
+                  <RefreshCw className="w-4 h-4 text-rose-600 shrink-0" />
                 ) : isEng ? (
                   <Wrench className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : isQuality ? (
+                  <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
                 ) : (
                   <Package className="w-4 h-4 text-purple-600 shrink-0" />
                 );
@@ -981,19 +1037,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-black text-slate-900">{area.areaKey}</span>
-                              <span className="text-[11px] text-slate-500 font-medium">({area.areaLabel})</span>
+                              {area.isExcluded6320 && (
+                                <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.2 rounded border border-rose-200">
+                                  ตัดออกจาก OPAH (6320)
+                                </span>
+                              )}
                             </div>
-                            <div className="text-[11px] text-slate-400 font-normal">
-                              {area.departments.length} แผนก / หน่วยงานย่อย
+                            <div className="text-[11px] text-slate-500 font-normal">
+                              {area.areaName}
                             </div>
                           </div>
                         </div>
                       </td>
 
-                      {/* Headcount */}
+                      {/* Standard Master Headcount */}
+                      <td className="py-3 px-3 text-center font-bold text-slate-700">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono font-bold text-xs">
+                          {area.headcountStandard ? `${area.headcountStandard} คน` : '-'}
+                        </span>
+                      </td>
+
+                      {/* Actual Scanned Headcount */}
                       <td className="py-3 px-4 text-center">
                         <div className="inline-flex flex-col items-center">
-                          <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-black text-xs">
+                          <span className={`px-2.5 py-0.5 rounded-full text-white font-black text-xs ${
+                            area.isExcluded6320 ? 'bg-rose-700' : 'bg-slate-900'
+                          }`}>
                             {area.totalHeadcount} คน
                           </span>
                           <span className="text-[10px] text-slate-500 mt-0.5">
@@ -1020,27 +1089,33 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
                       {/* % Contribution */}
                       <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2.5">
-                          <div className="w-20 bg-slate-200 rounded-full h-2 overflow-hidden shadow-2xs">
-                            <div
-                              className={`h-2 rounded-full transition-all duration-500 ${progressColor}`}
-                              style={{ width: `${Math.min(100, area.percentageOfTotalHours)}%` }}
-                            ></div>
-                          </div>
-                          <span className="font-mono font-black text-slate-900 text-xs w-12 text-right">
-                            {area.percentageOfTotalHours}%
+                        {area.isExcluded6320 ? (
+                          <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                            ไม่นับใน OPAH
                           </span>
-                        </div>
+                        ) : (
+                          <div className="flex items-center justify-end gap-2.5">
+                            <div className="w-16 bg-slate-200 rounded-full h-2 overflow-hidden shadow-2xs">
+                              <div
+                                className={`h-2 rounded-full transition-all duration-500 ${progressColor}`}
+                                style={{ width: `${Math.min(100, area.percentageOfTotalHours)}%` }}
+                              ></div>
+                            </div>
+                            <span className="font-mono font-black text-slate-900 text-xs w-12 text-right">
+                              {area.percentageOfTotalHours}%
+                            </span>
+                          </div>
+                        )}
                       </td>
                     </tr>
 
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={6} className="py-3 px-6 sm:px-10">
+                        <td colSpan={7} className="py-3 px-6 sm:px-10">
                           <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
-                              <span>รายละเอียดหน่วยงานย่อยในพื้นที่: {area.areaName}</span>
+                              <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName}</span>
                               <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
                             </div>
 
@@ -1050,7 +1125,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                   <tr className="text-slate-500 font-bold border-b border-slate-100 text-[11px]">
                                     <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด</th>
                                     <th className="py-1.5 px-3 text-center">ประเภท</th>
-                                    <th className="py-1.5 px-3 text-center">จำนวนคน</th>
+                                    <th className="py-1.5 px-3 text-center">จำนวนคนสแกน</th>
                                     <th className="py-1.5 px-3 text-right">ชม.ปกติ</th>
                                     <th className="py-1.5 px-3 text-right">ชม. OT</th>
                                     <th className="py-1.5 px-3 text-right font-black">ชม.รวม</th>
@@ -1111,7 +1186,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
                     TOTAL
                   </div>
-                  <span>ยอดรวมทุกพื้นที่โรงงาน (Plant Grand Total)</span>
+                  <div>
+                    <span>ยอดรวมชั่วโมงคำนวณ OPAH (Total Plant Working Hours)</span>
+                    <span className="text-[11px] font-normal text-slate-400 block">
+                      (รวม GY + Cont + รายเดือน 62 คน โดยตัดแผนก 6320 ออกตามสูตรมาตรฐาน)
+                    </span>
+                  </div>
+                </td>
+                <td className="py-3.5 px-3 text-center text-slate-300 font-mono">
+                  750 คน
                 </td>
                 <td className="py-3.5 px-4 text-center text-white font-mono">
                   {ohpaSummary.totalEmployeesCount} คน
