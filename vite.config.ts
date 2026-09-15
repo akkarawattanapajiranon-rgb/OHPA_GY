@@ -435,23 +435,91 @@ function scanFolderApiPlugin(): Plugin {
               const remark = row[9] ? String(row[9]).trim() : '';
               const deptRaw = row[10] ? String(row[10]).trim() : '';
               const isWorkDay = row[11] === 1 || row[11] === '1';
-              const otHours = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
+              let otCol = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
 
               const dateInfo = excelDateToDateObj(serialDate);
               const dateKey = dateInfo.formattedShort;
 
+              const hasScannedIn = Boolean(scanIn);
               let shiftNumber = 1;
               let shiftLabel = 'กะ 1 (07:00 - 15:00)';
-              if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
-                shiftNumber = 2;
-                shiftLabel = 'กะ 2 (15:00 - 23:00)';
-              } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
-                shiftNumber = 3;
-                shiftLabel = 'กะ 3 (23:00 - 07:00)';
+              let normalHours = hasScannedIn ? 8 : 0;
+              let otHours = otCol;
+
+              if (hasScannedIn) {
+                const inParts = scanIn.split(':');
+                const inHour = parseInt(inParts[0], 10);
+
+                let outHour = -1;
+                if (scanOut) {
+                  const outParts = scanOut.split(':');
+                  outHour = parseInt(outParts[0], 10);
+                }
+
+                // 1. เข้า 7.00 - 19.00 -> กะ 1 พร้อม OT 4 ชม
+                if (inHour >= 5 && inHour < 12) {
+                  shiftNumber = 1;
+                  if (otCol >= 4 || outHour >= 19) {
+                    if (otHours < 4) otHours = 4;
+                    shiftLabel = 'กะ 1 (07:00 - 19:00 / OT 4 ชม.)';
+                  } else if (otCol > 0) {
+                    shiftLabel = `กะ 1 (07:00 - 15:00 + OT ${otCol}h)`;
+                  } else {
+                    shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                  }
+                }
+                // 2. เข้า 15.00 - 23.00 -> กะ 2
+                else if (inHour >= 12 && inHour < 17) {
+                  if (outHour >= 6 && outHour <= 9) {
+                    shiftNumber = 3;
+                    shiftLabel = 'กะ 3 (15:00 - 07:00 / OT 8 ชม.)';
+                    if (otHours < 8) otHours = 8;
+                  } else {
+                    shiftNumber = 2;
+                    if (otCol > 0) {
+                      shiftLabel = `กะ 2 (15:00 - 23:00 + OT ${otCol}h)`;
+                    } else {
+                      shiftLabel = 'กะ 2 (15:00 - 23:00)';
+                    }
+                  }
+                }
+                // 3. เข้า 19.00 - 7.00 -> กะ 3 พร้อม OT 4 ชม
+                else if (inHour >= 17 && inHour < 21) {
+                  shiftNumber = 3;
+                  if (otCol >= 4 || (outHour >= 6 && outHour <= 9)) {
+                    if (otHours < 4) otHours = 4;
+                    shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
+                  } else if (otCol > 0) {
+                    shiftLabel = `กะ 3 (19:00 - 07:00 + OT ${otCol}h)`;
+                  } else {
+                    shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
+                    otHours = 4;
+                  }
+                }
+                // 4. เข้า 23.00 - 7.00 -> กะ 3
+                else {
+                  shiftNumber = 3;
+                  if (otCol > 0) {
+                    shiftLabel = `กะ 3 (23:00 - 07:00 + OT ${otCol}h)`;
+                  } else {
+                    shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                  }
+                }
+              } else {
+                if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
+                  shiftNumber = 2;
+                  shiftLabel = 'กะ 2 (15:00 - 23:00)';
+                } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
+                  shiftNumber = 3;
+                  shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                } else {
+                  shiftNumber = 1;
+                  shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                }
+                normalHours = 0;
+                otHours = 0;
               }
 
-              const hasScannedIn = Boolean(scanIn);
-              const normalHours = (hasScannedIn && isWorkDay) ? 8 : (hasScannedIn ? 0 : 0);
               const totalHours = normalHours + otHours;
 
               const empInfo = contractorMapping[empCode] || {
