@@ -82,10 +82,29 @@ export default function App() {
   }, [employeeMapping]);
 
   const handleSelectPreset = (presetId: string) => {
-    const preset = presets.find(p => p.id === presetId);
+    const preset = presets.find(p => p.id === presetId || p.dateFormatted === presetId || p.name === presetId);
     if (preset) {
       setScanContent(preset.content);
       setSelectedFileId(preset.id);
+      setSelectedShiftFilter('ALL');
+      setSelectedDeptFilter('ALL');
+      setSelectedCategoryFilter('ALL');
+    }
+  };
+
+  const handleSelectDateFromOhpa = (dateFormatted: string) => {
+    const cleanDate = dateFormatted.trim();
+    const matchingPreset = presets.find(p => {
+      if (p.dateFormatted && p.dateFormatted.trim() === cleanDate) return true;
+      if (p.name && p.name.includes(cleanDate)) return true;
+      const normP = normalizeDateToMMDDYYYY(p.dateFormatted || p.id);
+      const normInput = normalizeDateToMMDDYYYY(cleanDate);
+      return Boolean(normP && normInput && normP === normInput);
+    });
+
+    if (matchingPreset) {
+      setScanContent(matchingPreset.content);
+      setSelectedFileId(matchingPreset.id);
       setSelectedShiftFilter('ALL');
       setSelectedDeptFilter('ALL');
       setSelectedCategoryFilter('ALL');
@@ -353,6 +372,7 @@ export default function App() {
           <OhpaCalculationView
             records={records}
             currentScanDateFormatted={dateStringFormatted}
+            onSelectGlobalDate={handleSelectDateFromOhpa}
           />
         )}
       </main>

@@ -2,6 +2,8 @@ export interface ScanPreset {
   id: string;
   name: string;
   content: string;
+  dateFormatted?: string;
+  dateTimestamp?: number;
 }
 
 export const SCAN_FILE_PRESETS: ScanPreset[] = [

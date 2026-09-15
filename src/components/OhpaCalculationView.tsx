@@ -22,11 +22,13 @@ import {
 interface OhpaCalculationViewProps {
   records: ParsedShiftRecord[]; // All scanned employees (e.g. ~470-750 people)
   currentScanDateFormatted: string; // e.g. "14/09/2026"
+  onSelectGlobalDate?: (dateFormatted: string) => void;
 }
 
 export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   records,
-  currentScanDateFormatted
+  currentScanDateFormatted,
+  onSelectGlobalDate
 }) => {
   const [tonnageReport, setTonnageReport] = useState<StockingTonnageReport | null>(null);
   const [selectedPdValue, setSelectedPdValue] = useState<string>('');
@@ -51,7 +53,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
       if (data) {
         setTonnageReport(data);
-        if (data.productionDayValue && !selectedPdValue) {
+        if (data.productionDayValue) {
           setSelectedPdValue(data.productionDayValue);
         }
         if (!data.success && data.message) {
@@ -65,14 +67,38 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     }
   };
 
-  // Initial load or date switch
+  // Sync with currentScanDateFormatted whenever top navbar date changes
   useEffect(() => {
-    fetchTonnageData(undefined, currentScanDateFormatted);
+    if (!currentScanDateFormatted || currentScanDateFormatted === '-') return;
+
+    // Convert DD/MM/YYYY to YYYYMMDD000000
+    const parts = currentScanDateFormatted.split(/[/.-]/);
+    let pdVal = '';
+    if (parts.length === 3 && parts[2].length === 4) {
+      pdVal = `${parts[2]}${parts[1].padStart(2, '0')}${parts[0].padStart(2, '0')}000000`;
+    }
+    if (pdVal) {
+      setSelectedPdValue(pdVal);
+    }
+    fetchTonnageData(pdVal || undefined, currentScanDateFormatted);
   }, [currentScanDateFormatted]);
 
   const handleSelectDate = (newPdVal: string) => {
     setSelectedPdValue(newPdVal);
     fetchTonnageData(newPdVal);
+
+    // Sync back to top global scan date in Navbar
+    if (onSelectGlobalDate) {
+      const opt = tonnageReport?.availableDates?.find(o => o.value === newPdVal);
+      if (opt && opt.label) {
+        onSelectGlobalDate(opt.label);
+      } else if (newPdVal && newPdVal.length >= 8) {
+        const yyyy = newPdVal.slice(0, 4);
+        const mm = newPdVal.slice(4, 6);
+        const dd = newPdVal.slice(6, 8);
+        onSelectGlobalDate(`${dd}/${mm}/${yyyy}`);
+      }
+    }
   };
 
   const handleSyncWithScanDate = () => {
