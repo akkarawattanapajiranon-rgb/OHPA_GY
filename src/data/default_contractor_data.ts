@@ -830,6 +830,16 @@ export const DEFAULT_CONTRACTOR_MAPPING: Record<string, ContractorEmployeeInfo> 
     "closing": "1022",
     "department": "MFG",
     "type": "Salary"
+  },
+  "94318": {
+    "empCode": "94318",
+    "nameEn": "Suphamongkol Phiwkhom",
+    "nameTh": "ศุภมงคล ผิวขม",
+    "position": "RE",
+    "location": "BCB",
+    "closing": "5120",
+    "department": "MFG",
+    "type": "Salary"
   }
 };
 

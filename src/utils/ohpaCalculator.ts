@@ -51,7 +51,7 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   const count = 62;
   const totalHours = count * hoursPerPerson;
 
-  const wasCount = 8;
+  const wasCount = 9;
   const wasTotalHours = wasCount * hoursPerPerson;
 
   return {
