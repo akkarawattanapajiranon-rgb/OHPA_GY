@@ -51,15 +51,18 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   const count = 61;
   const totalHours = count * hoursPerPerson;
 
+  const wasCount = 9;
+  const wasTotalHours = wasCount * hoursPerPerson;
+
   return {
     count,
     hoursPerPerson,
     totalHours,
     dayName: dayNames[dayOfWeek],
-    wasCount: 0,
-    wasTotalHours: 0,
-    combinedCount: count,
-    combinedTotalHours: totalHours
+    wasCount,
+    wasTotalHours,
+    combinedCount: count + wasCount,
+    combinedTotalHours: totalHours + wasTotalHours
   };
 }
 
@@ -489,6 +492,29 @@ export function accumulateRecordsIntoAreaMap(
     aOther.deptMap['GY Monthly Staff'].totalHours += monthlyStaff.totalHours;
   }
 
+  // Fallback WAS Monthly Staff (if not scanned in contRecords)
+  const fallbackWasCount = hasScannedWasMonthly ? 0 : (monthlyStaff.wasCount || 9);
+  const fallbackWasHours = hasScannedWasMonthly ? 0 : (monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson));
+  if (!hasScannedWasMonthly && fallbackWasCount > 0 && fallbackWasHours > 0) {
+    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    aOther.monthlyHc += fallbackWasCount;
+    aOther.monthlyNormal += fallbackWasHours;
+    if (!aOther.deptMap['WAS Monthly Staff']) {
+      aOther.deptMap['WAS Monthly Staff'] = {
+        dept: wasMonthlyKey,
+        isContractor: true,
+        isMonthly: true,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    aOther.deptMap['WAS Monthly Staff'].headcount += fallbackWasCount;
+    aOther.deptMap['WAS Monthly Staff'].normalHours += fallbackWasHours;
+    aOther.deptMap['WAS Monthly Staff'].totalHours += fallbackWasHours;
+  }
+
   // Bead Add Hours
   if (beadAddHours > 0) {
     const beadKey = `B-end Bead (ชั่วโมงบวกเพิ่ม OPAH - Bead Component)`;
@@ -648,11 +674,16 @@ export function calculateMtdSummary(
     }
 
     // 2. Contractor Data
+    let contHourlyRecords: ContractorScanRecord[] = [];
+    let contMonthlyRecords: ContractorScanRecord[] = [];
+
     if (d === targetDay) {
       dayContRecords = currentContRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
       const active = dayContRecords.filter(r => !isContDept6320(r));
-      contractorHeadcount = active.length;
-      contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
+      contHourlyRecords = active.filter(r => r.type !== 'Salary' && !(r as any).isMonthly);
+      contMonthlyRecords = active.filter(r => r.type === 'Salary' || (r as any).isMonthly);
+      contractorHeadcount = contHourlyRecords.length;
+      contractorHours = contHourlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
     } else {
       const contEntry = contractorRecordsByDate[`${d}/${targetMonth}/${targetYear}`] ||
         contractorRecordsByDate[dayDateStr] ||
@@ -661,15 +692,19 @@ export function calculateMtdSummary(
       if (contEntry && contEntry.records) {
         dayContRecords = contEntry.records.filter(r => r.hasScannedIn || r.totalHours > 0);
         const active = dayContRecords.filter(r => !isContDept6320(r));
-        contractorHeadcount = active.length;
-        contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
+        contHourlyRecords = active.filter(r => r.type !== 'Salary' && !(r as any).isMonthly);
+        contMonthlyRecords = active.filter(r => r.type === 'Salary' || (r as any).isMonthly);
+        contractorHeadcount = contHourlyRecords.length;
+        contractorHours = contHourlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
       }
     }
 
     // 3. Monthly Staff Data (Goodyear 61 + WAS 9)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
     const gyMonthlyHours = monthlyStaff.totalHours;
-    const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (9 * monthlyStaff.hoursPerPerson);
+    const wasMonthlyHours = contMonthlyRecords.length > 0
+      ? contMonthlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0)
+      : monthlyStaff.wasTotalHours;
     const combinedMonthlyHours = gyMonthlyHours + wasMonthlyHours;
 
     const dayTotalHours = gyHours + contractorHours + combinedMonthlyHours;
@@ -1054,6 +1089,18 @@ export function calculateOhpaSummary(
       normalHours: monthlyStaff.totalHours,
       otHours: 0,
       totalHours: monthlyStaff.totalHours
+    };
+  }
+
+  if (!hasScannedWasMonthly && fallbackWasCount > 0 && fallbackWasHours > 0) {
+    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    deptMap[wasMonthlyKey] = {
+      isContractor: true,
+      isMonthly: true,
+      headcount: fallbackWasCount,
+      normalHours: fallbackWasHours,
+      otHours: 0,
+      totalHours: fallbackWasHours
     };
   }
 
