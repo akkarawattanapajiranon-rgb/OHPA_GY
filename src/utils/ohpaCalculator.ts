@@ -747,7 +747,7 @@ export function calculateMtdSummary(
     });
   }
 
-  const LBS_FACTOR = 2.2046;
+  const LBS_FACTOR = 2.20462;
   const mtdStockingKg = tonnageReport?.total?.mtdTonnage || (tonnageReport?.total?.dailyTotalTonnage ? tonnageReport.total.dailyTotalTonnage * targetDay : 0);
   const mtdStockingLbs = Math.round(mtdStockingKg * LBS_FACTOR * 100) / 100;
   const mtdStockingTon = Math.round((mtdStockingKg / 1000) * 1000) / 1000;
@@ -850,13 +850,13 @@ export function calculateOhpaSummary(
   const opahWorkingHours = Math.max(0, Math.round((totalWorkingHours - pdiDeductHours + beadAddHours) * 10) / 10);
 
   // 5. Tonnage & Pounds (lbs)
-  const LBS_CONVERSION_FACTOR = 2.2046;
+  const LBS_CONVERSION_FACTOR = 2.20462;
   const totalTonnageKg = tonnageReport?.total?.dailyTotalTonnage || 0;
   const totalTonnageTon = totalTonnageKg / 1000;
   const totalTonnageLbs = Math.round(totalTonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
   const totalPallets = tonnageReport?.total?.dailyTotalPallets || 0;
 
-  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.2046) / Net OPAH Working Hours (lbs/hr)
+  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.20462) / Net OPAH Working Hours (lbs/hr)
   const overallOpahLbsPerHour = opahWorkingHours > 0
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / opahWorkingHours) * 100) / 100
     : 0;

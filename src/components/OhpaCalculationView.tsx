@@ -223,9 +223,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': '🟢 B-end / Bead Hours (Add)', 'ค่า': `+${ohpaSummary.beadAddHours.toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': '⭐ ชั่วโมงทำงานสุทธิที่ใช้คิด OPAH (Net OPAH Hours)', 'ค่า': `${ohpaSummary.opahWorkingHours.toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (kg)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg' },
-      { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (lbs = kg x 2.2046)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
+      { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (lbs = kg x 2.20462)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
       { 'หัวข้อ (KPI)': 'ยอดตันประจำวัน (Metric Tons)', 'ค่า': ohpaSummary.totalTonnageTon + ' Tons' },
-      { 'หัวข้อ (KPI)': '⭐ Daily Overall Plant OPAH [(kg x 2.2046) / Net OPAH Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '⭐ Daily Overall Plant OPAH [(kg x 2.20462) / Net OPAH Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Goodyear', 'ค่า': ohpaSummary.gyOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Contractor', 'ค่า': ohpaSummary.contractorOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '----------------------------------------', 'ค่า': '----------------------------------------' },
@@ -397,7 +397,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              คำนวณ OPAH = (Stocking kg × 2.2046) ÷ Net Working Hours [ฐานรวม - PDI ({ohpaSummary.pdiDeductHours} ชม.) + Bead ({ohpaSummary.beadAddHours} ชม.) = {ohpaSummary.opahWorkingHours} ชม.]
+              คำนวณ OPAH = (Stocking kg × 2.20462) ÷ Net Working Hours [ฐานรวม - PDI ({ohpaSummary.pdiDeductHours} ชม.) + Bead ({ohpaSummary.beadAddHours} ชม.) = {ohpaSummary.opahWorkingHours} ชม.]
             </p>
           </div>
         </div>
@@ -680,7 +680,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <span className="text-sm font-bold text-blue-200">lbs / ชม.</span>
               </div>
               <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">
-                สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม.
+                สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.20462) ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม.
               </p>
             </div>
             <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-blue-100 z-10">
@@ -794,7 +794,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <span className="text-sm font-bold text-indigo-200">lbs / ชม.</span>
               </div>
               <p className="text-xs text-indigo-100/90 mt-2 leading-relaxed">
-                สูตร: ({ohpaSummary.mtd?.mtdStockingKg.toLocaleString()} kg × 2.2046) ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.mtd?.mtdStockingLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม.
+                สูตร: ({ohpaSummary.mtd?.mtdStockingKg.toLocaleString()} kg × 2.20462) ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.mtd?.mtdStockingLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.mtd?.mtdOpahWorkingHours.toLocaleString()} ชม.
               </p>
             </div>
             <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-indigo-100 z-10">
