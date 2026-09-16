@@ -245,6 +245,7 @@ function scanFolderApiPlugin(): Plugin {
               (timeStr.includes('07') && timeStr.includes('15'))
             )) {
               finalRegMachine = finalOtMachine;
+              finalOtMachine = undefined;
             }
 
             let defaultReason = reason;

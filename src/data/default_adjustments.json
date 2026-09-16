@@ -93,11 +93,10 @@
     "empId": "12185",
     "empName": "จักรพงษ์ โคตรแป",
     "regularMachineOverride": "Chaffer Lay-up",
-    "otMachineOverride": "Chaffer Lay-up",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00 - 23.00)"
+    "reason": "เวลาพิเศษ 15.00 - 23.00"
   },
   {
     "id": "adj-9-10705",
@@ -116,11 +115,10 @@
     "empId": "12674",
     "empName": "พงศกรณ์ พวงใส",
     "regularMachineOverride": "Chaffer Lay-up",
-    "otMachineOverride": "Chaffer Lay-up",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+    "reason": "เวลาพิเศษ 15.00-23.00"
   },
   {
     "id": "adj-11-12676",
@@ -128,11 +126,10 @@
     "empId": "12676",
     "empName": "ประชา ไชยโชติ",
     "regularMachineOverride": "Chaffer Lay-up",
-    "otMachineOverride": "Chaffer Lay-up",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+    "reason": "เวลาพิเศษ 15.00-23.00"
   },
   {
     "id": "adj-12-12945",
@@ -144,5 +141,60 @@
     "customEndTime": "20:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-20.00)"
+  },
+  {
+    "id": "adj-13-12753",
+    "dateStr": "15/09/2026",
+    "empId": "12753",
+    "empName": "ปรัชญา เพ็งที",
+    "otMachineOverride": "4roll#2 for was",
+    "customStartTime": "15:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 4roll#2 for was (15.00-19.00)"
+  },
+  {
+    "id": "adj-14-12116",
+    "dateStr": "15/09/2026",
+    "empId": "12116",
+    "empName": "อำพล ศรีชัย",
+    "regularMachineOverride": "4roll#1 for was",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 15.00-23.00"
+  },
+  {
+    "id": "adj-15-12185",
+    "dateStr": "15/09/2026",
+    "empId": "12185",
+    "empName": "จักรพงษ์ โคตรแป",
+    "regularMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "เวลาพิเศษ 15.00-23.00"
+  },
+  {
+    "id": "adj-16-12462",
+    "dateStr": "15/09/2026",
+    "empId": "12462",
+    "empName": "อธิวัฒน์ งามสม",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-17-12632",
+    "dateStr": "15/09/2026",
+    "empId": "12632",
+    "empName": "อนุพงษ์ วงค์คำจันทร์",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
   }
 ]
