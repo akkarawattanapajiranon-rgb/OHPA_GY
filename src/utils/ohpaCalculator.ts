@@ -51,18 +51,15 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   const count = 61;
   const totalHours = count * hoursPerPerson;
 
-  const wasCount = 9;
-  const wasTotalHours = wasCount * hoursPerPerson;
-
   return {
     count,
     hoursPerPerson,
     totalHours,
     dayName: dayNames[dayOfWeek],
-    wasCount,
-    wasTotalHours,
-    combinedCount: count + wasCount,
-    combinedTotalHours: totalHours + wasTotalHours
+    wasCount: 0,
+    wasTotalHours: 0,
+    combinedCount: count,
+    combinedTotalHours: totalHours
   };
 }
 
@@ -490,29 +487,6 @@ export function accumulateRecordsIntoAreaMap(
     aOther.deptMap['GY Monthly Staff'].headcount += monthlyStaff.count;
     aOther.deptMap['GY Monthly Staff'].normalHours += monthlyStaff.totalHours;
     aOther.deptMap['GY Monthly Staff'].totalHours += monthlyStaff.totalHours;
-  }
-
-  // WAS Monthly Staff Fallback (if not scanned)
-  const fallbackWasCount = monthlyStaff.wasCount ?? 9;
-  const fallbackWasHours = monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson);
-  if (!hasScannedWasMonthly && fallbackWasCount > 0) {
-    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
-    aOther.monthlyHc += fallbackWasCount;
-    aOther.monthlyNormal += fallbackWasHours;
-    if (!aOther.deptMap['WAS Monthly Staff']) {
-      aOther.deptMap['WAS Monthly Staff'] = {
-        dept: wasMonthlyKey,
-        isContractor: true,
-        isMonthly: true,
-        headcount: 0,
-        normalHours: 0,
-        otHours: 0,
-        totalHours: 0
-      };
-    }
-    aOther.deptMap['WAS Monthly Staff'].headcount += fallbackWasCount;
-    aOther.deptMap['WAS Monthly Staff'].normalHours += fallbackWasHours;
-    aOther.deptMap['WAS Monthly Staff'].totalHours += fallbackWasHours;
   }
 
   // Bead Add Hours
@@ -1080,18 +1054,6 @@ export function calculateOhpaSummary(
       normalHours: monthlyStaff.totalHours,
       otHours: 0,
       totalHours: monthlyStaff.totalHours
-    };
-  }
-
-  if (!hasScannedWasMonthly && fallbackWasCount > 0) {
-    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
-    deptMap[wasMonthlyKey] = {
-      isContractor: true,
-      isMonthly: true,
-      headcount: fallbackWasCount,
-      normalHours: fallbackWasHours,
-      otHours: 0,
-      totalHours: fallbackWasHours
     };
   }
 
