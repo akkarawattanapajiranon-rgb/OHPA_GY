@@ -311,16 +311,35 @@ export function processScanRecords(
 
     const inScan = ins.length > 0 ? ins[0] : null;
 
+    // Determine provisional shift from inScan (or outs if no inScan)
+    let provShift: ShiftType = 1;
+    if (inScan) {
+      provShift = determineShift(inScan.timestamp);
+    } else if (outs.length > 0) {
+      provShift = determineShiftFromOut(outs[0].timestamp);
+    }
+
     // Pick best matching out scan
     let outScan: RawScanRecord | null = null;
     if (inScan && outs.length > 0) {
       // Exclude outs at the exact same minute (< 60s) as inScan
       const distinctOuts = outs.filter(o => Math.abs(o.timestamp.getTime() - inScan.timestamp.getTime()) >= 60 * 1000);
       if (distinctOuts.length > 0) {
-        const validOuts = distinctOuts.filter(o => o.timestamp.getTime() > inScan.timestamp.getTime());
+        let validOuts = distinctOuts.filter(o => o.timestamp.getTime() > inScan.timestamp.getTime());
+
+        // Rule: Shift 3 (Night shift 23:00 - 07:00) workers NEVER work continuously through morning shift until afternoon.
+        // Valid Shift 3 checkouts occur in the morning window (05:00 - 11:30). Out scans in the afternoon (>= 12:00) are not Shift 3 checkouts.
+        if (provShift === 3) {
+          validOuts = validOuts.filter(o => {
+            const oh = o.timestamp.getHours();
+            const om = o.timestamp.getMinutes();
+            return (oh >= 5 && (oh < 11 || (oh === 11 && om <= 30)));
+          });
+        }
+
         if (validOuts.length > 0) {
           outScan = validOuts[validOuts.length - 1]; // Latest out for total working hours / OT
-        } else {
+        } else if (provShift !== 3) {
           outScan = distinctOuts[0];
         }
       }
@@ -534,8 +553,8 @@ export function processScanRecords(
             postOtHours = Math.floor((minsPastShift + 15) / 60);
           }
         } else if (shiftNum === 3) {
-          // Shift 3: 23:00 to 07:00
-          if (outMins >= 7 * 60 + 45 && outMins <= 19 * 60) {
+          // Shift 3: 23:00 to 07:00 (No continuous OT into Shift 1; max handover up to 11:30)
+          if (outMins >= 7 * 60 + 45 && outMins <= 11 * 60 + 30) {
             const minsPastShift = outMins - 7 * 60;
             if (minsPastShift >= 45) {
               postOtHours = Math.floor((minsPastShift + 15) / 60);
