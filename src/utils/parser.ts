@@ -670,7 +670,7 @@ export function processScanRecords(
     if (r.category && r.category !== 'BCA') return; // Only BCA employees cover Team A Standard HC!
     
     // If employee has an OT machine transfer (Scenario 2), credit OT hours to the target machine!
-    const effectiveOtMachine = r.otMachineOverride || r.regularMachineOverride || r.machine;
+    const effectiveOtMachine = r.otMachineOverride || r.machine;
     const stdPosName = mapBcaPosToStdPosition(r.otMachineOverride ? r.otMachineOverride : r.position, r.dept, effectiveOtMachine);
     if (!stdPosName || !posOtCoverage[stdPosName] || r.otHours <= 0) return;
 
