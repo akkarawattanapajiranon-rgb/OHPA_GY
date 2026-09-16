@@ -15,7 +15,6 @@ export interface PdiBeadReport {
 
 export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
   "monthYear": "09/2026",
-  "updatedAt": "2026-09-16T03:02:26.597Z",
   "pdiPersons": [
     {
       "name": "Somrudee",
@@ -273,5 +272,6 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "29": 0,
     "30": 0,
     "31": 0
-  }
+  },
+  "updatedAt": "2026-09-16T03:03:26.995Z"
 };

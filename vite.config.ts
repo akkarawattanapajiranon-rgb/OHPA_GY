@@ -801,8 +801,18 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
             };
           };
 
-          // Parse scan records across ALL files and ALL sheets
-          const recordsByDate: Record<string, any> = {};
+          // Parse scan records across ALL files and ALL sheets (preserving historical records)
+          let recordsByDate: Record<string, any> = {};
+          const defaultContractorPath = path.resolve(__dirname, 'src/data/default_contractor_data.ts');
+          if (fs.existsSync(defaultContractorPath)) {
+            try {
+              const defContent = fs.readFileSync(defaultContractorPath, 'utf8');
+              const recMatch = defContent.match(/export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE[\s\S]*?=\s*({[\s\S]*});?\s*$/);
+              if (recMatch && recMatch[1]) {
+                recordsByDate = JSON.parse(recMatch[1].replace(/;\s*$/, ''));
+              }
+            } catch (pErr) {}
+          }
 
           for (const f of wasFiles) {
             const scanFilePath = path.join(targetWasDir, f);
