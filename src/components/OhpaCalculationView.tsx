@@ -1321,42 +1321,42 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
 
         {/* Main Area Table (5 Production Areas) */}
-        <div className="overflow-x-auto rounded-2xl border border-slate-200">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-900 text-white font-bold">
-                <th className="py-3 px-4 min-w-[240px]">
-                  พื้นที่ / กลุ่มโรงงาน (5 Production Areas) - {viewMode === 'MTD' ? `สะสม MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)` : 'ประจำวัน'}
+              <tr className="bg-slate-900 text-white font-bold text-[11px]">
+                <th className="py-2.5 px-3 min-w-[200px] whitespace-nowrap">
+                  พื้นที่ (5 Areas) - {viewMode === 'MTD' ? `สะสม MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)` : 'ประจำวัน'}
                 </th>
-                <th className="py-3 px-2.5 text-center w-20">เป้า Master</th>
-                <th className="py-3 px-3 text-center">
-                  {viewMode === 'MTD' ? 'สแกนเฉลี่ย/วัน (Headcount)' : 'สแกนจริงรวม (Headcount)'}
+                <th className="py-2.5 px-1.5 text-center w-14 whitespace-nowrap">เป้า Master</th>
+                <th className="py-2.5 px-2 text-center w-24 whitespace-nowrap">
+                  {viewMode === 'MTD' ? 'สแกนเฉลี่ย/วัน' : 'สแกนจริงรวม'}
                 </th>
-                <th className="py-3 px-2.5 text-right bg-slate-800/80">
+                <th className="py-2.5 px-2 text-right w-20 whitespace-nowrap bg-slate-800/80">
                   {viewMode === 'MTD' ? 'ชม.ปกติสะสม' : 'ชม.ปกติ'}
                 </th>
-                <th className="py-3 px-2.5 text-right bg-amber-950/60 text-amber-300">
+                <th className="py-2.5 px-1.5 text-right w-18 whitespace-nowrap bg-amber-950/60 text-amber-300">
                   {viewMode === 'MTD' ? 'ชม. OT สะสม' : 'ชม. OT'}
                 </th>
-                <th className="py-3 px-2.5 text-right bg-slate-800/90 text-slate-200">
+                <th className="py-2.5 px-2 text-right w-20 whitespace-nowrap bg-slate-800/90 text-slate-200">
                   {viewMode === 'MTD' ? 'ชม.ฐานรวม' : 'ชม.ฐานรวม'}
                 </th>
-                <th className="py-3 px-2.5 text-right bg-rose-950/60 text-rose-300">
+                <th className="py-2.5 px-1.5 text-right w-16 whitespace-nowrap bg-rose-950/60 text-rose-300">
                   🔻 PDI หัก
                 </th>
-                <th className="py-3 px-2.5 text-right bg-emerald-950/60 text-emerald-300">
+                <th className="py-2.5 px-1.5 text-right w-16 whitespace-nowrap bg-emerald-950/60 text-emerald-300">
                   🟢 Bead บวก
                 </th>
-                <th className="py-3 px-3 text-right bg-indigo-950/80 text-indigo-200 font-black">
+                <th className="py-2.5 px-2.5 text-right w-22 whitespace-nowrap bg-indigo-950/80 text-indigo-200 font-black">
                   ⭐ ชม.สุทธิ
                 </th>
-                <th className="py-3 px-3 text-right bg-emerald-950/80 text-emerald-200 font-bold min-w-[150px]">
+                <th className="py-2.5 px-2.5 text-right whitespace-nowrap bg-emerald-950/80 text-emerald-200 font-bold min-w-[130px]">
                   📦 Stocking 55012
                 </th>
-                <th className="py-3 px-3 text-right bg-purple-950/80 text-purple-200 font-black min-w-[120px]">
+                <th className="py-2.5 px-2.5 text-right whitespace-nowrap bg-purple-950/80 text-purple-200 font-black min-w-[100px]">
                   🚀 Area OPAH
                 </th>
-                <th className="py-3 px-3 text-right min-w-[100px]">% สัดส่วน</th>
+                <th className="py-2.5 px-2 text-right w-18 whitespace-nowrap">% สัดส่วน</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -1391,15 +1391,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   : 'hover:bg-rose-50/30 bg-rose-50/15';
 
                 const iconElem = isBCA ? (
-                  <Factory className="w-4 h-4 text-amber-600 shrink-0" />
+                  <Factory className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 ) : isConsumer ? (
-                  <Car className="w-4 h-4 text-blue-600 shrink-0" />
+                  <Car className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 ) : isBiasAero ? (
-                  <Plane className="w-4 h-4 text-sky-600 shrink-0" />
+                  <Plane className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                 ) : isRadialAero ? (
-                  <Plane className="w-4 h-4 text-indigo-600 shrink-0" />
+                  <Plane className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                 ) : (
-                  <RefreshCw className="w-4 h-4 text-rose-600 shrink-0" />
+                  <RefreshCw className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                 );
 
                 return (
@@ -1409,32 +1409,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       onClick={() => toggleArea(area.areaKey)}
                       className={`transition-colors cursor-pointer ${rowBg}`}
                     >
-                      <td className="py-3 px-4 font-bold text-slate-900">
-                        <div className="flex items-center gap-2.5">
+                      <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
+                            className="p-0.5 rounded text-slate-400 hover:text-slate-700 transition-colors"
                             title={isExpanded ? 'ย่อรายละเอียด' : 'คลิกเพื่อดูรายละเอียดแผนกย่อย'}
                           >
                             {isExpanded ? (
-                              <ChevronDown className="w-4 h-4 text-indigo-600" />
+                              <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
                             ) : (
-                              <ChevronRight className="w-4 h-4" />
+                              <ChevronRight className="w-3.5 h-3.5" />
                             )}
                           </button>
-                          <div className="p-1.5 rounded-lg bg-white shadow-2xs border border-slate-200">
+                          <div className="p-1 rounded-lg bg-white shadow-2xs border border-slate-200 shrink-0">
                             {iconElem}
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-black text-slate-900">{area.areaKey}</span>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs font-black text-slate-900">{area.areaKey}</span>
                               {area.isExcluded6320 && (
-                                <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.2 rounded border border-rose-200">
-                                  ตัดออกจาก OPAH (6320)
+                                <span className="text-[9px] font-bold bg-rose-100 text-rose-700 px-1 py-0.2 rounded border border-rose-200 whitespace-nowrap">
+                                  ตัด 6320
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-500 font-normal">
+                            <div className="text-[10px] text-slate-400 font-normal truncate max-w-[190px]" title={area.areaName}>
                               {area.areaName}
                             </div>
                           </div>
@@ -1442,102 +1442,102 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       </td>
 
                       {/* Standard Master Headcount */}
-                      <td className="py-3 px-2.5 text-center font-bold text-slate-700">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono font-bold text-xs">
-                          {area.headcountStandard ? `${area.headcountStandard} คน` : '-'}
+                      <td className="py-2.5 px-1.5 text-center font-bold text-slate-700 whitespace-nowrap">
+                        <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono font-bold text-[11px]">
+                          {area.headcountStandard ? `${area.headcountStandard}` : '-'}
                         </span>
                       </td>
 
                       {/* Actual Scanned Headcount */}
-                      <td className="py-3 px-3 text-center">
+                      <td className="py-2.5 px-2 text-center whitespace-nowrap">
                         <div className="inline-flex flex-col items-center">
-                          <span className={`px-2.5 py-0.5 rounded-full text-white font-black text-xs ${
+                          <span className={`px-2 py-0.5 rounded-full text-white font-black text-[11px] leading-none ${
                             area.isExcluded6320 ? 'bg-rose-700' : 'bg-slate-900'
                           }`}>
                             {area.totalHeadcount} คน
                           </span>
-                          <span className="text-[10px] text-slate-500 mt-0.5">
+                          <span className="text-[9px] text-slate-400 mt-0.5 font-mono">
                             GY {area.gyHeadcount} | Cont {area.contractorHeadcount}
-                            {area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}
                           </span>
                         </div>
                       </td>
 
                       {/* Normal Hours */}
-                      <td className="py-3 px-2.5 text-right font-mono font-semibold text-slate-700 bg-slate-50/50">
-                        {area.normalHours.toLocaleString()} ชม.
+                      <td className="py-2.5 px-2 text-right font-mono font-semibold text-slate-700 bg-slate-50/50 whitespace-nowrap text-xs">
+                        {area.normalHours.toLocaleString()}
                       </td>
 
                       {/* OT Hours */}
-                      <td className="py-3 px-2.5 text-right font-mono font-bold text-amber-700 bg-amber-50/40">
-                        +{area.otHours.toLocaleString()} ชม.
+                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-amber-700 bg-amber-50/40 whitespace-nowrap text-xs">
+                        {area.otHours > 0 ? `+${area.otHours.toLocaleString()}` : '-'}
                       </td>
 
                       {/* Gross Base Hours */}
-                      <td className="py-3 px-2.5 text-right font-mono font-bold text-slate-900 bg-slate-100/50">
-                        {area.totalHours.toLocaleString()} ชม.
+                      <td className="py-2.5 px-2 text-right font-mono font-bold text-slate-900 bg-slate-100/50 whitespace-nowrap text-xs">
+                        {area.totalHours.toLocaleString()}
                       </td>
 
                       {/* PDI Deduct */}
-                      <td className="py-3 px-2.5 text-right font-mono font-bold text-rose-700 bg-rose-50/30">
-                        {area.pdiDeductHours && area.pdiDeductHours > 0 ? `-${area.pdiDeductHours} ชม.` : '-'}
+                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-rose-700 bg-rose-50/30 whitespace-nowrap text-xs">
+                        {area.pdiDeductHours && area.pdiDeductHours > 0 ? `-${area.pdiDeductHours.toLocaleString()}` : '-'}
                       </td>
 
                       {/* Bead Add */}
-                      <td className="py-3 px-2.5 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
-                        {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)} ชม.` : '-'}
+                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30 whitespace-nowrap text-xs">
+                        {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)}` : '-'}
                       </td>
 
                       {/* Final Net OPAH Hours */}
-                      <td className="py-3 px-3 text-right font-mono font-black text-sm text-indigo-950 bg-indigo-50/40">
-                        {(area.finalOpahHours || area.totalHours).toLocaleString()} ชม.
+                      <td className="py-2.5 px-2.5 text-right font-mono font-black text-xs text-indigo-950 bg-indigo-50/40 whitespace-nowrap">
+                        {(area.finalOpahHours || area.totalHours).toLocaleString()}
                       </td>
 
                       {/* Stocking Tonnage 55012 */}
-                      <td className="py-3 px-3 text-right font-mono bg-emerald-50/40">
+                      <td className="py-2.5 px-2.5 text-right font-mono bg-emerald-50/40 whitespace-nowrap">
                         {area.isExcluded6320 ? (
                           <span className="text-slate-400 text-[11px]">-</span>
                         ) : (
                           <div>
                             <div className="font-bold text-slate-900 text-xs">
-                              {area.areaTonnageKg?.toLocaleString()} kg
+                              {area.areaTonnageKg?.toLocaleString()} <span className="text-[10px] text-slate-500 font-normal">kg</span>
                             </div>
-                            <div className="text-[10px] text-slate-500 font-normal">
-                              {area.areaTonnageLbs?.toLocaleString()} lbs <span className="text-[9px] bg-emerald-200/70 text-emerald-950 px-1 py-0.2 rounded font-bold">{area.areaTonnageCodes}</span>
+                            <div className="text-[10px] text-slate-500 font-normal flex items-center justify-end gap-1 mt-0.5">
+                              <span>{area.areaTonnageLbs?.toLocaleString()} lbs</span>
+                              <span className="text-[9px] bg-emerald-200/80 text-emerald-950 px-1 py-0.2 rounded font-bold">{area.areaTonnageCodes}</span>
                             </div>
                           </div>
                         )}
                       </td>
 
                       {/* Area OPAH (lbs/ชม.) */}
-                      <td className="py-3 px-3 text-right font-mono bg-purple-50/50">
+                      <td className="py-2.5 px-2.5 text-right font-mono bg-purple-50/50 whitespace-nowrap">
                         {area.isExcluded6320 ? (
                           <span className="text-slate-400 text-[11px]">-</span>
                         ) : (
-                          <div>
-                            <span className="font-black text-purple-900 text-sm">
+                          <div className="flex items-baseline justify-end gap-1">
+                            <span className="font-black text-purple-900 text-xs">
                               {area.areaOpahLbsPerHour ? area.areaOpahLbsPerHour.toLocaleString() : '-'}
                             </span>
-                            <span className="text-[10px] text-slate-400 block">lbs/ชม.</span>
+                            <span className="text-[10px] text-slate-400 font-sans">lbs/ชม.</span>
                           </div>
                         )}
                       </td>
 
                       {/* % Contribution */}
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-2.5 px-2 text-right whitespace-nowrap">
                         {area.isExcluded6320 ? (
-                          <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                            ไม่นับใน OPAH
+                          <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                            ไม่นับ
                           </span>
                         ) : (
-                          <div className="flex items-center justify-end gap-2">
-                            <div className="w-12 bg-slate-200 rounded-full h-2 overflow-hidden shadow-2xs">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <div className="w-8 bg-slate-200 rounded-full h-1.5 overflow-hidden shadow-2xs">
                               <div
-                                className={`h-2 rounded-full transition-all duration-500 ${progressColor}`}
+                                className={`h-1.5 rounded-full transition-all duration-500 ${progressColor}`}
                                 style={{ width: `${Math.min(100, area.percentageOfTotalHours)}%` }}
                               ></div>
                             </div>
-                            <span className="font-mono font-black text-slate-900 text-xs w-10 text-right">
+                            <span className="font-mono font-black text-slate-900 text-[11px] w-8 text-right">
                               {area.percentageOfTotalHours}%
                             </span>
                           </div>
@@ -1548,9 +1548,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={12} className="py-3 px-6 sm:px-10">
-                          <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
-                            <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
+                        <td colSpan={12} className="py-2.5 px-4 sm:px-6">
+                          <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-2">
+                            <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 border-b border-slate-100 pb-1.5">
                               <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
                               <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
                             </div>
@@ -1558,34 +1558,34 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                             <div className="overflow-x-auto">
                               <table className="w-full text-left text-xs border-collapse">
                                 <thead>
-                                  <tr className="text-slate-500 font-bold border-b border-slate-100 text-[11px]">
-                                    <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด / การจัดสรร</th>
-                                    <th className="py-1.5 px-3 text-center">ประเภท</th>
-                                    <th className="py-1.5 px-3 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน/วัน' : 'จำนวนคนสแกน'}</th>
-                                    <th className="py-1.5 px-3 text-right">ชม.ปกติ</th>
-                                    <th className="py-1.5 px-3 text-right">ชม. OT</th>
-                                    <th className="py-1.5 px-3 text-right font-black">ชม.รวม</th>
+                                  <tr className="text-slate-500 font-bold border-b border-slate-100 text-[10px]">
+                                    <th className="py-1 px-2.5">แผนก / Cost Center / สังกัด / การจัดสรร</th>
+                                    <th className="py-1 px-2 text-center">ประเภท</th>
+                                    <th className="py-1 px-2 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน/วัน' : 'จำนวนคนสแกน'}</th>
+                                    <th className="py-1 px-2 text-right">ชม.ปกติ</th>
+                                    <th className="py-1 px-2 text-right">ชม. OT</th>
+                                    <th className="py-1 px-2 text-right font-black">ชม.รวม</th>
                                   </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-50 font-sans">
+                                <tbody className="divide-y divide-slate-50 font-sans text-xs">
                                   {area.departments.map((sub, sIdx) => (
                                     <tr key={sub.dept + sIdx} className="hover:bg-slate-50/80">
-                                      <td className="py-1.5 px-3 font-medium text-slate-800 flex items-center gap-2">
+                                      <td className="py-1 px-2.5 font-medium text-slate-800 flex items-center gap-1.5">
                                         {sub.isBead ? (
-                                          <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                          <Sparkles className="w-3 h-3 text-emerald-600 shrink-0" />
                                         ) : sub.dept.includes('PDI') ? (
-                                          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                                          <AlertCircle className="w-3 h-3 text-rose-600 shrink-0" />
                                         ) : sub.isMonthly ? (
-                                          <Briefcase className={`w-3.5 h-3.5 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
+                                          <Briefcase className={`w-3 h-3 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
                                         ) : sub.isContractor ? (
-                                          <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                                          <HardHat className="w-3 h-3 text-teal-600 shrink-0" />
                                         ) : (
-                                          <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                          <Building2 className="w-3 h-3 text-blue-600 shrink-0" />
                                         )}
-                                        <span>{sub.dept}</span>
+                                        <span className="truncate max-w-[280px]">{sub.dept}</span>
                                       </td>
-                                      <td className="py-1.5 px-3 text-center">
-                                        <span className={`px-2 py-0.2 rounded-full font-bold text-[10px] ${
+                                      <td className="py-1 px-2 text-center">
+                                        <span className={`px-1.5 py-0.2 rounded-full font-bold text-[9px] ${
                                           sub.isBead
                                             ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                                             : sub.dept.includes('PDI')
@@ -1601,17 +1601,17 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                           {sub.isBead ? 'Bead (+)' : sub.dept.includes('PDI') ? 'PDI (-)' : sub.isMonthly ? (sub.isContractor ? 'WAS Monthly' : 'Salaries Monthly') : sub.isContractor ? 'Contractor' : 'Goodyear'}
                                         </span>
                                       </td>
-                                      <td className="py-1.5 px-3 text-center font-bold text-slate-700">
+                                      <td className="py-1 px-2 text-center font-bold text-slate-700">
                                         {sub.headcount > 0 ? `${sub.headcount} คน` : '-'}
                                       </td>
-                                      <td className="py-1.5 px-3 text-right text-slate-600 font-mono">
+                                      <td className="py-1 px-2 text-right text-slate-600 font-mono">
                                         {sub.normalHours.toLocaleString()}
                                       </td>
-                                      <td className="py-1.5 px-3 text-right font-mono font-bold text-amber-600">
+                                      <td className="py-1 px-2 text-right font-mono font-bold text-amber-600">
                                         {sub.otHours > 0 ? `+${sub.otHours.toLocaleString()}` : '-'}
                                       </td>
-                                      <td className="py-1.5 px-3 text-right font-mono font-black text-slate-900">
-                                        {sub.totalHours.toLocaleString()} ชม.
+                                      <td className="py-1 px-2 text-right font-mono font-black text-slate-900">
+                                        {sub.totalHours.toLocaleString()}
                                       </td>
                                     </tr>
                                   ))}
@@ -1627,59 +1627,59 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               })}
 
               {/* Row 1: OPAH Active Total (4 Production Areas: BCA, Consumer, Bias Aero, Radial Aero) */}
-              <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-700 text-sm">
-                <td className="py-3 px-4 flex items-center gap-2 text-white">
-                  <div className="p-1 rounded-md bg-emerald-500 text-slate-950 font-black text-xs">
+              <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-700 text-xs">
+                <td className="py-2.5 px-3 flex items-center gap-2 text-white whitespace-nowrap">
+                  <div className="p-0.5 px-1.5 rounded bg-emerald-500 text-slate-950 font-black text-[10px]">
                     OPAH
                   </div>
                   <div>
                     <span className="text-emerald-300 font-bold">
                       {viewMode === 'MTD'
-                        ? `ยอดรวม 4 พื้นที่การผลิตคิด OPAH (MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน)`
-                        : 'ยอดรวม 4 พื้นที่การผลิตคิด OPAH (Active 4 Areas: BCA, Consumer, Bias, Radial)'}
+                        ? `ยอดรวม 4 พื้นที่คิด OPAH (MTD ${ohpaSummary.mtd?.daysCount || 14} วัน)`
+                        : 'ยอดรวม 4 พื้นที่คิด OPAH (Active 4 Areas)'}
                     </span>
-                    <span className="text-[11px] font-normal text-slate-400 block">
-                      {viewMode === 'MTD'
-                        ? `(รวม 4 พื้นที่หลัก MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน GY + Cont + รายเดือน โดยตัดแผนก 6320 ออก)`
-                        : '(รวม 4 พื้นที่หลัก GY + Cont + รายเดือน โดยตัดแผนก 6320 ออก พร้อมปรับยอด PDI/Bead)'}
+                    <span className="text-[10px] font-normal text-slate-400 block">
+                      (BCA, Consumer, Bias, Radial | ตัด 6320)
                     </span>
                   </div>
                 </td>
-                <td className="py-3 px-2.5 text-center text-slate-300 font-mono text-xs">
-                  793 คน
+                <td className="py-2.5 px-1.5 text-center text-slate-300 font-mono text-[11px] whitespace-nowrap">
+                  793
                 </td>
-                <td className="py-3 px-3 text-center text-white font-mono font-bold">
+                <td className="py-2.5 px-2 text-center text-white font-mono font-bold whitespace-nowrap text-[11px]">
                   {areaActiveStats.activeHc} คน
                 </td>
-                <td className="py-3 px-2.5 text-right text-slate-200 font-mono bg-slate-800/80">
-                  {areaActiveStats.activeNorm.toLocaleString()} ชม.
+                <td className="py-2.5 px-2 text-right text-slate-200 font-mono bg-slate-800/80 whitespace-nowrap">
+                  {areaActiveStats.activeNorm.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-amber-300 font-mono bg-amber-950/80">
-                  +{areaActiveStats.activeOt.toLocaleString()} ชม.
+                <td className="py-2.5 px-1.5 text-right text-amber-300 font-mono bg-amber-950/80 whitespace-nowrap">
+                  +{areaActiveStats.activeOt.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-slate-200 font-mono bg-slate-800">
-                  {areaActiveStats.activeGrossTot.toLocaleString()} ชม.
+                <td className="py-2.5 px-2 text-right text-slate-200 font-mono bg-slate-800 whitespace-nowrap">
+                  {areaActiveStats.activeGrossTot.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-rose-300 font-mono bg-rose-950">
-                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()} ชม.` : '-'}
+                <td className="py-2.5 px-1.5 text-right text-rose-300 font-mono bg-rose-950 whitespace-nowrap">
+                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()}` : '-'}
                 </td>
-                <td className="py-3 px-2.5 text-right text-emerald-300 font-mono bg-emerald-950">
-                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()} ชม.` : '-'}
+                <td className="py-2.5 px-1.5 text-right text-emerald-300 font-mono bg-emerald-950 whitespace-nowrap">
+                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()}` : '-'}
                 </td>
-                <td className="py-3 px-3 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
-                  {areaActiveStats.activeNetTot.toLocaleString()} ชม.
+                <td className="py-2.5 px-2.5 text-right text-emerald-300 font-mono bg-emerald-950/80 font-black whitespace-nowrap">
+                  {areaActiveStats.activeNetTot.toLocaleString()}
                 </td>
-                <td className="py-3 px-3 text-right font-mono bg-emerald-950/90 text-emerald-200 font-bold">
+                <td className="py-2.5 px-2.5 text-right font-mono bg-emerald-950/90 text-emerald-200 font-bold whitespace-nowrap">
                   {viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdStockingKg.toLocaleString() || '0') : ohpaSummary.totalTonnageKg.toLocaleString()} kg
-                  <span className="block text-[10px] text-emerald-400 font-normal">
+                  <span className="block text-[9px] text-emerald-400 font-normal">
                     ({viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdStockingLbs.toLocaleString() || '0') : ohpaSummary.totalTonnageLbs.toLocaleString()} lbs)
                   </span>
                 </td>
-                <td className="py-3 px-3 text-right font-mono bg-purple-950/90 text-purple-200 font-black text-sm">
-                  {viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdOpahLbsPerHour || '-') : ohpaSummary.overallOpahLbsPerHour}
-                  <span className="block text-[10px] text-purple-300/80 font-normal">lbs/ชม.</span>
+                <td className="py-2.5 px-2.5 text-right font-mono bg-purple-950/90 text-purple-200 font-black whitespace-nowrap">
+                  <span className="text-sm">
+                    {viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdOpahLbsPerHour || '-') : ohpaSummary.overallOpahLbsPerHour}
+                  </span>
+                  <span className="text-[10px] text-purple-300/80 font-sans ml-1">lbs/ชม.</span>
                 </td>
-                <td className="py-3 px-3 text-right text-emerald-400 font-mono text-xs font-black">
+                <td className="py-2.5 px-2 text-right text-emerald-400 font-mono text-[11px] font-black whitespace-nowrap">
                   100.0%
                 </td>
               </tr>
@@ -1687,93 +1687,93 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               {/* Row 2: Retread 6320 Excluded Stats */}
               {(areaActiveStats.retreadHc > 0 || areaActiveStats.retreadTot > 0) && (
                 <tr className="bg-rose-950/80 text-rose-200 font-bold border-t border-rose-800/50 text-xs">
-                  <td className="py-2.5 px-4 flex items-center gap-2">
-                    <div className="p-0.5 px-1.5 rounded bg-rose-500 text-white font-black text-[10px]">
+                  <td className="py-2 px-3 flex items-center gap-1.5 whitespace-nowrap">
+                    <div className="p-0.5 px-1 rounded bg-rose-500 text-white font-black text-[9px]">
                       EXCLUDED
                     </div>
                     <div>
-                      <span>🚫 ส่วนงานหล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH โรงงาน)</span>
-                      <span className="text-[10px] text-rose-300/80 block">
+                      <span>🚫 หล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH)</span>
+                      <span className="text-[9px] text-rose-300/80 block">
                         (GY {areaActiveStats.retreadGyHc} คน: {areaActiveStats.retreadGyTot.toLocaleString()} ชม. | Cont {areaActiveStats.retreadContHc} คน: {areaActiveStats.retreadContTot.toLocaleString()} ชม.)
                       </span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-2.5 text-center text-rose-300 font-mono">
-                    108 คน
+                  <td className="py-2 px-1.5 text-center text-rose-300 font-mono text-[11px] whitespace-nowrap">
+                    108
                   </td>
-                  <td className="py-2.5 px-3 text-center font-mono">
+                  <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
                     {areaActiveStats.retreadHc} คน
                   </td>
-                  <td className="py-2.5 px-2.5 text-right font-mono">
-                    {areaActiveStats.retreadNorm.toLocaleString()} ชม.
+                  <td className="py-2 px-2 text-right font-mono whitespace-nowrap">
+                    {areaActiveStats.retreadNorm.toLocaleString()}
                   </td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-amber-300">
-                    +{areaActiveStats.retreadOt.toLocaleString()} ชม.
+                  <td className="py-2 px-1.5 text-right font-mono text-amber-300 whitespace-nowrap">
+                    +{areaActiveStats.retreadOt.toLocaleString()}
                   </td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-rose-300 font-black">
-                    {areaActiveStats.retreadTot.toLocaleString()} ชม.
+                  <td className="py-2 px-2 text-right font-mono text-rose-300 font-black whitespace-nowrap">
+                    {areaActiveStats.retreadTot.toLocaleString()}
                   </td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400">-</td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400">-</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-rose-300 font-black">
-                    {areaActiveStats.retreadTot.toLocaleString()} ชม.
+                  <td className="py-2 px-1.5 text-right font-mono text-slate-400">-</td>
+                  <td className="py-2 px-1.5 text-right font-mono text-slate-400">-</td>
+                  <td className="py-2 px-2.5 text-right font-mono text-rose-300 font-black whitespace-nowrap">
+                    {areaActiveStats.retreadTot.toLocaleString()}
                   </td>
-                  <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
-                  <td className="py-2.5 px-3 text-right text-rose-400 font-mono text-[11px]">
-                    (ไม่นับใน OPAH)
+                  <td className="py-2 px-2.5 text-right font-mono text-slate-400">-</td>
+                  <td className="py-2 px-2.5 text-right font-mono text-slate-400">-</td>
+                  <td className="py-2 px-2 text-right text-rose-400 font-mono text-[10px] whitespace-nowrap">
+                    (ไม่นับ)
                   </td>
                 </tr>
               )}
 
               {/* Row 3: All-Plant Grand Total (All 5 Areas, including 6320) */}
               <tr className="bg-slate-950 text-white font-black border-t-2 border-slate-800 text-xs">
-                <td className="py-3 px-4 flex items-center gap-2">
-                  <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
+                <td className="py-2.5 px-3 flex items-center gap-1.5 whitespace-nowrap">
+                  <div className="p-0.5 px-1.5 rounded bg-amber-400 text-slate-950 font-black text-[10px]">
                     GRAND TOTAL
                   </div>
                   <div>
                     <span>
                       {viewMode === 'MTD'
-                        ? `ยอดรวมทั้งสิ้นทั้งโรงงาน MTD สะสม (${ohpaSummary.mtd?.daysCount || 14} วัน)`
-                        : 'ยอดรวมทั้งสิ้นทั้งโรงงาน (รวม 5 พื้นที่ Master 100%)'}
+                        ? `รวมทั้งสิ้นทั้งโรงงาน MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)`
+                        : 'รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)'}
                     </span>
-                    <span className="text-[10px] font-normal text-slate-400 block">
-                      (รวม 5 พื้นที่: BCA + Consumer + Bias Aero + Radial Aero + Retread)
+                    <span className="text-[9px] font-normal text-slate-400 block">
+                      (BCA + Consumer + Bias + Radial + Retread)
                     </span>
                   </div>
                 </td>
-                <td className="py-3 px-2.5 text-center text-slate-300 font-mono">
-                  901 คน
+                <td className="py-2.5 px-1.5 text-center text-slate-300 font-mono text-[11px] whitespace-nowrap">
+                  901
                 </td>
-                <td className="py-3 px-3 text-center text-amber-300 font-mono font-black">
+                <td className="py-2.5 px-2 text-center text-amber-300 font-mono font-black text-[11px] whitespace-nowrap">
                   {areaActiveStats.grandHc} คน
                 </td>
-                <td className="py-3 px-2.5 text-right text-slate-300 font-mono">
-                  {areaActiveStats.grandNorm.toLocaleString()} ชม.
+                <td className="py-2.5 px-2 text-right text-slate-300 font-mono whitespace-nowrap">
+                  {areaActiveStats.grandNorm.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-amber-300 font-mono">
-                  +{areaActiveStats.grandOt.toLocaleString()} ชม.
+                <td className="py-2.5 px-1.5 text-right text-amber-300 font-mono whitespace-nowrap">
+                  +{areaActiveStats.grandOt.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-slate-300 font-mono font-bold">
-                  {areaActiveStats.grandGrossTot.toLocaleString()} ชม.
+                <td className="py-2.5 px-2 text-right text-slate-300 font-mono font-bold whitespace-nowrap">
+                  {areaActiveStats.grandGrossTot.toLocaleString()}
                 </td>
-                <td className="py-3 px-2.5 text-right text-rose-300 font-mono">
-                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()} ชม.` : '-'}
+                <td className="py-2.5 px-1.5 text-right text-rose-300 font-mono whitespace-nowrap">
+                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()}` : '-'}
                 </td>
-                <td className="py-3 px-2.5 text-right text-emerald-300 font-mono">
-                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()} ชม.` : '-'}
+                <td className="py-2.5 px-1.5 text-right text-emerald-300 font-mono whitespace-nowrap">
+                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()}` : '-'}
                 </td>
-                <td className="py-3 px-3 text-right text-amber-300 font-mono font-black text-sm">
-                  {areaActiveStats.grandNetTot.toLocaleString()} ชม.
+                <td className="py-2.5 px-2.5 text-right text-amber-300 font-mono font-black whitespace-nowrap">
+                  {areaActiveStats.grandNetTot.toLocaleString()}
                 </td>
-                <td className="py-3 px-3 text-right font-mono text-slate-400">
+                <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 whitespace-nowrap">
                   -
                 </td>
-                <td className="py-3 px-3 text-right font-mono text-slate-400">
+                <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 whitespace-nowrap">
                   -
                 </td>
-                <td className="py-3 px-3 text-right text-slate-400 font-mono">
+                <td className="py-2.5 px-2 text-right text-slate-400 font-mono whitespace-nowrap">
                   -
                 </td>
               </tr>
