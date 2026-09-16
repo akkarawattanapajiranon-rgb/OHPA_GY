@@ -257,51 +257,96 @@ export default function App() {
     setSelectedCategoryFilter('ALL');
   };
 
-  // Fetch scans directly from scans/ folder
+  // Fetch ALL data from network/local folders (GY Scans, Cont Hourly+Monthly, PDI/NPI & B-end Bead, Adjustments)
   const handleFetchFolderScans = async (isManual = true): Promise<{ success: boolean; message: string; fileCount?: number }> => {
     setIsLoadingFolder(true);
+    const syncSummary: string[] = [];
+
     try {
-      const response = await fetch('/api/scan-folder');
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errMsg = errorData.error || `HTTP error ${response.status}`;
-        if (isManual) {
-          setToastNotification({ type: 'error', message: `ดึงข้อมูลไม่สำเร็จ: ${errMsg}` });
+      // 1. Fetch GY Scans from /api/scan-folder
+      let gyFilesCount = 0;
+      try {
+        const scanRes = await fetch('/api/scan-folder');
+        if (scanRes.ok) {
+          const scanData = await scanRes.json();
+          const files: RawScanFileItem[] = scanData.files || [];
+          if (files.length > 0) {
+            const newPresets = createPresetsFromScanFiles(files);
+            if (newPresets.length > 0) {
+              setPresets(newPresets);
+              setScanContent(newPresets[0].content);
+              setSelectedFileId(newPresets[0].id);
+              setSelectedShiftFilter('ALL');
+              setSelectedDeptFilter('ALL');
+              gyFilesCount = files.length;
+              syncSummary.push(`สแกนนิ้ว GY (${newPresets.length} วัน)`);
+            }
+          }
         }
-        return { success: false, message: errMsg };
+      } catch (e: any) {
+        console.warn('Sync GY scans error:', e);
       }
 
-      const data = await response.json();
-      const files: RawScanFileItem[] = data.files || [];
-
-      if (files.length === 0) {
-        const msg = 'ไม่พบไฟล์สแกนในโฟลเดอร์ scans (กรุณาวางไฟล์ .txt ในโฟลเดอร์ scans แล้วกดใหม่อีกครั้ง)';
-        if (isManual) {
-          setToastNotification({ type: 'error', message: msg });
+      // 2. Fetch Contractor WAS (Hourly + Monthly 9 staff) from /api/contractor-data
+      try {
+        const contRes = await fetch('/api/contractor-data');
+        if (contRes.ok) {
+          const contData = await contRes.json();
+          if (contData.success && contData.recordsByDate && Object.keys(contData.recordsByDate).length > 0) {
+            setContractorRecordsByDate(contData.recordsByDate);
+            syncSummary.push(`Contractor WAS (${contData.employeeCount || 84} คน, ${contData.datesCount} วัน)`);
+          }
         }
-        return { success: false, message: msg };
+      } catch (e: any) {
+        console.warn('Sync contractor data error:', e);
       }
 
-      const newPresets = createPresetsFromScanFiles(files);
-      if (newPresets.length > 0) {
-        setPresets(newPresets);
-        // Automatically switch to the latest date
-        setScanContent(newPresets[0].content);
-        setSelectedFileId(newPresets[0].id);
-        setSelectedShiftFilter('ALL');
-        setSelectedDeptFilter('ALL');
+      // 3. Fetch PDI/NPI (E-end) & B-end Bead from /api/sync-pdi-bead
+      try {
+        const pdiRes = await fetch('/api/sync-pdi-bead');
+        if (pdiRes.ok) {
+          const pdiData = await pdiRes.json();
+          if (pdiData.success && pdiData.report) {
+            setPdiBeadReport(pdiData.report);
+            try {
+              localStorage.setItem('ohpa_pdi_bead_report', JSON.stringify(pdiData.report));
+            } catch (e) {}
+            syncSummary.push('PDI/NPI & B-end Bead');
+          }
+        }
+      } catch (e: any) {
+        console.warn('Sync PDI/Bead error:', e);
+      }
 
-        const successMsg = `ดึงข้อมูลจากโฟลเดอร์สำเร็จ! (${files.length} ไฟล์, ประมวลผลได้ ${newPresets.length} วัน)`;
+      // 4. Fetch Daily Adjustments from /api/sync-adjustments
+      try {
+        const adjRes = await fetch('/api/sync-adjustments');
+        if (adjRes.ok) {
+          const adjData = await adjRes.json();
+          if (adjData.success && Array.isArray(adjData.adjustments)) {
+            setDailyAdjustments(adjData.adjustments);
+            try {
+              localStorage.setItem('ohpa_daily_adjustments', JSON.stringify(adjData.adjustments));
+            } catch (e) {}
+            syncSummary.push(`ปรับตำแหน่ง/OT (${adjData.adjustments.length} รายการ)`);
+          }
+        }
+      } catch (e: any) {
+        console.warn('Sync adjustments error:', e);
+      }
+
+      if (syncSummary.length > 0) {
+        const successMsg = `ดึงข้อมูลครบทุกส่วนสำเร็จ! (${syncSummary.join(' | ')})`;
         if (isManual) {
           setToastNotification({ type: 'success', message: successMsg });
         }
         return {
           success: true,
           message: successMsg,
-          fileCount: files.length
+          fileCount: gyFilesCount
         };
       } else {
-        const msg = 'อ่านไฟล์สำเร็จ แต่ไม่พบรูปแบบบันทึกเวลาที่ถูกต้องในไฟล์';
+        const msg = 'ไม่สามารถดึงข้อมูลจากโฟลเดอร์หรือ API ได้ (โปรดตรวจสอบการเชื่อมต่อไดรฟ์ T:)';
         if (isManual) {
           setToastNotification({ type: 'error', message: msg });
         }

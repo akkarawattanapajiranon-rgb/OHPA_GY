@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onFetchFolderScans}
               disabled={isLoadingFolder}
               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all hover:shadow-emerald-600/30 active:scale-95 cursor-pointer"
-              title="กดเพื่อดึงไฟล์สแกนทั้งหมดที่อยู่ในโฟลเดอร์ scans"
+              title="กดเพื่อดึงและซิงค์ข้อมูลทั้งหมด (สแกนนิ้ว GY, Contractor รายชม.+รายเดือน, PDI/NPI & Bead, ปรับตำแหน่ง)"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoadingFolder ? 'animate-spin' : ''}`} />
               <span className="hidden md:inline">{isLoadingFolder ? 'กำลังดึง...' : 'ดึงข้อมูลจากโฟลเดอร์'}</span>
