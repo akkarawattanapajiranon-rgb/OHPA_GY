@@ -157,6 +157,52 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     );
   }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport]);
 
+  const activeAreaBreakdown = useMemo(() => {
+    if (viewMode === 'MTD' && ohpaSummary.mtd?.areaBreakdown && ohpaSummary.mtd.areaBreakdown.length > 0) {
+      return ohpaSummary.mtd.areaBreakdown;
+    }
+    return ohpaSummary.areaBreakdown || [];
+  }, [viewMode, ohpaSummary]);
+
+  const areaActiveStats = useMemo(() => {
+    const activeAreas = activeAreaBreakdown.filter(a => !a.isExcluded6320);
+    const retreadArea = activeAreaBreakdown.find(a => a.isExcluded6320);
+
+    const activeNorm = Math.round(activeAreas.reduce((s, a) => s + a.normalHours, 0) * 10) / 10;
+    const activeOt = Math.round(activeAreas.reduce((s, a) => s + a.otHours, 0) * 10) / 10;
+    const activeTot = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
+    const activeHc = activeAreas.reduce((s, a) => s + a.totalHeadcount, 0);
+
+    const retreadNorm = Math.round((retreadArea?.normalHours || 0) * 10) / 10;
+    const retreadOt = Math.round((retreadArea?.otHours || 0) * 10) / 10;
+    const retreadTot = Math.round((retreadArea?.totalHours || 0) * 10) / 10;
+    const retreadHc = retreadArea?.totalHeadcount || 0;
+
+    const grandNorm = Math.round((activeNorm + retreadNorm) * 10) / 10;
+    const grandOt = Math.round((activeOt + retreadOt) * 10) / 10;
+    const grandTot = Math.round((activeTot + retreadTot) * 10) / 10;
+    const grandHc = activeHc + retreadHc;
+
+    return {
+      activeNorm,
+      activeOt,
+      activeTot,
+      activeHc,
+      retreadNorm,
+      retreadOt,
+      retreadTot,
+      retreadHc,
+      retreadGyHc: retreadArea?.gyHeadcount || 0,
+      retreadContHc: retreadArea?.contractorHeadcount || 0,
+      retreadGyTot: retreadArea?.gyTotalHours || 0,
+      retreadContTot: retreadArea?.contractorTotalHours || 0,
+      grandNorm,
+      grandOt,
+      grandTot,
+      grandHc
+    };
+  }, [activeAreaBreakdown]);
+
   const handleExportExcel = () => {
     if (!tonnageReport) return;
 
@@ -244,8 +290,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws3 = XLSX.utils.json_to_sheet(shiftData);
     XLSX.utils.book_append_sheet(wb, ws3, 'Shift_Breakdown');
 
-    // Sheet 4: Area Breakdown (8 Exact Areas: BCA, Consumer, Bias Aero, Radial Aero, Retread, Eng, Quality, Others)
-    const areaData = (ohpaSummary.areaBreakdown || []).map(a => ({
+    // Sheet 4: Area Breakdown Daily (8 Exact Areas)
+    const areaDataDaily = (ohpaSummary.areaBreakdown || []).map(a => ({
       'พื้นที่ / กลุ่มโรงงาน': a.areaName,
       'เป้าหมายกำลังพล Master (คน)': a.headcountStandard || '-',
       'สแกนนิ้วจริงรวม (คน)': a.totalHeadcount,
@@ -260,8 +306,29 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH',
       '% สัดส่วน': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
     }));
-    const ws4 = XLSX.utils.json_to_sheet(areaData);
-    XLSX.utils.book_append_sheet(wb, ws4, 'Area_Breakdown');
+    const ws4 = XLSX.utils.json_to_sheet(areaDataDaily);
+    XLSX.utils.book_append_sheet(wb, ws4, 'Area_Daily');
+
+    // Sheet 4.1: Area Breakdown MTD (8 Exact Areas)
+    if (ohpaSummary.mtd?.areaBreakdown && ohpaSummary.mtd.areaBreakdown.length > 0) {
+      const areaDataMtd = ohpaSummary.mtd.areaBreakdown.map(a => ({
+        'พื้นที่ / กลุ่มโรงงาน': a.areaName,
+        'เป้าหมายกำลังพล Master (คน)': a.headcountStandard || '-',
+        'สแกนเฉลี่ย/วัน (คน)': a.totalHeadcount,
+        'Goodyear เฉลี่ย (คน)': a.gyHeadcount,
+        'Contractor เฉลี่ย (คน)': a.contractorHeadcount,
+        'พนักงานรายเดือน เฉลี่ย (คน)': a.monthlyHeadcount || 0,
+        'ชม.ปกติสะสม MTD (ชม.)': a.normalHours,
+        'ชม. OT สะสม MTD (ชม.)': a.otHours,
+        'ชม.รวมสะสม MTD (ชม.)': a.totalHours,
+        'Goodyear ชม.รวม MTD': a.gyTotalHours,
+        'Contractor ชม.รวม MTD': a.contractorTotalHours,
+        'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH',
+        '% สัดส่วน MTD': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
+      }));
+      const ws4Mtd = XLSX.utils.json_to_sheet(areaDataMtd);
+      XLSX.utils.book_append_sheet(wb, ws4Mtd, 'Area_MTD');
+    }
 
     // Sheet 5: MTD Daily Breakdown
     if (ohpaSummary.mtd?.dailyItems && ohpaSummary.mtd.dailyItems.length > 0) {
@@ -1090,12 +1157,26 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 สรุปชั่วโมงทำงานและ OT แยกตาม 8 พื้นที่หลัก (Area Working Hours & OT Summary)
-                <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-200/60">
-                  8 พื้นที่โรงงาน
+                <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
+                  viewMode === 'MTD'
+                    ? 'bg-purple-100 text-purple-800 border-purple-300/60 font-bold'
+                    : 'bg-indigo-50 text-indigo-700 border-indigo-200/60'
+                }`}>
+                  {viewMode === 'MTD'
+                    ? `สะสม MTD วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14}/09 รวม ${ohpaSummary.mtd?.daysCount || 14} วัน`
+                    : 'ข้อมูลประจำวัน (Daily)'}
                 </span>
               </h3>
               <p className="text-xs text-slate-500">
-                จำแนกชั่วโมงทำงานและ OT ตามโครงสร้างองค์กร: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong>
+                {viewMode === 'MTD' ? (
+                  <span>
+                    ยอดชั่วโมงและ OT <strong>สะสม MTD (วันที่ 1 ถึง {ohpaSummary.mtd?.daysCount || 14}/09)</strong> จำแนกตาม 8 พื้นที่: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong> (เฉลี่ยกำลังพล/วัน)
+                  </span>
+                ) : (
+                  <span>
+                    จำแนกชั่วโมงทำงานและ OT ประจำวันตามโครงสร้างองค์กร: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong>
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -1103,7 +1184,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => {
-                const allKeys = (ohpaSummary.areaBreakdown || []).map(a => a.areaKey);
+                const allKeys = activeAreaBreakdown.map(a => a.areaKey);
                 const isAllExpanded = allKeys.every(k => expandedAreas[k]);
                 const nextState: Record<string, boolean> = {};
                 allKeys.forEach(k => {
@@ -1121,7 +1202,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
         {/* 8 Area Summary Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-2.5">
-          {(ohpaSummary.areaBreakdown || []).map((area) => {
+          {activeAreaBreakdown.map((area) => {
             const isBCA = area.areaKey === 'BCA';
             const isConsumer = area.areaKey === 'Consumer';
             const isBiasAero = area.areaKey === 'Bias Aero';
@@ -1195,11 +1276,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
                 <div className="mt-2 pt-1.5 border-t border-slate-200/60 text-[10px]">
                   <div className="flex items-center justify-between text-slate-600">
-                    <span>ปกติ: {area.normalHours}</span>
-                    <span className="text-amber-700 font-bold">+{area.otHours}</span>
+                    <span>ปกติ: {area.normalHours.toLocaleString()}</span>
+                    <span className="text-amber-700 font-bold">+{area.otHours.toLocaleString()}</span>
                   </div>
                   <div className="text-slate-500 mt-0.5 text-[9px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
-                    สแกน: <strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount}/Cont {area.contractorHeadcount})
+                    {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount}/Cont {area.contractorHeadcount})
                   </div>
                 </div>
               </div>
@@ -1212,17 +1293,27 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-900 text-white font-bold">
-                <th className="py-3 px-4 min-w-[280px]">พื้นที่ / กลุ่มโรงงาน (8 Production Areas)</th>
+                <th className="py-3 px-4 min-w-[280px]">
+                  พื้นที่ / กลุ่มโรงงาน (8 Production Areas) - {viewMode === 'MTD' ? `สะสม MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)` : 'ประจำวัน'}
+                </th>
                 <th className="py-3 px-3 text-center w-24">เป้าหมาย Master</th>
-                <th className="py-3 px-4 text-center">สแกนจริงรวม (Headcount)</th>
-                <th className="py-3 px-4 text-right bg-slate-800/80">ชม.ปกติ (Normal)</th>
-                <th className="py-3 px-4 text-right bg-amber-950/60 text-amber-300">ชม. OT (OT Hours)</th>
-                <th className="py-3 px-4 text-right bg-indigo-950/80 text-indigo-200 font-black">ชม.รวมทั้งหมด (Total Hours)</th>
+                <th className="py-3 px-4 text-center">
+                  {viewMode === 'MTD' ? 'สแกนเฉลี่ย/วัน (Headcount)' : 'สแกนจริงรวม (Headcount)'}
+                </th>
+                <th className="py-3 px-4 text-right bg-slate-800/80">
+                  {viewMode === 'MTD' ? 'ชม.ปกติสะสม (Normal)' : 'ชม.ปกติ (Normal)'}
+                </th>
+                <th className="py-3 px-4 text-right bg-amber-950/60 text-amber-300">
+                  {viewMode === 'MTD' ? 'ชม. OT สะสม (OT Hours)' : 'ชม. OT (OT Hours)'}
+                </th>
+                <th className="py-3 px-4 text-right bg-indigo-950/80 text-indigo-200 font-black">
+                  {viewMode === 'MTD' ? 'ชม.รวมสะสม MTD (Total Hours)' : 'ชม.รวมทั้งหมด (Total Hours)'}
+                </th>
                 <th className="py-3 px-4 text-right min-w-[150px]">% สัดส่วนชั่วโมง</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {(ohpaSummary.areaBreakdown || []).map((area) => {
+              {activeAreaBreakdown.map((area) => {
                 const isExpanded = Boolean(expandedAreas[area.areaKey]);
                 const isBCA = area.areaKey === 'BCA';
                 const isConsumer = area.areaKey === 'Consumer';
@@ -1388,7 +1479,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                         <td colSpan={7} className="py-3 px-6 sm:px-10">
                           <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
-                              <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName}</span>
+                              <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
                               <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
                             </div>
 
@@ -1398,7 +1489,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                   <tr className="text-slate-500 font-bold border-b border-slate-100 text-[11px]">
                                     <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด</th>
                                     <th className="py-1.5 px-3 text-center">ประเภท</th>
-                                    <th className="py-1.5 px-3 text-center">จำนวนคนสแกน</th>
+                                    <th className="py-1.5 px-3 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน/วัน' : 'จำนวนคนสแกน'}</th>
                                     <th className="py-1.5 px-3 text-right">ชม.ปกติ</th>
                                     <th className="py-1.5 px-3 text-right">ชม. OT</th>
                                     <th className="py-1.5 px-3 text-right font-black">ชม.รวม</th>
@@ -1466,9 +1557,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     OPAH
                   </div>
                   <div>
-                    <span className="text-emerald-300 font-bold">ยอดรวม 7 พื้นที่คำนวณ OPAH (Active Working Hours)</span>
+                    <span className="text-emerald-300 font-bold">
+                      {viewMode === 'MTD'
+                        ? `ยอดรวม 7 พื้นที่คำนวณ OPAH (MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน)`
+                        : 'ยอดรวม 7 พื้นที่คำนวณ OPAH (Active Working Hours)'}
+                    </span>
                     <span className="text-[11px] font-normal text-slate-400 block">
-                      (รวม 7 พื้นที่การผลิต GY + Cont + รายเดือน 62 คน โดยตัดแผนก 6320 ออก)
+                      {viewMode === 'MTD'
+                        ? `(รวม 7 พื้นที่การผลิต MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน GY + Cont + รายเดือน 70 คน โดยตัดแผนก 6320 ออก)`
+                        : '(รวม 7 พื้นที่การผลิต GY + Cont + รายเดือน 70 คน โดยตัดแผนก 6320 ออก)'}
                     </span>
                   </div>
                 </td>
@@ -1476,16 +1573,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   679 คน
                 </td>
                 <td className="py-3 px-4 text-center text-white font-mono font-bold">
-                  {ohpaSummary.totalEmployeesCount} คน
+                  {areaActiveStats.activeHc} คน
                 </td>
                 <td className="py-3 px-4 text-right text-slate-200 font-mono bg-slate-800/80">
-                  {ohpaSummary.totalNormalHours.toLocaleString()} ชม.
+                  {areaActiveStats.activeNorm.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-amber-300 font-mono bg-amber-950/80">
-                  +{ohpaSummary.totalOtHours.toLocaleString()} ชม.
+                  +{areaActiveStats.activeOt.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
-                  {ohpaSummary.totalWorkingHours.toLocaleString()} ชม.
+                  {areaActiveStats.activeTot.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-emerald-400 font-mono text-xs font-black">
                   100.0%
@@ -1493,7 +1590,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </tr>
 
               {/* Row 2: Retread 6320 Excluded Stats */}
-              {(ohpaSummary.excluded6320GyCount > 0 || ohpaSummary.excluded6320ContCount > 0) && (
+              {(areaActiveStats.retreadHc > 0 || areaActiveStats.retreadTot > 0) && (
                 <tr className="bg-rose-950/80 text-rose-200 font-bold border-t border-rose-800/50 text-xs">
                   <td className="py-2.5 px-4 flex items-center gap-2">
                     <div className="p-0.5 px-1.5 rounded bg-rose-500 text-white font-black text-[10px]">
@@ -1502,7 +1599,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     <div>
                       <span>🚫 ส่วนงานหล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH)</span>
                       <span className="text-[10px] text-rose-300/80 block">
-                        (GY {ohpaSummary.excluded6320GyCount} คน: {ohpaSummary.excluded6320GyHours} ชม. | Cont {ohpaSummary.excluded6320ContCount} คน: {ohpaSummary.excluded6320ContHours} ชม.)
+                        (GY {areaActiveStats.retreadGyHc} คน: {areaActiveStats.retreadGyTot.toLocaleString()} ชม. | Cont {areaActiveStats.retreadContHc} คน: {areaActiveStats.retreadContTot.toLocaleString()} ชม.)
                       </span>
                     </div>
                   </td>
@@ -1510,16 +1607,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     71 คน
                   </td>
                   <td className="py-2.5 px-4 text-center font-mono">
-                    {ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน
+                    {areaActiveStats.retreadHc} คน
                   </td>
                   <td className="py-2.5 px-4 text-right font-mono">
-                    {Math.round((ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.normalHours || 0) * 10) / 10} ชม.
+                    {areaActiveStats.retreadNorm.toLocaleString()} ชม.
                   </td>
                   <td className="py-2.5 px-4 text-right font-mono text-amber-300">
-                    +{Math.round((ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.otHours || 0) * 10) / 10} ชม.
+                    +{areaActiveStats.retreadOt.toLocaleString()} ชม.
                   </td>
                   <td className="py-2.5 px-4 text-right font-mono text-rose-300 font-black">
-                    {Math.round((ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours) * 10) / 10} ชม.
+                    {areaActiveStats.retreadTot.toLocaleString()} ชม.
                   </td>
                   <td className="py-2.5 px-4 text-right text-rose-400 font-mono text-[11px]">
                     (ไม่นับใน OPAH)
@@ -1534,7 +1631,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     GRAND TOTAL
                   </div>
                   <div>
-                    <span>ยอดรวมทั้งสิ้นทั้งโรงงาน (รวมทุกแผนก 100%)</span>
+                    <span>
+                      {viewMode === 'MTD'
+                        ? `ยอดรวมทั้งสิ้นทั้งโรงงาน MTD สะสม (${ohpaSummary.mtd?.daysCount || 14} วัน)`
+                        : 'ยอดรวมทั้งสิ้นทั้งโรงงาน (รวมทุกแผนก 100%)'}
+                    </span>
                     <span className="text-[10px] font-normal text-slate-400 block">
                       (รวม 8 พื้นที่: 7 พื้นที่หลัก + แผนก 6320 หล่อดอกยาง)
                     </span>
@@ -1544,16 +1645,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   750 คน
                 </td>
                 <td className="py-3 px-4 text-center text-amber-300 font-mono font-black">
-                  {ohpaSummary.totalEmployeesCount + ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน
+                  {areaActiveStats.grandHc} คน
                 </td>
                 <td className="py-3 px-4 text-right text-slate-300 font-mono">
-                  {Math.round((ohpaSummary.totalNormalHours + (ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.normalHours || 0)) * 10) / 10} ชม.
+                  {areaActiveStats.grandNorm.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-amber-300 font-mono">
-                  +{Math.round((ohpaSummary.totalOtHours + (ohpaSummary.areaBreakdown.find(a => a.isExcluded6320)?.otHours || 0)) * 10) / 10} ชม.
+                  +{areaActiveStats.grandOt.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-amber-300 font-mono font-black text-sm">
-                  {Math.round((ohpaSummary.totalWorkingHours + ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours) * 10) / 10} ชม.
+                  {areaActiveStats.grandTot.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-slate-400 font-mono">
                   -

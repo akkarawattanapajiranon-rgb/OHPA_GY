@@ -66,6 +66,535 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
   };
 }
 
+export const classifyArea = (
+  category?: string,
+  dept?: string,
+  costCenter?: string,
+  pbu?: string,
+  location?: string,
+  closing?: string,
+  isMonthly?: boolean
+): { key: string; name: string; label: string; icon: string; order: number; headcountStandard: number; isExcluded6320?: boolean } => {
+  if (isMonthly) {
+    return {
+      key: 'Non-MFG : Others',
+      name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+      label: 'Others',
+      icon: '📦',
+      headcountStandard: 6,
+      order: 8
+    };
+  }
+
+  const d = String(dept || '').toUpperCase().trim();
+  const cc = String(costCenter || '').toUpperCase().trim();
+  const cls = String(closing || '').toUpperCase().trim();
+  const c = String(category || '').toLowerCase().trim();
+  const loc = String(location || '').toUpperCase().trim();
+
+  // Extract 4-5 character code from closing, costCenter, dept in priority order
+  const extractCode = (str: string): string => {
+    const m = str.match(/([A-Z]?\d{4})/i);
+    return m ? m[1].toUpperCase() : '';
+  };
+
+  const code = extractCode(cls) || extractCode(cc) || extractCode(d);
+
+  // 1. Bias Aero (121 คน): แผนก A5110, A5120, A5130
+  if (
+    ['A5110', 'A5120', 'A5130'].includes(code) ||
+    c.includes('bias aero') ||
+    (c.includes('aero') && !c.includes('radial') && !loc.includes('STA'))
+  ) {
+    return {
+      key: 'Bias Aero',
+      name: 'Bias Aero (แผนก A5110, A5120, A5130)',
+      label: 'Bias Aero',
+      icon: '✈️',
+      headcountStandard: 121,
+      order: 3
+    };
+  }
+
+  // 2. Radial Aero (74 คน): แผนก S5110, S5120, S5130
+  if (
+    ['S5110', 'S5120', 'S5130'].includes(code) ||
+    c.includes('radial aero') ||
+    (c.includes('radial') && c.includes('aero')) ||
+    loc.includes('STA')
+  ) {
+    return {
+      key: 'Radial Aero',
+      name: 'Radial Aero (แผนก S5110, S5120, S5130)',
+      label: 'Radial Aero',
+      icon: '🛫',
+      headcountStandard: 74,
+      order: 4
+    };
+  }
+
+  // 3. BCA (208 คน): แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300
+  if (
+    ['3200', '3300', '3700', '4110', '4120', '4130', '4200', '4300'].includes(code) ||
+    c.includes('bca') ||
+    c.includes('banbury') ||
+    c.includes('calender') ||
+    c.includes('stock prep')
+  ) {
+    return {
+      key: 'BCA',
+      name: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
+      label: 'BCA',
+      icon: '🏢',
+      headcountStandard: 208,
+      order: 1
+    };
+  }
+
+  // 4. Consumer (148 คน): แผนก 4140, 5110, 5120, 5130
+  if (
+    ['4140', '5110', '5120', '5130'].includes(code) ||
+    c.includes('consumer')
+  ) {
+    return {
+      key: 'Consumer',
+      name: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
+      label: 'Consumer',
+      icon: '🚗',
+      headcountStandard: 148,
+      order: 2
+    };
+  }
+
+  // 5. Retread (71 คน): แผนก 6320 และส่วนงานหล่อดอกยาง
+  if (
+    code === '6320' ||
+    c.includes('retread') ||
+    loc.includes('RETREAD') ||
+    d.includes('หล่อดอก')
+  ) {
+    return {
+      key: 'Retread',
+      name: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
+      label: 'Retread (หล่อดอก)',
+      icon: '🔄',
+      headcountStandard: 71,
+      order: 5,
+      isExcluded6320: true
+    };
+  }
+
+  // 6. Non-MFG : Engineering (65 คน): แผนก 1100, 1110, 1161, 1164, 1210, S1100
+  if (
+    ['1100', '1110', '1161', '1164', '1210', 'S1100'].includes(code) ||
+    c.includes('engineering') ||
+    loc.includes('ENG') ||
+    c.includes('maintenance')
+  ) {
+    return {
+      key: 'Non-MFG : Engineering',
+      name: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
+      label: 'Engineering',
+      icon: '🔧',
+      headcountStandard: 65,
+      order: 6
+    };
+  }
+
+  // 7. Non-MFG : Quality (57 คน): แผนก 1021, 1022, 1040, S1040
+  if (
+    ['1021', '1022', '1040', 'S1040'].includes(code) ||
+    c.includes('quality') ||
+    loc.includes('Q-TECH') ||
+    loc.includes('QUALITY') ||
+    c.includes('q-tech')
+  ) {
+    return {
+      key: 'Non-MFG : Quality',
+      name: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
+      label: 'Quality',
+      icon: '🔬',
+      headcountStandard: 57,
+      order: 7
+    };
+  }
+
+  // 8. Non-MFG : Others (6 คน): แผนก 1860 (และ 1850, 1200)
+  return {
+    key: 'Non-MFG : Others',
+    name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+    label: 'Others',
+    icon: '📦',
+    headcountStandard: 6,
+    order: 8
+  };
+};
+
+export interface AreaAccumulator {
+  areaKey: string;
+  areaName: string;
+  areaLabel: string;
+  icon: string;
+  order: number;
+  headcountStandard: number;
+  isExcluded6320?: boolean;
+  gyHc: number;
+  contHc: number;
+  monthlyHc: number;
+  gyNormal: number;
+  gyOt: number;
+  contNormal: number;
+  contOt: number;
+  monthlyNormal: number;
+  deptMap: Record<string, OhpaAreaDeptItem>;
+}
+
+export function createEmptyAreaMap(): Record<string, AreaAccumulator> {
+  return {
+    'BCA': {
+      areaKey: 'BCA',
+      areaName: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
+      areaLabel: 'BCA',
+      icon: '🏢',
+      order: 1,
+      headcountStandard: 208,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Consumer': {
+      areaKey: 'Consumer',
+      areaName: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
+      areaLabel: 'Consumer',
+      icon: '🚗',
+      order: 2,
+      headcountStandard: 148,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Bias Aero': {
+      areaKey: 'Bias Aero',
+      areaName: 'Bias Aero (แผนก A5110, A5120, A5130)',
+      areaLabel: 'Bias Aero',
+      icon: '✈️',
+      order: 3,
+      headcountStandard: 121,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Radial Aero': {
+      areaKey: 'Radial Aero',
+      areaName: 'Radial Aero (แผนก S5110, S5120, S5130)',
+      areaLabel: 'Radial Aero',
+      icon: '🛫',
+      order: 4,
+      headcountStandard: 74,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Retread': {
+      areaKey: 'Retread',
+      areaName: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
+      areaLabel: 'Retread (หล่อดอก)',
+      icon: '🔄',
+      order: 5,
+      headcountStandard: 71,
+      isExcluded6320: true,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Engineering': {
+      areaKey: 'Non-MFG : Engineering',
+      areaName: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
+      areaLabel: 'Engineering',
+      icon: '🔧',
+      order: 6,
+      headcountStandard: 65,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Quality': {
+      areaKey: 'Non-MFG : Quality',
+      areaName: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
+      areaLabel: 'Quality',
+      icon: '🔬',
+      order: 7,
+      headcountStandard: 57,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    },
+    'Non-MFG : Others': {
+      areaKey: 'Non-MFG : Others',
+      areaName: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
+      areaLabel: 'Others',
+      icon: '📦',
+      order: 8,
+      headcountStandard: 6,
+      gyHc: 0,
+      contHc: 0,
+      monthlyHc: 0,
+      gyNormal: 0,
+      gyOt: 0,
+      contNormal: 0,
+      contOt: 0,
+      monthlyNormal: 0,
+      deptMap: {}
+    }
+  };
+}
+
+export function accumulateRecordsIntoAreaMap(
+  areaMap: Record<string, AreaAccumulator>,
+  gyRecords: ParsedShiftRecord[],
+  contRecords: ContractorScanRecord[],
+  monthlyStaff: { count: number; hoursPerPerson: number; totalHours: number; wasCount?: number; wasTotalHours?: number },
+  beadAddHours: number = 0
+) {
+  // 1. Process Goodyear records
+  gyRecords.forEach(r => {
+    const d = r.dept || 'ไม่ระบุแผนก (GY)';
+    const nHours = r.normalWorkHours || 0;
+    const otH = r.otHours || 0;
+    const totH = nHours + otH;
+
+    const areaInfo = classifyArea(r.category, r.dept, r.costCenter, '', '', '');
+    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
+    a.gyHc++;
+    a.gyNormal += nHours;
+    a.gyOt += otH;
+
+    const deptKey = `GY: ${d}`;
+    if (!a.deptMap[deptKey]) {
+      a.deptMap[deptKey] = {
+        dept: d,
+        isContractor: false,
+        isMonthly: false,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    a.deptMap[deptKey].headcount++;
+    a.deptMap[deptKey].normalHours += nHours;
+    a.deptMap[deptKey].otHours += otH;
+    a.deptMap[deptKey].totalHours += totH;
+  });
+
+  // 2. Process Contractor records
+  let hasScannedWasMonthly = false;
+  contRecords.forEach(r => {
+    const isMonthlyCont = r.type === 'Salary' || (r as any).isMonthly;
+    if (isMonthlyCont) hasScannedWasMonthly = true;
+    const code = (r.closing || r.department || 'MFG').trim();
+    const loc = r.location ? ` (${r.location})` : '';
+    const d = isMonthlyCont ? `Cont รายเดือน แผนก ${code}${loc}` : `Cont แผนก ${code}${loc}`;
+    const nHours = r.normalHours || 0;
+    const otH = r.otHours || 0;
+    const totH = nHours + otH;
+
+    const areaInfo = isMonthlyCont
+      ? { key: 'Non-MFG : Others', name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)', label: 'Others', icon: '📦', headcountStandard: 6, order: 8 }
+      : classifyArea('', r.department, r.closing, '', r.location, r.closing);
+
+    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
+    a.contHc++;
+    a.contNormal += nHours;
+    a.contOt += otH;
+
+    const deptKey = isMonthlyCont ? `Cont Monthly: ${code}${loc}` : `Cont: ${code}${loc}`;
+    if (!a.deptMap[deptKey]) {
+      a.deptMap[deptKey] = {
+        dept: d,
+        isContractor: true,
+        isMonthly: isMonthlyCont,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    a.deptMap[deptKey].headcount++;
+    a.deptMap[deptKey].normalHours += nHours;
+    a.deptMap[deptKey].otHours += otH;
+    a.deptMap[deptKey].totalHours += totH;
+  });
+
+  // 3. Monthly Staff & Bead
+  const aOther = areaMap['Non-MFG : Others'];
+
+  // Goodyear Monthly Staff
+  if (monthlyStaff.count > 0) {
+    const gyMonthlyKey = `พนักงานรายเดือน GY (Goodyear Monthly Staff - ${monthlyStaff.count} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    aOther.monthlyHc += monthlyStaff.count;
+    aOther.monthlyNormal += monthlyStaff.totalHours;
+    if (!aOther.deptMap['GY Monthly Staff']) {
+      aOther.deptMap['GY Monthly Staff'] = {
+        dept: gyMonthlyKey,
+        isContractor: false,
+        isMonthly: true,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    aOther.deptMap['GY Monthly Staff'].headcount += monthlyStaff.count;
+    aOther.deptMap['GY Monthly Staff'].normalHours += monthlyStaff.totalHours;
+    aOther.deptMap['GY Monthly Staff'].totalHours += monthlyStaff.totalHours;
+  }
+
+  // WAS Monthly Staff Fallback (if not scanned)
+  const fallbackWasCount = monthlyStaff.wasCount ?? 9;
+  const fallbackWasHours = monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson);
+  if (!hasScannedWasMonthly && fallbackWasCount > 0) {
+    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+    aOther.monthlyHc += fallbackWasCount;
+    aOther.monthlyNormal += fallbackWasHours;
+    if (!aOther.deptMap['WAS Monthly Staff']) {
+      aOther.deptMap['WAS Monthly Staff'] = {
+        dept: wasMonthlyKey,
+        isContractor: true,
+        isMonthly: true,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    aOther.deptMap['WAS Monthly Staff'].headcount += fallbackWasCount;
+    aOther.deptMap['WAS Monthly Staff'].normalHours += fallbackWasHours;
+    aOther.deptMap['WAS Monthly Staff'].totalHours += fallbackWasHours;
+  }
+
+  // Bead Add Hours
+  if (beadAddHours > 0) {
+    const beadKey = `B-end Bead (ชั่วโมงบวกเพิ่ม OPAH - Bead Component)`;
+    aOther.monthlyNormal += beadAddHours;
+    if (!aOther.deptMap['B-end Bead']) {
+      aOther.deptMap['B-end Bead'] = {
+        dept: beadKey,
+        isContractor: false,
+        isMonthly: false,
+        isBead: true,
+        headcount: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0
+      };
+    }
+    aOther.deptMap['B-end Bead'].normalHours += beadAddHours;
+    aOther.deptMap['B-end Bead'].totalHours += beadAddHours;
+  }
+}
+
+export function buildAreaBreakdownList(
+  areaMap: Record<string, AreaAccumulator>,
+  totalWorkingHours: number,
+  daysCount: number = 1
+): OhpaAreaMetrics[] {
+  const avgDays = Math.max(1, daysCount);
+  return Object.values(areaMap)
+    .map(a => {
+      const normalH = a.gyNormal + a.contNormal + a.monthlyNormal;
+      const otH = a.gyOt + a.contOt;
+      const totH = normalH + otH;
+      const totHc = Math.round((a.gyHc + a.contHc + a.monthlyHc) / avgDays);
+      const gyHc = Math.round(a.gyHc / avgDays);
+      const contHc = Math.round(a.contHc / avgDays);
+      const monthlyHc = a.monthlyHc > 0 ? Math.round(a.monthlyHc / avgDays) : undefined;
+      const gyTot = a.gyNormal + a.gyOt;
+      const contTot = a.contNormal + a.contOt;
+
+      const subDepts = Object.values(a.deptMap)
+        .map(d => ({
+          ...d,
+          headcount: Math.round(d.headcount / avgDays),
+          normalHours: Math.round(d.normalHours * 10) / 10,
+          otHours: Math.round(d.otHours * 10) / 10,
+          totalHours: Math.round(d.totalHours * 10) / 10
+        }))
+        .sort((x, y) => y.totalHours - x.totalHours);
+
+      return {
+        areaKey: a.areaKey,
+        areaName: a.areaName,
+        areaLabel: a.areaLabel,
+        icon: a.icon,
+        order: a.order,
+        headcountStandard: a.headcountStandard,
+        isExcluded6320: a.isExcluded6320,
+        totalHeadcount: totHc,
+        gyHeadcount: gyHc,
+        contractorHeadcount: contHc,
+        monthlyHeadcount: monthlyHc,
+        normalHours: Math.round(normalH * 10) / 10,
+        otHours: Math.round(otH * 10) / 10,
+        totalHours: Math.round(totH * 10) / 10,
+        gyNormalHours: Math.round(a.gyNormal * 10) / 10,
+        gyOtHours: Math.round(a.gyOt * 10) / 10,
+        gyTotalHours: Math.round(gyTot * 10) / 10,
+        contractorNormalHours: Math.round(a.contNormal * 10) / 10,
+        contractorOtHours: Math.round(a.contOt * 10) / 10,
+        contractorTotalHours: Math.round(contTot * 10) / 10,
+        monthlyHours: a.monthlyNormal > 0 ? Math.round(a.monthlyNormal * 10) / 10 : undefined,
+        percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
+          ? Math.round((totH / totalWorkingHours) * 1000) / 10
+          : 0,
+        departments: subDepts
+      };
+    })
+    .sort((a, b) => a.order - b.order);
+}
+
 export function calculateMtdSummary(
   targetDateStr: string,
   currentGyRecords: ParsedShiftRecord[],
@@ -101,6 +630,7 @@ export function calculateMtdSummary(
   let mtdBeadAddHours = 0;
   let mtdOpahWorkingHours = 0;
 
+  const mtdAreaMap = createEmptyAreaMap();
   const dayNames = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
 
   for (let d = 1; d <= targetDay; d++) {
@@ -111,14 +641,17 @@ export function calculateMtdSummary(
     const dayOfWeek = dt.getDay();
     const dayName = dayNames[dayOfWeek];
 
+    let dayGyRecords: ParsedShiftRecord[] = [];
     let gyHeadcount = 0;
     let gyHours = 0;
 
+    let dayContRecords: ContractorScanRecord[] = [];
     let contractorHeadcount = 0;
     let contractorHours = 0;
 
     // 1. Goodyear Data
     if (d === targetDay) {
+      dayGyRecords = currentGyRecords;
       const active = currentGyRecords.filter(r => !isGyDept6320(r));
       gyHeadcount = active.length;
       gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
@@ -133,6 +666,7 @@ export function calculateMtdSummary(
 
       if (preset && preset.content) {
         const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
+        dayGyRecords = parsed.records;
         const active = parsed.records.filter(r => !isGyDept6320(r));
         gyHeadcount = active.length;
         gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
@@ -141,7 +675,8 @@ export function calculateMtdSummary(
 
     // 2. Contractor Data
     if (d === targetDay) {
-      const active = currentContRecords.filter(r => (r.hasScannedIn || r.totalHours > 0) && !isContDept6320(r));
+      dayContRecords = currentContRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
+      const active = dayContRecords.filter(r => !isContDept6320(r));
       contractorHeadcount = active.length;
       contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
     } else {
@@ -150,22 +685,32 @@ export function calculateMtdSummary(
         contractorRecordsByDate[`${targetYear}-${mPad}-${dPad}`];
 
       if (contEntry && contEntry.records) {
-        const active = contEntry.records.filter(r => (r.hasScannedIn || r.totalHours > 0) && !isContDept6320(r));
+        dayContRecords = contEntry.records.filter(r => r.hasScannedIn || r.totalHours > 0);
+        const active = dayContRecords.filter(r => !isContDept6320(r));
         contractorHeadcount = active.length;
         contractorHours = active.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
       }
     }
 
-    // 3. Monthly Staff Data (Goodyear 62 + WAS 8)
+    // 3. Monthly Staff Data (Goodyear 61 + WAS 9)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
     const gyMonthlyHours = monthlyStaff.totalHours;
-    const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (8 * monthlyStaff.hoursPerPerson);
+    const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (9 * monthlyStaff.hoursPerPerson);
     const combinedMonthlyHours = gyMonthlyHours + wasMonthlyHours;
 
     const dayTotalHours = gyHours + contractorHours + combinedMonthlyHours;
     const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
     const beadAddHours = pdiBeadReport?.beadDailyTotals?.[d] || 0;
     const dayOpahHours = Math.max(0, dayTotalHours - pdiDeductHours + beadAddHours);
+
+    // Accumulate area breakdown for day d
+    accumulateRecordsIntoAreaMap(
+      mtdAreaMap,
+      dayGyRecords,
+      dayContRecords,
+      monthlyStaff,
+      beadAddHours
+    );
 
     mtdGyHours += gyHours;
     mtdContractorHours += contractorHours;
@@ -211,6 +756,8 @@ export function calculateMtdSummary(
     ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdContractorHours) * 100) / 100
     : 0;
 
+  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay);
+
   return {
     targetDate: clean || `${String(targetDay).padStart(2, '0')}/${String(targetMonth).padStart(2, '0')}/${targetYear}`,
     daysCount: targetDay,
@@ -228,7 +775,8 @@ export function calculateMtdSummary(
     mtdOpahLbsPerHour,
     mtdGyOpahLbsPerHour,
     mtdContractorOpahLbsPerHour,
-    dailyItems
+    dailyItems,
+    areaBreakdown
   };
 }
 
@@ -474,330 +1022,18 @@ export function calculateOhpaSummary(
     };
   });
 
-  // 8. Area Classification Helper (8 Exact User-Specified Areas)
-  const classifyArea = (
-    category?: string,
-    dept?: string,
-    costCenter?: string,
-    pbu?: string,
-    location?: string,
-    closing?: string,
-    isMonthly?: boolean
-  ): { key: string; name: string; label: string; icon: string; order: number; headcountStandard: number; isExcluded6320?: boolean } => {
-    if (isMonthly) {
-      return {
-        key: 'Non-MFG : Others',
-        name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
-        label: 'Others',
-        icon: '📦',
-        headcountStandard: 6,
-        order: 8
-      };
-    }
+  // 8. Process Area Breakdown
+  const areaMap = createEmptyAreaMap();
+  accumulateRecordsIntoAreaMap(
+    areaMap,
+    records,
+    rawContActive,
+    monthlyStaff,
+    beadAddHours
+  );
+  const areaBreakdown = buildAreaBreakdownList(areaMap, totalWorkingHours, 1);
 
-    const d = String(dept || '').toUpperCase().trim();
-    const cc = String(costCenter || '').toUpperCase().trim();
-    const cls = String(closing || '').toUpperCase().trim();
-    const c = String(category || '').toLowerCase().trim();
-    const loc = String(location || '').toUpperCase().trim();
-
-    // Extract 4-5 character code from closing, costCenter, dept in priority order
-    const extractCode = (str: string): string => {
-      const m = str.match(/([A-Z]?\d{4})/i);
-      return m ? m[1].toUpperCase() : '';
-    };
-
-    const code = extractCode(cls) || extractCode(cc) || extractCode(d);
-
-    // 1. Bias Aero (121 คน): แผนก A5110, A5120, A5130
-    if (
-      ['A5110', 'A5120', 'A5130'].includes(code) ||
-      c.includes('bias aero') ||
-      (c.includes('aero') && !c.includes('radial') && !loc.includes('STA'))
-    ) {
-      return {
-        key: 'Bias Aero',
-        name: 'Bias Aero (แผนก A5110, A5120, A5130)',
-        label: 'Bias Aero',
-        icon: '✈️',
-        headcountStandard: 121,
-        order: 3
-      };
-    }
-
-    // 2. Radial Aero (74 คน): แผนก S5110, S5120, S5130
-    if (
-      ['S5110', 'S5120', 'S5130'].includes(code) ||
-      c.includes('radial aero') ||
-      (c.includes('radial') && c.includes('aero')) ||
-      loc.includes('STA')
-    ) {
-      return {
-        key: 'Radial Aero',
-        name: 'Radial Aero (แผนก S5110, S5120, S5130)',
-        label: 'Radial Aero',
-        icon: '🛫',
-        headcountStandard: 74,
-        order: 4
-      };
-    }
-
-    // 3. BCA (208 คน): แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300
-    if (
-      ['3200', '3300', '3700', '4110', '4120', '4130', '4200', '4300'].includes(code) ||
-      c.includes('bca') ||
-      c.includes('banbury') ||
-      c.includes('calender') ||
-      c.includes('stock prep')
-    ) {
-      return {
-        key: 'BCA',
-        name: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
-        label: 'BCA',
-        icon: '🏢',
-        headcountStandard: 208,
-        order: 1
-      };
-    }
-
-    // 4. Consumer (148 คน): แผนก 4140, 5110, 5120, 5130
-    if (
-      ['4140', '5110', '5120', '5130'].includes(code) ||
-      c.includes('consumer')
-    ) {
-      return {
-        key: 'Consumer',
-        name: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
-        label: 'Consumer',
-        icon: '🚗',
-        headcountStandard: 148,
-        order: 2
-      };
-    }
-
-    // 5. Retread (71 คน): แผนก 6320 และส่วนงานหล่อดอกยาง
-    if (
-      code === '6320' ||
-      c.includes('retread') ||
-      loc.includes('RETREAD') ||
-      d.includes('หล่อดอก')
-    ) {
-      return {
-        key: 'Retread',
-        name: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
-        label: 'Retread (หล่อดอก)',
-        icon: '🔄',
-        headcountStandard: 71,
-        order: 5,
-        isExcluded6320: true
-      };
-    }
-
-    // 6. Non-MFG : Engineering (65 คน): แผนก 1100, 1110, 1161, 1164, 1210, S1100
-    if (
-      ['1100', '1110', '1161', '1164', '1210', 'S1100'].includes(code) ||
-      c.includes('engineering') ||
-      loc.includes('ENG') ||
-      c.includes('maintenance')
-    ) {
-      return {
-        key: 'Non-MFG : Engineering',
-        name: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
-        label: 'Engineering',
-        icon: '🔧',
-        headcountStandard: 65,
-        order: 6
-      };
-    }
-
-    // 7. Non-MFG : Quality (57 คน): แผนก 1021, 1022, 1040, S1040
-    if (
-      ['1021', '1022', '1040', 'S1040'].includes(code) ||
-      c.includes('quality') ||
-      loc.includes('Q-TECH') ||
-      loc.includes('QUALITY') ||
-      c.includes('q-tech')
-    ) {
-      return {
-        key: 'Non-MFG : Quality',
-        name: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
-        label: 'Quality',
-        icon: '🔬',
-        headcountStandard: 57,
-        order: 7
-      };
-    }
-
-    // 8. Non-MFG : Others (6 คน): แผนก 1860 (และ 1850, 1200)
-    return {
-      key: 'Non-MFG : Others',
-      name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
-      label: 'Others',
-      icon: '📦',
-      headcountStandard: 6,
-      order: 8
-    };
-  };
-
-  // 9. Area Breakdown Map (8 Exact Categories)
-  const areaMap: Record<string, {
-    areaKey: string;
-    areaName: string;
-    areaLabel: string;
-    icon: string;
-    order: number;
-    headcountStandard: number;
-    isExcluded6320?: boolean;
-    gyHc: number;
-    contHc: number;
-    monthlyHc: number;
-    gyNormal: number;
-    gyOt: number;
-    contNormal: number;
-    contOt: number;
-    monthlyNormal: number;
-    deptMap: Record<string, OhpaAreaDeptItem>;
-  }> = {
-    'BCA': {
-      areaKey: 'BCA',
-      areaName: 'BCA (แผนก 3200, 3300, 3700, 4110, 4120, 4130, 4200, 4300)',
-      areaLabel: 'BCA',
-      icon: '🏢',
-      order: 1,
-      headcountStandard: 208,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Consumer': {
-      areaKey: 'Consumer',
-      areaName: 'Consumer (แผนก 4140, 5110, 5120, 5130)',
-      areaLabel: 'Consumer',
-      icon: '🚗',
-      order: 2,
-      headcountStandard: 148,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Bias Aero': {
-      areaKey: 'Bias Aero',
-      areaName: 'Bias Aero (แผนก A5110, A5120, A5130)',
-      areaLabel: 'Bias Aero',
-      icon: '✈️',
-      order: 3,
-      headcountStandard: 121,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Radial Aero': {
-      areaKey: 'Radial Aero',
-      areaName: 'Radial Aero (แผนก S5110, S5120, S5130)',
-      areaLabel: 'Radial Aero',
-      icon: '🛫',
-      order: 4,
-      headcountStandard: 74,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Retread': {
-      areaKey: 'Retread',
-      areaName: 'Retread (แผนก 6320 และส่วนงานหล่อดอกยาง)',
-      areaLabel: 'Retread (หล่อดอก)',
-      icon: '🔄',
-      order: 5,
-      headcountStandard: 71,
-      isExcluded6320: true,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Non-MFG : Engineering': {
-      areaKey: 'Non-MFG : Engineering',
-      areaName: 'Non-MFG : Engineering (แผนก 1100, 1110, 1161, 1164, 1210, S1100)',
-      areaLabel: 'Engineering',
-      icon: '🔧',
-      order: 6,
-      headcountStandard: 65,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Non-MFG : Quality': {
-      areaKey: 'Non-MFG : Quality',
-      areaName: 'Non-MFG : Quality (แผนก 1021, 1022, 1040, S1040)',
-      areaLabel: 'Quality',
-      icon: '🔬',
-      order: 7,
-      headcountStandard: 57,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    },
-    'Non-MFG : Others': {
-      areaKey: 'Non-MFG : Others',
-      areaName: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)',
-      areaLabel: 'Others',
-      icon: '📦',
-      order: 8,
-      headcountStandard: 6,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      gyNormal: 0,
-      gyOt: 0,
-      contNormal: 0,
-      contOt: 0,
-      monthlyNormal: 0,
-      deptMap: {}
-    }
-  };
-
-  // 10. Process All Goodyear Records (Active + 6320) into Areas & Depts
+  // 9. Department Breakdown (for backwards compatibility)
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isBead?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
   records.forEach(r => {
@@ -807,7 +1043,6 @@ export function calculateOhpaSummary(
     const otH = r.otHours || 0;
     const totH = nHours + otH;
 
-    // Dept map
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: false, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
@@ -815,33 +1050,8 @@ export function calculateOhpaSummary(
     deptMap[d].normalHours += nHours;
     deptMap[d].otHours += otH;
     deptMap[d].totalHours += totH;
-
-    // Area map
-    const areaInfo = classifyArea(r.category, r.dept, r.costCenter, '', '', '');
-    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
-    a.gyHc++;
-    a.gyNormal += nHours;
-    a.gyOt += otH;
-
-    const deptKey = `GY: ${d}`;
-    if (!a.deptMap[deptKey]) {
-      a.deptMap[deptKey] = {
-        dept: d,
-        isContractor: false,
-        isMonthly: false,
-        headcount: 0,
-        normalHours: 0,
-        otHours: 0,
-        totalHours: 0
-      };
-    }
-    a.deptMap[deptKey].headcount++;
-    a.deptMap[deptKey].normalHours += nHours;
-    a.deptMap[deptKey].otHours += otH;
-    a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 11. Process All Contractor Records (Active + 6320) into Areas & Depts (separated by exact department)
   rawContActive.forEach(r => {
     const isExcluded = isContDept6320(r);
     const isMonthlyCont = r.type === 'Salary' || (r as any).isMonthly;
@@ -852,7 +1062,6 @@ export function calculateOhpaSummary(
     const otH = r.otHours || 0;
     const totH = nHours + otH;
 
-    // Dept map
     if (!deptMap[d]) {
       deptMap[d] = { isContractor: true, isMonthly: isMonthlyCont, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
@@ -860,39 +1069,8 @@ export function calculateOhpaSummary(
     deptMap[d].normalHours += nHours;
     deptMap[d].otHours += otH;
     deptMap[d].totalHours += totH;
-
-    // Area map
-    const areaInfo = isMonthlyCont
-      ? { key: 'Non-MFG : Others', name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)', label: 'Others', icon: '📦', headcountStandard: 6, order: 8 }
-      : classifyArea('', r.department, r.closing, '', r.location, r.closing);
-
-    const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
-    a.contHc++;
-    a.contNormal += nHours;
-    a.contOt += otH;
-
-    const deptKey = isMonthlyCont ? `Cont Monthly: ${code}${loc}` : `Cont: ${code}${loc}`;
-    if (!a.deptMap[deptKey]) {
-      a.deptMap[deptKey] = {
-        dept: d,
-        isContractor: true,
-        isMonthly: isMonthlyCont,
-        headcount: 0,
-        normalHours: 0,
-        otHours: 0,
-        totalHours: 0
-      };
-    }
-    a.deptMap[deptKey].headcount++;
-    a.deptMap[deptKey].normalHours += nHours;
-    a.deptMap[deptKey].otHours += otH;
-    a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 12. Add Monthly Staff (Goodyear 61 + WAS fallback) and B-end (Bead) to Non-MFG : Others
-  const aOther = areaMap['Non-MFG : Others'];
-
-  // 12.1 Goodyear Monthly Staff (61 persons)
   if (monthlyStaff.count > 0) {
     const gyMonthlyKey = `พนักงานรายเดือน GY (Goodyear Monthly Staff - ${monthlyStaff.count} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
     deptMap[gyMonthlyKey] = {
@@ -903,21 +1081,8 @@ export function calculateOhpaSummary(
       otHours: 0,
       totalHours: monthlyStaff.totalHours
     };
-
-    aOther.monthlyHc += monthlyStaff.count;
-    aOther.monthlyNormal += monthlyStaff.totalHours;
-    aOther.deptMap['GY Monthly Staff'] = {
-      dept: gyMonthlyKey,
-      isContractor: false,
-      isMonthly: true,
-      headcount: monthlyStaff.count,
-      normalHours: monthlyStaff.totalHours,
-      otHours: 0,
-      totalHours: monthlyStaff.totalHours
-    };
   }
 
-  // 12.2 WAS Monthly Staff Fallback (only if not already in contractor scan records)
   if (!hasScannedWasMonthly && fallbackWasCount > 0) {
     const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
     deptMap[wasMonthlyKey] = {
@@ -928,21 +1093,8 @@ export function calculateOhpaSummary(
       otHours: 0,
       totalHours: fallbackWasHours
     };
-
-    aOther.monthlyHc += fallbackWasCount;
-    aOther.monthlyNormal += fallbackWasHours;
-    aOther.deptMap['WAS Monthly Staff'] = {
-      dept: wasMonthlyKey,
-      isContractor: true,
-      isMonthly: true,
-      headcount: fallbackWasCount,
-      normalHours: fallbackWasHours,
-      otHours: 0,
-      totalHours: fallbackWasHours
-    };
   }
 
-  // 12.3 B-end (Bead) Hours Addition
   if (beadAddHours > 0) {
     const beadKey = `B-end Bead (ชั่วโมงบวกเพิ่ม OPAH - Bead Component)`;
     deptMap[beadKey] = {
@@ -954,70 +1106,8 @@ export function calculateOhpaSummary(
       otHours: 0,
       totalHours: beadAddHours
     };
-
-    aOther.monthlyNormal += beadAddHours;
-    aOther.deptMap['B-end Bead'] = {
-      dept: beadKey,
-      isContractor: false,
-      isMonthly: false,
-      isBead: true,
-      headcount: 0,
-      normalHours: beadAddHours,
-      otHours: 0,
-      totalHours: beadAddHours
-    };
   }
 
-  // 13. Build final areaBreakdown list
-  const areaBreakdown: OhpaAreaMetrics[] = Object.values(areaMap)
-    .map(a => {
-      const normalH = a.gyNormal + a.contNormal + a.monthlyNormal;
-      const otH = a.gyOt + a.contOt;
-      const totH = normalH + otH;
-      const totHc = a.gyHc + a.contHc + a.monthlyHc;
-      const gyTot = a.gyNormal + a.gyOt;
-      const contTot = a.contNormal + a.contOt;
-
-      const subDepts = Object.values(a.deptMap)
-        .map(d => ({
-          ...d,
-          normalHours: Math.round(d.normalHours * 10) / 10,
-          otHours: Math.round(d.otHours * 10) / 10,
-          totalHours: Math.round(d.totalHours * 10) / 10
-        }))
-        .sort((x, y) => y.totalHours - x.totalHours);
-
-      return {
-        areaKey: a.areaKey,
-        areaName: a.areaName,
-        areaLabel: a.areaLabel,
-        icon: a.icon,
-        order: a.order,
-        headcountStandard: a.headcountStandard,
-        isExcluded6320: a.isExcluded6320,
-        totalHeadcount: totHc,
-        gyHeadcount: a.gyHc,
-        contractorHeadcount: a.contHc,
-        monthlyHeadcount: a.monthlyHc > 0 ? a.monthlyHc : undefined,
-        normalHours: Math.round(normalH * 10) / 10,
-        otHours: Math.round(otH * 10) / 10,
-        totalHours: Math.round(totH * 10) / 10,
-        gyNormalHours: Math.round(a.gyNormal * 10) / 10,
-        gyOtHours: Math.round(a.gyOt * 10) / 10,
-        gyTotalHours: Math.round(gyTot * 10) / 10,
-        contractorNormalHours: Math.round(a.contNormal * 10) / 10,
-        contractorOtHours: Math.round(a.contOt * 10) / 10,
-        contractorTotalHours: Math.round(contTot * 10) / 10,
-        monthlyHours: a.monthlyNormal > 0 ? Math.round(a.monthlyNormal * 10) / 10 : undefined,
-        percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
-          ? Math.round((totH / totalWorkingHours) * 1000) / 10
-          : 0,
-        departments: subDepts
-      };
-    })
-    .sort((a, b) => a.order - b.order);
-
-  // 14. Department Breakdown (for backwards compatibility)
   const departmentBreakdown: OhpaDeptMetrics[] = Object.entries(deptMap)
     .map(([dept, val]) => ({
       dept,

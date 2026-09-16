@@ -145,6 +145,7 @@ export interface MtdOhpaSummary {
   mtdGyOpahLbsPerHour: number;
   mtdContractorOpahLbsPerHour: number;
   dailyItems: DailyMtdItem[];
+  areaBreakdown?: OhpaAreaMetrics[];
 }
 
 export interface OhpaSummary {
