@@ -157,7 +157,8 @@ function scanFolderApiPlugin(): Plugin {
           }
 
           const stat = fs.statSync(targetPath);
-          const wb = XLSX.readFile(targetPath);
+          const buf = fs.readFileSync(targetPath);
+          const wb = XLSX.read(buf, { type: 'buffer' });
           const wsName = wb.SheetNames[0];
           const ws = wb.Sheets[wsName];
           const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
@@ -318,7 +319,8 @@ function scanFolderApiPlugin(): Plugin {
           }
 
           const stat = fs.statSync(targetPath);
-          const wb = XLSX.readFile(targetPath);
+          const buf = fs.readFileSync(targetPath);
+          const wb = XLSX.read(buf, { type: 'buffer' });
           const wsName = wb.SheetNames[0];
           const ws = wb.Sheets[wsName];
           const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
