@@ -989,7 +989,18 @@ export default defineConfig({
     port: 3000,
     host: true,
     watch: {
-      ignored: ['**/scans/**', '**/*.txt', '**/*.dat', '**/*.csv', '**/*.log', '**/node_modules/**']
+      ignored: [
+        '**/scans/**',
+        '**/scans_was/**',
+        '**/*.txt',
+        '**/*.dat',
+        '**/*.csv',
+        '**/*.log',
+        '**/*.bat',
+        '**/*.xlsx',
+        '**/*.xls',
+        '**/node_modules/**'
+      ]
     }
   }
 });
