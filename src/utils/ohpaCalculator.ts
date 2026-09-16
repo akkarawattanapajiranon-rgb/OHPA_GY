@@ -684,6 +684,73 @@ export function getAreaTonnage(
   return { codes, kg, lbs, ton };
 }
 
+export function getDeptSortPriority(d: OhpaAreaDeptItem): number {
+  const name = d.dept || '';
+  const isNonHpt = name.includes('Non-HPT') || name.includes('1/5');
+  const isShared = name.includes('50% Con/Bias') || name.includes('Shared');
+
+  // 1. Direct Production - Goodyear
+  if (!isNonHpt && !isShared && !d.isContractor && !d.isMonthly && !d.isBead && !name.includes('PDI')) {
+    return 10;
+  }
+
+  // 2. Direct Production - Contractor
+  if (!isNonHpt && !isShared && d.isContractor && !d.isMonthly) {
+    return 20;
+  }
+
+  // 3. Direct Area - Monthly Salaries
+  if (!isNonHpt && !isShared && d.isMonthly) {
+    return 30;
+  }
+
+  // 4. Shared Consumer/Bias Aero 50%
+  if (isShared) {
+    if (!d.isContractor && !d.isMonthly) return 40;
+    if (d.isContractor && !d.isMonthly) return 41;
+    return 42;
+  }
+
+  // 5. Adjustments: Bead Component (+) & PDI Deduction (-)
+  if (d.isBead) return 50;
+  if (name.includes('PDI')) return 51;
+
+  // 6. Non-HPT 1/5 Allocated Support - Goodyear
+  if (isNonHpt && !d.isContractor && !d.isMonthly) {
+    return 60;
+  }
+
+  // 7. Non-HPT 1/5 Allocated Support - Contractor
+  if (isNonHpt && d.isContractor && !d.isMonthly) {
+    return 70;
+  }
+
+  // 8. Non-HPT 1/5 Allocated Support - Monthly Staff
+  if (isNonHpt && d.isMonthly) {
+    return 80;
+  }
+
+  return 90;
+}
+
+export function extractDeptCode(deptName: string): string {
+  const match = deptName.match(/(?:แผนก\s*|รายเดือน:\s*|:\s*|^|\s)([A-Z]?\d{4}|[A-Z]?\d{3})/i) || deptName.match(/\b([A-Z]?\d{4})\b/i);
+  return match ? match[1].toUpperCase() : deptName;
+}
+
+export function compareDeptItems(a: OhpaAreaDeptItem, b: OhpaAreaDeptItem): number {
+  const pA = getDeptSortPriority(a);
+  const pB = getDeptSortPriority(b);
+  if (pA !== pB) return pA - pB;
+
+  const codeA = extractDeptCode(a.dept);
+  const codeB = extractDeptCode(b.dept);
+  const cmp = codeA.localeCompare(codeB, undefined, { numeric: true, sensitivity: 'base' });
+  if (cmp !== 0) return cmp;
+
+  return b.totalHours - a.totalHours;
+}
+
 export function buildAreaBreakdownList(
   areaMap: Record<string, AreaAccumulator>,
   totalWorkingHours: number,
@@ -717,7 +784,7 @@ export function buildAreaBreakdownList(
           otHours: Math.round(d.otHours * 10) / 10,
           totalHours: Math.round(d.totalHours * 10) / 10
         }))
-        .sort((x, y) => y.totalHours - x.totalHours);
+        .sort(compareDeptItems);
 
       const areaTonnage = getAreaTonnage(a.areaKey, tonnageReport, mode);
       const areaOpahLbsPerHour = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.kg > 0)

@@ -1591,6 +1591,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                             ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                                             : sub.dept.includes('PDI')
                                             ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                                            : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
+                                            ? (sub.isMonthly ? 'bg-purple-50 text-purple-700 border border-purple-200' : sub.isContractor ? 'bg-teal-50 text-teal-700 border border-teal-200' : 'bg-slate-100 text-slate-700 border border-slate-200')
+                                            : sub.dept.includes('50% Con/Bias')
+                                            ? 'bg-amber-100 text-amber-800 border border-amber-200'
                                             : sub.isMonthly && sub.isContractor
                                             ? 'bg-teal-100 text-teal-800 border border-teal-200'
                                             : sub.isMonthly
@@ -1599,7 +1603,19 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                             ? 'bg-teal-100 text-teal-800'
                                             : 'bg-blue-100 text-blue-800'
                                         }`}>
-                                          {sub.isBead ? 'Bead (+)' : sub.dept.includes('PDI') ? 'PDI (-)' : sub.isMonthly ? (sub.isContractor ? 'WAS Mon' : 'Salaries') : sub.isContractor ? 'Contractor' : 'Goodyear'}
+                                          {sub.isBead
+                                            ? 'Bead (+)'
+                                            : sub.dept.includes('PDI')
+                                            ? 'PDI (-)'
+                                            : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
+                                            ? (sub.isMonthly ? 'Non-HPT (รายเดือน)' : sub.isContractor ? 'Non-HPT (Cont)' : 'Non-HPT (GY)')
+                                            : sub.dept.includes('50% Con/Bias')
+                                            ? (sub.isMonthly ? 'Shared (รายเดือน)' : sub.isContractor ? 'Shared (Cont)' : 'Shared (GY)')
+                                            : sub.isMonthly
+                                            ? (sub.isContractor ? 'WAS Mon' : 'Salaries')
+                                            : sub.isContractor
+                                            ? 'Contractor'
+                                            : 'Goodyear'}
                                         </span>
                                       </td>
                                       <td className="py-1.5 px-2 text-center font-bold text-slate-700 text-xs">
