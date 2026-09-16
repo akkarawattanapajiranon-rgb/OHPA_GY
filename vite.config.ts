@@ -715,13 +715,6 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
 
           const nameListPath = findFile(networkBaseDir, wasScansDir, 'name list was');
           const monthlyListPath = findFile(networkBaseDir, wasScansDir, 'was_รายเดือน') || findFile(networkBaseDir, wasScansDir, 'was_salary');
-          const scanFilePath = findFile(networkWasScanDir, wasScansDir, 'mfg was') || findFile(networkWasScanDir, wasScansDir, 'รายงานการทำงาน');
-
-          if (!nameListPath && !monthlyListPath && !scanFilePath) {
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ success: false, message: 'ไม่พบไฟล์ Contractor ในโฟลเดอร์ T: หรือ scans_was' }));
-            return;
-          }
 
           // Parse employee mapping
           const contractorMapping: Record<string, any> = {};
@@ -755,214 +748,283 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           if (nameListPath) parseContractorSheet(nameListPath);
           if (monthlyListPath) parseContractorSheet(monthlyListPath);
 
-          // Parse scan records across ALL sheets in scan file
-          const recordsByDate: Record<string, any> = {};
-          if (scanFilePath && fs.existsSync(scanFilePath)) {
-            const buf = fs.readFileSync(scanFilePath);
-            const wb = XLSX.read(buf, { type: 'buffer' });
+          // Find ALL scan files (excluding mapping files)
+          const targetWasDir = fs.existsSync(networkWasScanDir) ? networkWasScanDir : wasScansDir;
+          const wasFiles = fs.existsSync(targetWasDir)
+            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !f.toLowerCase().includes('name list') && !f.toLowerCase().includes('รายเดือน'))
+            : [];
 
-            const excelDateToDateObj = (serial: any) => {
-              if (typeof serial === 'number') {
-                const utc_days = Math.floor(serial - 25569);
-                const utc_value = utc_days * 86400;
-                const d = new Date(utc_value * 1000);
-                const day = d.getUTCDate();
-                const month = d.getUTCMonth() + 1;
-                const year = d.getUTCFullYear();
-                const pad = (n: number) => String(n).padStart(2, '0');
-                return {
-                  iso: `${year}-${pad(month)}-${pad(day)}`,
-                  formattedThai: `วันที่ ${day}/${month}/${year}`,
-                  formattedShort: `${day}/${month}/${year}`
-                };
-              }
+          if (!nameListPath && !monthlyListPath && wasFiles.length === 0) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, message: 'ไม่พบไฟล์ Contractor ในโฟลเดอร์ T: หรือ scans_was' }));
+            return;
+          }
+
+          const formatExcelTime = (val: any) => {
+            if (val === undefined || val === null || val === '') return '';
+            if (typeof val === 'number') {
+              const totalSeconds = Math.round(val * 86400);
+              const hours = Math.floor(totalSeconds / 3600) % 24;
+              const minutes = Math.floor((totalSeconds % 3600) / 60);
+              const pad = (n: number) => String(n).padStart(2, '0');
+              return `${pad(hours)}:${pad(minutes)}`;
+            }
+            return String(val).trim();
+          };
+
+          const excelDateToDateObj = (serial: any) => {
+            if (typeof serial === 'number') {
+              const utc_days = Math.floor(serial - 25569);
+              const utc_value = utc_days * 86400;
+              const d = new Date(utc_value * 1000);
+              const day = d.getUTCDate();
+              const month = d.getUTCMonth() + 1;
+              const year = d.getUTCFullYear();
+              const pad = (n: number) => String(n).padStart(2, '0');
               return {
-                iso: String(serial),
-                formattedThai: `วันที่ ${serial}`,
-                formattedShort: String(serial)
+                iso: `${year}-${pad(month)}-${pad(day)}`,
+                formattedThai: `วันที่ ${day}/${month}/${year}`,
+                formattedShort: `${day}/${month}/${year}`
               };
+            }
+            const str = String(serial || '').trim();
+            const dmy = str.replace(/^[^\d]*/, '').trim();
+            const parts = dmy.split(/[/.-]/);
+            if (parts.length === 3) {
+              const d = parseInt(parts[0], 10);
+              const m = parseInt(parts[1], 10);
+              const y = parts[2].length === 2 ? `20${parts[2]}` : parts[2];
+              const pad = (n: number) => String(n).padStart(2, '0');
+              return {
+                iso: `${y}-${pad(m)}-${pad(d)}`,
+                formattedThai: `วันที่ ${d}/${m}/${y}`,
+                formattedShort: `${d}/${m}/${y}`
+              };
+            }
+            return {
+              iso: str,
+              formattedThai: `วันที่ ${str}`,
+              formattedShort: str
             };
+          };
 
-            wb.SheetNames.forEach((sheetName: string) => {
-              const ws = wb.Sheets[sheetName];
-              const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
-              const isMonthlySheet = sheetName.includes('รายเดือน') || sheetName.toLowerCase().includes('salary');
+          // Parse scan records across ALL files and ALL sheets
+          const recordsByDate: Record<string, any> = {};
 
-              let headerRow = -1;
-              for (let i = 0; i < Math.min(5, data.length); i++) {
-                const row = data[i];
-                if (row && (row.includes('รหัสพนักงาน') || row.includes('ชื่อ') || row.includes('วันที่/เวลา'))) {
-                  headerRow = i;
-                  break;
+          for (const f of wasFiles) {
+            const scanFilePath = path.join(targetWasDir, f);
+            if (!fs.existsSync(scanFilePath)) continue;
+            try {
+              const buf = fs.readFileSync(scanFilePath);
+              const wb = XLSX.read(buf, { type: 'buffer' });
+
+              wb.SheetNames.forEach((sheetName: string) => {
+                const ws = wb.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+                const isMonthlySheet = sheetName.includes('รายเดือน') || sheetName.toLowerCase().includes('salary');
+
+                let headerRow = -1;
+                for (let i = 0; i < Math.min(5, data.length); i++) {
+                  const row = data[i];
+                  if (row && (row.includes('รหัสพนักงาน') || row.includes('ชื่อ') || row.includes('วันที่/เวลา'))) {
+                    headerRow = i;
+                    break;
+                  }
                 }
-              }
-              if (headerRow < 0) headerRow = 0;
+                if (headerRow < 0) headerRow = 0;
 
-              for (let i = headerRow + 1; i < data.length; i++) {
-                const row = data[i];
-                if (!row || !row[0] || row[0] === 'รหัสพนักงาน') continue;
+                for (let i = headerRow + 1; i < data.length; i++) {
+                  const row = data[i];
+                  if (!row || !row[0] || row[0] === 'รหัสพนักงาน') continue;
 
-                const empCode = String(row[0]).trim();
-                const scanNameTh = String(row[1] || '').trim();
-                const serialDate = row[2];
-                const shiftRaw = String(row[3] || '').trim();
-                const scanIn = row[4] ? String(row[4]).trim() : '';
-                const scanOut = row[5] ? String(row[5]).trim() : '';
-                const late = row[6] ? String(row[6]).trim() : '';
-                const earlyOut = row[7] ? String(row[7]).trim() : '';
-                const absent = row[8] ? String(row[8]).trim() : '';
-                const remark = row[9] ? String(row[9]).trim() : '';
-                const deptRaw = row[10] ? String(row[10]).trim() : '';
-                const isWorkDay = row[11] === 1 || row[11] === '1' || row[11] === true;
-                let otCol = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
+                  const empCode = String(row[0]).trim();
+                  const scanNameTh = String(row[1] || '').trim();
+                  const serialDate = row[2];
+                  const shiftRaw = String(row[3] || '').trim();
+                  const scanIn = formatExcelTime(row[4]);
+                  const scanOut = formatExcelTime(row[5]);
+                  const late = row[6] ? String(row[6]).trim() : '';
+                  const earlyOut = row[7] ? String(row[7]).trim() : '';
+                  const absent = row[8] ? String(row[8]).trim() : '';
+                  const remark = row[9] ? String(row[9]).trim() : '';
+                  const deptRaw = row[10] ? String(row[10]).trim() : '';
+                  const isWorkDay = row[11] === 1 || row[11] === '1' || row[11] === true;
+                  let otCol = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
 
-                const dateInfo = excelDateToDateObj(serialDate);
-                const dateKey = dateInfo.formattedShort;
+                  const dateInfo = excelDateToDateObj(serialDate);
+                  const dateKey = dateInfo.formattedShort;
 
-                const hasScannedIn = Boolean(scanIn);
-                let shiftNumber = 1;
-                let shiftLabel = 'กะ 1 (07:00 - 15:00)';
-                let normalHours = hasScannedIn ? 8 : 0;
-                let otHours = otCol;
+                  const hasScannedIn = Boolean(scanIn);
+                  let shiftNumber = 1;
+                  let shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                  let normalHours = hasScannedIn ? 8 : 0;
+                  let otHours = otCol;
 
-                if (hasScannedIn) {
-                  const inParts = scanIn.split(':');
-                  const inHour = parseInt(inParts[0], 10);
+                  if (hasScannedIn) {
+                    const inParts = scanIn.split(':');
+                    const inHour = parseInt(inParts[0], 10);
 
-                  let outHour = -1;
-                  if (scanOut) {
-                    const outParts = scanOut.split(':');
-                    outHour = parseInt(outParts[0], 10);
-                  }
-
-                  // 1. เข้า 7.00 - 19.00 -> กะ 1 พร้อม OT 4 ชม
-                  if (inHour >= 5 && inHour < 12) {
-                    shiftNumber = 1;
-                    if (otCol >= 4 || outHour >= 19) {
-                      if (otHours < 4) otHours = 4;
-                      shiftLabel = 'กะ 1 (07:00 - 19:00 / OT 4 ชม.)';
-                    } else if (otCol > 0) {
-                      shiftLabel = `กะ 1 (07:00 - 15:00 + OT ${otCol}h)`;
-                    } else {
-                      shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                    let outHour = -1;
+                    if (scanOut) {
+                      const outParts = scanOut.split(':');
+                      outHour = parseInt(outParts[0], 10);
                     }
-                  }
-                  // 2. เข้า 15.00 - 23.00 -> กะ 2
-                  else if (inHour >= 12 && inHour < 17) {
-                    if (outHour >= 6 && outHour <= 9) {
-                      shiftNumber = 3;
-                      shiftLabel = 'กะ 3 (15:00 - 07:00 / OT 8 ชม.)';
-                      if (otHours < 8) otHours = 8;
-                    } else {
-                      shiftNumber = 2;
-                      if (otCol > 0) {
-                        shiftLabel = `กะ 2 (15:00 - 23:00 + OT ${otCol}h)`;
+
+                    // 1. เข้า 7.00 - 19.00 -> กะ 1 พร้อม OT 4 ชม
+                    if (inHour >= 5 && inHour < 12) {
+                      shiftNumber = 1;
+                      if (otCol >= 4 || outHour >= 19) {
+                        if (otHours < 4) otHours = 4;
+                        shiftLabel = 'กะ 1 (07:00 - 19:00 / OT 4 ชม.)';
+                      } else if (otCol > 0) {
+                        shiftLabel = `กะ 1 (07:00 - 15:00 + OT ${otCol}h)`;
                       } else {
-                        shiftLabel = 'กะ 2 (15:00 - 23:00)';
+                        shiftLabel = 'กะ 1 (07:00 - 15:00)';
                       }
                     }
-                  }
-                  // 3. เข้า 19.00 - 7.00 -> กะ 3 พร้อม OT 4 ชม
-                  else if (inHour >= 17 && inHour < 21) {
-                    shiftNumber = 3;
-                    if (otCol >= 4 || (outHour >= 6 && outHour <= 9)) {
-                      if (otHours < 4) otHours = 4;
-                      shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
-                    } else if (otCol > 0) {
-                      shiftLabel = `กะ 3 (19:00 - 07:00 + OT ${otCol}h)`;
-                    } else {
-                      shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
-                      otHours = 4;
+                    // 2. เข้า 15.00 - 23.00 -> กะ 2
+                    else if (inHour >= 12 && inHour < 17) {
+                      if (outHour >= 6 && outHour <= 9) {
+                        shiftNumber = 3;
+                        shiftLabel = 'กะ 3 (15:00 - 07:00 / OT 8 ชม.)';
+                        if (otHours < 8) otHours = 8;
+                      } else {
+                        shiftNumber = 2;
+                        if (otCol > 0) {
+                          shiftLabel = `กะ 2 (15:00 - 23:00 + OT ${otCol}h)`;
+                        } else {
+                          shiftLabel = 'กะ 2 (15:00 - 23:00)';
+                        }
+                      }
                     }
-                  }
-                  // 4. เข้า 23.00 - 7.00 -> กะ 3
-                  else {
-                    shiftNumber = 3;
-                    if (otCol > 0) {
-                      shiftLabel = `กะ 3 (23:00 - 07:00 + OT ${otCol}h)`;
-                    } else {
-                      shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                    // 3. เข้า 19.00 - 7.00 -> กะ 3 พร้อม OT 4 ชม
+                    else if (inHour >= 17 && inHour < 21) {
+                      shiftNumber = 3;
+                      if (otCol >= 4 || (outHour >= 6 && outHour <= 9)) {
+                        if (otHours < 4) otHours = 4;
+                        shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
+                      } else if (otCol > 0) {
+                        shiftLabel = `กะ 3 (19:00 - 07:00 + OT ${otCol}h)`;
+                      } else {
+                        shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
+                        otHours = 4;
+                      }
                     }
-                  }
-                } else {
-                  if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
-                    shiftNumber = 2;
-                    shiftLabel = 'กะ 2 (15:00 - 23:00)';
-                  } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
-                    shiftNumber = 3;
-                    shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                    // 4. เข้า 23.00 - 7.00 -> กะ 3
+                    else {
+                      shiftNumber = 3;
+                      if (otCol > 0) {
+                        shiftLabel = `กะ 3 (23:00 - 07:00 + OT ${otCol}h)`;
+                      } else {
+                        shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                      }
+                    }
                   } else {
-                    shiftNumber = 1;
-                    shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                    if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
+                      shiftNumber = 2;
+                      shiftLabel = 'กะ 2 (15:00 - 23:00)';
+                    } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
+                      shiftNumber = 3;
+                      shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                    } else {
+                      shiftNumber = 1;
+                      shiftLabel = 'กะ 1 (07:00 - 15:00)';
+                    }
+                    normalHours = 0;
+                    otHours = 0;
                   }
-                  normalHours = 0;
-                  otHours = 0;
-                }
 
-                const totalHours = normalHours + otHours;
+                  const totalHours = normalHours + otHours;
 
-                const empInfo = contractorMapping[empCode] || {
-                  empCode,
-                  nameEn: '',
-                  nameTh: scanNameTh,
-                  position: isMonthlySheet ? 'WAS Monthly' : 'Contractor',
-                  location: deptRaw,
-                  closing: '',
-                  department: 'MFG',
-                  type: isMonthlySheet ? 'Salary' : 'Hourly'
-                };
-
-                let status = 'ปกติ';
-                if (!hasScannedIn) {
-                  status = remark || (absent ? 'ขาดงาน' : 'วันหยุด');
-                } else if (late) {
-                  status = `มาสาย (${late})`;
-                } else if (otHours > 0) {
-                  status = `ปกติ (+OT ${otHours} ชม.)`;
-                }
-
-                const record = {
-                  empCode,
-                  nameTh: empInfo.nameTh || scanNameTh,
-                  nameEn: empInfo.nameEn,
-                  position: empInfo.position,
-                  location: empInfo.location || deptRaw,
-                  closing: empInfo.closing,
-                  department: empInfo.department,
-                  type: empInfo.type,
-                  shiftRaw,
-                  shiftNumber,
-                  shiftLabel,
-                  scanIn,
-                  scanOut,
-                  late,
-                  earlyOut,
-                  absent,
-                  remark,
-                  deptRaw,
-                  isWorkDay,
-                  hasScannedIn,
-                  normalHours,
-                  otHours,
-                  totalHours,
-                  status,
-                  date: dateInfo.iso,
-                  dateFormatted: dateInfo.formattedThai,
-                  dateShort: dateInfo.formattedShort
-                };
-
-                if (!recordsByDate[dateKey]) {
-                  recordsByDate[dateKey] = {
-                    dateFormatted: dateInfo.formattedThai,
-                    dateShort: dateKey,
-                    isoDate: dateInfo.iso,
-                    records: []
+                  const empInfo = contractorMapping[empCode] || {
+                    empCode,
+                    nameEn: '',
+                    nameTh: scanNameTh,
+                    position: isMonthlySheet ? 'WAS Monthly' : 'Contractor',
+                    location: deptRaw,
+                    closing: '',
+                    department: 'MFG',
+                    type: isMonthlySheet ? 'Salary' : 'Hourly'
                   };
+
+                  let status = 'ปกติ';
+                  if (!hasScannedIn) {
+                    status = remark || (absent ? 'ขาดงาน' : 'วันหยุด');
+                  } else if (late) {
+                    status = `มาสาย (${late})`;
+                  } else if (otHours > 0) {
+                    status = `ปกติ (+OT ${otHours} ชม.)`;
+                  }
+
+                  const record = {
+                    empCode,
+                    nameTh: empInfo.nameTh || scanNameTh,
+                    nameEn: empInfo.nameEn,
+                    position: empInfo.position,
+                    location: empInfo.location || deptRaw,
+                    closing: empInfo.closing,
+                    department: empInfo.department,
+                    type: empInfo.type,
+                    shiftRaw,
+                    shiftNumber,
+                    shiftLabel,
+                    scanIn,
+                    scanOut,
+                    late,
+                    earlyOut,
+                    absent,
+                    remark,
+                    deptRaw,
+                    isWorkDay,
+                    hasScannedIn,
+                    normalHours,
+                    otHours,
+                    totalHours,
+                    status,
+                    date: dateInfo.iso,
+                    dateFormatted: dateInfo.formattedThai,
+                    dateShort: dateInfo.formattedShort
+                  };
+
+                  if (!recordsByDate[dateKey]) {
+                    recordsByDate[dateKey] = {
+                      dateFormatted: dateInfo.formattedThai,
+                      dateShort: dateKey,
+                      isoDate: dateInfo.iso,
+                      records: []
+                    };
+                  }
+
+                  const existingIdx = recordsByDate[dateKey].records.findIndex(r => r.empCode === empCode);
+                  if (existingIdx >= 0) {
+                    if (record.hasScannedIn || !recordsByDate[dateKey].records[existingIdx].hasScannedIn) {
+                      recordsByDate[dateKey].records[existingIdx] = record;
+                    }
+                  } else {
+                    recordsByDate[dateKey].records.push(record);
+                  }
                 }
-                recordsByDate[dateKey].records.push(record);
-              }
-            });
+              });
+            } catch (scanErr) {
+              console.warn(`Error reading scan file ${scanFilePath}:`, scanErr);
+            }
           }
+
+          // Auto persist to default_contractor_data.ts
+          try {
+            const contractorTs = `import { ContractorScanRecord, ContractorEmployeeInfo } from '../types/contractor';
+
+export const DEFAULT_CONTRACTOR_MAPPING: Record<string, ContractorEmployeeInfo> = ${JSON.stringify(contractorMapping, null, 2)};
+
+export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
+  dateFormatted: string;
+  dateShort: string;
+  isoDate: string;
+  records: ContractorScanRecord[];
+}> = ${JSON.stringify(recordsByDate, null, 2)};
+`;
+            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_contractor_data.ts'), contractorTs, 'utf8');
+          } catch (wErr) {}
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
