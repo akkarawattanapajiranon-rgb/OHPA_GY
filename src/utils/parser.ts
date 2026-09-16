@@ -965,7 +965,7 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
         const hh = e.timestamp.getHours();
         const mm = e.timestamp.getMinutes();
         const mins = hh * 60 + mm;
-        if (mins >= 4 * 60 && mins <= 8 * 60 + 30) {
+        if (mins <= 8 * 60 + 30) {
           return allEvents.some(cur =>
             cur.parsed.empId === e.empId &&
             cur.parsed.dateStr === dayStr &&
