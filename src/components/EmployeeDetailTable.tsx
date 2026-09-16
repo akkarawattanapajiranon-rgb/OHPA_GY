@@ -17,6 +17,7 @@ import {
   Layers
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { classifyArea } from '../utils/ohpaCalculator';
 
 interface EmployeeDetailTableProps {
   records: ParsedShiftRecord[];
@@ -125,7 +126,7 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
   const totalLateCount = records.filter(r => r.isLate).length;
   const totalEarlyLeaveCount = records.filter(r => r.isEarlyLeave).length;
 
-  // Export to Excel
+  // Export to Excel with full Working Hours & Team Allocation
   const handleExportExcel = () => {
     const exportData = filteredRecords.map((r, i) => {
       let statusText = 'ตรงเวลา';
@@ -136,28 +137,55 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
       } else if (r.isLate) {
         statusText = `สาย (${r.lateMinutes} นาที)`;
       } else if (!r.inTime || !r.outTime) {
-        statusText = 'ขาดสแกน';
+        statusText = 'ขาดสแกน / สแกนไม่ครบ';
       }
+
+      const areaResult = classifyArea(r.category, r.dept, r.costCenter, undefined, undefined, undefined, r.mu);
+      const nHours = r.normalWorkHours !== undefined ? r.normalWorkHours : (r.effectiveWorkHours || 8);
+      const otH = r.otHours || 0;
+      const totH = nHours + otH;
 
       return {
         'ลำดับ': i + 1,
         'รหัสพนักงาน': r.empId,
-        'ชื่อ-นามสกุล': r.nameTH,
+        'ชื่อ-นามสกุล (ไทย)': r.nameTH,
+        'ชื่อภาษาอังกฤษ (EN)': r.nameEN || '-',
+        'ประเภท': 'Goodyear',
+        'พื้นที่หลัก (5 Areas)': areaResult.key,
+        'กลุ่มโรงงาน': areaResult.name,
         'หมวดหมู่ (Category)': r.category || '-',
         'เครื่องจักร (Machine)': r.machine || r.position,
+        'ตำแหน่งงาน (Position)': r.position || '-',
         'Cost Center': r.dept,
         'กะการทำงาน': r.shiftLabel,
-        'OT (ชั่วโมง/หมายเหตุ)': r.otNote,
-        'เวลาสแกนเข้า (IN)': r.inTimeFormatted,
-        'เวลาสแกนออก (OUT)': r.outTimeFormatted,
-        'สถานะ': statusText
+        'เวลาสแกนเข้า (IN)': r.inTimeFormatted || '-',
+        'เวลาสแกนออก (OUT)': r.outTimeFormatted || '-',
+        'ชม. ปกติ (ชม.)': nHours,
+        'ชม. OT (ชม.)': otH,
+        'ชม. ทำงานรวม (ชม.)': totH,
+        'สถานะการสแกน': statusText,
+        'หมายเหตุ OT': r.otNote || '-'
       };
     });
 
-    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'ตารางสแกนนิ้วรายบุคคล');
-    XLSX.writeFile(wb, `ตารางสแกนนิ้วรายบุคคล_${new Date().toISOString().slice(0, 10)}.xlsx`);
+
+    // Sheet 1: All filtered records
+    const wsAll = XLSX.utils.json_to_sheet(exportData);
+    XLSX.utils.book_append_sheet(wb, wsAll, 'Raw_Data_รายคน');
+
+    // Sub-sheets separated by 5 Production Areas
+    const areasList = ['BCA', 'Consumer', 'Bias Aero', 'Radial Aero', 'Retread'];
+    areasList.forEach(areaKey => {
+      const teamRecords = exportData.filter(r => r['พื้นที่หลัก (5 Areas)'] === areaKey);
+      if (teamRecords.length > 0) {
+        const renumbered = teamRecords.map((r, idx) => ({ ...r, 'ลำดับ': idx + 1 }));
+        const wsTeam = XLSX.utils.json_to_sheet(renumbered);
+        XLSX.utils.book_append_sheet(wb, wsTeam, `Team_${areaKey.replace(/\s+/g, '_')}`);
+      }
+    });
+
+    XLSX.writeFile(wb, `ตารางสแกนนิ้วและจัดสรรทีมรายบุคคล_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
   return (

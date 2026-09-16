@@ -5,6 +5,7 @@ import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
+import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
 import {
   Calculator,
   RefreshCw,
@@ -66,6 +67,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   const [viewMode, setViewMode] = useState<'DAILY' | 'MTD'>('DAILY');
   const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
   const [showPdiDetail, setShowPdiDetail] = useState<boolean>(false);
+  const [showExportMenu, setShowExportMenu] = useState<boolean>(false);
 
   const toggleArea = (key: string) => {
     setExpandedAreas(prev => ({ ...prev, [key]: !prev[key] }));
@@ -387,6 +389,70 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       XLSX.utils.book_append_sheet(wb, ws6, 'PDI_Deduct_Persons');
     }
 
+    // Sheet 7: Team Summary Matrix & Raw Employee Attendance Data
+    const { rows: rawRows, teamSummary } = buildRawEmployeeRecords(
+      records,
+      contractorRecords,
+      employeeMapping,
+      ohpaSummary.productionDay
+    );
+
+    const formatRow = (r: any, index: number) => ({
+      'ลำดับ': index + 1,
+      'รหัสพนักงาน': r.empId,
+      'ชื่อ-นามสกุล (ไทย)': r.nameTH,
+      'ชื่อภาษาอังกฤษ (EN)': r.nameEN,
+      'ประเภทพนักงาน': r.empType,
+      'พื้นที่หลัก (5 Production Areas)': r.areaKey,
+      'ชื่อพื้นที่ / กลุ่มโรงงาน': r.areaName,
+      'รหัสปิดรอบ (Closing / CC)': r.closingCode,
+      'แผนก / Cost Center': r.department,
+      'ตำแหน่งงาน (Position)': r.position,
+      'เครื่องจักร (Machine)': r.machine,
+      'กะการทำงาน (Shift)': r.shift,
+      'เวลาสแกนเข้า (IN)': r.inTime,
+      'เวลาสแกนออก (OUT)': r.outTime,
+      'ชม. ปกติ (Normal Hours)': r.normalHours,
+      'ชม. OT (OT Hours)': r.otHours,
+      'ชม. ทำงานรวม (Total Hours)': r.totalHours,
+      'ชม. สุทธิคิด OPAH': r.netOpahHours,
+      'นับใน OPAH โรงงาน': r.isIncludedInPlantOpah,
+      'สถานะการสแกน': r.scanStatus,
+      'หมายเหตุ OT / อื่นๆ': r.otNote,
+    });
+
+    // Sheet 7: Team Summary Matrix
+    const wsSummaryMatrix = XLSX.utils.json_to_sheet(teamSummary.map((s, idx) => ({
+      'ลำดับ': idx + 1,
+      'พื้นที่ (5 Production Areas)': s.areaKey,
+      'ชื่อกลุ่มโรงงาน': s.areaName,
+      'เป้าหมาย Master (คน)': s.targetHc,
+      'สแกนจริงรวม (คน)': s.actualTotalHc,
+      'Goodyear (คน)': s.gyHc,
+      'Contractor (คน)': s.contHc,
+      'ชม. ปกติรวม (ชม.)': s.normalHours,
+      'ชม. OT รวม (ชม.)': s.otHours,
+      'ชม. ทำงานรวมทั้งหมด (ชม.)': s.totalHours,
+      'ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
+      'สถานะการคิด OPAH': s.isExcluded,
+    })));
+    XLSX.utils.book_append_sheet(wb, wsSummaryMatrix, 'Team_Summary_Matrix');
+
+    // Sheet 8: Raw All Employees (Every single person)
+    const wsRawAll = XLSX.utils.json_to_sheet(rawRows.map(formatRow));
+    XLSX.utils.book_append_sheet(wb, wsRawAll, 'Raw_All_Employees');
+
+    // Sub-sheets 9-13: Per-team individual sheets
+    const areaKeys = ['BCA', 'Consumer', 'Bias Aero', 'Radial Aero', 'Retread'];
+    areaKeys.forEach(key => {
+      const teamRecords = rawRows.filter(r => r.areaKey === key);
+      if (teamRecords.length > 0) {
+        const wsTeam = XLSX.utils.json_to_sheet(teamRecords.map(formatRow));
+        const safeName = `Team_${key.replace(/\s+/g, '_')}`;
+        XLSX.utils.book_append_sheet(wb, wsTeam, safeName);
+      }
+    });
+
     XLSX.writeFile(wb, 'OPAH_CAL_5Areas_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
   };
 
@@ -474,13 +540,86 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <span>Link 55012</span>
           </a>
 
-          <button
-            onClick={handleExportExcel}
-            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>ส่งออก Excel</span>
-          </button>
+          {/* Export Group */}
+          <div className="relative inline-block text-left">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleExportExcel}
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                title="ส่งออกรายงานสรุป OPAH พร้อม Raw Data ครบทุกชีท"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>ส่งออก Excel ทั้งหมด</span>
+              </button>
+
+              <button
+                onClick={() => setShowExportMenu(!showExportMenu)}
+                className="px-2.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                title="เลือกส่งออก Raw Data รายคน & แยกทีม"
+              >
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Dropdown Menu for Team Raw Data */}
+            {showExportMenu && (
+              <div
+                className="origin-top-right absolute right-0 mt-2 w-64 rounded-2xl shadow-xl bg-white ring-1 ring-black/5 divide-y divide-slate-100 z-50 animate-fadeIn"
+                onClick={() => setShowExportMenu(false)}
+              >
+                <div className="p-2">
+                  <div className="text-[11px] font-bold text-slate-400 px-2 py-1 uppercase tracking-wider">
+                    ส่งออก Raw Data & Team Allocation
+                  </div>
+                  <button
+                    onClick={() =>
+                      exportTeamRawDataExcel(
+                        records,
+                        contractorRecords,
+                        employeeMapping,
+                        ohpaSummary.productionDay,
+                        'ALL'
+                      )
+                    }
+                    className="w-full text-left px-2.5 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>📥 ครบทุกทีม (All Teams แยกแท็บ)</span>
+                  </button>
+                </div>
+
+                <div className="p-2 space-y-0.5">
+                  <div className="text-[10px] font-bold text-slate-400 px-2 py-0.5">
+                    เลือกเฉพาะทีม (Specific Team):
+                  </div>
+                  {[
+                    { key: 'BCA', label: '🏭 ทีม BCA (287 คน)' },
+                    { key: 'Consumer', label: '🚗 ทีม Consumer (232 คน)' },
+                    { key: 'Bias Aero', label: '✈️ ทีม Bias Aero (172 คน)' },
+                    { key: 'Radial Aero', label: '🛫 ทีม Radial Aero (104 คน)' },
+                    { key: 'Retread', label: '🔄 ทีม Retread (108 คน - 6320)' },
+                  ].map((team) => (
+                    <button
+                      key={team.key}
+                      onClick={() =>
+                        exportTeamRawDataExcel(
+                          records,
+                          contractorRecords,
+                          employeeMapping,
+                          ohpaSummary.productionDay,
+                          team.key
+                        )
+                      }
+                      className="w-full text-left px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span>{team.label}</span>
+                      <Download className="w-3 h-3 text-slate-400" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1060,6 +1199,23 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
           <div className="flex items-center gap-2 flex-wrap">
             <button
+              onClick={() =>
+                exportTeamRawDataExcel(
+                  records,
+                  contractorRecords,
+                  employeeMapping,
+                  ohpaSummary.productionDay,
+                  'ALL'
+                )
+              }
+              className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="ส่งออก Raw Data รายคนครบทั้ง 5 ทีม (แยกแท็บตามทีม)"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Export Raw Data (5 ทีม)</span>
+            </button>
+
+            <button
               onClick={() => {
                 const allKeys = activeAreaBreakdown.map(a => a.areaKey);
                 const isAllExpanded = allKeys.every(k => expandedAreas[k]);
@@ -1170,6 +1326,26 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </div>
                   <div className="text-slate-500 mt-1 text-[11px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
                     {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} / Cont {area.contractorHeadcount})
+                  </div>
+                  <div className="mt-1.5 pt-1 border-t border-slate-200/40 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        exportTeamRawDataExcel(
+                          records,
+                          contractorRecords,
+                          employeeMapping,
+                          ohpaSummary.productionDay,
+                          area.areaKey
+                        );
+                      }}
+                      className="text-[10px] text-indigo-700 hover:text-indigo-900 font-bold flex items-center gap-1 hover:underline cursor-pointer"
+                      title={`ส่งออก Raw Data รายคนเฉพาะทีม ${area.areaKey}`}
+                    >
+                      <Download className="w-3 h-3 text-indigo-600" />
+                      <span>Export Raw Data ({area.areaKey})</span>
+                    </button>
                   </div>
                 </div>
               </div>
