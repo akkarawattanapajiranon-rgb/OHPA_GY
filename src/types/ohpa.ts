@@ -35,11 +35,17 @@ export interface OhpaShiftMetrics {
   headcount: number;
   gyHeadcount: number;
   contractorHeadcount: number;
+  monthlyHeadcount?: number;
   normalHours: number;
   otHours: number;
   totalHours: number;
+  grossHours?: number;
   gyTotalHours: number;
   contractorTotalHours: number;
+  monthlyHours?: number;
+  pdiDeductHours?: number;
+  beadAddHours?: number;
+  opahWorkingHours?: number;
   tonnageKg: number;
   tonnageTon: number;
   tonnageLbs: number;

@@ -1804,40 +1804,60 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <span className="text-sm font-extrabold text-slate-800">
                   {s.shiftLabel}
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                <div className="flex items-center gap-1 flex-wrap justify-end">
+                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-700">
                     GY: {s.gyHeadcount}
                   </span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-teal-100 text-teal-800">
                     Cont: {s.contractorHeadcount}
+                  </span>
+                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-purple-100 text-purple-800">
+                    รายเดือน: {s.monthlyHeadcount}
                   </span>
                 </div>
               </div>
 
-              <div className="py-4 space-y-2.5">
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-500">ชั่วโมงทำงานรวม (GY+Cont):</span>
-                  <strong className="text-slate-900 font-bold">{s.totalHours.toLocaleString()} ชม.</strong>
+              <div className="py-3.5 space-y-2">
+                <div className="flex justify-between items-baseline text-xs">
+                  <span className="text-slate-600 font-semibold">ชม. สุทธิคิด OPAH (Net Hours):</span>
+                  <strong className="text-indigo-950 font-black text-sm">{(s.opahWorkingHours || s.totalHours).toLocaleString()} ชม.</strong>
                 </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="pl-2">- ปกติ / OT รวม:</span>
-                  <span>{s.normalHours} ชม. / <span className="text-amber-600 font-bold">+{s.otHours} ชม.</span></span>
+
+                {/* Formula breakdown badge */}
+                <div className="p-2 bg-white rounded-xl border border-slate-200/80 space-y-1 text-[11px]">
+                  <div className="flex justify-between text-slate-500">
+                    <span>- ฐานรวม (GY + Cont + รายเดือน):</span>
+                    <span className="font-mono font-bold text-slate-800">{(s.grossHours || (s.gyTotalHours + s.contractorTotalHours + (s.monthlyHours || 0))).toLocaleString()} ชม.</span>
+                  </div>
+                  <div className="flex justify-between text-slate-500 pl-2">
+                    <span>(ปกติ {s.normalHours}h + OT +{s.otHours}h)</span>
+                    <span className="font-mono text-[10px] text-slate-400">
+                      GY {s.gyTotalHours}h | Cont {s.contractorTotalHours}h | Mon {s.monthlyHours}h
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-[10px]">
+                    <span className="text-rose-600 font-bold">🔻 PDI: -{s.pdiDeductHours || 0}h</span>
+                    <span className="text-emerald-600 font-bold">🟢 Bead: +{s.beadAddHours || 0}h</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="pl-2">- สัดส่วนชั่วโมง (GY / Cont):</span>
-                  <span><strong>{s.gyTotalHours}</strong> ชม. / <strong>{s.contractorTotalHours}</strong> ชม.</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-500">ยอด Stocking:</span>
+
+                <div className="flex justify-between text-xs pt-1">
+                  <span className="text-slate-600 font-semibold">ยอด Stocking ประจำกะ:</span>
                   <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageLbs.toLocaleString()} lbs)</strong>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-4 rounded-b-2xl flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase">OPAH ประจำกะ:</span>
-                <span className="text-xl font-black text-indigo-700">
-                  {s.opahLbsPerHour} <span className="text-xs font-semibold text-slate-500">lbs/ชม.</span>
-                </span>
+              <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-3.5 px-4 rounded-b-2xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase block">OPAH ประจำกะ:</span>
+                  <span className="text-[10px] text-slate-400 font-mono">({s.tonnageLbs.toLocaleString()} lbs ÷ {(s.opahWorkingHours || s.totalHours).toLocaleString()} ชม.)</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xl font-black text-indigo-700">
+                    {s.opahLbsPerHour}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-500 ml-1">lbs/ชม.</span>
+                </div>
               </div>
             </div>
           ))}

@@ -1139,28 +1139,30 @@ export function calculateOhpaSummary(
     3: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 }
   };
 
-  // Goodyear Allocation
+  // Goodyear Allocation (Applying Non-HPT 80% active weight)
   gyActiveRecords.forEach(r => {
     const s = r.shift;
-    const norm = r.normalWorkHours || 0;
-    const ot = r.otHours || 0;
+    const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
+    const weight = mu === 'Non-HPT' ? 0.8 : 1.0;
+    const norm = (r.normalWorkHours || 0) * weight;
+    const ot = (r.otHours || 0) * weight;
 
     if (s === 1) {
       shiftAlloc[1].gyNorm += norm;
-      shiftAlloc[1].gyHc++;
+      shiftAlloc[1].gyHc += weight;
       if (ot > 0) {
         if (r.empId === '01454' || r.empId === '1454') {
           shiftAlloc[1].gyOt += ot;
         } else {
-          const s2Ot = Math.min(8, ot);
-          const s3Ot = Math.max(0, ot - 8);
+          const s2Ot = Math.min(8 * weight, ot);
+          const s3Ot = Math.max(0, ot - 8 * weight);
           shiftAlloc[2].gyOt += s2Ot;
           shiftAlloc[3].gyOt += s3Ot;
         }
       }
     } else if (s === 2) {
       shiftAlloc[2].gyNorm += norm;
-      shiftAlloc[2].gyHc++;
+      shiftAlloc[2].gyHc += weight;
       if (ot > 0) {
         if (r.isPreShiftReliefOt) {
           shiftAlloc[1].gyOt += ot;
@@ -1170,7 +1172,7 @@ export function calculateOhpaSummary(
       }
     } else if (s === 3) {
       shiftAlloc[3].gyNorm += norm;
-      shiftAlloc[3].gyHc++;
+      shiftAlloc[3].gyHc += weight;
       if (ot > 0) {
         const inH = r.inTime ? (typeof r.inTime.getHours === 'function' ? r.inTime.getHours() : new Date(r.inTime).getHours()) : 23;
         if (inH >= 17 && inH < 22) {
@@ -1182,52 +1184,76 @@ export function calculateOhpaSummary(
     }
   });
 
-  // Contractor Allocation
+  // Contractor Allocation (Applying Non-HPT 80% active weight)
   contActiveRecords.forEach(r => {
     const s = r.shiftNumber;
-    const norm = r.normalHours || 0;
-    const ot = r.otHours || 0;
+    const empCode = r.empCode || (r as any).workerId || '';
+    const mu = getEmpMu(empCode, '', '', r.department, r.closing);
+    const weight = mu === 'Non-HPT' ? 0.8 : 1.0;
+    const norm = (r.normalHours || 0) * weight;
+    const ot = (r.otHours || 0) * weight;
 
     if (s === 1) {
       shiftAlloc[1].contNorm += norm;
-      shiftAlloc[1].contHc++;
+      shiftAlloc[1].contHc += weight;
       if (ot > 0) {
-        const s2Ot = Math.min(8, ot);
-        const s3Ot = Math.max(0, ot - 8);
+        const s2Ot = Math.min(8 * weight, ot);
+        const s3Ot = Math.max(0, ot - 8 * weight);
         shiftAlloc[2].contOt += s2Ot;
         shiftAlloc[3].contOt += s3Ot;
       }
     } else if (s === 2) {
       shiftAlloc[2].contNorm += norm;
       shiftAlloc[2].contOt += ot;
-      shiftAlloc[2].contHc++;
+      shiftAlloc[2].contHc += weight;
     } else if (s === 3) {
       shiftAlloc[3].contNorm += norm;
-      shiftAlloc[3].contHc++;
+      shiftAlloc[3].contHc += weight;
       if (ot > 0) {
         shiftAlloc[2].contOt += ot;
       }
     }
   });
 
+  const totalMonthlyHours = (monthlyStaff.combinedTotalHours || (monthlyStaff.totalHours + (monthlyStaff.wasTotalHours || 0))) || 560;
+  const totalMonthlyHc = monthlyStaff.combinedCount || 70;
+
   const shiftList: (1 | 2 | 3)[] = [1, 2, 3];
   const shifts: OhpaShiftMetrics[] = shiftList.map(shiftNum => {
     const alloc = shiftAlloc[shiftNum];
-    const gyHc = alloc.gyHc;
-    const contHc = alloc.contHc;
-    const headcount = gyHc + contHc;
+    const gyHc = Math.round(alloc.gyHc * 10) / 10;
+    const contHc = Math.round(alloc.contHc * 10) / 10;
+    const headcount = Math.round((gyHc + contHc) * 10) / 10;
 
-    const gyNorm = alloc.gyNorm;
-    const gyOt = alloc.gyOt;
-    const gyTot = gyNorm + gyOt;
+    const gyNorm = Math.round(alloc.gyNorm * 10) / 10;
+    const gyOt = Math.round(alloc.gyOt * 10) / 10;
+    const gyTot = Math.round((gyNorm + gyOt) * 10) / 10;
 
-    const contNorm = alloc.contNorm;
-    const contOt = alloc.contOt;
-    const contTot = contNorm + contOt;
+    const contNorm = Math.round(alloc.contNorm * 10) / 10;
+    const contOt = Math.round(alloc.contOt * 10) / 10;
+    const contTot = Math.round((contNorm + contOt) * 10) / 10;
 
-    const normalHours = gyNorm + contNorm;
-    const otHours = gyOt + contOt;
-    const totalHours = gyTot + contTot;
+    const normalHours = Math.round((gyNorm + contNorm) * 10) / 10;
+    const otHours = Math.round((gyOt + contOt) * 10) / 10;
+
+    // Distribute monthly staff, PDI deduct, and Bead add equally across 3 shifts
+    const monthlyHours = shiftNum === 3
+      ? Math.round((totalMonthlyHours - Math.round(totalMonthlyHours / 3 * 10) / 10 * 2) * 10) / 10
+      : Math.round(totalMonthlyHours / 3 * 10) / 10;
+
+    const monthlyHeadcount = Math.round(totalMonthlyHc / 3 * 10) / 10;
+
+    const shiftPdiDeduct = shiftNum === 3
+      ? Math.round((activePdiHours - Math.round(activePdiHours / 3 * 10) / 10 * 2) * 10) / 10
+      : Math.round(activePdiHours / 3 * 10) / 10;
+
+    const shiftBeadAdd = shiftNum === 3
+      ? Math.round((activeBeadHours - Math.round(activeBeadHours / 3 * 10) / 10 * 2) * 10) / 10
+      : Math.round(activeBeadHours / 3 * 10) / 10;
+
+    const grossHours = Math.round((gyTot + contTot + monthlyHours) * 10) / 10;
+    const opahWorkingHours = Math.round((grossHours - shiftPdiDeduct + shiftBeadAdd) * 10) / 10;
+    const totalHours = opahWorkingHours; // Set totalHours to Net OPAH Working Hours
 
     let tonnageKg = 0;
     let pallets = 0;
@@ -1247,8 +1273,8 @@ export function calculateOhpaSummary(
 
     const tonnageTon = tonnageKg / 1000;
     const tonnageLbs = Math.round(tonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
-    const opahLbsPerHour = totalHours > 0
-      ? Math.round(((tonnageKg * LBS_CONVERSION_FACTOR) / totalHours) * 100) / 100
+    const opahLbsPerHour = opahWorkingHours > 0
+      ? Math.round(((tonnageKg * LBS_CONVERSION_FACTOR) / opahWorkingHours) * 100) / 100
       : 0;
 
     const shiftLabel = shiftNum === 1
@@ -1263,11 +1289,17 @@ export function calculateOhpaSummary(
       headcount,
       gyHeadcount: gyHc,
       contractorHeadcount: contHc,
-      normalHours: Math.round(normalHours * 10) / 10,
-      otHours: Math.round(otHours * 10) / 10,
-      totalHours: Math.round(totalHours * 10) / 10,
-      gyTotalHours: Math.round(gyTot * 10) / 10,
-      contractorTotalHours: Math.round(contTot * 10) / 10,
+      monthlyHeadcount,
+      normalHours,
+      otHours,
+      grossHours,
+      totalHours,
+      gyTotalHours: gyTot,
+      contractorTotalHours: contTot,
+      monthlyHours,
+      pdiDeductHours: shiftPdiDeduct,
+      beadAddHours: shiftBeadAdd,
+      opahWorkingHours,
       tonnageKg,
       tonnageTon: Math.round(tonnageTon * 1000) / 1000,
       tonnageLbs,
