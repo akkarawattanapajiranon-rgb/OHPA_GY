@@ -637,12 +637,62 @@ export function accumulateRecordsIntoAreaMap(
   });
 }
 
+export function getAreaTonnage(
+  areaKey: string,
+  tonnageReport: StockingTonnageReport | null,
+  mode: 'DAILY' | 'MTD' = 'DAILY'
+): { codes: string; kg: number; lbs: number; ton: number } {
+  if (!tonnageReport) {
+    return { codes: '-', kg: 0, lbs: 0, ton: 0 };
+  }
+
+  const rows = tonnageReport.rows || [];
+  const getRowKg = (code: string): number => {
+    const r = rows.find(x => x.code.trim().toUpperCase() === code.trim().toUpperCase());
+    if (!r) return 0;
+    return mode === 'MTD' ? (r.mtdTonnage || 0) : (r.dailyTotalTonnage || 0);
+  };
+
+  let kg = 0;
+  let codes = '';
+
+  if (areaKey === 'BCA') {
+    codes = 'TOTAL (ทุก Code)';
+    if (tonnageReport.total) {
+      kg = mode === 'MTD' ? (tonnageReport.total.mtdTonnage || 0) : (tonnageReport.total.dailyTotalTonnage || 0);
+    } else {
+      kg = rows.reduce((sum, r) => sum + (mode === 'MTD' ? (r.mtdTonnage || 0) : (r.dailyTotalTonnage || 0)), 0);
+    }
+  } else if (areaKey === 'Consumer') {
+    codes = 'CODE Q + W';
+    kg = getRowKg('Q') + getRowKg('W');
+  } else if (areaKey === 'Bias Aero') {
+    codes = 'CODE A + B';
+    kg = getRowKg('A') + getRowKg('B');
+  } else if (areaKey === 'Radial Aero') {
+    codes = 'CODE 6';
+    kg = getRowKg('6');
+  } else {
+    codes = 'ตัดออก (6320)';
+    kg = 0;
+  }
+
+  const LBS_FACTOR = 2.20462;
+  const lbs = Math.round(kg * LBS_FACTOR * 100) / 100;
+  const ton = Math.round((kg / 1000) * 1000) / 1000;
+
+  return { codes, kg, lbs, ton };
+}
+
 export function buildAreaBreakdownList(
   areaMap: Record<string, AreaAccumulator>,
   totalWorkingHours: number,
-  daysCount: number = 1
+  daysCount: number = 1,
+  tonnageReport: StockingTonnageReport | null = null,
+  mode: 'DAILY' | 'MTD' = 'DAILY'
 ): OhpaAreaMetrics[] {
   const avgDays = Math.max(1, daysCount);
+  const LBS_FACTOR = 2.20462;
   return Object.values(areaMap)
     .map(a => {
       const normalH = a.gyNormal + a.contNormal + a.monthlyNormal;
@@ -668,6 +718,14 @@ export function buildAreaBreakdownList(
           totalHours: Math.round(d.totalHours * 10) / 10
         }))
         .sort((x, y) => y.totalHours - x.totalHours);
+
+      const areaTonnage = getAreaTonnage(a.areaKey, tonnageReport, mode);
+      const areaOpahLbsPerHour = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.kg > 0)
+        ? Math.round(((areaTonnage.kg * LBS_FACTOR) / finalOpah) * 100) / 100
+        : undefined;
+      const areaOhpaHoursPerTon = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.ton > 0)
+        ? Math.round((finalOpah / areaTonnage.ton) * 100) / 100
+        : undefined;
 
       return {
         areaKey: a.areaKey,
@@ -701,7 +759,13 @@ export function buildAreaBreakdownList(
         percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
           ? Math.round((grossTotH / totalWorkingHours) * 1000) / 10
           : 0,
-        departments: subDepts
+        departments: subDepts,
+        areaTonnageCodes: areaTonnage.codes,
+        areaTonnageKg: areaTonnage.kg,
+        areaTonnageLbs: areaTonnage.lbs,
+        areaTonnageTon: areaTonnage.ton,
+        areaOpahLbsPerHour,
+        areaOhpaHoursPerTon
       };
     })
     .sort((a, b) => a.order - b.order);
@@ -915,7 +979,7 @@ export function calculateMtdSummary(
     ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdContractorHours) * 100) / 100
     : 0;
 
-  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay);
+  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay, tonnageReport, 'MTD');
 
   return {
     targetDate: clean || `${String(targetDay).padStart(2, '0')}/${String(targetMonth).padStart(2, '0')}/${targetYear}`,
@@ -1182,7 +1246,7 @@ export function calculateOhpaSummary(
     pdiDeductMap,
     employeeMapping
   );
-  const areaBreakdown = buildAreaBreakdownList(areaMap, totalWorkingHours, 1);
+  const areaBreakdown = buildAreaBreakdownList(areaMap, totalWorkingHours, 1, tonnageReport, 'DAILY');
 
   // 9. Department Breakdown (for backwards compatibility)
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isBead?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};

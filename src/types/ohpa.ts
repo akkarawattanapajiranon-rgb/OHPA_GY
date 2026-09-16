@@ -113,6 +113,12 @@ export interface OhpaAreaMetrics {
   finalOpahHours?: number;
   percentageOfTotalHours: number;
   departments: OhpaAreaDeptItem[];
+  areaTonnageCodes?: string;
+  areaTonnageKg?: number;
+  areaTonnageLbs?: number;
+  areaTonnageTon?: number;
+  areaOpahLbsPerHour?: number;
+  areaOhpaHoursPerTon?: number;
 }
 
 export interface DailyMtdItem {
