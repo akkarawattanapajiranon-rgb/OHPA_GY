@@ -723,9 +723,6 @@ export function buildAreaBreakdownList(
       const areaOpahLbsPerHour = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.kg > 0)
         ? Math.round(((areaTonnage.kg * LBS_FACTOR) / finalOpah) * 100) / 100
         : undefined;
-      const areaOhpaHoursPerTon = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.ton > 0)
-        ? Math.round((finalOpah / areaTonnage.ton) * 100) / 100
-        : undefined;
 
       return {
         areaKey: a.areaKey,
@@ -764,8 +761,7 @@ export function buildAreaBreakdownList(
         areaTonnageKg: areaTonnage.kg,
         areaTonnageLbs: areaTonnage.lbs,
         areaTonnageTon: areaTonnage.ton,
-        areaOpahLbsPerHour,
-        areaOhpaHoursPerTon
+        areaOpahLbsPerHour
       };
     })
     .sort((a, b) => a.order - b.order);

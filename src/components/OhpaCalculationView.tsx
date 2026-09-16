@@ -317,9 +317,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'รหัส Stocking 55012': a.areaTonnageCodes || '-',
       'ยอด Stocking (kg)': a.areaTonnageKg || 0,
       'ยอด Stocking (lbs)': a.areaTonnageLbs || 0,
-      'ยอด Stocking (Tons)': a.areaTonnageTon || 0,
       '🚀 Area OPAH (lbs/ชม.)': a.areaOpahLbsPerHour || '-',
-      '⏱️ Area OHPA (ชม./ตัน)': a.areaOhpaHoursPerTon || '-',
       'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
       '% สัดส่วน OPAH': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
     }));
@@ -344,9 +342,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'รหัส Stocking 55012': a.areaTonnageCodes || '-',
         'ยอด Stocking สะสม MTD (kg)': a.areaTonnageKg || 0,
         'ยอด Stocking สะสม MTD (lbs)': a.areaTonnageLbs || 0,
-        'ยอด Stocking สะสม MTD (Tons)': a.areaTonnageTon || 0,
         '🚀 Area OPAH MTD (lbs/ชม.)': a.areaOpahLbsPerHour || '-',
-        '⏱️ Area OHPA MTD (ชม./ตัน)': a.areaOhpaHoursPerTon || '-',
         'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
         '% สัดส่วน MTD': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
       }));
@@ -1254,7 +1250,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               : 'bg-rose-600 text-white';
 
             const opahText = area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-';
-            const ohpaText = area.areaOhpaHoursPerTon ? `${area.areaOhpaHoursPerTon.toLocaleString()} ชม./ตัน` : '-';
 
             return (
               <div
@@ -1293,10 +1288,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       <div className="text-xl font-black text-indigo-900 font-mono leading-tight mt-0.5">
                         {opahText}
                       </div>
-                      <div className="text-[11px] font-bold text-slate-600 mt-0.5">
-                        OHPA: <span className="text-amber-700 font-black">{ohpaText}</span>
-                      </div>
-                      <div className="text-[10px] text-emerald-700 font-semibold truncate mt-0.5" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
+                      <div className="text-[10px] text-emerald-700 font-semibold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
                         📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
                       </div>
                     </div>
@@ -1363,9 +1355,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </th>
                 <th className="py-3 px-3 text-right bg-purple-950/80 text-purple-200 font-black min-w-[120px]">
                   🚀 Area OPAH
-                </th>
-                <th className="py-3 px-3 text-right bg-amber-950/80 text-amber-200 font-black min-w-[110px]">
-                  ⏱️ OHPA
                 </th>
                 <th className="py-3 px-3 text-right min-w-[100px]">% สัดส่วน</th>
               </tr>
@@ -1534,20 +1523,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                         )}
                       </td>
 
-                      {/* Area OHPA (ชม./ตัน) */}
-                      <td className="py-3 px-3 text-right font-mono bg-amber-50/50">
-                        {area.isExcluded6320 ? (
-                          <span className="text-slate-400 text-[11px]">-</span>
-                        ) : (
-                          <div>
-                            <span className="font-black text-amber-900 text-xs">
-                              {area.areaOhpaHoursPerTon ? area.areaOhpaHoursPerTon.toLocaleString() : '-'}
-                            </span>
-                            <span className="text-[10px] text-slate-400 block">ชม./ตัน</span>
-                          </div>
-                        )}
-                      </td>
-
                       {/* % Contribution */}
                       <td className="py-3 px-3 text-right">
                         {area.isExcluded6320 ? (
@@ -1573,7 +1548,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={13} className="py-3 px-6 sm:px-10">
+                        <td colSpan={12} className="py-3 px-6 sm:px-10">
                           <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
                               <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
@@ -1704,12 +1679,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   {viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdOpahLbsPerHour || '-') : ohpaSummary.overallOpahLbsPerHour}
                   <span className="block text-[10px] text-purple-300/80 font-normal">lbs/ชม.</span>
                 </td>
-                <td className="py-3 px-3 text-right font-mono bg-amber-950/90 text-amber-200 font-black text-xs">
-                  {((viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdStockingTon || 0) : ohpaSummary.totalTonnageTon) > 0)
-                    ? (Math.round((areaActiveStats.activeNetTot / (viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdStockingTon || 1) : ohpaSummary.totalTonnageTon)) * 100) / 100).toLocaleString()
-                    : '-'}
-                  <span className="block text-[10px] text-amber-300/80 font-normal">ชม./ตัน</span>
-                </td>
                 <td className="py-3 px-3 text-right text-emerald-400 font-mono text-xs font-black">
                   100.0%
                 </td>
@@ -1749,7 +1718,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <td className="py-2.5 px-3 text-right font-mono text-rose-300 font-black">
                     {areaActiveStats.retreadTot.toLocaleString()} ชม.
                   </td>
-                  <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
                   <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
                   <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
                   <td className="py-2.5 px-3 text-right text-rose-400 font-mono text-[11px]">
@@ -1798,9 +1766,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </td>
                 <td className="py-3 px-3 text-right text-amber-300 font-mono font-black text-sm">
                   {areaActiveStats.grandNetTot.toLocaleString()} ชม.
-                </td>
-                <td className="py-3 px-3 text-right font-mono text-slate-400">
-                  -
                 </td>
                 <td className="py-3 px-3 text-right font-mono text-slate-400">
                   -

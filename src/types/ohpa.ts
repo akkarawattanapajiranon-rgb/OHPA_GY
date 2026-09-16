@@ -118,7 +118,6 @@ export interface OhpaAreaMetrics {
   areaTonnageLbs?: number;
   areaTonnageTon?: number;
   areaOpahLbsPerHour?: number;
-  areaOhpaHoursPerTon?: number;
 }
 
 export interface DailyMtdItem {
