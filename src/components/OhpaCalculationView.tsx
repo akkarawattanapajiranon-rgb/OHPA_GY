@@ -1024,149 +1024,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       )}
 
-      {/* Shift-by-Shift Performance Matrix */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                ประสิทธิภาพแยกตามกะ (Shift Performance Breakdown - รวม GY + Contractor)
-              </h3>
-              <p className="text-xs text-slate-500">
-                เปรียบเทียบชั่วโมงทำงาน กำลังพล ยอด Stocking และค่า OPAH แต่ละกะ
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {ohpaSummary.shifts.map((s) => (
-            <div
-              key={s.shift}
-              className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between hover:border-blue-300 transition-colors shadow-xs"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
-                <span className="text-sm font-extrabold text-slate-800">
-                  {s.shiftLabel}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                    GY: {s.gyHeadcount}
-                  </span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-                    Cont: {s.contractorHeadcount}
-                  </span>
-                </div>
-              </div>
-
-              <div className="py-4 space-y-2.5">
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-500">ชั่วโมงทำงานรวม (GY+Cont):</span>
-                  <strong className="text-slate-900 font-bold">{s.totalHours.toLocaleString()} ชม.</strong>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="pl-2">- ปกติ / OT รวม:</span>
-                  <span>{s.normalHours} ชม. / <span className="text-amber-600 font-bold">+{s.otHours} ชม.</span></span>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="pl-2">- สัดส่วนชั่วโมง (GY / Cont):</span>
-                  <span><strong>{s.gyTotalHours}</strong> ชม. / <strong>{s.contractorTotalHours}</strong> ชม.</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-slate-500">ยอด Stocking:</span>
-                  <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageLbs.toLocaleString()} lbs)</strong>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-4 rounded-b-2xl flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase">OPAH ประจำกะ:</span>
-                <span className="text-xl font-black text-indigo-700">
-                  {s.opahLbsPerHour} <span className="text-xs font-semibold text-slate-500">lbs/ชม.</span>
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Table Section: 55012 Daily Stocking Tonnage Report */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 bg-slate-50/70 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-100 text-blue-700 rounded-xl">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-black text-slate-900">
-                (55012) Daily Stocking Tonnage Report for {ohpaSummary.productionDay}
-              </h3>
-              <p className="text-xs text-slate-500">
-                ข้อมูลการ Stock ยางแยกตาม Product Category และตามกะ (จากเซิร์ฟเวอร์ระบบการผลิต)
-              </p>
-            </div>
-          </div>
-          <div className="text-xs font-mono text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-200">
-            Source: /l2web/datahost/all_areas/dpics.php?action=r06
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100/80 text-slate-700 border-b border-slate-200 font-bold">
-                <th className="py-3 px-3 border-r border-slate-200 text-center w-14">Code</th>
-                <th className="py-3 px-4 border-r border-slate-200 min-w-[200px]">Product Category</th>
-                <th className="py-3 px-4 text-right border-r border-slate-200 bg-slate-200/60 text-slate-800">MTD Tonnage (kg)</th>
-                <th className="py-3 px-4 text-right border-r border-slate-200 bg-blue-50 text-blue-900">SHIFT 1 (kg)</th>
-                <th className="py-3 px-4 text-right border-r border-slate-200 bg-amber-50 text-amber-900">SHIFT 2 (kg)</th>
-                <th className="py-3 px-4 text-right border-r border-slate-200 bg-purple-50 text-purple-900">SHIFT 3 (kg)</th>
-                <th className="py-3 px-4 text-right bg-emerald-100/80 text-emerald-950 font-black">DAILY TOTAL (kg)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
-              {tonnageReport?.rows && tonnageReport.rows.length > 0 ? (
-                tonnageReport.rows.map((row, idx) => (
-                  <tr
-                    key={row.code + idx}
-                    className={'hover:bg-slate-50/80 transition-colors ' + (idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30')}
-                  >
-                    <td className="py-2.5 px-3 text-center font-bold text-slate-800 border-r border-slate-100">{row.code}</td>
-                    <td className="py-2.5 px-4 font-sans font-semibold text-slate-900 border-r border-slate-100">{row.categoryName}</td>
-                    <td className="py-2.5 px-4 text-right text-slate-600 border-r border-slate-100">{row.mtdTonnage.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-blue-700 font-medium border-r border-slate-100">{row.shift1Tonnage.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-amber-700 font-medium border-r border-slate-100">{row.shift2Tonnage.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-purple-700 font-medium border-r border-slate-100">{row.shift3Tonnage.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right font-black text-emerald-800 bg-emerald-50/30">{row.dailyTotalTonnage.toLocaleString()}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400 font-sans">
-                    กำลังโหลดข้อมูลจากระบบ 55012...
-                  </td>
-                </tr>
-              )}
-
-              {/* Total Row */}
-              {tonnageReport?.total && (
-                <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-800">
-                  <td className="py-3 px-3 text-center border-r border-slate-800 text-amber-400">TOTAL</td>
-                  <td className="py-3 px-4 font-sans border-r border-slate-800 text-white">ยอดรวมทุกรายการ (TOTAL)</td>
-                  <td className="py-3 px-4 text-right text-slate-200 border-r border-slate-800">{tonnageReport.total.mtdTonnage.toLocaleString()}</td>
-                  <td className="py-3 px-4 text-right text-blue-300 border-r border-slate-800">{tonnageReport.total.shift1Tonnage.toLocaleString()}</td>
-                  <td className="py-3 px-4 text-right text-amber-300 border-r border-slate-800">{tonnageReport.total.shift2Tonnage.toLocaleString()}</td>
-                  <td className="py-3 px-4 text-right text-purple-300 border-r border-slate-800">{tonnageReport.total.shift3Tonnage.toLocaleString()}</td>
-                  <td className="py-3 px-4 text-right text-emerald-300 bg-slate-800">{tonnageReport.total.dailyTotalTonnage.toLocaleString()}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       {/* Area Working Hours & OT Summary (5 Production Areas) */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1779,6 +1636,149 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   -
                 </td>
               </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Shift-by-Shift Performance Matrix */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+              <Layers className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900">
+                ประสิทธิภาพแยกตามกะ (Shift Performance Breakdown - รวม GY + Contractor)
+              </h3>
+              <p className="text-xs text-slate-500">
+                เปรียบเทียบชั่วโมงทำงาน กำลังพล ยอด Stocking และค่า OPAH แต่ละกะ
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {ohpaSummary.shifts.map((s) => (
+            <div
+              key={s.shift}
+              className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between hover:border-blue-300 transition-colors shadow-xs"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
+                <span className="text-sm font-extrabold text-slate-800">
+                  {s.shiftLabel}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                    GY: {s.gyHeadcount}
+                  </span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                    Cont: {s.contractorHeadcount}
+                  </span>
+                </div>
+              </div>
+
+              <div className="py-4 space-y-2.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-500">ชั่วโมงทำงานรวม (GY+Cont):</span>
+                  <strong className="text-slate-900 font-bold">{s.totalHours.toLocaleString()} ชม.</strong>
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span className="pl-2">- ปกติ / OT รวม:</span>
+                  <span>{s.normalHours} ชม. / <span className="text-amber-600 font-bold">+{s.otHours} ชม.</span></span>
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span className="pl-2">- สัดส่วนชั่วโมง (GY / Cont):</span>
+                  <span><strong>{s.gyTotalHours}</strong> ชม. / <strong>{s.contractorTotalHours}</strong> ชม.</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-500">ยอด Stocking:</span>
+                  <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageLbs.toLocaleString()} lbs)</strong>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-4 rounded-b-2xl flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase">OPAH ประจำกะ:</span>
+                <span className="text-xl font-black text-indigo-700">
+                  {s.opahLbsPerHour} <span className="text-xs font-semibold text-slate-500">lbs/ชม.</span>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Table Section: 55012 Daily Stocking Tonnage Report */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="px-6 py-4 bg-slate-50/70 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-blue-100 text-blue-700 rounded-xl">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-slate-900">
+                (55012) Daily Stocking Tonnage Report for {ohpaSummary.productionDay}
+              </h3>
+              <p className="text-xs text-slate-500">
+                ข้อมูลการ Stock ยางแยกตาม Product Category และตามกะ (จากเซิร์ฟเวอร์ระบบการผลิต)
+              </p>
+            </div>
+          </div>
+          <div className="text-xs font-mono text-slate-500 bg-white px-3 py-1 rounded-lg border border-slate-200">
+            Source: /l2web/datahost/all_areas/dpics.php?action=r06
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-100/80 text-slate-700 border-b border-slate-200 font-bold">
+                <th className="py-3 px-3 border-r border-slate-200 text-center w-14">Code</th>
+                <th className="py-3 px-4 border-r border-slate-200 min-w-[200px]">Product Category</th>
+                <th className="py-3 px-4 text-right border-r border-slate-200 bg-slate-200/60 text-slate-800">MTD Tonnage (kg)</th>
+                <th className="py-3 px-4 text-right border-r border-slate-200 bg-blue-50 text-blue-900">SHIFT 1 (kg)</th>
+                <th className="py-3 px-4 text-right border-r border-slate-200 bg-amber-50 text-amber-900">SHIFT 2 (kg)</th>
+                <th className="py-3 px-4 text-right border-r border-slate-200 bg-purple-50 text-purple-900">SHIFT 3 (kg)</th>
+                <th className="py-3 px-4 text-right bg-emerald-100/80 text-emerald-950 font-black">DAILY TOTAL (kg)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 font-mono">
+              {tonnageReport?.rows && tonnageReport.rows.length > 0 ? (
+                tonnageReport.rows.map((row, idx) => (
+                  <tr
+                    key={row.code + idx}
+                    className={'hover:bg-slate-50/80 transition-colors ' + (idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30')}
+                  >
+                    <td className="py-2.5 px-3 text-center font-bold text-slate-800 border-r border-slate-100">{row.code}</td>
+                    <td className="py-2.5 px-4 font-sans font-semibold text-slate-900 border-r border-slate-100">{row.categoryName}</td>
+                    <td className="py-2.5 px-4 text-right text-slate-600 border-r border-slate-100">{row.mtdTonnage.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right text-blue-700 font-medium border-r border-slate-100">{row.shift1Tonnage.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right text-amber-700 font-medium border-r border-slate-100">{row.shift2Tonnage.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right text-purple-700 font-medium border-r border-slate-100">{row.shift3Tonnage.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right font-black text-emerald-800 bg-emerald-50/30">{row.dailyTotalTonnage.toLocaleString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-400 font-sans">
+                    กำลังโหลดข้อมูลจากระบบ 55012...
+                  </td>
+                </tr>
+              )}
+
+              {/* Total Row */}
+              {tonnageReport?.total && (
+                <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-800">
+                  <td className="py-3 px-3 text-center border-r border-slate-800 text-amber-400">TOTAL</td>
+                  <td className="py-3 px-4 font-sans border-r border-slate-800 text-white">ยอดรวมทุกรายการ (TOTAL)</td>
+                  <td className="py-3 px-4 text-right text-slate-200 border-r border-slate-800">{tonnageReport.total.mtdTonnage.toLocaleString()}</td>
+                  <td className="py-3 px-4 text-right text-blue-300 border-r border-slate-800">{tonnageReport.total.shift1Tonnage.toLocaleString()}</td>
+                  <td className="py-3 px-4 text-right text-amber-300 border-r border-slate-800">{tonnageReport.total.shift2Tonnage.toLocaleString()}</td>
+                  <td className="py-3 px-4 text-right text-purple-300 border-r border-slate-800">{tonnageReport.total.shift3Tonnage.toLocaleString()}</td>
+                  <td className="py-3 px-4 text-right text-emerald-300 bg-slate-800">{tonnageReport.total.dailyTotalTonnage.toLocaleString()}</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
