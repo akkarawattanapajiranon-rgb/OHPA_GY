@@ -1389,7 +1389,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <th className="py-2.5 px-2.5 text-right whitespace-nowrap bg-purple-950/80 text-purple-200 font-black min-w-[95px]">
                   🚀 OPAH
                 </th>
-                <th className="py-2.5 px-2 text-right w-16 whitespace-nowrap">% รวม</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs">
@@ -1400,16 +1399,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 const isBiasAero = area.areaKey === 'Bias Aero';
                 const isRadialAero = area.areaKey === 'Radial Aero';
                 const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
-
-                const progressColor = isBCA
-                  ? 'bg-amber-500'
-                  : isConsumer
-                  ? 'bg-blue-600'
-                  : isBiasAero
-                  ? 'bg-sky-500'
-                  : isRadialAero
-                  ? 'bg-indigo-600'
-                  : 'bg-rose-500';
 
                 const rowBg = isExpanded
                   ? 'bg-slate-50/80'
@@ -1555,33 +1544,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           </div>
                         )}
                       </td>
-
-                      {/* % Contribution */}
-                      <td className="py-2.5 px-2 text-right whitespace-nowrap">
-                        {area.isExcluded6320 ? (
-                          <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
-                            ไม่นับ
-                          </span>
-                        ) : (
-                          <div className="flex items-center justify-end gap-1.5">
-                            <div className="w-8 bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                              <div
-                                className={`h-1.5 rounded-full transition-all duration-500 ${progressColor}`}
-                                style={{ width: `${Math.min(100, area.percentageOfTotalHours)}%` }}
-                              ></div>
-                            </div>
-                            <span className="font-mono font-bold text-slate-900 text-xs w-8 text-right">
-                              {area.percentageOfTotalHours}%
-                            </span>
-                          </div>
-                        )}
-                      </td>
                     </tr>
 
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={12} className="py-2.5 px-4 sm:px-6">
+                        <td colSpan={11} className="py-2.5 px-4 sm:px-6">
                           <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-2">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-1.5">
                               <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
@@ -1714,9 +1682,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </div>
                   <div className="text-[10px] text-purple-300/80 font-sans">lbs/ชม.</div>
                 </td>
-                <td className="py-2.5 px-2 text-right text-emerald-400 font-mono text-xs font-black whitespace-nowrap">
-                  100.0%
-                </td>
               </tr>
 
               {/* Row 2: Retread 6320 Excluded Stats */}
@@ -1755,9 +1720,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </td>
                   <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs">-</td>
                   <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs">-</td>
-                  <td className="py-2.5 px-2 text-right text-rose-400 font-mono text-[10px] whitespace-nowrap">
-                    (ไม่นับ)
-                  </td>
                 </tr>
               )}
 
@@ -1806,9 +1768,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   -
                 </td>
                 <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs whitespace-nowrap">
-                  -
-                </td>
-                <td className="py-2.5 px-2 text-right text-slate-400 font-mono text-xs whitespace-nowrap">
                   -
                 </td>
               </tr>
