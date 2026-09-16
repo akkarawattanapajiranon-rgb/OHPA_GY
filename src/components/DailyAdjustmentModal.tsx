@@ -256,7 +256,7 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
             empId: cleanId,
             empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
             regularMachineOverride: (isShiftTransfer || (!timeStr && machineTarget)) ? machineTarget : undefined,
-            otMachineOverride: machineTarget || undefined,
+            otMachineOverride: isShiftTransfer ? undefined : (machineTarget || undefined),
             customStartTime: customStart,
             customEndTime: customEnd,
             isApprovedTiming: isApproved || Boolean(timeStr),
