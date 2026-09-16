@@ -396,38 +396,29 @@ function scanFolderApiPlugin(): Plugin {
               });
             }
 
-            const isPdiTotalRow = (
-              (textAll.includes('total') || textAll.includes('sum') || textAll.includes('pdi')) &&
-              (textAll.includes('pdi') || textAll.includes('deduct') || r === 6) &&
-              !textAll.includes('b-end') && !textAll.includes('bead')
+            const isPdiTotalRow = r === 6 || (
+              r > 0 && r < 9 &&
+              (col0.toLowerCase().includes('total') || col1.toLowerCase().includes('total') || col2.toLowerCase().includes('total'))
             );
 
             if (isPdiTotalRow) {
               for (const [cStr, d] of Object.entries(dayColMap)) {
                 const c = Number(cStr);
                 const val = parseFloat(String(row[c] || '0').trim());
-                if (!isNaN(val) && val > 0) {
-                  pdiDailyTotals[d] = val;
-                }
+                pdiDailyTotals[d] = (!isNaN(val) && val > 0) ? val : 0;
               }
             }
 
-            const isBeadRow = (
-              textAll.includes('b-end') ||
-              textAll.includes('b-ead') ||
-              textAll.includes('bead') ||
-              col0.toLowerCase().includes('b-end') ||
-              col0.toLowerCase().includes('b-ead') ||
-              r === 10
+            const isBeadRow = r === 10 || (
+              r > 8 &&
+              (col0.toLowerCase().includes('bead') || col1.toLowerCase().includes('bead') || col2.toLowerCase().includes('bead') || textAll.includes('bead total'))
             );
 
             if (isBeadRow) {
               for (const [cStr, d] of Object.entries(dayColMap)) {
                 const c = Number(cStr);
                 const val = parseFloat(String(row[c] || '0').trim());
-                if (!isNaN(val) && val > 0) {
-                  beadDailyTotals[d] = Math.round(val * 100) / 100;
-                }
+                beadDailyTotals[d] = (!isNaN(val) && val > 0) ? Math.round(val * 100) / 100 : 0;
               }
             }
           }
