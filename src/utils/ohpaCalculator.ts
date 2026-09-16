@@ -908,19 +908,24 @@ export function calculateMtdSummary(
 
     // 3. Monthly Staff Data (Goodyear 61 + WAS 9)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
-    const gyMonthlyHours = monthlyStaff.totalHours;
-    const wasMonthlyHours = contMonthlyRecords.length > 0
-      ? contMonthlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0)
-      : monthlyStaff.wasTotalHours;
-    const combinedMonthlyHours = gyMonthlyHours + wasMonthlyHours;
 
-    const dayTotalHours = gyHours + contractorHours + combinedMonthlyHours;
     const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
     const beadAddHours = pdiBeadReport?.beadDailyTotals?.[d] || 0;
-    const dayOpahHours = Math.max(0, dayTotalHours - pdiDeductHours + beadAddHours);
     const dayPdiDeductMap = buildPdiDeductMap(pdiBeadReport, d);
 
-    // Accumulate area breakdown for day d
+    // Calculate day-level area breakdown
+    const dayAreaMap = createEmptyAreaMap();
+    accumulateRecordsIntoAreaMap(
+      dayAreaMap,
+      dayGyRecords,
+      dayContRecords,
+      monthlyStaff,
+      beadAddHours,
+      dayPdiDeductMap,
+      employeeMapping
+    );
+
+    // Accumulate area breakdown for day d into MTD
     accumulateRecordsIntoAreaMap(
       mtdAreaMap,
       dayGyRecords,
@@ -931,9 +936,19 @@ export function calculateMtdSummary(
       employeeMapping
     );
 
-    mtdGyHours += gyHours;
-    mtdContractorHours += contractorHours;
-    mtdMonthlyHours += combinedMonthlyHours;
+    // Derive active 4 areas for day d
+    const dayActiveAreas = (['BCA', 'Consumer', 'Bias Aero', 'Radial Aero'] as Area5Key[]).map(k => dayAreaMap[k]);
+    const dayGyHc = Math.round(dayActiveAreas.reduce((s, a) => s + a.gyHc, 0) * 10) / 10;
+    const dayGyH = Math.round(dayActiveAreas.reduce((s, a) => s + a.gyNormal + a.gyOt, 0) * 10) / 10;
+    const dayContHc = Math.round(dayActiveAreas.reduce((s, a) => s + a.contHc, 0) * 10) / 10;
+    const dayContH = Math.round(dayActiveAreas.reduce((s, a) => s + a.contNormal + a.contOt, 0) * 10) / 10;
+    const dayMonthlyH = Math.round(dayActiveAreas.reduce((s, a) => s + a.monthlyNormal, 0) * 10) / 10;
+    const dayTotalHours = Math.round((dayGyH + dayContH + dayMonthlyH) * 10) / 10;
+    const dayOpahHours = Math.max(0, Math.round((dayTotalHours - pdiDeductHours + beadAddHours) * 10) / 10);
+
+    mtdGyHours += dayGyH;
+    mtdContractorHours += dayContH;
+    mtdMonthlyHours += dayMonthlyH;
     mtdTotalHours += dayTotalHours;
     mtdPdiDeductHours += pdiDeductHours;
     mtdBeadAddHours += beadAddHours;
@@ -943,11 +958,11 @@ export function calculateMtdSummary(
       day: d,
       dateStr: dayDateStr,
       dayName,
-      gyHeadcount,
-      gyHours: Math.round(gyHours * 10) / 10,
-      contractorHeadcount,
-      contractorHours: Math.round(contractorHours * 10) / 10,
-      monthlyHours: Math.round(combinedMonthlyHours * 10) / 10,
+      gyHeadcount: dayGyHc,
+      gyHours: Math.round(dayGyH * 10) / 10,
+      contractorHeadcount: dayContHc,
+      contractorHours: Math.round(dayContH * 10) / 10,
+      monthlyHours: Math.round(dayMonthlyH * 10) / 10,
       totalHours: Math.round(dayTotalHours * 10) / 10,
       pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
       beadAddHours: Math.round(beadAddHours * 10) / 10,
@@ -1010,44 +1025,15 @@ export function calculateOhpaSummary(
   dailyAdjustments: DailyAdjustmentRecord[] = [],
   pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 ): OhpaSummary {
-  // 1. Separate Department 6320 (Retread) from Goodyear
-  const gyActiveRecords = records.filter(r => !isGyDept6320(r));
-  const gy6320Records = records.filter(r => isGyDept6320(r));
-
-  const gyEmployeesCount = gyActiveRecords.length;
-  const gyNormalHours = gyActiveRecords.reduce((sum, r) => sum + (r.normalWorkHours || 0), 0);
-  const gyOtHours = gyActiveRecords.reduce((sum, r) => sum + (r.otHours || 0), 0);
-  const gyTotalHours = gyNormalHours + gyOtHours;
-
-  const excluded6320GyCount = gy6320Records.length;
-  const excluded6320GyHours = gy6320Records.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
-
-  // 2. Separate Department 6320 (Retread) from Contractor
   const rawContActive = contractorRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
-  const contActiveRecords = rawContActive.filter(r => !isContDept6320(r));
-  const cont6320Records = rawContActive.filter(r => isContDept6320(r));
 
-  const contractorEmployeesCount = contActiveRecords.length;
-  const contractorNormalHours = contActiveRecords.reduce((sum, r) => sum + (r.normalHours || 0), 0);
-  const contractorOtHours = contActiveRecords.reduce((sum, r) => sum + (r.otHours || 0), 0);
-  const contractorTotalHours = contractorNormalHours + contractorOtHours;
-
-  const excluded6320ContCount = cont6320Records.length;
-  const excluded6320ContHours = cont6320Records.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
-
-  // 3. Monthly Staff (Goodyear 61 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  // 1. Monthly Staff
   const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
   const hasScannedWasMonthly = rawContActive.some(r => r.type === 'Salary' || (r as any).isMonthly);
   const fallbackWasCount = hasScannedWasMonthly ? 0 : (monthlyStaff.wasCount ?? 9);
   const fallbackWasHours = hasScannedWasMonthly ? 0 : (monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson));
 
-  // 4. Grand Total (GY active + Contractor active [Hourly+Monthly] + GY Monthly)
-  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + monthlyStaff.count + fallbackWasCount;
-  const totalNormalHours = gyNormalHours + contractorNormalHours + monthlyStaff.totalHours + fallbackWasHours;
-  const totalOtHours = gyOtHours + contractorOtHours;
-  const totalWorkingHours = gyTotalHours + contractorTotalHours + monthlyStaff.totalHours + fallbackWasHours;
-
-  // 4.1 PDI Deduct & B-end (Bead) Addition for OPAH
+  // 2. PDI Deduct & B-end (Bead) Addition for OPAH
   const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
   const dateParts = cleanDate.split(/[/.-]/);
   let targetDay = 14;
@@ -1057,17 +1043,57 @@ export function calculateOhpaSummary(
   }
   const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[targetDay] || 0;
   const beadAddHours = pdiBeadReport?.beadDailyTotals?.[targetDay] || 0;
-  const opahWorkingHours = Math.max(0, Math.round((totalWorkingHours - pdiDeductHours + beadAddHours) * 10) / 10);
   const pdiDeductMap = buildPdiDeductMap(pdiBeadReport, targetDay);
 
-  // 5. Tonnage & Pounds (lbs)
+  // 3. Process Area Breakdown (5 Areas based on Master Headcount 16 Sep)
+  const areaMap = createEmptyAreaMap();
+  accumulateRecordsIntoAreaMap(
+    areaMap,
+    records,
+    rawContActive,
+    monthlyStaff,
+    beadAddHours,
+    pdiDeductMap,
+    employeeMapping
+  );
+
+  // Active 4 Areas & Retread derived from areaBreakdown
+  const areaBreakdown = buildAreaBreakdownList(areaMap, 0, 1, tonnageReport, 'DAILY');
+  const activeAreas = areaBreakdown.filter(a => !a.isExcluded6320);
+  const retreadArea = areaBreakdown.find(a => a.isExcluded6320);
+
+  const totalNormalHours = Math.round(activeAreas.reduce((s, a) => s + a.normalHours, 0) * 10) / 10;
+  const totalOtHours = Math.round(activeAreas.reduce((s, a) => s + a.otHours, 0) * 10) / 10;
+  const totalWorkingHours = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
+  const totalEmployeesCount = Math.round(activeAreas.reduce((s, a) => s + a.totalHeadcount, 0) * 10) / 10;
+
+  const gyEmployeesCount = Math.round(activeAreas.reduce((s, a) => s + a.gyHeadcount, 0) * 10) / 10;
+  const gyTotalHours = Math.round(activeAreas.reduce((s, a) => s + a.gyTotalHours, 0) * 10) / 10;
+  const gyNormalHours = Math.round(activeAreas.reduce((s, a) => s + a.gyNormalHours, 0) * 10) / 10;
+  const gyOtHours = Math.round(activeAreas.reduce((s, a) => s + a.gyOtHours, 0) * 10) / 10;
+
+  const contractorEmployeesCount = Math.round(activeAreas.reduce((s, a) => s + a.contractorHeadcount, 0) * 10) / 10;
+  const contractorTotalHours = Math.round(activeAreas.reduce((s, a) => s + a.contractorTotalHours, 0) * 10) / 10;
+  const contractorNormalHours = Math.round(activeAreas.reduce((s, a) => s + a.contractorNormalHours, 0) * 10) / 10;
+  const contractorOtHours = Math.round(activeAreas.reduce((s, a) => s + a.contractorOtHours, 0) * 10) / 10;
+
+  const activePdiHours = Math.round(activeAreas.reduce((s, a) => s + (a.pdiDeductHours || 0), 0) * 10) / 10;
+  const activeBeadHours = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
+  const opahWorkingHours = Math.round(activeAreas.reduce((s, a) => s + a.finalOpahHours, 0) * 10) / 10;
+
+  const excluded6320GyCount = retreadArea?.gyHeadcount || 0;
+  const excluded6320GyHours = retreadArea?.gyTotalHours || 0;
+  const excluded6320ContCount = retreadArea?.contractorHeadcount || 0;
+  const excluded6320ContHours = retreadArea?.contractorTotalHours || 0;
+
+  // 4. Tonnage & Pounds (lbs)
   const LBS_CONVERSION_FACTOR = 2.20462;
   const totalTonnageKg = tonnageReport?.total?.dailyTotalTonnage || 0;
   const totalTonnageTon = totalTonnageKg / 1000;
   const totalTonnageLbs = Math.round(totalTonnageKg * LBS_CONVERSION_FACTOR * 100) / 100;
   const totalPallets = tonnageReport?.total?.dailyTotalPallets || 0;
 
-  // 6. OPAH Calculation: OPAH = (Stocking kg x 2.20462) / Net OPAH Working Hours (lbs/hr)
+  // 5. OPAH Calculation: OPAH = (Stocking kg x 2.20462) / Net OPAH Working Hours (lbs/hr)
   const overallOpahLbsPerHour = opahWorkingHours > 0
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / opahWorkingHours) * 100) / 100
     : 0;
@@ -1079,6 +1105,25 @@ export function calculateOhpaSummary(
   const contractorOpahLbsPerHour = contractorTotalHours > 0
     ? Math.round(((totalTonnageKg * LBS_CONVERSION_FACTOR) / contractorTotalHours) * 100) / 100
     : 0;
+
+  // Helper to get MU
+  const getEmpMu = (empId: string, fallbackMu?: string, category?: string, dept?: string, costCenter?: string): string => {
+    const emp = employeeMapping[empId] || employeeMapping[empId.replace(/^0+/, '')] || employeeMapping[empId.padStart(5, '0')];
+    if (emp?.mu) return emp.mu.trim();
+    if (fallbackMu) return fallbackMu.trim();
+    return 'Non-HPT';
+  };
+
+  const gyActiveRecords = records.filter(r => {
+    const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
+    return mu !== 'Retread' && !isGyDept6320(r);
+  });
+
+  const contActiveRecords = rawContActive.filter(r => {
+    const empCode = r.empCode || (r as any).workerId || '';
+    const mu = getEmpMu(empCode, '', '', r.department, r.closing);
+    return mu !== 'Retread' && !isContDept6320(r);
+  });
 
   // 7. Shift Breakdown (Allocating working hours & OT to the actual shift operating time window)
   const shiftAlloc: Record<1 | 2 | 3, {
@@ -1231,20 +1276,7 @@ export function calculateOhpaSummary(
     };
   });
 
-  // 8. Process Area Breakdown (5 Areas)
-  const areaMap = createEmptyAreaMap();
-  accumulateRecordsIntoAreaMap(
-    areaMap,
-    records,
-    rawContActive,
-    monthlyStaff,
-    beadAddHours,
-    pdiDeductMap,
-    employeeMapping
-  );
-  const areaBreakdown = buildAreaBreakdownList(areaMap, totalWorkingHours, 1, tonnageReport, 'DAILY');
-
-  // 9. Department Breakdown (for backwards compatibility)
+  // 8. Department Breakdown (for backwards compatibility)
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isBead?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
   records.forEach(r => {
