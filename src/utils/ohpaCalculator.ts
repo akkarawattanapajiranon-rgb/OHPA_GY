@@ -268,18 +268,17 @@ export function calculateOhpaSummary(
   const excluded6320ContCount = cont6320Records.length;
   const excluded6320ContHours = cont6320Records.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
 
-  // 3. Monthly Staff (GY 62 persons + WAS 8 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
+  // 3. Monthly Staff (Goodyear 61 persons: Mon-Fri 8h, Sat 4h, Sun 0h)
   const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
-  const wasMonthlyCount = monthlyStaff.wasCount ?? 8;
-  const wasMonthlyHours = monthlyStaff.wasTotalHours ?? (wasMonthlyCount * monthlyStaff.hoursPerPerson);
-  const combinedMonthlyCount = monthlyStaff.count + wasMonthlyCount;
-  const combinedMonthlyHours = monthlyStaff.totalHours + wasMonthlyHours;
+  const hasScannedWasMonthly = rawContActive.some(r => r.type === 'Salary' || (r as any).isMonthly);
+  const fallbackWasCount = hasScannedWasMonthly ? 0 : (monthlyStaff.wasCount ?? 9);
+  const fallbackWasHours = hasScannedWasMonthly ? 0 : (monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson));
 
-  // 4. Grand Total (GY active + Contractor active + GY Monthly + WAS Monthly)
-  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + combinedMonthlyCount;
-  const totalNormalHours = gyNormalHours + contractorNormalHours + combinedMonthlyHours;
+  // 4. Grand Total (GY active + Contractor active [Hourly+Monthly] + GY Monthly)
+  const totalEmployeesCount = gyEmployeesCount + contractorEmployeesCount + monthlyStaff.count + fallbackWasCount;
+  const totalNormalHours = gyNormalHours + contractorNormalHours + monthlyStaff.totalHours + fallbackWasHours;
   const totalOtHours = gyOtHours + contractorOtHours;
-  const totalWorkingHours = gyTotalHours + contractorTotalHours + combinedMonthlyHours;
+  const totalWorkingHours = gyTotalHours + contractorTotalHours + monthlyStaff.totalHours + fallbackWasHours;
 
   // 4.1 PDI Deduct & B-end (Bead) Addition for OPAH
   const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
@@ -845,16 +844,17 @@ export function calculateOhpaSummary(
   // 11. Process All Contractor Records (Active + 6320) into Areas & Depts (separated by exact department)
   rawContActive.forEach(r => {
     const isExcluded = isContDept6320(r);
+    const isMonthlyCont = r.type === 'Salary' || (r as any).isMonthly;
     const code = (r.closing || r.department || 'MFG').trim();
     const loc = r.location ? ` (${r.location})` : '';
-    const d = `Cont แผนก ${code}${loc}`;
+    const d = isMonthlyCont ? `Cont รายเดือน แผนก ${code}${loc}` : `Cont แผนก ${code}${loc}`;
     const nHours = r.normalHours || 0;
     const otH = r.otHours || 0;
     const totH = nHours + otH;
 
     // Dept map
     if (!deptMap[d]) {
-      deptMap[d] = { isContractor: true, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
+      deptMap[d] = { isContractor: true, isMonthly: isMonthlyCont, isExcluded6320: isExcluded, headcount: 0, normalHours: 0, otHours: 0, totalHours: 0 };
     }
     deptMap[d].headcount++;
     deptMap[d].normalHours += nHours;
@@ -862,18 +862,21 @@ export function calculateOhpaSummary(
     deptMap[d].totalHours += totH;
 
     // Area map
-    const areaInfo = classifyArea('', r.department, r.closing, '', r.location, r.closing);
+    const areaInfo = isMonthlyCont
+      ? { key: 'Non-MFG : Others', name: 'Non-MFG : Others (แผนก 1860 และส่วนสนับสนุน)', label: 'Others', icon: '📦', headcountStandard: 6, order: 8 }
+      : classifyArea('', r.department, r.closing, '', r.location, r.closing);
+
     const a = areaMap[areaInfo.key] || areaMap['Non-MFG : Others'];
     a.contHc++;
     a.contNormal += nHours;
     a.contOt += otH;
 
-    const deptKey = `Cont: ${code}${loc}`;
+    const deptKey = isMonthlyCont ? `Cont Monthly: ${code}${loc}` : `Cont: ${code}${loc}`;
     if (!a.deptMap[deptKey]) {
       a.deptMap[deptKey] = {
         dept: d,
         isContractor: true,
-        isMonthly: false,
+        isMonthly: isMonthlyCont,
         headcount: 0,
         normalHours: 0,
         otHours: 0,
@@ -886,7 +889,7 @@ export function calculateOhpaSummary(
     a.deptMap[deptKey].totalHours += totH;
   });
 
-  // 12. Add Monthly Staff (Goodyear 62 + WAS 8) and B-end (Bead) to Non-MFG : Others
+  // 12. Add Monthly Staff (Goodyear 61 + WAS fallback) and B-end (Bead) to Non-MFG : Others
   const aOther = areaMap['Non-MFG : Others'];
 
   // 12.1 Goodyear Monthly Staff (61 persons)
@@ -914,28 +917,28 @@ export function calculateOhpaSummary(
     };
   }
 
-  // 12.2 WAS Monthly Staff (8 persons)
-  if (wasMonthlyCount > 0) {
-    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${wasMonthlyCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
+  // 12.2 WAS Monthly Staff Fallback (only if not already in contractor scan records)
+  if (!hasScannedWasMonthly && fallbackWasCount > 0) {
+    const wasMonthlyKey = `พนักงานรายเดือน WAS (WAS Monthly Staff - ${fallbackWasCount} คน @ ${monthlyStaff.hoursPerPerson} ชม.)`;
     deptMap[wasMonthlyKey] = {
       isContractor: true,
       isMonthly: true,
-      headcount: wasMonthlyCount,
-      normalHours: wasMonthlyHours,
+      headcount: fallbackWasCount,
+      normalHours: fallbackWasHours,
       otHours: 0,
-      totalHours: wasMonthlyHours
+      totalHours: fallbackWasHours
     };
 
-    aOther.monthlyHc += wasMonthlyCount;
-    aOther.monthlyNormal += wasMonthlyHours;
+    aOther.monthlyHc += fallbackWasCount;
+    aOther.monthlyNormal += fallbackWasHours;
     aOther.deptMap['WAS Monthly Staff'] = {
       dept: wasMonthlyKey,
       isContractor: true,
       isMonthly: true,
-      headcount: wasMonthlyCount,
-      normalHours: wasMonthlyHours,
+      headcount: fallbackWasCount,
+      normalHours: fallbackWasHours,
       otHours: 0,
-      totalHours: wasMonthlyHours
+      totalHours: fallbackWasHours
     };
   }
 
