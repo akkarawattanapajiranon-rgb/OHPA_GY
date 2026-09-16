@@ -18,7 +18,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
   "pdiPersons": [
     {
       "name": "Somrudee",
-      "group": "NPI Consumer",
+      "group": "NPI (Consumer )",
       "desc": "Tire DEV Consumer",
       "dailyHours": {
         "1": 70,
@@ -56,7 +56,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     },
     {
       "name": "Damrongsak",
-      "group": "NPI Radial Aero",
+      "group": "NPI (Radial Aero)",
       "desc": "Tire DEV Sapphire",
       "dailyHours": {
         "1": 0,
@@ -94,7 +94,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     },
     {
       "name": "Kitipan",
-      "group": "NPI Bias Aero",
+      "group": "NPI( Bias Aero)",
       "desc": "Tire DEV Bias Aero",
       "dailyHours": {
         "1": 0,
@@ -132,7 +132,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     },
     {
       "name": "Sangpian",
-      "group": "QA / Qtech",
+      "group": "QA / Qtech  (Consumer )",
       "desc": "PDI Consumer in Warehouse",
       "dailyHours": {
         "1": 20,
@@ -170,7 +170,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     },
     {
       "name": "Vattana",
-      "group": "QA / Qtech",
+      "group": "QA / Qtech  (Bia/Radial Aero )",
       "desc": "PDI Aviation in Warehouse",
       "dailyHours": {
         "1": 1,
@@ -273,5 +273,5 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "30": 0,
     "31": 0
   },
-  "updatedAt": "2026-09-16T04:37:52.896Z"
+  "updatedAt": "2026-09-16T08:09:28.954Z"
 };

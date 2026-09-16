@@ -640,6 +640,7 @@ export function processScanRecords(
       category: empInfo.category || 'Other',
       costCenter: empInfo.costCenter,
       dept,
+      mu: empInfo.mu,
       shift: shiftNum,
       shiftLabel,
       dateStr: inScan ? inScan.dateStr : (outScan ? outScan.dateStr : '-'),

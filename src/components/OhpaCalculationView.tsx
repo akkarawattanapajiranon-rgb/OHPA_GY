@@ -170,23 +170,31 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
     const activeNorm = Math.round(activeAreas.reduce((s, a) => s + a.normalHours, 0) * 10) / 10;
     const activeOt = Math.round(activeAreas.reduce((s, a) => s + a.otHours, 0) * 10) / 10;
-    const activeTot = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
-    const activeHc = activeAreas.reduce((s, a) => s + a.totalHeadcount, 0);
+    const activeGrossTot = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
+    const activeHc = Math.round(activeAreas.reduce((s, a) => s + a.totalHeadcount, 0) * 10) / 10;
+    const activePdi = Math.round(activeAreas.reduce((s, a) => s + (a.pdiDeductHours || 0), 0) * 10) / 10;
+    const activeBead = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
+    const activeNetTot = Math.round((activeGrossTot - activePdi + activeBead) * 10) / 10;
 
     const retreadNorm = Math.round((retreadArea?.normalHours || 0) * 10) / 10;
     const retreadOt = Math.round((retreadArea?.otHours || 0) * 10) / 10;
     const retreadTot = Math.round((retreadArea?.totalHours || 0) * 10) / 10;
-    const retreadHc = retreadArea?.totalHeadcount || 0;
+    const retreadHc = Math.round((retreadArea?.totalHeadcount || 0) * 10) / 10;
 
     const grandNorm = Math.round((activeNorm + retreadNorm) * 10) / 10;
     const grandOt = Math.round((activeOt + retreadOt) * 10) / 10;
-    const grandTot = Math.round((activeTot + retreadTot) * 10) / 10;
-    const grandHc = activeHc + retreadHc;
+    const grandGrossTot = Math.round((activeGrossTot + retreadTot) * 10) / 10;
+    const grandHc = Math.round((activeHc + retreadHc) * 10) / 10;
+    const grandNetTot = Math.round((activeNetTot + retreadTot) * 10) / 10;
 
     return {
       activeNorm,
       activeOt,
-      activeTot,
+      activeGrossTot,
+      activeTot: activeGrossTot,
+      activePdi,
+      activeBead,
+      activeNetTot,
       activeHc,
       retreadNorm,
       retreadOt,
@@ -198,7 +206,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       retreadContTot: retreadArea?.contractorTotalHours || 0,
       grandNorm,
       grandOt,
-      grandTot,
+      grandGrossTot,
+      grandTot: grandGrossTot,
+      grandNetTot,
       grandHc
     };
   }, [activeAreaBreakdown]);
@@ -290,9 +300,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws3 = XLSX.utils.json_to_sheet(shiftData);
     XLSX.utils.book_append_sheet(wb, ws3, 'Shift_Breakdown');
 
-    // Sheet 4: Area Breakdown Daily (8 Exact Areas)
+    // Sheet 4: Area Breakdown Daily (5 Production Areas)
     const areaDataDaily = (ohpaSummary.areaBreakdown || []).map(a => ({
-      'พื้นที่ / กลุ่มโรงงาน': a.areaName,
+      'พื้นที่ / กลุ่มโรงงาน (5 Areas)': a.areaName,
       'เป้าหมายกำลังพล Master (คน)': a.headcountStandard || '-',
       'สแกนนิ้วจริงรวม (คน)': a.totalHeadcount,
       'Goodyear (คน)': a.gyHeadcount,
@@ -300,19 +310,20 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'พนักงานรายเดือน (คน)': a.monthlyHeadcount || 0,
       'ชม.ปกติ (ชม.)': a.normalHours,
       'ชม. OT (ชม.)': a.otHours,
-      'ชม.รวมทั้งหมด (ชม.)': a.totalHours,
-      'Goodyear ชม.รวม': a.gyTotalHours,
-      'Contractor ชม.รวม': a.contractorTotalHours,
-      'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH',
-      '% สัดส่วน': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
+      'ชม.ฐานรวม (ชม.)': a.totalHours,
+      '🔻 PDI Deduct (ชม.)': a.pdiDeductHours ? `-${a.pdiDeductHours}` : 0,
+      '🟢 Bead Add (ชม.)': a.beadAddHours ? `+${a.beadAddHours}` : 0,
+      '⭐ ชม.สุทธิคิด OPAH (ชม.)': a.finalOpahHours || a.totalHours,
+      'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
+      '% สัดส่วน OPAH': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
     }));
     const ws4 = XLSX.utils.json_to_sheet(areaDataDaily);
-    XLSX.utils.book_append_sheet(wb, ws4, 'Area_Daily');
+    XLSX.utils.book_append_sheet(wb, ws4, 'Area_Daily_5Areas');
 
-    // Sheet 4.1: Area Breakdown MTD (8 Exact Areas)
+    // Sheet 4.1: Area Breakdown MTD (5 Production Areas)
     if (ohpaSummary.mtd?.areaBreakdown && ohpaSummary.mtd.areaBreakdown.length > 0) {
       const areaDataMtd = ohpaSummary.mtd.areaBreakdown.map(a => ({
-        'พื้นที่ / กลุ่มโรงงาน': a.areaName,
+        'พื้นที่ / กลุ่มโรงงาน (5 Areas)': a.areaName,
         'เป้าหมายกำลังพล Master (คน)': a.headcountStandard || '-',
         'สแกนเฉลี่ย/วัน (คน)': a.totalHeadcount,
         'Goodyear เฉลี่ย (คน)': a.gyHeadcount,
@@ -320,14 +331,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'พนักงานรายเดือน เฉลี่ย (คน)': a.monthlyHeadcount || 0,
         'ชม.ปกติสะสม MTD (ชม.)': a.normalHours,
         'ชม. OT สะสม MTD (ชม.)': a.otHours,
-        'ชม.รวมสะสม MTD (ชม.)': a.totalHours,
-        'Goodyear ชม.รวม MTD': a.gyTotalHours,
-        'Contractor ชม.รวม MTD': a.contractorTotalHours,
-        'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH',
+        'ชม.ฐานรวมสะสม MTD (ชม.)': a.totalHours,
+        '🔻 PDI Deduct MTD (ชม.)': a.pdiDeductHours ? `-${a.pdiDeductHours}` : 0,
+        '🟢 Bead Add MTD (ชม.)': a.beadAddHours ? `+${a.beadAddHours}` : 0,
+        '⭐ ชม.สุทธิ MTD (ชม.)': a.finalOpahHours || a.totalHours,
+        'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
         '% สัดส่วน MTD': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
       }));
       const ws4Mtd = XLSX.utils.json_to_sheet(areaDataMtd);
-      XLSX.utils.book_append_sheet(wb, ws4Mtd, 'Area_MTD');
+      XLSX.utils.book_append_sheet(wb, ws4Mtd, 'Area_MTD_5Areas');
     }
 
     // Sheet 5: MTD Daily Breakdown
@@ -367,7 +379,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       XLSX.utils.book_append_sheet(wb, ws6, 'PDI_Deduct_Persons');
     }
 
-    XLSX.writeFile(wb, 'OPAH_CAL_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
+    XLSX.writeFile(wb, 'OPAH_CAL_5Areas_Report_' + (ohpaSummary.productionDay || 'Date').replace(/\//g, '') + '.xlsx');
   };
 
   return (
@@ -1147,7 +1159,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
-      {/* Area Working Hours & OT Summary (8 Exact Production Areas) */}
+      {/* Area Working Hours & OT Summary (5 Production Areas) */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
@@ -1156,7 +1168,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                สรุปชั่วโมงทำงานและ OT แยกตาม 8 พื้นที่หลัก (Area Working Hours & OT Summary)
+                สรุปชั่วโมงทำงานและ OT แยกตาม 5 พื้นที่หลัก (5 Production Areas Breakdown)
                 <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
                   viewMode === 'MTD'
                     ? 'bg-purple-100 text-purple-800 border-purple-300/60 font-bold'
@@ -1170,11 +1182,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <p className="text-xs text-slate-500">
                 {viewMode === 'MTD' ? (
                   <span>
-                    ยอดชั่วโมงและ OT <strong>สะสม MTD (วันที่ 1 ถึง {ohpaSummary.mtd?.daysCount || 14}/09)</strong> จำแนกตาม 8 พื้นที่: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong> (เฉลี่ยกำลังพล/วัน)
+                    ยอดชั่วโมงและ OT <strong>สะสม MTD (วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14}/09)</strong> จำแนกตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้ารวมทั้งโรงงาน 901 คน]
                   </span>
                 ) : (
                   <span>
-                    จำแนกชั่วโมงทำงานและ OT ประจำวันตามโครงสร้างองค์กร: <strong>BCA (208)</strong>, <strong>Consumer (148)</strong>, <strong>Bias Aero (121)</strong>, <strong>Radial Aero (74)</strong>, <strong>Retread (71)</strong>, <strong>Engineering (65)</strong>, <strong>Quality (57)</strong> และ <strong>Others (6)</strong>
+                    จำแนกชั่วโมงทำงานและ OT ประจำวันตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้ารวมทั้งโรงงาน 901 คน]
                   </span>
                 )}
               </p>
@@ -1200,16 +1212,14 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           </div>
         </div>
 
-        {/* 8 Area Summary Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-2.5">
+        {/* 5 Area Summary Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
           {activeAreaBreakdown.map((area) => {
             const isBCA = area.areaKey === 'BCA';
             const isConsumer = area.areaKey === 'Consumer';
             const isBiasAero = area.areaKey === 'Bias Aero';
             const isRadialAero = area.areaKey === 'Radial Aero';
             const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
-            const isEng = area.areaKey === 'Non-MFG : Engineering';
-            const isQuality = area.areaKey === 'Non-MFG : Quality';
 
             const cardBorder = isBCA
               ? 'border-amber-200 bg-amber-50/40 hover:bg-amber-50/70'
@@ -1219,13 +1229,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               ? 'border-sky-200 bg-sky-50/40 hover:bg-sky-50/70'
               : isRadialAero
               ? 'border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/70'
-              : isRetread
-              ? 'border-rose-200 bg-rose-50/30 hover:bg-rose-50/60'
-              : isEng
-              ? 'border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50/70'
-              : isQuality
-              ? 'border-teal-200 bg-teal-50/40 hover:bg-teal-50/70'
-              : 'border-purple-200 bg-purple-50/40 hover:bg-purple-50/70';
+              : 'border-rose-200 bg-rose-50/30 hover:bg-rose-50/60';
 
             const badgeBg = isBCA
               ? 'bg-amber-500 text-white'
@@ -1235,52 +1239,49 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               ? 'bg-sky-600 text-white'
               : isRadialAero
               ? 'bg-indigo-600 text-white'
-              : isRetread
-              ? 'bg-rose-600 text-white'
-              : isEng
-              ? 'bg-emerald-600 text-white'
-              : isQuality
-              ? 'bg-teal-600 text-white'
-              : 'bg-purple-600 text-white';
+              : 'bg-rose-600 text-white';
 
             return (
               <div
                 key={area.areaKey}
                 onClick={() => toggleArea(area.areaKey)}
-                className={`p-3 rounded-2xl border transition-all cursor-pointer shadow-2xs flex flex-col justify-between ${cardBorder}`}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs flex flex-col justify-between ${cardBorder}`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-1 gap-1">
-                    <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-md truncate ${badgeBg}`} title={area.areaKey}>
+                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md truncate ${badgeBg}`} title={area.areaKey}>
                       {area.areaLabel}
                     </span>
                     {area.isExcluded6320 ? (
-                      <span className="text-[9px] font-bold text-rose-600 bg-rose-100 px-1 py-0.2 rounded">
+                      <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.2 rounded border border-rose-200">
                         ตัด 6320
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold text-slate-600">
+                      <span className="text-xs font-black text-slate-700">
                         {area.percentageOfTotalHours}%
                       </span>
                     )}
                   </div>
 
-                  <div className="text-[10px] text-slate-500 font-medium">
-                    เป้า: <strong className="text-slate-700">{area.headcountStandard || '-'} คน</strong>
+                  <div className="text-[11px] text-slate-500 font-medium">
+                    เป้า Master: <strong className="text-slate-800">{area.headcountStandard || '-'} คน</strong>
                   </div>
 
-                  <div className="text-base font-black text-slate-900 font-mono leading-tight mt-1">
-                    {area.totalHours.toLocaleString()} <span className="text-[10px] font-sans font-normal text-slate-500">ชม.</span>
+                  <div className="text-lg font-black text-slate-900 font-mono leading-tight mt-1.5">
+                    {(area.finalOpahHours || area.totalHours).toLocaleString()} <span className="text-xs font-sans font-normal text-slate-500">ชม.สุทธิ</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono">
+                    (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''})
                   </div>
                 </div>
 
-                <div className="mt-2 pt-1.5 border-t border-slate-200/60 text-[10px]">
-                  <div className="flex items-center justify-between text-slate-600">
+                <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-xs">
+                  <div className="flex items-center justify-between text-slate-600 font-mono">
                     <span>ปกติ: {area.normalHours.toLocaleString()}</span>
                     <span className="text-amber-700 font-bold">+{area.otHours.toLocaleString()}</span>
                   </div>
-                  <div className="text-slate-500 mt-0.5 text-[9px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
-                    {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount}/Cont {area.contractorHeadcount})
+                  <div className="text-slate-500 mt-1 text-[11px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
+                    {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} / Cont {area.contractorHeadcount})
                   </div>
                 </div>
               </div>
@@ -1288,28 +1289,37 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           })}
         </div>
 
-        {/* Main Area Table */}
+        {/* Main Area Table (5 Production Areas) */}
         <div className="overflow-x-auto rounded-2xl border border-slate-200">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-900 text-white font-bold">
-                <th className="py-3 px-4 min-w-[280px]">
-                  พื้นที่ / กลุ่มโรงงาน (8 Production Areas) - {viewMode === 'MTD' ? `สะสม MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)` : 'ประจำวัน'}
+                <th className="py-3 px-4 min-w-[260px]">
+                  พื้นที่ / กลุ่มโรงงาน (5 Production Areas) - {viewMode === 'MTD' ? `สะสม MTD (${ohpaSummary.mtd?.daysCount || 14} วัน)` : 'ประจำวัน'}
                 </th>
                 <th className="py-3 px-3 text-center w-24">เป้าหมาย Master</th>
                 <th className="py-3 px-4 text-center">
                   {viewMode === 'MTD' ? 'สแกนเฉลี่ย/วัน (Headcount)' : 'สแกนจริงรวม (Headcount)'}
                 </th>
-                <th className="py-3 px-4 text-right bg-slate-800/80">
-                  {viewMode === 'MTD' ? 'ชม.ปกติสะสม (Normal)' : 'ชม.ปกติ (Normal)'}
+                <th className="py-3 px-3 text-right bg-slate-800/80">
+                  {viewMode === 'MTD' ? 'ชม.ปกติสะสม' : 'ชม.ปกติ (Normal)'}
                 </th>
-                <th className="py-3 px-4 text-right bg-amber-950/60 text-amber-300">
-                  {viewMode === 'MTD' ? 'ชม. OT สะสม (OT Hours)' : 'ชม. OT (OT Hours)'}
+                <th className="py-3 px-3 text-right bg-amber-950/60 text-amber-300">
+                  {viewMode === 'MTD' ? 'ชม. OT สะสม' : 'ชม. OT (OT Hours)'}
+                </th>
+                <th className="py-3 px-3 text-right bg-slate-800/90 text-slate-200">
+                  {viewMode === 'MTD' ? 'ชม.ฐานรวมสะสม' : 'ชม.ฐานรวม (Gross)'}
+                </th>
+                <th className="py-3 px-3 text-right bg-rose-950/60 text-rose-300">
+                  🔻 PDI หักออก
+                </th>
+                <th className="py-3 px-3 text-right bg-emerald-950/60 text-emerald-300">
+                  🟢 Bead บวกเพิ่ม
                 </th>
                 <th className="py-3 px-4 text-right bg-indigo-950/80 text-indigo-200 font-black">
-                  {viewMode === 'MTD' ? 'ชม.รวมสะสม MTD (Total Hours)' : 'ชม.รวมทั้งหมด (Total Hours)'}
+                  ⭐ ชม.สุทธิ OPAH
                 </th>
-                <th className="py-3 px-4 text-right min-w-[150px]">% สัดส่วนชั่วโมง</th>
+                <th className="py-3 px-4 text-right min-w-[130px]">% สัดส่วน OPAH</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -1320,8 +1330,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 const isBiasAero = area.areaKey === 'Bias Aero';
                 const isRadialAero = area.areaKey === 'Radial Aero';
                 const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
-                const isEng = area.areaKey === 'Non-MFG : Engineering';
-                const isQuality = area.areaKey === 'Non-MFG : Quality';
 
                 const progressColor = isBCA
                   ? 'bg-amber-500'
@@ -1331,13 +1339,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   ? 'bg-sky-500'
                   : isRadialAero
                   ? 'bg-indigo-600'
-                  : isRetread
-                  ? 'bg-rose-500'
-                  : isEng
-                  ? 'bg-emerald-600'
-                  : isQuality
-                  ? 'bg-teal-600'
-                  : 'bg-purple-600';
+                  : 'bg-rose-500';
 
                 const rowBg = isExpanded
                   ? 'bg-slate-50/80'
@@ -1349,13 +1351,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   ? 'hover:bg-sky-50/30'
                   : isRadialAero
                   ? 'hover:bg-indigo-50/30'
-                  : isRetread
-                  ? 'hover:bg-rose-50/30 bg-rose-50/15'
-                  : isEng
-                  ? 'hover:bg-emerald-50/30'
-                  : isQuality
-                  ? 'hover:bg-teal-50/30'
-                  : 'hover:bg-purple-50/30';
+                  : 'hover:bg-rose-50/30 bg-rose-50/15';
 
                 const iconElem = isBCA ? (
                   <Factory className="w-4 h-4 text-amber-600 shrink-0" />
@@ -1365,14 +1361,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <Plane className="w-4 h-4 text-sky-600 shrink-0" />
                 ) : isRadialAero ? (
                   <Plane className="w-4 h-4 text-indigo-600 shrink-0" />
-                ) : isRetread ? (
-                  <RefreshCw className="w-4 h-4 text-rose-600 shrink-0" />
-                ) : isEng ? (
-                  <Wrench className="w-4 h-4 text-emerald-600 shrink-0" />
-                ) : isQuality ? (
-                  <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
                 ) : (
-                  <Package className="w-4 h-4 text-purple-600 shrink-0" />
+                  <RefreshCw className="w-4 h-4 text-rose-600 shrink-0" />
                 );
 
                 return (
@@ -1437,18 +1427,33 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       </td>
 
                       {/* Normal Hours */}
-                      <td className="py-3 px-4 text-right font-mono font-semibold text-slate-700 bg-slate-50/50">
+                      <td className="py-3 px-3 text-right font-mono font-semibold text-slate-700 bg-slate-50/50">
                         {area.normalHours.toLocaleString()} ชม.
                       </td>
 
                       {/* OT Hours */}
-                      <td className="py-3 px-4 text-right font-mono font-bold text-amber-700 bg-amber-50/40">
+                      <td className="py-3 px-3 text-right font-mono font-bold text-amber-700 bg-amber-50/40">
                         +{area.otHours.toLocaleString()} ชม.
                       </td>
 
-                      {/* Total Hours */}
-                      <td className="py-3 px-4 text-right font-mono font-black text-sm text-indigo-950 bg-indigo-50/40">
+                      {/* Gross Base Hours */}
+                      <td className="py-3 px-3 text-right font-mono font-bold text-slate-900 bg-slate-100/50">
                         {area.totalHours.toLocaleString()} ชม.
+                      </td>
+
+                      {/* PDI Deduct */}
+                      <td className="py-3 px-3 text-right font-mono font-bold text-rose-700 bg-rose-50/30">
+                        {area.pdiDeductHours && area.pdiDeductHours > 0 ? `-${area.pdiDeductHours} ชม.` : '-'}
+                      </td>
+
+                      {/* Bead Add */}
+                      <td className="py-3 px-3 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30">
+                        {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)} ชม.` : '-'}
+                      </td>
+
+                      {/* Final Net OPAH Hours */}
+                      <td className="py-3 px-4 text-right font-mono font-black text-sm text-indigo-950 bg-indigo-50/40">
+                        {(area.finalOpahHours || area.totalHours).toLocaleString()} ชม.
                       </td>
 
                       {/* % Contribution */}
@@ -1476,7 +1481,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={7} className="py-3 px-6 sm:px-10">
+                        <td colSpan={10} className="py-3 px-6 sm:px-10">
                           <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-2">
                               <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
@@ -1487,7 +1492,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                               <table className="w-full text-left text-xs border-collapse">
                                 <thead>
                                   <tr className="text-slate-500 font-bold border-b border-slate-100 text-[11px]">
-                                    <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด</th>
+                                    <th className="py-1.5 px-3">แผนก / Cost Center / สังกัด / การจัดสรร</th>
                                     <th className="py-1.5 px-3 text-center">ประเภท</th>
                                     <th className="py-1.5 px-3 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน/วัน' : 'จำนวนคนสแกน'}</th>
                                     <th className="py-1.5 px-3 text-right">ชม.ปกติ</th>
@@ -1501,6 +1506,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                       <td className="py-1.5 px-3 font-medium text-slate-800 flex items-center gap-2">
                                         {sub.isBead ? (
                                           <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                        ) : sub.dept.includes('PDI') ? (
+                                          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                                         ) : sub.isMonthly ? (
                                           <Briefcase className={`w-3.5 h-3.5 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
                                         ) : sub.isContractor ? (
@@ -1514,6 +1521,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                         <span className={`px-2 py-0.2 rounded-full font-bold text-[10px] ${
                                           sub.isBead
                                             ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                            : sub.dept.includes('PDI')
+                                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
                                             : sub.isMonthly && sub.isContractor
                                             ? 'bg-teal-100 text-teal-800 border border-teal-200'
                                             : sub.isMonthly
@@ -1522,17 +1531,17 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                                             ? 'bg-teal-100 text-teal-800'
                                             : 'bg-blue-100 text-blue-800'
                                         }`}>
-                                          {sub.isBead ? 'Bead (+)' : sub.isMonthly ? (sub.isContractor ? 'WAS Monthly' : 'GY Monthly') : sub.isContractor ? 'Contractor' : 'Goodyear'}
+                                          {sub.isBead ? 'Bead (+)' : sub.dept.includes('PDI') ? 'PDI (-)' : sub.isMonthly ? (sub.isContractor ? 'WAS Monthly' : 'Salaries Monthly') : sub.isContractor ? 'Contractor' : 'Goodyear'}
                                         </span>
                                       </td>
                                       <td className="py-1.5 px-3 text-center font-bold text-slate-700">
-                                        {sub.headcount} คน
+                                        {sub.headcount > 0 ? `${sub.headcount} คน` : '-'}
                                       </td>
                                       <td className="py-1.5 px-3 text-right text-slate-600 font-mono">
                                         {sub.normalHours.toLocaleString()}
                                       </td>
                                       <td className="py-1.5 px-3 text-right font-mono font-bold text-amber-600">
-                                        +{sub.otHours.toLocaleString()}
+                                        {sub.otHours > 0 ? `+${sub.otHours.toLocaleString()}` : '-'}
                                       </td>
                                       <td className="py-1.5 px-3 text-right font-mono font-black text-slate-900">
                                         {sub.totalHours.toLocaleString()} ชม.
@@ -1550,7 +1559,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 );
               })}
 
-              {/* Row 1: OPAH Active Total (7 Production Areas, excluding 6320) */}
+              {/* Row 1: OPAH Active Total (4 Production Areas: BCA, Consumer, Bias Aero, Radial Aero) */}
               <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-700 text-sm">
                 <td className="py-3 px-4 flex items-center gap-2 text-white">
                   <div className="p-1 rounded-md bg-emerald-500 text-slate-950 font-black text-xs">
@@ -1559,30 +1568,39 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <div>
                     <span className="text-emerald-300 font-bold">
                       {viewMode === 'MTD'
-                        ? `ยอดรวม 7 พื้นที่คำนวณ OPAH (MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน)`
-                        : 'ยอดรวม 7 พื้นที่คำนวณ OPAH (Active Working Hours)'}
+                        ? `ยอดรวม 4 พื้นที่การผลิตคิด OPAH (MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน)`
+                        : 'ยอดรวม 4 พื้นที่การผลิตคิด OPAH (Active 4 Areas: BCA, Consumer, Bias, Radial)'}
                     </span>
                     <span className="text-[11px] font-normal text-slate-400 block">
                       {viewMode === 'MTD'
-                        ? `(รวม 7 พื้นที่การผลิต MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน GY + Cont + รายเดือน 70 คน โดยตัดแผนก 6320 ออก)`
-                        : '(รวม 7 พื้นที่การผลิต GY + Cont + รายเดือน 70 คน โดยตัดแผนก 6320 ออก)'}
+                        ? `(รวม 4 พื้นที่หลัก MTD สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน GY + Cont + รายเดือน โดยตัดแผนก 6320 ออก)`
+                        : '(รวม 4 พื้นที่หลัก GY + Cont + รายเดือน โดยตัดแผนก 6320 ออก พร้อมปรับยอด PDI/Bead)'}
                     </span>
                   </div>
                 </td>
                 <td className="py-3 px-3 text-center text-slate-300 font-mono text-xs">
-                  679 คน
+                  793 คน
                 </td>
                 <td className="py-3 px-4 text-center text-white font-mono font-bold">
                   {areaActiveStats.activeHc} คน
                 </td>
-                <td className="py-3 px-4 text-right text-slate-200 font-mono bg-slate-800/80">
+                <td className="py-3 px-3 text-right text-slate-200 font-mono bg-slate-800/80">
                   {areaActiveStats.activeNorm.toLocaleString()} ชม.
                 </td>
-                <td className="py-3 px-4 text-right text-amber-300 font-mono bg-amber-950/80">
+                <td className="py-3 px-3 text-right text-amber-300 font-mono bg-amber-950/80">
                   +{areaActiveStats.activeOt.toLocaleString()} ชม.
                 </td>
+                <td className="py-3 px-3 text-right text-slate-200 font-mono bg-slate-800">
+                  {areaActiveStats.activeGrossTot.toLocaleString()} ชม.
+                </td>
+                <td className="py-3 px-3 text-right text-rose-300 font-mono bg-rose-950">
+                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()} ชม.` : '-'}
+                </td>
+                <td className="py-3 px-3 text-right text-emerald-300 font-mono bg-emerald-950">
+                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()} ชม.` : '-'}
+                </td>
                 <td className="py-3 px-4 text-right text-emerald-300 font-mono bg-emerald-950/80 text-base">
-                  {areaActiveStats.activeTot.toLocaleString()} ชม.
+                  {areaActiveStats.activeNetTot.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-emerald-400 font-mono text-xs font-black">
                   100.0%
@@ -1597,24 +1615,29 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       EXCLUDED
                     </div>
                     <div>
-                      <span>🚫 ส่วนงานหล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH)</span>
+                      <span>🚫 ส่วนงานหล่อดอกยาง แผนก 6320 (ตัดออกจาก OPAH โรงงาน)</span>
                       <span className="text-[10px] text-rose-300/80 block">
                         (GY {areaActiveStats.retreadGyHc} คน: {areaActiveStats.retreadGyTot.toLocaleString()} ชม. | Cont {areaActiveStats.retreadContHc} คน: {areaActiveStats.retreadContTot.toLocaleString()} ชม.)
                       </span>
                     </div>
                   </td>
                   <td className="py-2.5 px-3 text-center text-rose-300 font-mono">
-                    71 คน
+                    108 คน
                   </td>
                   <td className="py-2.5 px-4 text-center font-mono">
                     {areaActiveStats.retreadHc} คน
                   </td>
-                  <td className="py-2.5 px-4 text-right font-mono">
+                  <td className="py-2.5 px-3 text-right font-mono">
                     {areaActiveStats.retreadNorm.toLocaleString()} ชม.
                   </td>
-                  <td className="py-2.5 px-4 text-right font-mono text-amber-300">
+                  <td className="py-2.5 px-3 text-right font-mono text-amber-300">
                     +{areaActiveStats.retreadOt.toLocaleString()} ชม.
                   </td>
+                  <td className="py-2.5 px-3 text-right font-mono text-rose-300 font-black">
+                    {areaActiveStats.retreadTot.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-400">-</td>
                   <td className="py-2.5 px-4 text-right font-mono text-rose-300 font-black">
                     {areaActiveStats.retreadTot.toLocaleString()} ชม.
                   </td>
@@ -1624,7 +1647,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </tr>
               )}
 
-              {/* Row 3: All-Plant Grand Total (All 8 Areas, including 6320) */}
+              {/* Row 3: All-Plant Grand Total (All 5 Areas, including 6320) */}
               <tr className="bg-slate-950 text-white font-black border-t-2 border-slate-800 text-xs">
                 <td className="py-3 px-4 flex items-center gap-2">
                   <div className="p-1 rounded-md bg-amber-400 text-slate-950 font-black text-xs">
@@ -1634,27 +1657,36 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     <span>
                       {viewMode === 'MTD'
                         ? `ยอดรวมทั้งสิ้นทั้งโรงงาน MTD สะสม (${ohpaSummary.mtd?.daysCount || 14} วัน)`
-                        : 'ยอดรวมทั้งสิ้นทั้งโรงงาน (รวมทุกแผนก 100%)'}
+                        : 'ยอดรวมทั้งสิ้นทั้งโรงงาน (รวม 5 พื้นที่ Master 100%)'}
                     </span>
                     <span className="text-[10px] font-normal text-slate-400 block">
-                      (รวม 8 พื้นที่: 7 พื้นที่หลัก + แผนก 6320 หล่อดอกยาง)
+                      (รวม 5 พื้นที่: BCA + Consumer + Bias Aero + Radial Aero + Retread)
                     </span>
                   </div>
                 </td>
                 <td className="py-3 px-3 text-center text-slate-300 font-mono">
-                  750 คน
+                  901 คน
                 </td>
                 <td className="py-3 px-4 text-center text-amber-300 font-mono font-black">
                   {areaActiveStats.grandHc} คน
                 </td>
-                <td className="py-3 px-4 text-right text-slate-300 font-mono">
+                <td className="py-3 px-3 text-right text-slate-300 font-mono">
                   {areaActiveStats.grandNorm.toLocaleString()} ชม.
                 </td>
-                <td className="py-3 px-4 text-right text-amber-300 font-mono">
+                <td className="py-3 px-3 text-right text-amber-300 font-mono">
                   +{areaActiveStats.grandOt.toLocaleString()} ชม.
                 </td>
+                <td className="py-3 px-3 text-right text-slate-300 font-mono font-bold">
+                  {areaActiveStats.grandGrossTot.toLocaleString()} ชม.
+                </td>
+                <td className="py-3 px-3 text-right text-rose-300 font-mono">
+                  {areaActiveStats.activePdi > 0 ? `-${areaActiveStats.activePdi.toLocaleString()} ชม.` : '-'}
+                </td>
+                <td className="py-3 px-3 text-right text-emerald-300 font-mono">
+                  {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()} ชม.` : '-'}
+                </td>
                 <td className="py-3 px-4 text-right text-amber-300 font-mono font-black text-sm">
-                  {areaActiveStats.grandTot.toLocaleString()} ชม.
+                  {areaActiveStats.grandNetTot.toLocaleString()} ชม.
                 </td>
                 <td className="py-3 px-4 text-right text-slate-400 font-mono">
                   -

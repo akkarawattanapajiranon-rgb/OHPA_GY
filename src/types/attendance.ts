@@ -25,7 +25,9 @@ export interface EmployeeInfo {
   function?: string;
   pos?: string;
   sheet?: string;
+  sourceSheet?: string;
   sourceFile?: string;
+  mu?: string;
 }
 
 export type ShiftType = 1 | 2 | 3;
@@ -55,6 +57,7 @@ export interface ParsedShiftRecord {
   position: string;
   category?: string;
   machine?: string;
+  mu?: string;
   shift: ShiftType;
   shiftLabel: string;
   dateStr: string;

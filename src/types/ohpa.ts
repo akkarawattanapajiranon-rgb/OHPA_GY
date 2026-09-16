@@ -104,6 +104,13 @@ export interface OhpaAreaMetrics {
   contractorOtHours: number;
   contractorTotalHours: number;
   monthlyHours?: number;
+  nonHptAllocatedHours?: number;
+  nonHptAllocatedHC?: number;
+  consumerBiasAllocatedHours?: number;
+  consumerBiasAllocatedHC?: number;
+  beadAddHours?: number;
+  pdiDeductHours?: number;
+  finalOpahHours?: number;
   percentageOfTotalHours: number;
   departments: OhpaAreaDeptItem[];
 }
