@@ -181,6 +181,11 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
     return '430 6"x8" Tuber';
   }
 
+  // แทน WAS / WAS Replacement
+  if (m.includes('was') || m.includes('แทน was') || p.includes('was') || p.includes('แทน was')) {
+    return 'แทน WAS';
+  }
+
   if (p.includes('leader')) return 'Leader';
 
   return null;
@@ -614,8 +619,8 @@ export function processScanRecords(
     const regularMachineOverride = empAdjustment?.regularMachineOverride?.trim();
     const otMachineOverride = empAdjustment?.otMachineOverride?.trim();
 
-    // Increment Standard HC actual count (Only for BCA employees - 208 people)
-    const isBca = (empInfo.category === 'BCA') || (!empInfo.category && (dept.includes('3200') || dept.includes('4130')));
+    // Increment Standard HC actual count (Only for BCA employees or overridden machine)
+    const isBca = (empInfo.category === 'BCA') || (!empInfo.category && (dept.includes('3200') || dept.includes('4130'))) || Boolean(regularMachineOverride);
     if (isBca) {
       // If employee has a regular machine transfer (Scenario 1), count towards the target machine!
       const effectiveMachine = regularMachineOverride || machine;
@@ -687,7 +692,7 @@ export function processScanRecords(
   });
 
   processedRecords.forEach(r => {
-    if (r.category && r.category !== 'BCA') return; // Only BCA employees cover Team A Standard HC!
+    if (r.category && r.category !== 'BCA' && !r.otMachineOverride) return; // Only BCA employees cover Team A Standard HC, unless OT assigned to BCA/แทน WAS
     
     // If employee has an OT machine transfer (Scenario 2), credit OT hours to the target machine!
     const effectiveOtMachine = r.otMachineOverride || r.machine;

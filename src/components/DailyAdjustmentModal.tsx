@@ -140,7 +140,8 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
       { 'รหัส Cost Center': '4200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '420 Hot apexer', 'คำอธิบาย': 'Hot Apexer' },
       { 'รหัส Cost Center': '4300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '430 6"x8" Tuber', 'คำอธิบาย': 'Duplex 6" X 8" Extruder' },
       { 'รหัส Cost Center': '4300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '430 Quad', 'คำอธิบาย': 'Quad Extruder' },
-      { 'รหัส Cost Center': '3200/4300/4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'Leader', 'คำอธิบาย': 'Production Team Leader (หัวหน้ากะ)' }
+      { 'รหัส Cost Center': '3200/4300/4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'Leader', 'คำอธิบาย': 'Production Team Leader (หัวหน้ากะ)' },
+      { 'รหัส Cost Center': '3200/4110/4200/4300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'แทน WAS', 'คำอธิบาย': 'พนักงานทำงานแทน WAS (Contractor Replacement)' }
     ];
 
     const instructions = [

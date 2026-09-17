@@ -8,7 +8,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-1-10199",
@@ -19,7 +19,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-2-12093",
@@ -30,7 +30,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-3-12141",
@@ -41,7 +41,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-4-12187",
@@ -52,7 +52,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-5-12341",
@@ -63,7 +63,7 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-6-12833",
@@ -74,18 +74,18 @@
     "customStartTime": "11:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-roll (11:00 - 19:00)"
+    "reason": "ทำที่ 3-roll (11:00 - 19:00)"
   },
   {
     "id": "adj-7-11848",
     "dateStr": "13/09/2026",
     "empId": "11848",
     "empName": "วีระพันธ์ นุตะดี",
-    "otMachineOverride": "Mixer 2",
+    "regularMachineOverride": "Mixer 2",
     "customStartTime": "23:00",
     "customEndTime": "07:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Mixer 2 (23.00 - 7.00)"
+    "reason": "ทำที่ Mixer 2 (23.00 - 7.00)"
   },
   {
     "id": "adj-8-12185",
@@ -96,18 +96,18 @@
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00 - 23.00"
+    "reason": "ทำที่ Chaffer Lay-up (15.00 - 23.00)"
   },
   {
     "id": "adj-9-10705",
     "dateStr": "13/09/2026",
     "empId": "10705",
     "empName": "วรวุฒิ พันขันตี",
-    "otMachineOverride": "54\" Band Building",
+    "regularMachineOverride": "54\" Band Building",
     "customStartTime": "23:00",
     "customEndTime": "07:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 54\" Band Building (23.00 - 7.00)"
+    "reason": "ทำที่ 54\" Band Building (23.00 - 7.00)"
   },
   {
     "id": "adj-10-12674",
@@ -118,7 +118,7 @@
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00-23.00"
+    "reason": "ทำที่ Chaffer Lay-up (15.00-23.00)"
   },
   {
     "id": "adj-11-12676",
@@ -129,40 +129,40 @@
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00-23.00"
+    "reason": "ทำที่ Chaffer Lay-up (15.00-23.00)"
   },
   {
     "id": "adj-12-12945",
     "dateStr": "14/09/2026",
     "empId": "12945",
     "empName": "วรวุฒิ  มาพงษ์",
-    "otMachineOverride": "3-Roll Calender",
+    "otMachineOverride": "3roll",
     "customStartTime": "15:00",
     "customEndTime": "20:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-20.00)"
+    "reason": "ทำที่ 3roll (15.00-20.00)"
   },
   {
     "id": "adj-13-12753",
     "dateStr": "15/09/2026",
     "empId": "12753",
     "empName": "ปรัชญา เพ็งที",
-    "otMachineOverride": "4roll#2 for was",
+    "otMachineOverride": "แทน WAS",
     "customStartTime": "15:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 4roll#2 for was (15.00-19.00)"
+    "reason": "ทำที่ แทน WAS (15.00-19.00)"
   },
   {
     "id": "adj-14-12116",
     "dateStr": "15/09/2026",
     "empId": "12116",
     "empName": "อำพล ศรีชัย",
-    "regularMachineOverride": "4roll#1 for was",
+    "regularMachineOverride": "แทน WAS",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00-23.00"
+    "reason": "ทำที่ แทน WAS (15.00-23.00)"
   },
   {
     "id": "adj-15-12185",
@@ -173,28 +173,28 @@
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00-23.00"
+    "reason": "ทำที่ Chaffer Lay-up (15.00-23.00)"
   },
   {
     "id": "adj-16-12462",
     "dateStr": "15/09/2026",
     "empId": "12462",
     "empName": "อธิวัฒน์ งามสม",
-    "otMachineOverride": "3-Roll Calender",
+    "otMachineOverride": "3roll",
     "customStartTime": "15:00",
     "customEndTime": "18:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+    "reason": "ทำที่ 3roll (15.00-18.00)"
   },
   {
     "id": "adj-17-12632",
     "dateStr": "15/09/2026",
     "empId": "12632",
     "empName": "อนุพงษ์ วงค์คำจันทร์",
-    "otMachineOverride": "3-Roll Calender",
+    "otMachineOverride": "3roll",
     "customStartTime": "15:00",
     "customEndTime": "18:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+    "reason": "ทำที่ 3roll (15.00-18.00)"
   }
 ]
