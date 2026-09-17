@@ -14,7 +14,11 @@ import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
 
 export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!dateStr) return '';
-  const clean = String(dateStr).trim();
+  const raw = String(dateStr).trim();
+  // Strip out emojis, Thai words, prefixes like "📅", "วันที่", "folder_day_", etc.
+  const clean = raw.replace(/^[^\d]*/, '').trim();
+  if (!clean) return '';
+
   if (clean.length === 8 && /^\d{8}$/.test(clean)) {
     return clean; // Already MMDDYYYY or YYYYMMDD
   }
@@ -29,19 +33,19 @@ export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
     return `${mm}${dd}${yyyy}`;
   }
   // Check DD/MM/YYYY or DD-MM-YYYY
-  const parts = clean.split(/[/.-]/);
+  const parts = clean.split(/[/.-]/).map(p => p.trim());
   if (parts.length === 3) {
     if (parts[2].length === 4) {
       // DD/MM/YYYY -> MMDDYYYY
-      const dd = parts[0].padStart(2, '0');
-      const mm = parts[1].padStart(2, '0');
-      const yyyy = parts[2];
+      const dd = parts[0].replace(/\D/g, '').padStart(2, '0');
+      const mm = parts[1].replace(/\D/g, '').padStart(2, '0');
+      const yyyy = parts[2].replace(/\D/g, '');
       return `${mm}${dd}${yyyy}`;
     } else if (parts[0].length === 4) {
       // YYYY-MM-DD -> MMDDYYYY
-      const yyyy = parts[0];
-      const mm = parts[1].padStart(2, '0');
-      const dd = parts[2].padStart(2, '0');
+      const yyyy = parts[0].replace(/\D/g, '');
+      const mm = parts[1].replace(/\D/g, '').padStart(2, '0');
+      const dd = parts[2].replace(/\D/g, '').padStart(2, '0');
       return `${mm}${dd}${yyyy}`;
     }
   }

@@ -7,7 +7,7 @@ import { ContractorEmployeeInfo, ContractorScanRecord, ContractorDaySummary } fr
 export function normalizeToDMY(input: any): string {
   if (!input) return '';
   const str = String(input).trim();
-  const clean = str.replace(/^[📅📄s]*วันที่s*/, '').trim();
+  const clean = str.replace(/^[^\d]*/, '').trim();
 
   // Match D/M/YYYY or DD/MM/YYYY
   const dmyMatch = clean.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})/);

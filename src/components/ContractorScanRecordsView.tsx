@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Users,
   Search,
@@ -33,6 +33,8 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
   const [selectedLocation, setSelectedLocation] = useState<string>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<'ALL' | 'IN' | 'OT' | 'ABSENT' | 'LATE'>('ALL');
 
+  const [localDateKey, setLocalDateKey] = useState<string>('');
+
   // Sort available date keys in descending order (latest date first)
   const sortedDateKeys = useMemo(() => {
     return Object.keys(recordsByDate).sort((a, b) => {
@@ -47,8 +49,16 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
     });
   }, [recordsByDate]);
 
-  // Active date key matched directly to Navbar currentDateFormatted
+  // When currentDateFormatted changes from top navbar, reset local override to stay in sync
+  useEffect(() => {
+    setLocalDateKey('');
+  }, [currentDateFormatted]);
+
+  // Active date key matched directly to Navbar currentDateFormatted or local selection
   const activeDateKey = useMemo(() => {
+    if (localDateKey && recordsByDate[localDateKey]) {
+      return localDateKey;
+    }
     const targetNorm = normalizeToDMY(currentDateFormatted);
     if (recordsByDate[targetNorm]) return targetNorm;
 
@@ -56,7 +66,7 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
     if (match) return match;
 
     return sortedDateKeys[0] || '1/9/2026';
-  }, [currentDateFormatted, recordsByDate, sortedDateKeys]);
+  }, [localDateKey, currentDateFormatted, recordsByDate, sortedDateKeys]);
 
   // Current day summary
   const daySummary: ContractorDaySummary | null = useMemo(() => {
