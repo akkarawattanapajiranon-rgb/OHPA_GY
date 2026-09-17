@@ -158,11 +158,11 @@
     "dateStr": "15/09/2026",
     "empId": "12116",
     "empName": "อำพล ศรีชัย",
-    "regularMachineOverride": "แทน WAS",
+    "otMachineOverride": "แทน WAS",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "เวลาพิเศษ 15.00-23.00"
+    "reason": "OT / ทำงานที่ แทน WAS (15.00-23.00)"
   },
   {
     "id": "adj-15-12185",
