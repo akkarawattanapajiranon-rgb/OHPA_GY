@@ -62,8 +62,19 @@ export default function App() {
       const defaults = (defaultAdjustmentsRaw as DailyAdjustmentRecord[]) || [];
       const saved = localStorage.getItem('ohpa_daily_adjustments');
       if (saved) {
-        const parsed = JSON.parse(saved);
+        let parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
+          // Sanitize any legacy cached entries where แทน WAS was stored under regularMachineOverride
+          parsed = parsed.map((a: DailyAdjustmentRecord) => {
+            if (a.regularMachineOverride && a.regularMachineOverride.includes('แทน WAS')) {
+              return {
+                ...a,
+                otMachineOverride: 'แทน WAS',
+                regularMachineOverride: undefined
+              };
+            }
+            return a;
+          });
           const existingKeys = new Set(parsed.map((a: DailyAdjustmentRecord) => `${a.dateStr}_${(a.empId || '').replace(/\D/g, '').padStart(5, '0')}`));
           const defaultsToAdd = defaults.filter(
             d => !existingKeys.has(`${d.dateStr}_${(d.empId || '').replace(/\D/g, '').padStart(5, '0')}`)

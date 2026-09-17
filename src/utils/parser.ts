@@ -616,8 +616,23 @@ export function processScanRecords(
     const position = empInfo.position || '-';
     const dept = empInfo.dept || 'ไม่ระบุแผนก';
 
-    const regularMachineOverride = empAdjustment?.regularMachineOverride?.trim();
-    const otMachineOverride = empAdjustment?.otMachineOverride?.trim();
+    let regularMachineOverride = empAdjustment?.regularMachineOverride?.trim();
+    let otMachineOverride = empAdjustment?.otMachineOverride?.trim();
+
+    // If an adjustment specifies a time window outside the current regular shift,
+    // it belongs to OT rather than modifying the regular shift machine count!
+    if (regularMachineOverride && empAdjustment?.customStartTime) {
+      const startH = parseInt(empAdjustment.customStartTime.split(':')[0], 10);
+      const isShift1Ot = shiftNum === 1 && startH >= 15; // e.g. 15:00-23:00 OT
+      const isShift2Ot = shiftNum === 2 && (startH >= 23 || startH < 12); // e.g. 23:00-07:00 OT
+      const isShift3Ot = shiftNum === 3 && (startH >= 7 && startH < 22); // e.g. 07:00-15:00 OT
+      if (isShift1Ot || isShift2Ot || isShift3Ot) {
+        if (!otMachineOverride) {
+          otMachineOverride = regularMachineOverride;
+        }
+        regularMachineOverride = undefined;
+      }
+    }
 
     // Increment Standard HC actual count (Only for BCA employees or overridden machine)
     const isBca = (empInfo.category === 'BCA') || (!empInfo.category && (dept.includes('3200') || dept.includes('4130'))) || Boolean(regularMachineOverride);

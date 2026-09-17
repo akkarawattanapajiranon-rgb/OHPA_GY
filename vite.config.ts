@@ -240,9 +240,9 @@ function scanFolderApiPlugin(): Plugin {
 
             const empInfo = empMap[cleanId];
 
-            if (!finalRegMachine && finalOtMachine && timeStr && (
-              (timeStr.includes('15') && timeStr.includes('23')) ||
-              (timeStr.includes('07') && timeStr.includes('15'))
+            if (!finalRegMachine && finalOtMachine && timeStr && !finalOtMachine.includes('แทน WAS') && (
+              (timeStr.includes('15') && timeStr.includes('23') && !findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'โอที'])) ||
+              (timeStr.includes('07') && timeStr.includes('15') && !findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'โอที']))
             )) {
               finalRegMachine = finalOtMachine;
               finalOtMachine = undefined;
