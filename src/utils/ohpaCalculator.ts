@@ -48,7 +48,7 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
     hoursPerPerson = 0;
   }
 
-  const count = 61;
+  const count = 62;
   const totalHours = count * hoursPerPerson;
 
   const wasCount = 9;
@@ -1148,10 +1148,10 @@ export function calculateOhpaSummary(
   const activeBeadHours = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
   const opahWorkingHours = Math.round(activeAreas.reduce((s, a) => s + a.finalOpahHours, 0) * 10) / 10;
 
-  const excluded6320GyCount = retreadArea?.gyHeadcount || 0;
-  const excluded6320GyHours = retreadArea?.gyTotalHours || 0;
-  const excluded6320ContCount = retreadArea?.contractorHeadcount || 0;
-  const excluded6320ContHours = retreadArea?.contractorTotalHours || 0;
+  const excluded6320GyCount = Math.round((retreadArea?.gyHeadcount || 0) * 10) / 10;
+  const excluded6320GyHours = Math.round((retreadArea?.gyTotalHours || 0) * 10) / 10;
+  const excluded6320ContCount = Math.round((retreadArea?.contractorHeadcount || 0) * 10) / 10;
+  const excluded6320ContHours = Math.round((retreadArea?.contractorTotalHours || 0) * 10) / 10;
 
   // 4. Tonnage & Pounds (lbs)
   const LBS_CONVERSION_FACTOR = 2.20462;

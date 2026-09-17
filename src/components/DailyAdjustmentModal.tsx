@@ -73,7 +73,7 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
       reason: newReason.trim() || undefined
     };
 
-    const updated = [...localAdjustments.filter(a => a.empId !== cleanId), newRecord];
+    const updated = [...localAdjustments.filter(a => !(a.empId === cleanId && a.dateStr === currentDateFormatted)), newRecord];
     setLocalAdjustments(updated);
     onSaveAdjustments(updated);
 
@@ -124,8 +124,7 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
       { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 BANBURY # 1', 'คำอธิบาย': 'Mixer 1' },
       { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 BANBURY # 2', 'คำอธิบาย': 'Mixer 2' },
       { 'รหัส Cost Center': '3200', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '320 Pigment', 'คำอธิบาย': 'Auto Pigment' },
-      { 'รหัส Cost Center': '3300', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '330 3ROII', 'คำอธิบาย': '3-Roll Calender' },
-      { 'รหัส Cost Center': '3700', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': 'Cement (3roll)', 'คำอธิบาย': 'Cement House' },
+      { 'รหัส Cost Center': '3300/3700', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '3roll + Cement (3300/3700)', 'คำอธิบาย': '3-Roll Calender + Cement House' },
       { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 4Roll#1', 'คำอธิบาย': '4-Roll Calender 1' },
       { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 4Roll#2', 'คำอธิบาย': '4-Roll Calender 2' },
       { 'รหัส Cost Center': '4110', 'ชื่อตำแหน่ง / เครื่องจักรในระบบ (Standard Position)': '411 Chafer lay up', 'คำอธิบาย': 'Chaffer Lay-up' },

@@ -153,15 +153,14 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   }
 
   // Dept 3200 (Banbury & Pigment)
-  if (m.includes('mixer 1') || m.includes('banbury 1') || m.includes('banbury # 1') || p.includes('banbury 1')) return '320 BANBURY # 1';
+  if (m.includes('auto pigment') || m.includes('pigment') || p.includes('pigment')) return '320 Pigment';
   if (m.includes('mixer 2') || m.includes('banbury 2') || m.includes('banbury # 2') || p.includes('banbury 2')) return '320 BANBURY # 2';
-  if (m.includes('auto pigment') || m.includes('pigment') || p.includes('pigment') || (d.includes('3200') && !m.includes('mixer') && !p.includes('banbury'))) return '320 Pigment';
+  if (m.includes('mixer 1') || m.includes('banbury 1') || m.includes('banbury # 1') || p.includes('banbury 1') || d.includes('3200')) return '320 BANBURY # 1';
 
-  // Dept 3300 (3ROII / Calender) - strictly for Dept 3300
-  if (d.includes('3300') || m.includes('3-roll') || m.includes('3roii') || p.includes('3roii')) return '330 3ROII';
-
-  // Dept 3700 (Cement / 3roll)
-  if (d.includes('3700') || p.includes('cement') || m.includes('cement')) return 'Cement (3roll)';
+  // Dept 3300 & 3700 (3roll + Cement)
+  if (d.includes('3300') || d.includes('3700') || m.includes('3-roll') || m.includes('3roll') || m.includes('3roii') || p.includes('3roii') || p.includes('3roll') || p.includes('cement') || m.includes('cement')) {
+    return '3roll + Cement (3300/3700)';
+  }
 
   // Dept 4110 (Chafer, Lux, Fischer, 4Roll)
   if (m.includes('4-roll calender 1') || m.includes('4roll#1') || m.includes('4roll 1')) return '411 4Roll#1';
@@ -252,13 +251,17 @@ export function processScanRecords(
   // Find primary date of the file
   const firstValidDate = rawScans.find(s => s.dateStr && s.dateStr.length === 8)?.dateStr || '';
 
-  // Index adjustments for quick lookup
-  const adjMap: Record<string, DailyAdjustmentRecord> = {};
+  // Index adjustments for quick lookup (support multiple adjustments per employee)
+  const adjMap: Record<string, DailyAdjustmentRecord[]> = {};
   dailyAdjustments.forEach(adj => {
-    const cleanId = (adj.empId || '').replace(/\D/g, '').padStart(5, '0');
+    let cleanId = (adj.empId || '').replace(/\D/g, '').padStart(5, '0');
+    if (cleanId === '12626') {
+      cleanId = '12678'; // 12678 พงศธร เกตุแก้ว (Band 72)
+    }
     const normAdjDate = normalizeDateToMMDDYYYY(adj.dateStr);
     if (!normAdjDate || !firstValidDate || normAdjDate === firstValidDate) {
-      adjMap[cleanId] = adj;
+      if (!adjMap[cleanId]) adjMap[cleanId] = [];
+      adjMap[cleanId].push(adj);
     }
   });
 
@@ -294,7 +297,8 @@ export function processScanRecords(
 
   uniqueEmpIds.forEach(empId => {
     const empInfo: EmployeeInfo = employeeMap[empId] || { empId };
-    const empAdjustment = adjMap[empId];
+    const empAdjustments: DailyAdjustmentRecord[] = adjMap[empId] || [];
+    const empAdjustment = empAdjustments[0];
     const empScans = scansByEmp[empId];
     const ins = empScans.filter(s => s.io === 'I');
     const outs = empScans.filter(s => s.io === 'O');
@@ -419,7 +423,18 @@ export function processScanRecords(
         shiftNum = determineShift(inScan.timestamp);
       }
     } else if (inScan) {
-      shiftNum = determineShift(inScan.timestamp);
+      const inHh = inScan.timestamp.getHours();
+      const hasShift3Adj = empAdjustments.some(a => {
+        if (!a.customStartTime) return false;
+        const h = parseInt(a.customStartTime.split(':')[0], 10);
+        return h >= 22 || h <= 1;
+      });
+      if (inHh >= 17 && inHh < 22 && hasShift3Adj) {
+        shiftNum = 3;
+        isPreShiftReliefOt = true;
+      } else {
+        shiftNum = determineShift(inScan.timestamp);
+      }
     } else if (outScan) {
       shiftNum = determineShiftFromOut(outScan.timestamp);
     }
@@ -638,21 +653,28 @@ export function processScanRecords(
     const position = empInfo.position || '-';
     const dept = empInfo.dept || 'ไม่ระบุแผนก';
 
-    let regularMachineOverride = empAdjustment?.regularMachineOverride?.trim();
-    let otMachineOverride = empAdjustment?.otMachineOverride?.trim();
+    let regularMachineOverride: string | undefined = undefined;
+    let otMachineOverride: string | undefined = undefined;
 
-    // If an adjustment specifies a time window outside the current regular shift,
-    // it belongs to OT rather than modifying the regular shift machine count!
-    if (regularMachineOverride && empAdjustment?.customStartTime) {
-      const startH = parseInt(empAdjustment.customStartTime.split(':')[0], 10);
-      const isShift1Ot = shiftNum === 1 && startH >= 15; // e.g. 15:00-23:00 OT
-      const isShift2Ot = shiftNum === 2 && (startH >= 23 || startH < 12); // e.g. 23:00-07:00 OT
-      const isShift3Ot = shiftNum === 3 && (startH >= 7 && startH < 22); // e.g. 07:00-15:00 OT
-      if (isShift1Ot || isShift2Ot || isShift3Ot) {
-        if (!otMachineOverride) {
-          otMachineOverride = regularMachineOverride;
-        }
-        regularMachineOverride = undefined;
+    // Check each adjustment for this employee
+    for (const adj of empAdjustments) {
+      const targetMachine = (adj.regularMachineOverride || adj.otMachineOverride || '').trim();
+      if (!targetMachine) continue;
+
+      let isReg = false;
+      if (adj.customStartTime) {
+        const startH = parseInt(adj.customStartTime.split(':')[0], 10);
+        if (shiftNum === 1 && (startH >= 6 && startH <= 8)) isReg = true;
+        else if (shiftNum === 2 && (startH >= 14 && startH <= 16)) isReg = true;
+        else if (shiftNum === 3 && (startH >= 22 || startH <= 1)) isReg = true;
+      } else if (adj.regularMachineOverride) {
+        isReg = true;
+      }
+
+      if (isReg && !regularMachineOverride) {
+        regularMachineOverride = targetMachine;
+      } else if (!isReg && !otMachineOverride) {
+        otMachineOverride = targetMachine;
       }
     }
 
@@ -718,32 +740,74 @@ export function processScanRecords(
     s1OtHours: number;
     s2OtHours: number;
     s3OtHours: number;
+    s1OtPeople: number;
+    s2OtPeople: number;
+    s3OtPeople: number;
   }> = {};
 
   TEAM_A_STANDARD_HC.forEach(std => {
     posOtCoverage[std.positionName] = {
       s1OtHours: 0,
       s2OtHours: 0,
-      s3OtHours: 0
+      s3OtHours: 0,
+      s1OtPeople: 0,
+      s2OtPeople: 0,
+      s3OtPeople: 0
     };
   });
 
   processedRecords.forEach(r => {
     if (r.category && r.category !== 'BCA' && !r.otMachineOverride) return; // Only BCA employees cover Team A Standard HC, unless OT assigned to BCA/แทน WAS
-    
-    // If employee has an OT machine transfer (Scenario 2), credit OT hours to the target machine!
-    const effectiveOtMachine = r.otMachineOverride || r.regularMachineOverride || r.machine;
-    const targetPos = r.otMachineOverride || r.regularMachineOverride || r.position;
-    const stdPosName = mapBcaPosToStdPosition(targetPos, r.dept, effectiveOtMachine);
-    if (!stdPosName || !posOtCoverage[stdPosName] || r.otHours <= 0) return;
+    if (r.otHours <= 0) return;
+
+    const empAdjs: DailyAdjustmentRecord[] = adjMap[r.empId] || [];
+
+    // Helper to resolve the target Standard HC position for a given OT shift
+    const getTargetStdPosForShift = (targetShift: ShiftType): string | null => {
+      const matchingAdj = empAdjs.find(a => {
+        if (!a.customStartTime) return Boolean(a.otMachineOverride);
+        const h = parseInt(a.customStartTime.split(':')[0], 10);
+        if (targetShift === 1) return (h >= 6 && h <= 8);
+        if (targetShift === 2) return (h >= 14 && h <= 18);
+        if (targetShift === 3) return (h >= 22 || h <= 1);
+        return false;
+      });
+
+      if (matchingAdj) {
+        const targetMach = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || '').trim();
+        const targetP = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || r.position || '').trim();
+        return mapBcaPosToStdPosition(targetP, r.dept, targetMach);
+      }
+
+      // If employee has adjustments for OTHER shifts with specific times (e.g. 23:00-07:00),
+      // do NOT apply their other-shift otMachineOverride to this shift!
+      const hasOtherShiftSpecificAdj = empAdjs.some(a => Boolean(a.customStartTime));
+      if (hasOtherShiftSpecificAdj) {
+        return mapBcaPosToStdPosition(r.position, r.dept, r.machine);
+      }
+
+      const targetMach = (r.otMachineOverride || r.regularMachineOverride || r.machine || '').trim();
+      const targetP = (r.otMachineOverride || r.regularMachineOverride || r.position || '').trim();
+      return mapBcaPosToStdPosition(targetP, r.dept, targetMach);
+    };
 
     if (r.shift === 1) {
       // Shift 1 worker: Post-shift OT (past 15:00) covers Shift 2, and any excess past 23:00 covers Shift 3
-      if (r.otHours <= 8) {
-        posOtCoverage[stdPosName].s2OtHours += r.otHours;
-      } else {
-        posOtCoverage[stdPosName].s2OtHours += 8;
-        posOtCoverage[stdPosName].s3OtHours += (r.otHours - 8);
+      const s2TargetPos = getTargetStdPosForShift(2);
+      if (s2TargetPos && posOtCoverage[s2TargetPos]) {
+        posOtCoverage[s2TargetPos].s2OtPeople++;
+        if (r.otHours <= 8) {
+          posOtCoverage[s2TargetPos].s2OtHours += r.otHours;
+        } else {
+          posOtCoverage[s2TargetPos].s2OtHours += 8;
+        }
+      }
+      if (r.otHours > 8) {
+        const s3TargetPos = getTargetStdPosForShift(3);
+        if (s3TargetPos && posOtCoverage[s3TargetPos]) {
+          posOtCoverage[s3TargetPos].s3OtHours += (r.otHours - 8);
+          posOtCoverage[s3TargetPos].s3OtPeople++;
+        }
       }
     } else if (r.shift === 2) {
       // Shift 2 worker:
@@ -751,18 +815,34 @@ export function processScanRecords(
       // If stayed late into night/morning (out past 02:00, e.g. 07:00 morning) -> covers Shift 3
       const outH = r.outTime ? r.outTime.getHours() : 23;
       if (r.isPreShiftReliefOt && outH >= 22 && outH <= 23) {
-        posOtCoverage[stdPosName].s1OtHours += r.otHours;
+        const s1TargetPos = getTargetStdPosForShift(1);
+        if (s1TargetPos && posOtCoverage[s1TargetPos]) {
+          posOtCoverage[s1TargetPos].s1OtHours += r.otHours;
+          posOtCoverage[s1TargetPos].s1OtPeople++;
+        }
       } else {
-        posOtCoverage[stdPosName].s3OtHours += r.otHours;
+        const s3TargetPos = getTargetStdPosForShift(3);
+        if (s3TargetPos && posOtCoverage[s3TargetPos]) {
+          posOtCoverage[s3TargetPos].s3OtHours += r.otHours;
+          posOtCoverage[s3TargetPos].s3OtPeople++;
+        }
       }
     } else if (r.shift === 3) {
       // Shift 3 worker:
       // If early scan before 22:00 (e.g. 17:30-19:30 pre-shift break relief), covers Shift 2; otherwise covers Shift 1
       const inH = r.inTime ? r.inTime.getHours() : 23;
       if (inH >= 17 && inH < 22) {
-        posOtCoverage[stdPosName].s2OtHours += r.otHours;
+        const s2TargetPos = getTargetStdPosForShift(2);
+        if (s2TargetPos && posOtCoverage[s2TargetPos]) {
+          posOtCoverage[s2TargetPos].s2OtHours += r.otHours;
+          posOtCoverage[s2TargetPos].s2OtPeople++;
+        }
       } else {
-        posOtCoverage[stdPosName].s1OtHours += r.otHours;
+        const s1TargetPos = getTargetStdPosForShift(1);
+        if (s1TargetPos && posOtCoverage[s1TargetPos]) {
+          posOtCoverage[s1TargetPos].s1OtHours += r.otHours;
+          posOtCoverage[s1TargetPos].s1OtPeople++;
+        }
       }
     }
   });
@@ -770,7 +850,7 @@ export function processScanRecords(
   // Build ManpowerComparison Rows based on TEAM_A_STANDARD_HC
   const manpowerComparison: ManpowerComparisonRow[] = TEAM_A_STANDARD_HC.map(std => {
     const actuals = actualCounts[std.positionName] || { shift1: 0, shift2: 0, shift3: 0 };
-    const otCov = posOtCoverage[std.positionName] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0 };
+    const otCov = posOtCoverage[std.positionName] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0, s1OtPeople: 0, s2OtPeople: 0, s3OtPeople: 0 };
 
     let s1Target = std.shift1Target;
     let s2Target = std.shift2Target;
@@ -838,6 +918,7 @@ export function processScanRecords(
       shift1Regular: actuals.shift1,
       shift1OtHC: s1OtHC,
       shift1OtHours: otCov.s1OtHours,
+      shift1OtPeople: otCov.s1OtPeople,
       shift1Gap: s1Gap,
       shift1Status: getStatus(s1Target, s1Actual),
 
@@ -846,6 +927,7 @@ export function processScanRecords(
       shift2Regular: actuals.shift2,
       shift2OtHC: s2OtHC,
       shift2OtHours: otCov.s2OtHours,
+      shift2OtPeople: otCov.s2OtPeople,
       shift2Gap: s2Gap,
       shift2Status: getStatus(s2Target, s2Actual),
 
@@ -854,6 +936,7 @@ export function processScanRecords(
       shift3Regular: actuals.shift3,
       shift3OtHC: s3OtHC,
       shift3OtHours: otCov.s3OtHours,
+      shift3OtPeople: otCov.s3OtPeople,
       shift3Gap: s3Gap,
       shift3Status: getStatus(s3Target, s3Actual)
     };

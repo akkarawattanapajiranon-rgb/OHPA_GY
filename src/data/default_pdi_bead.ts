@@ -150,7 +150,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "13": 0,
         "14": 24,
         "15": 40,
-        "16": 0,
+        "16": 28,
         "17": 0,
         "18": 0,
         "19": 0,
@@ -188,7 +188,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "13": 0,
         "14": 3,
         "15": 2,
-        "16": 0,
+        "16": 1,
         "17": 0,
         "18": 0,
         "19": 0,
@@ -223,7 +223,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "13": 0,
     "14": 83,
     "15": 98,
-    "16": 56,
+    "16": 85,
     "17": 0,
     "18": 0,
     "19": 0,
@@ -256,7 +256,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "13": 164.13,
     "14": 184.69,
     "15": 191,
-    "16": 0,
+    "16": 202,
     "17": 0,
     "18": 0,
     "19": 0,
@@ -273,5 +273,5 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "30": 0,
     "31": 0
   },
-  "updatedAt": "2026-09-17T01:29:58.391Z"
+  "updatedAt": "2026-09-17T05:19:52.557Z"
 };

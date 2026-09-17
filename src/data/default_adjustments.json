@@ -220,10 +220,10 @@
     "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
   },
   {
-    "id": "adj-20-12626",
+    "id": "adj-20-12676",
     "dateStr": "16/09/2026",
-    "empId": "12626",
-    "empName": "พนักงาน 12626",
+    "empId": "12676",
+    "empName": "ประชา ไชยโชติ",
     "otMachineOverride": "Chaffer Lay-up",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
@@ -235,10 +235,43 @@
     "dateStr": "16/09/2026",
     "empId": "12255",
     "empName": "เจริญวุฒิ สะใบพิมพ์",
-    "otMachineOverride": "Trucker 4roll#1",
+    "otMachineOverride": "แทน WAS",
     "customStartTime": "23:00",
     "customEndTime": "07:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Trucker 4roll#1 (23.00-07.00)"
+    "reason": "OT / ทำงานที่ แทน WAS (23.00-07.00)"
+  },
+  {
+    "id": "adj-22-12890",
+    "dateStr": "16/09/2026",
+    "empId": "12890",
+    "empName": "ปณัฐชา ปัตถา",
+    "otMachineOverride": "Pigment",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Pigment (23.00-07.00)"
+  },
+  {
+    "id": "adj-23-10705",
+    "dateStr": "16/09/2026",
+    "empId": "10705",
+    "empName": "วรวุฒิ พันขันตี",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (23.00-07.00)"
+  },
+  {
+    "id": "adj-24-12809",
+    "dateStr": "17/09/2027",
+    "empId": "12809",
+    "empName": "ภาณุเดช แสนบุญมี",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (07.00-15.00)"
   }
 ]

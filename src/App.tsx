@@ -466,6 +466,12 @@ export default function App() {
     }
   };
 
+  // Auto-sync all data from T: drive on initial page mount
+  useEffect(() => {
+    handleFetchFolderScans(false);
+    handleFetchContractorData();
+  }, []);
+
   // Count adjustments for current date
   const currentDateAdjustmentsCount = useMemo(() => {
     const cleanCurrentDate = dateStringFormatted.trim();

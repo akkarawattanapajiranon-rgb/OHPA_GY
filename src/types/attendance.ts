@@ -122,6 +122,7 @@ export interface ManpowerComparisonRow {
   shift1Regular?: number;
   shift1OtHC?: number;
   shift1OtHours?: number;
+  shift1OtPeople?: number;
   shift1Gap: number;
   shift1Status: 'EXACT' | 'OVER' | 'UNDER';
   
@@ -130,6 +131,7 @@ export interface ManpowerComparisonRow {
   shift2Regular?: number;
   shift2OtHC?: number;
   shift2OtHours?: number;
+  shift2OtPeople?: number;
   shift2Gap: number;
   shift2Status: 'EXACT' | 'OVER' | 'UNDER';
   
@@ -138,6 +140,7 @@ export interface ManpowerComparisonRow {
   shift3Regular?: number;
   shift3OtHC?: number;
   shift3OtHours?: number;
+  shift3OtPeople?: number;
   shift3Gap: number;
   shift3Status: 'EXACT' | 'OVER' | 'UNDER';
 }

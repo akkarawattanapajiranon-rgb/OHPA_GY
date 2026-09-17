@@ -41,13 +41,47 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
     status: 'EXACT' | 'OVER' | 'UNDER',
     regular?: number,
     otHC?: number,
-    otHours?: number
+    otHours?: number,
+    otPeople?: number,
+    positionName?: string
   ) => {
-    if (target === 0 && actual === 0) {
+    const isWasReplacement = positionName === 'แทน WAS';
+
+    if (target === 0 && actual === 0 && (!otHours || otHours === 0)) {
       return <span className="text-slate-400 font-mono text-[11px]">-</span>;
     }
 
-    const hasOtSupport = otHC !== undefined && otHC > 0;
+    const hasOtSupport = (otHC !== undefined && otHC > 0) || (otHours !== undefined && otHours > 0);
+    const displayOtPeople = otPeople || otHC || (otHours ? Math.ceil(otHours / 8) : 0);
+
+    // Special Case: แทน WAS -> Show clean headcount e.g. "1 คน"
+    if (isWasReplacement) {
+      const count = displayOtPeople || actual;
+      if (count <= 0) return <span className="text-slate-400 font-mono text-[11px]">-</span>;
+      return (
+        <span className="inline-flex items-center font-semibold px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700 border border-slate-200">
+          {count} คน
+        </span>
+      );
+    }
+
+    // Dedicated case: Machines with no regular target in this shift (Target = 0) but having OT workers (e.g. 3-Roll Shift 2/3)
+    if (target === 0 && hasOtSupport) {
+      return (
+        <div className="inline-flex flex-col items-center justify-center">
+          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded text-[11px] border border-blue-200 shadow-xs"
+            title={`กะนี้ไม่มีเป้าหมายปกติ มีพนักงานทำ OT มาช่วย ${displayOtPeople} คน (รวม ${otHours} ชม.)`}
+          >
+            ⚡ OT {displayOtPeople} คน ({otHours} ชม.)
+          </span>
+          {regular !== undefined && regular > 0 && (
+            <span className="text-[10px] text-slate-500 font-medium mt-0.5">
+              (สแกนปกติ {regular} คน)
+            </span>
+          )}
+        </div>
+      );
+    }
 
     if (status === 'EXACT') {
       return (
@@ -59,9 +93,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
           {hasOtSupport && (
             <span
               className="text-[10px] text-emerald-800 font-medium mt-0.5 bg-emerald-100/60 px-1.5 py-0.2 rounded border border-emerald-200/60"
-              title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${otHC} คน (${otHours} ชม.)`}
+              title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${displayOtPeople} คน (${otHours} ชม.)`}
             >
-              (สแกน {regular} + OT {otHC})
+              (สแกน {regular} + OT {displayOtPeople} คน)
             </span>
           )}
         </div>
@@ -77,9 +111,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
           {hasOtSupport && (
             <span
               className="text-[10px] text-rose-700 font-medium mt-0.5 bg-rose-100/60 px-1.5 py-0.2 rounded border border-rose-200/60"
-              title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${otHC} คน (${otHours} ชม.)`}
+              title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${displayOtPeople} คน (${otHours} ชม.)`}
             >
-              (สแกน {regular} + OT {otHC})
+              (สแกน {regular} + OT {displayOtPeople} คน)
             </span>
           )}
         </div>
@@ -94,9 +128,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
         {hasOtSupport && (
           <span
             className="text-[10px] text-amber-800 font-medium mt-0.5 bg-amber-100/60 px-1.5 py-0.2 rounded border border-amber-200/60"
-            title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${otHC} คน (${otHours} ชม.)`}
+            title={`สแกนกะนี้ ${regular} คน + มีคนทำ OT มาช่วย ${displayOtPeople} คน (${otHours} ชม.)`}
           >
-            (สแกน {regular} + OT {otHC})
+            (สแกน {regular} + OT {displayOtPeople} คน)
           </span>
         )}
       </div>
@@ -198,7 +232,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
                     row.shift1Status,
                     row.shift1Regular,
                     row.shift1OtHC,
-                    row.shift1OtHours
+                    row.shift1OtHours,
+                    row.shift1OtPeople,
+                    row.positionName
                   )}
                 </td>
 
@@ -211,7 +247,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
                     row.shift2Status,
                     row.shift2Regular,
                     row.shift2OtHC,
-                    row.shift2OtHours
+                    row.shift2OtHours,
+                    row.shift2OtPeople,
+                    row.positionName
                   )}
                 </td>
 
@@ -224,7 +262,9 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({ data }) => {
                     row.shift3Status,
                     row.shift3Regular,
                     row.shift3OtHC,
-                    row.shift3OtHours
+                    row.shift3OtHours,
+                    row.shift3OtPeople,
+                    row.positionName
                   )}
                 </td>
               </tr>

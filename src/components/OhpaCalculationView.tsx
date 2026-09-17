@@ -226,8 +226,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': 'พนักงานรวมทั้งโรงงาน (GY + Contractor + Monthly)', 'ค่า': ohpaSummary.totalEmployeesCount + ' คน' },
       { 'หัวข้อ (KPI)': '- พนักงานประจำ Goodyear (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.gyEmployeesCount + ' คน (' + ohpaSummary.gyTotalHours.toLocaleString() + ' ชม.)' },
       { 'หัวข้อ (KPI)': '- พนักงานผู้รับเหมา Contractor WAS (ไม่รวมแผนก 6320)', 'ค่า': ohpaSummary.contractorEmployeesCount + ' คน (' + ohpaSummary.contractorTotalHours.toLocaleString() + ' ชม.)' },
-      { 'หัวข้อ (KPI)': `- พนักงานรายเดือน (Monthly Staff: GY ${ohpaSummary.monthlyStaff.count} + WAS ${ohpaSummary.monthlyStaff.wasCount || 9} = ${ohpaSummary.monthlyStaff.combinedCount || 70} คน)`, 'ค่า': `${ohpaSummary.monthlyStaff.combinedCount || 70} คน (${(ohpaSummary.monthlyStaff.combinedTotalHours || (ohpaSummary.monthlyStaff.totalHours + (ohpaSummary.monthlyStaff.wasTotalHours || 0)))} ชม. @ ${ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน)` },
-      { 'หัวข้อ (KPI)': '🚫 พนักงานแผนก 6320 ที่ตัดออก (GY + Cont)', 'ค่า': `${ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน (${(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.)` },
+      { 'หัวข้อ (KPI)': `- พนักงานรายเดือน (Monthly Staff: GY ${ohpaSummary.monthlyStaff.count} + WAS ${ohpaSummary.monthlyStaff.wasCount || 9} = ${ohpaSummary.monthlyStaff.combinedCount || 71} คน)`, 'ค่า': `${ohpaSummary.monthlyStaff.combinedCount || 71} คน (${(ohpaSummary.monthlyStaff.combinedTotalHours || (ohpaSummary.monthlyStaff.totalHours + (ohpaSummary.monthlyStaff.wasTotalHours || 0)))} ชม. @ ${ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน)` },
+      { 'หัวข้อ (KPI)': '🚫 พนักงานแผนก 6320 ที่ตัดออก (GY + Cont)', 'ค่า': `${Math.round((ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount) * 10) / 10} คน (${(ohpaSummary.excluded6320GyHours + ohpaSummary.excluded6320ContHours).toFixed(1)} ชม.)` },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานปกติรวมทั้งสิ้น (รวมรายเดือน)', 'ค่า': ohpaSummary.totalNormalHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงาน OT รวมทั้งสิ้น', 'ค่า': ohpaSummary.totalOtHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Total Plant Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
@@ -473,7 +473,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 55012
               </span>
               <span className="bg-purple-100 text-purple-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-purple-300/40">
-                + รายเดือน {ohpaSummary.monthlyStaff.combinedCount || 70} คน
+                + รายเดือน {ohpaSummary.monthlyStaff.combinedCount || 71} คน
               </span>
               <span className="bg-rose-100 text-rose-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-300/40">
                 ตัดแผนก 6320 ออก
@@ -634,7 +634,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <div className="text-slate-300 space-y-0.5">
               <span>
                 1. <strong>ตัดแผนก 6320 (Retread)</strong> ออกทั้ง GY ({ohpaSummary.excluded6320GyCount} คน) และ Cont ({ohpaSummary.excluded6320ContCount} คน) &nbsp;|&nbsp;
-                2. <strong>รวมพนักงานรายเดือน {ohpaSummary.monthlyStaff.combinedCount || 70} คน</strong> ({ohpaSummary.monthlyStaff.dayName} คิด {ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน = +{ohpaSummary.monthlyStaff.combinedTotalHours || ohpaSummary.monthlyStaff.totalHours} ชม.)
+                2. <strong>รวมพนักงานรายเดือน {ohpaSummary.monthlyStaff.combinedCount || 71} คน</strong> ({ohpaSummary.monthlyStaff.dayName} คิด {ohpaSummary.monthlyStaff.hoursPerPerson} ชม./คน = +{ohpaSummary.monthlyStaff.combinedTotalHours || ohpaSummary.monthlyStaff.totalHours} ชม.)
               </span>
               <span className="block text-slate-200">
                 3. <strong className="text-rose-400">🔻 หัก Development + PDI Hour (Deduct):</strong> -{ohpaSummary.pdiDeductHours} ชม. &nbsp;|&nbsp;
@@ -895,7 +895,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span>กำลังพลรวม: <strong>{ohpaSummary.totalEmployeesCount.toLocaleString()} คน</strong></span>
               <span className="text-rose-600 font-semibold text-[11px]">
-                (ตัด 6320 ออก {ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount} คน)
+                (ตัด 6320 ออก {Math.round((ohpaSummary.excluded6320GyCount + ohpaSummary.excluded6320ContCount) * 10) / 10} คน)
               </span>
             </div>
           </div>

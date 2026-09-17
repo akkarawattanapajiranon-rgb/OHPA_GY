@@ -183,7 +183,11 @@ function scanFolderApiPlugin(): Plugin {
             const rawEmpId = findVal(['รหัส', 'empid', 'emp id', 'id', 'emp']);
             if (!rawEmpId) return;
 
-            const cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
+            let cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
+            // Handle alias / typos from Excel (e.g. 12626 -> 12678 Pongsatron Ketkaew - Band 72)
+            if (cleanId === '12626') {
+              cleanId = '12678';
+            }
             const rawDate = findVal(['วัน', 'date']);
             let dateStr = '';
 
@@ -228,6 +232,7 @@ function scanFolderApiPlugin(): Plugin {
             if (finalOtMachine) {
               if (/3\s*roll/i.test(finalOtMachine)) finalOtMachine = '3-Roll Calender';
               else if (/mixer\s*2/i.test(finalOtMachine)) finalOtMachine = 'Mixer 2';
+              else if (/pigment/i.test(finalOtMachine)) finalOtMachine = 'Pigment';
               else if (/chaffer/i.test(finalOtMachine)) finalOtMachine = 'Chaffer Lay-up';
               else if (/54/i.test(finalOtMachine)) finalOtMachine = '54" Band Building';
               else if (/72/i.test(finalOtMachine)) finalOtMachine = '72" Band Building';
@@ -236,17 +241,11 @@ function scanFolderApiPlugin(): Plugin {
             let finalRegMachine = regMachine || undefined;
             if (finalRegMachine) {
               if (/chaffer/i.test(finalRegMachine)) finalRegMachine = 'Chaffer Lay-up';
+              else if (/pigment/i.test(finalRegMachine)) finalRegMachine = 'Pigment';
+              else if (/3\s*roll/i.test(finalRegMachine)) finalRegMachine = '3-Roll Calender';
             }
 
             const empInfo = empMap[cleanId];
-
-            if (!finalRegMachine && finalOtMachine && timeStr && !finalOtMachine.includes('แทน WAS') && (
-              (timeStr.includes('15') && timeStr.includes('23') && !findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'โอที'])) ||
-              (timeStr.includes('07') && timeStr.includes('15') && !findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'โอที']))
-            )) {
-              finalRegMachine = finalOtMachine;
-              finalOtMachine = undefined;
-            }
 
             let defaultReason = reason;
             if (!defaultReason) {
@@ -1042,6 +1041,131 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
           res.end(JSON.stringify({ success: false, message: err.message }));
         }
       });
+
+      // API to compute OHPA numbers for days 1 to 16
+      server.middlewares.use('/api/calculate-all-days', async (req, res) => {
+        try {
+          const defaultEmpMappingRaw = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'src/data/default_emp_mapping.json'), 'utf8'));
+          const defaultAdjustmentsRaw = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'src/data/default_adjustments.json'), 'utf8'));
+          const { DEFAULT_CONTRACTOR_RECORDS_BY_DATE } = await import('./src/data/default_contractor_data');
+          const { DEFAULT_PDI_BEAD_REPORT } = await import('./src/data/default_pdi_bead');
+          const { calculateOhpaSummary, calculateMtdSummary } = await import('./src/utils/ohpaCalculator');
+          const { processScanRecords, createPresetsFromScanFiles } = await import('./src/utils/parser');
+
+          // Read all scan files from scans/
+          const scansDir = path.resolve(__dirname, 'scans');
+          const scanFileNames = fs.readdirSync(scansDir).filter(f => !f.startsWith('.') && /\.(txt|dat|csv|log)$/i.test(f));
+          const scanFilesList = scanFileNames.map(fileName => ({
+            fileName,
+            content: fs.readFileSync(path.join(scansDir, fileName), 'utf8')
+          }));
+
+          const allScanPresets = createPresetsFromScanFiles(scanFilesList);
+          console.log('Available presets:', allScanPresets.map((p: any) => ({ name: p.name, dateFormatted: p.dateFormatted, id: p.id, len: p.content?.length })));
+
+          const tonnageListPath = path.resolve('C:\\Users\\aa11909\\.gemini\\antigravity\\brain\\9e3ae43d-62af-446d-bd0f-ea14bc1c8b03\\scratch\\daily_tonnage_1_16.json');
+          const tonnageList = JSON.parse(fs.readFileSync(tonnageListPath, 'utf8'));
+
+          const daysResult = [];
+
+          for (let d = 1; d <= 16; d++) {
+            const dPad = String(d).padStart(2, '0');
+            const dateFormatted = `${dPad}/09/2026`;
+            
+            const preset = allScanPresets.find((p: any) => {
+              const pId = p.id || '';
+              const pDate = (p.dateFormatted || '').trim();
+              const pName = (p.name || '').trim();
+              if (pId === `folder_day_09${dPad}2026` || pId === `scan_202609${dPad}`) return true;
+              if (pDate === `${d}/9/2026` || pDate === `${dPad}/09/2026` || pDate === `${d}/09/2026` || pDate === `${dPad}/9/2026`) return true;
+              if (pName === `📅 วันที่ ${d}/9/2026` || pName === `📅 วันที่ ${dPad}/09/2026` || pName === `📅 วันที่ ${d}/09/2026`) return true;
+              return false;
+            });
+
+            let records: any[] = [];
+            if (preset && preset.content) {
+              const parsed = processScanRecords(preset.content, defaultEmpMappingRaw, defaultAdjustmentsRaw);
+              records = parsed.records;
+            }
+
+            const contEntry = (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)[`${d}/9/2026`] ||
+              (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)[`${d}/09/2026`] ||
+              (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)[dateFormatted] ||
+              (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)[`2026-09-${dPad}`];
+            
+            const contRecords = contEntry ? contEntry.records : [];
+
+            const tItem = tonnageList.find((t: any) => t.day === d);
+            const tonnageReport = tItem?.tonnageData || null;
+
+            const summary = calculateOhpaSummary(
+              records,
+              contRecords,
+              tonnageReport,
+              `วันที่ ${d}/9/2026`,
+              allScanPresets,
+              DEFAULT_CONTRACTOR_RECORDS_BY_DATE,
+              defaultEmpMappingRaw,
+              defaultAdjustmentsRaw,
+              DEFAULT_PDI_BEAD_REPORT
+            );
+
+            daysResult.push({
+              day: d,
+              dateFormatted,
+              dayName: summary.monthlyStaff.dayName,
+              gyHc: summary.gyEmployeesCount,
+              gyHours: summary.gyTotalHours,
+              gyNormalHours: summary.gyNormalHours,
+              gyOtHours: summary.gyOtHours,
+              contHc: summary.contractorEmployeesCount,
+              contHours: summary.contractorTotalHours,
+              contNormalHours: summary.contractorNormalHours,
+              contOtHours: summary.contractorOtHours,
+              monthlyStaffCount: summary.monthlyStaff.combinedCount,
+              monthlyHours: summary.monthlyStaff.combinedTotalHours,
+              pdiDeduct: summary.pdiDeductHours,
+              beadAdd: summary.beadAddHours,
+              grossWorkingHours: summary.totalWorkingHours,
+              netOpahHours: summary.opahWorkingHours,
+              stockingKg: summary.totalTonnageKg,
+              stockingTon: summary.totalTonnageTon,
+              stockingLbs: summary.totalTonnageLbs,
+              dailyOhpaLbsHr: summary.overallOpahLbsPerHour,
+              shifts: summary.shifts,
+              areaBreakdown: summary.areaBreakdown
+            });
+          }
+
+          // Also compute Day 16 MTD cumulative summary
+          const d16Preset = allScanPresets.find((p: any) => p.name.includes('20260916') || p.dateFormatted?.includes('16/9/2026') || p.dateFormatted?.includes('16/09/2026'));
+          const d16Records = d16Preset ? processScanRecords(d16Preset.content, defaultEmpMappingRaw, defaultAdjustmentsRaw).records : [];
+          const d16Cont = (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)['16/9/2026']?.records || (DEFAULT_CONTRACTOR_RECORDS_BY_DATE as any)['16/09/2026']?.records || [];
+          const d16Tonnage = tonnageList.find((t: any) => t.day === 16)?.tonnageData || null;
+          const mtdSummary = calculateMtdSummary(
+            'วันที่ 16/9/2026',
+            d16Records,
+            d16Cont,
+            d16Tonnage,
+            allScanPresets,
+            DEFAULT_CONTRACTOR_RECORDS_BY_DATE,
+            defaultEmpMappingRaw,
+            defaultAdjustmentsRaw,
+            DEFAULT_PDI_BEAD_REPORT
+          );
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: true,
+            days: daysResult,
+            mtd: mtdSummary
+          }));
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ success: false, message: err.message, stack: err.stack }));
+        }
+      });
     }
   };
 }
@@ -1063,6 +1187,9 @@ export default defineConfig({
         '**/*.bat',
         '**/*.xlsx',
         '**/*.xls',
+        '**/src/data/default_contractor_data.ts',
+        '**/src/data/default_pdi_bead.ts',
+        '**/src/data/default_adjustments.json',
         '**/node_modules/**'
       ]
     }
