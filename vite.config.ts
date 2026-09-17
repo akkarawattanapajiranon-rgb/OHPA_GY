@@ -815,6 +815,9 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
             } catch (pErr) {}
           }
 
+          // Sort files so older files are read first, and newer daily exports take precedence
+          wasFiles.sort((a, b) => a.localeCompare(b));
+
           for (const f of wasFiles) {
             const scanFilePath = path.join(targetWasDir, f);
             if (!fs.existsSync(scanFilePath)) continue;
@@ -878,50 +881,36 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                     if (inHour >= 5 && inHour < 12) {
                       shiftNumber = 1;
                       if (otCol >= 4 || outHour >= 19) {
-                        if (otHours < 4) otHours = 4;
-                        shiftLabel = 'กะ 1 (07:00 - 19:00 / OT 4 ชม.)';
+                        shiftLabel = 'กะ 1 + OT 4h (07:00 - 19:00)';
+                        if (otHours === 0) otHours = 4;
                       } else if (otCol > 0) {
-                        shiftLabel = `กะ 1 (07:00 - 15:00 + OT ${otCol}h)`;
+                        shiftLabel = `กะ 1 + OT ${otCol}h`;
                       } else {
                         shiftLabel = 'กะ 1 (07:00 - 15:00)';
                       }
                     }
-                    // 2. เข้า 15.00 - 23.00 -> กะ 2
+                    // 2. เข้า 15.00 - 07.00 -> กะ 2 + OT 8 ชม ข้ามไปกะ 3
                     else if (inHour >= 12 && inHour < 17) {
+                      shiftNumber = 3;
                       if (outHour >= 6 && outHour <= 9) {
-                        shiftNumber = 3;
-                        shiftLabel = 'กะ 3 (15:00 - 07:00 / OT 8 ชม.)';
-                        if (otHours < 8) otHours = 8;
+                        shiftLabel = 'กะ 3 + OT ก่อนกะ 8h (15:00 - 07:00)';
+                        if (otHours === 0) otHours = 8;
                       } else {
                         shiftNumber = 2;
-                        if (otCol > 0) {
-                          shiftLabel = `กะ 2 (15:00 - 23:00 + OT ${otCol}h)`;
-                        } else {
-                          shiftLabel = 'กะ 2 (15:00 - 23:00)';
-                        }
+                        shiftLabel = 'กะ 2 (15:00 - 23:00)';
                       }
                     }
-                    // 3. เข้า 19.00 - 7.00 -> กะ 3 พร้อม OT 4 ชม
-                    else if (inHour >= 17 && inHour < 21) {
+                    // 3. เข้า 18.00 / 19.00 - 07.00 -> กะ 3 พร้อม OT 4-5 ชม ก่อนกะ
+                    else if (inHour >= 17 && inHour < 22) {
                       shiftNumber = 3;
-                      if (otCol >= 4 || (outHour >= 6 && outHour <= 9)) {
-                        if (otHours < 4) otHours = 4;
-                        shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
-                      } else if (otCol > 0) {
-                        shiftLabel = `กะ 3 (19:00 - 07:00 + OT ${otCol}h)`;
-                      } else {
-                        shiftLabel = 'กะ 3 (19:00 - 07:00 / OT 4 ชม.)';
-                        otHours = 4;
-                      }
+                      const otCalculated = Math.max(0, 23 - inHour);
+                      if (otHours === 0) otHours = otCalculated;
+                      shiftLabel = `กะ 3 + OT ก่อนกะ ${otHours}h (${scanIn} - 07:00)`;
                     }
-                    // 4. เข้า 23.00 - 7.00 -> กะ 3
+                    // 4. เข้า 23.00 - 07.00 -> กะ 3
                     else {
                       shiftNumber = 3;
-                      if (otCol > 0) {
-                        shiftLabel = `กะ 3 (23:00 - 07:00 + OT ${otCol}h)`;
-                      } else {
-                        shiftLabel = 'กะ 3 (23:00 - 07:00)';
-                      }
+                      shiftLabel = 'กะ 3 (23:00 - 07:00)';
                     }
                   } else {
                     if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
@@ -999,10 +988,19 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                     };
                   }
 
-                  const existingIdx = recordsByDate[dateKey].records.findIndex(r => r.empCode === empCode);
+                  const existingIdx = recordsByDate[dateKey].records.findIndex((r: any) => r.empCode === empCode);
                   if (existingIdx >= 0) {
-                    if (record.hasScannedIn || !recordsByDate[dateKey].records[existingIdx].hasScannedIn) {
-                      recordsByDate[dateKey].records[existingIdx] = record;
+                    const existing = recordsByDate[dateKey].records[existingIdx];
+                    // Keep the most complete record (prefer non-empty scanOut and higher OT)
+                    if (record.scanOut || !existing.scanOut || record.otHours > existing.otHours || (!existing.hasScannedIn && record.hasScannedIn)) {
+                      recordsByDate[dateKey].records[existingIdx] = {
+                        ...existing,
+                        ...record,
+                        scanOut: record.scanOut || existing.scanOut,
+                        otHours: Math.max(record.otHours, existing.otHours),
+                        totalHours: Math.max(record.totalHours, existing.totalHours),
+                        status: (record.otHours > 0 || existing.otHours > 0) ? `ปกติ (+OT ${Math.max(record.otHours, existing.otHours)} ชม.)` : (record.status || existing.status)
+                      };
                     }
                   } else {
                     recordsByDate[dateKey].records.push(record);

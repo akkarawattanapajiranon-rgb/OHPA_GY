@@ -196,5 +196,49 @@
     "customEndTime": "18:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-18-12462",
+    "dateStr": "16/09/2026",
+    "empId": "12462",
+    "empName": "อธิวัฒน์ งามสม",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-19-12945",
+    "dateStr": "16/09/2026",
+    "empId": "12945",
+    "empName": "วรวุฒิ  มาพงษ์",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-20-12626",
+    "dateStr": "16/09/2026",
+    "empId": "12626",
+    "empName": "พนักงาน 12626",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+  },
+  {
+    "id": "adj-21-12255",
+    "dateStr": "16/09/2026",
+    "empId": "12255",
+    "empName": "เจริญวุฒิ สะใบพิมพ์",
+    "otMachineOverride": "Trucker 4roll#1",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Trucker 4roll#1 (23.00-07.00)"
   }
 ]
