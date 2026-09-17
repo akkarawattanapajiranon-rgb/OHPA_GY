@@ -130,6 +130,11 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   const p = (bcaPos || '').toLowerCase().trim();
   const d = (dept || '');
 
+  // 0. แทน WAS / WAS Replacement (Priority match so it deducts from primary dept!)
+  if (m.includes('was') || m.includes('แทน was') || p.includes('was') || p.includes('แทน was')) {
+    return 'แทน WAS';
+  }
+
   // Direct match to standard position names if passed
   for (const std of TEAM_A_STANDARD_HC) {
     const stdLower = std.positionName.toLowerCase();
@@ -179,11 +184,6 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   if (m.includes('quad') || p.includes('quad')) return '430 Quad';
   if (d.includes('4300') || m.includes('duplex') || m.includes('6" x 8"') || m.includes('6"x8"') || m.includes('tuber') || p.includes('cfe') || p.includes('tuber') || p.includes('booker')) {
     return '430 6"x8" Tuber';
-  }
-
-  // แทน WAS / WAS Replacement
-  if (m.includes('was') || m.includes('แทน was') || p.includes('was') || p.includes('แทน was')) {
-    return 'แทน WAS';
   }
 
   if (p.includes('leader')) return 'Leader';
