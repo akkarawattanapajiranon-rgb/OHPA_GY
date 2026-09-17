@@ -314,42 +314,60 @@ export function processScanRecords(
       }
     }
 
-    const inScan = ins.length > 0 ? ins[0] : null;
+    // Candidate sessions pairing each IN scan with its corresponding OUT scan (within 18 hours max)
+    let inScan: RawScanRecord | null = null;
+    let outScan: RawScanRecord | null = null;
+
+    if (ins.length > 0) {
+      const candidateSessions: Array<{
+        inS: RawScanRecord;
+        outS: RawScanRecord | null;
+        durationHours: number;
+        provShift: ShiftType;
+      }> = [];
+
+      for (const inS of ins) {
+        const prov = determineShift(inS.timestamp);
+        // Exclude outs at the exact same minute (< 60s) or > 18 hours after inScan
+        const validOuts = outs.filter(o => {
+          const diffMs = o.timestamp.getTime() - inS.timestamp.getTime();
+          if (diffMs <= 60 * 1000 || diffMs > 18 * 3600 * 1000) return false;
+          if (prov === 3) {
+            const oh = o.timestamp.getHours();
+            const om = o.timestamp.getMinutes();
+            return (oh >= 5 && (oh < 11 || (oh === 11 && om <= 30)));
+          }
+          return true;
+        });
+
+        let outS: RawScanRecord | null = null;
+        if (validOuts.length > 0) {
+          outS = validOuts[validOuts.length - 1];
+        }
+
+        const durationHours = outS ? (outS.timestamp.getTime() - inS.timestamp.getTime()) / (3600 * 1000) : 0;
+        candidateSessions.push({ inS, outS, durationHours, provShift: prov });
+      }
+
+      // Sort candidate sessions: prefer valid full shift (>= 4h) over brief aborted punches (< 1.5h)
+      candidateSessions.sort((a, b) => {
+        if (a.durationHours >= 4 && b.durationHours < 1.5) return -1;
+        if (b.durationHours >= 4 && a.durationHours < 1.5) return 1;
+        return b.durationHours - a.durationHours;
+      });
+
+      inScan = candidateSessions[0].inS;
+      outScan = candidateSessions[0].outS;
+    } else if (outs.length > 0) {
+      outScan = outs[0];
+    }
 
     // Determine provisional shift from inScan (or outs if no inScan)
     let provShift: ShiftType = 1;
     if (inScan) {
       provShift = determineShift(inScan.timestamp);
-    } else if (outs.length > 0) {
-      provShift = determineShiftFromOut(outs[0].timestamp);
-    }
-
-    // Pick best matching out scan
-    let outScan: RawScanRecord | null = null;
-    if (inScan && outs.length > 0) {
-      // Exclude outs at the exact same minute (< 60s) as inScan
-      const distinctOuts = outs.filter(o => Math.abs(o.timestamp.getTime() - inScan.timestamp.getTime()) >= 60 * 1000);
-      if (distinctOuts.length > 0) {
-        let validOuts = distinctOuts.filter(o => o.timestamp.getTime() > inScan.timestamp.getTime());
-
-        // Rule: Shift 3 (Night shift 23:00 - 07:00) workers NEVER work continuously through morning shift until afternoon.
-        // Valid Shift 3 checkouts occur in the morning window (05:00 - 11:30). Out scans in the afternoon (>= 12:00) are not Shift 3 checkouts.
-        if (provShift === 3) {
-          validOuts = validOuts.filter(o => {
-            const oh = o.timestamp.getHours();
-            const om = o.timestamp.getMinutes();
-            return (oh >= 5 && (oh < 11 || (oh === 11 && om <= 30)));
-          });
-        }
-
-        if (validOuts.length > 0) {
-          outScan = validOuts[validOuts.length - 1]; // Latest out for total working hours / OT
-        } else if (provShift !== 3) {
-          outScan = distinctOuts[0];
-        }
-      }
-    } else if (outs.length > 0) {
-      outScan = outs[0];
+    } else if (outScan) {
+      provShift = determineShiftFromOut(outScan.timestamp);
     }
 
     // Determine shift
