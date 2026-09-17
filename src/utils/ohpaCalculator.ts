@@ -225,6 +225,9 @@ export interface AreaAccumulator {
   consumerBiasAllocatedHC: number;
   beadAddHours: number;
   pdiDeductHours: number;
+  bcaReductionHours: number;
+  bcaDevHours: number;
+  retreadReceivedHours: number;
   finalOpahHours: number;
   deptMap: Record<string, OhpaAreaDeptItem>;
 }
@@ -255,6 +258,9 @@ export function createEmptyAreaMap(): Record<string, AreaAccumulator> {
       consumerBiasAllocatedHC: 0,
       beadAddHours: 0,
       pdiDeductHours: 0,
+      bcaReductionHours: 0,
+      bcaDevHours: 0,
+      retreadReceivedHours: 0,
       finalOpahHours: 0,
       deptMap: {}
     };
@@ -269,8 +275,10 @@ export function accumulateRecordsIntoAreaMap(
   monthlyStaff: { count: number; hoursPerPerson: number; totalHours: number; wasCount?: number; wasTotalHours?: number },
   beadAddHours: number = 0,
   pdiDeductMap: Record<string, number> = {},
-  employeeMapping: Record<string, EmployeeInfo> = {}
-) {
+  employeeMapping: Record<string, EmployeeInfo> = {},
+  bcaReductionHours: number = 0,
+  bcaDevHours: number = 0
+): void {
   // Helper to get MU
   const getEmpMu = (empId: string, fallbackMu?: string, category?: string, dept?: string, costCenter?: string): string => {
     const emp = employeeMapping[empId] || employeeMapping[empId.replace(/^0+/, '')] || employeeMapping[empId.padStart(5, '0')];
@@ -635,6 +643,69 @@ export function accumulateRecordsIntoAreaMap(
       a.deptMap['PDI & Dev'].totalHours -= hrs;
     }
   });
+
+  // 6. BCA Reduction (Work done by BCA for Retread) -> Deduct from BCA, Add to Retread
+  if (bcaReductionHours > 0) {
+    const aBca = areaMap['BCA'];
+    if (aBca) {
+      aBca.bcaReductionHours += bcaReductionHours;
+      const bcaRedKey = `BCA -> Retread Transfer (หักงานผลิตให้ Retread)`;
+      if (!aBca.deptMap['BCA_Retread_Transfer']) {
+        aBca.deptMap['BCA_Retread_Transfer'] = {
+          dept: bcaRedKey,
+          isContractor: false,
+          isMonthly: false,
+          headcount: 0,
+          normalHours: 0,
+          otHours: 0,
+          totalHours: 0
+        };
+      }
+      aBca.deptMap['BCA_Retread_Transfer'].normalHours -= bcaReductionHours;
+      aBca.deptMap['BCA_Retread_Transfer'].totalHours -= bcaReductionHours;
+    }
+
+    const aRetread = areaMap['Retread'];
+    if (aRetread) {
+      aRetread.retreadReceivedHours += bcaReductionHours;
+      const retreadAddKey = `Received from BCA (รับโอนงานผลิต Compound/Cement จาก BCA)`;
+      if (!aRetread.deptMap['BCA_Retread_Received']) {
+        aRetread.deptMap['BCA_Retread_Received'] = {
+          dept: retreadAddKey,
+          isContractor: false,
+          isMonthly: false,
+          headcount: 0,
+          normalHours: 0,
+          otHours: 0,
+          totalHours: 0
+        };
+      }
+      aRetread.deptMap['BCA_Retread_Received'].normalHours += bcaReductionHours;
+      aRetread.deptMap['BCA_Retread_Received'].totalHours += bcaReductionHours;
+    }
+  }
+
+  // 7. BCA DEV (Development compound in BCA) -> Deduct from BCA
+  if (bcaDevHours > 0) {
+    const aBca = areaMap['BCA'];
+    if (aBca) {
+      aBca.bcaDevHours += bcaDevHours;
+      const bcaDevKey = `BCA DEV Compound (หักชั่วโมง Development BCA)`;
+      if (!aBca.deptMap['BCA_DEV_Compound']) {
+        aBca.deptMap['BCA_DEV_Compound'] = {
+          dept: bcaDevKey,
+          isContractor: false,
+          isMonthly: false,
+          headcount: 0,
+          normalHours: 0,
+          otHours: 0,
+          totalHours: 0
+        };
+      }
+      aBca.deptMap['BCA_DEV_Compound'].normalHours -= bcaDevHours;
+      aBca.deptMap['BCA_DEV_Compound'].totalHours -= bcaDevHours;
+    }
+  }
 }
 
 export function getAreaTonnage(
@@ -767,7 +838,10 @@ export function buildAreaBreakdownList(
       const grossTotH = normalH + otH;
       const beadH = a.beadAddHours;
       const pdiH = a.pdiDeductHours;
-      const finalOpah = grossTotH + beadH - pdiH;
+      const bcaRedH = a.bcaReductionHours;
+      const bcaDevH = a.bcaDevHours;
+      const retreadRecH = a.retreadReceivedHours;
+      const finalOpah = grossTotH + beadH - pdiH - bcaRedH - bcaDevH + retreadRecH;
 
       const totHc = Math.round(((a.gyHc + a.contHc + a.monthlyHc) / avgDays) * 10) / 10;
       const gyHc = Math.round((a.gyHc / avgDays) * 10) / 10;
@@ -819,6 +893,9 @@ export function buildAreaBreakdownList(
         consumerBiasAllocatedHC: Math.round(a.consumerBiasAllocatedHC * 10) / 10,
         beadAddHours: Math.round(beadH * 10) / 10,
         pdiDeductHours: Math.round(pdiH * 10) / 10,
+        bcaReductionHours: Math.round(bcaRedH * 10) / 10,
+        bcaDevHours: Math.round(bcaDevH * 10) / 10,
+        retreadReceivedHours: Math.round(retreadRecH * 10) / 10,
         finalOpahHours: Math.round(finalOpah * 10) / 10,
         percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
           ? Math.round((grossTotH / totalWorkingHours) * 1000) / 10
@@ -902,6 +979,8 @@ export function calculateMtdSummary(
   let mtdMonthlyHours = 0;
   let mtdPdiDeductHours = 0;
   let mtdBeadAddHours = 0;
+  let mtdBcaReductionHours = 0;
+  let mtdBcaDevHours = 0;
   let mtdOpahWorkingHours = 0;
 
   const mtdAreaMap = createEmptyAreaMap();
@@ -973,11 +1052,13 @@ export function calculateMtdSummary(
       }
     }
 
-    // 3. Monthly Staff Data (Goodyear 61 + WAS 9)
+    // 3. Monthly Staff Data (Goodyear 62 + WAS 9)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
 
     const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
     const beadAddHours = pdiBeadReport?.beadDailyTotals?.[d] || 0;
+    const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[d] || (pdiBeadReport?.bcaReductionDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[d] / 60) * 100) / 100 : 0);
+    const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[d] || (pdiBeadReport?.bcaDevDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[d] / 60) * 100) / 100 : 0);
     const dayPdiDeductMap = buildPdiDeductMap(pdiBeadReport, d);
 
     // Calculate day-level area breakdown
@@ -989,7 +1070,9 @@ export function calculateMtdSummary(
       monthlyStaff,
       beadAddHours,
       dayPdiDeductMap,
-      employeeMapping
+      employeeMapping,
+      bcaReductionHours,
+      bcaDevHours
     );
 
     // Accumulate area breakdown for day d into MTD
@@ -1000,7 +1083,9 @@ export function calculateMtdSummary(
       monthlyStaff,
       beadAddHours,
       dayPdiDeductMap,
-      employeeMapping
+      employeeMapping,
+      bcaReductionHours,
+      bcaDevHours
     );
 
     // Derive active 4 areas for day d
@@ -1011,7 +1096,7 @@ export function calculateMtdSummary(
     const dayContH = Math.round(dayActiveAreas.reduce((s, a) => s + a.contNormal + a.contOt, 0) * 10) / 10;
     const dayMonthlyH = Math.round(dayActiveAreas.reduce((s, a) => s + a.monthlyNormal, 0) * 10) / 10;
     const dayTotalHours = Math.round((dayGyH + dayContH + dayMonthlyH) * 10) / 10;
-    const dayOpahHours = Math.max(0, Math.round((dayTotalHours - pdiDeductHours + beadAddHours) * 10) / 10);
+    const dayOpahHours = Math.max(0, Math.round((dayTotalHours - pdiDeductHours + beadAddHours - bcaReductionHours - bcaDevHours) * 10) / 10);
 
     mtdGyHours += dayGyH;
     mtdContractorHours += dayContH;
@@ -1019,6 +1104,8 @@ export function calculateMtdSummary(
     mtdTotalHours += dayTotalHours;
     mtdPdiDeductHours += pdiDeductHours;
     mtdBeadAddHours += beadAddHours;
+    mtdBcaReductionHours += bcaReductionHours;
+    mtdBcaDevHours += bcaDevHours;
     mtdOpahWorkingHours += dayOpahHours;
 
     dailyItems.push({
@@ -1033,6 +1120,8 @@ export function calculateMtdSummary(
       totalHours: Math.round(dayTotalHours * 10) / 10,
       pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
       beadAddHours: Math.round(beadAddHours * 10) / 10,
+      bcaReductionHours: Math.round(bcaReductionHours * 10) / 10,
+      bcaDevHours: Math.round(bcaDevHours * 10) / 10,
       opahWorkingHours: Math.round(dayOpahHours * 10) / 10,
       cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10,
       cumulativeOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10
@@ -1068,6 +1157,8 @@ export function calculateMtdSummary(
     mtdMonthlyHours: Math.round(mtdMonthlyHours * 10) / 10,
     mtdPdiDeductHours: Math.round(mtdPdiDeductHours * 10) / 10,
     mtdBeadAddHours: Math.round(mtdBeadAddHours * 10) / 10,
+    mtdBcaReductionHours: Math.round(mtdBcaReductionHours * 10) / 10,
+    mtdBcaDevHours: Math.round(mtdBcaDevHours * 10) / 10,
     mtdOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10,
     mtdStockingKg,
     mtdStockingLbs,
@@ -1092,7 +1183,7 @@ export function calculateOhpaSummary(
   dailyAdjustments: DailyAdjustmentRecord[] = [],
   pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 ): OhpaSummary {
-  const rawContActive = contractorRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
+  const rawContActive = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
 
   // 1. Monthly Staff
   const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
@@ -1110,6 +1201,8 @@ export function calculateOhpaSummary(
   }
   const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[targetDay] || 0;
   const beadAddHours = pdiBeadReport?.beadDailyTotals?.[targetDay] || 0;
+  const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[targetDay] || (pdiBeadReport?.bcaReductionDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
+  const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[targetDay] || (pdiBeadReport?.bcaDevDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
   const pdiDeductMap = buildPdiDeductMap(pdiBeadReport, targetDay);
 
   // 3. Process Area Breakdown (5 Areas based on Master Headcount 16 Sep)
@@ -1121,7 +1214,9 @@ export function calculateOhpaSummary(
     monthlyStaff,
     beadAddHours,
     pdiDeductMap,
-    employeeMapping
+    employeeMapping,
+    bcaReductionHours,
+    bcaDevHours
   );
 
   // Active 4 Areas & Retread derived from areaBreakdown
@@ -1450,6 +1545,30 @@ export function calculateOhpaSummary(
     };
   }
 
+  if (bcaReductionHours > 0) {
+    const bcaRedKey = `BCA -> Retread Transfer (หักงานผลิตให้ Retread - ${bcaReductionHours} ชม.)`;
+    deptMap[bcaRedKey] = {
+      isContractor: false,
+      isMonthly: false,
+      headcount: 0,
+      normalHours: -bcaReductionHours,
+      otHours: 0,
+      totalHours: -bcaReductionHours
+    };
+  }
+
+  if (bcaDevHours > 0) {
+    const bcaDevKey = `BCA DEV Compound (หักชั่วโมง Development BCA - ${bcaDevHours} ชม.)`;
+    deptMap[bcaDevKey] = {
+      isContractor: false,
+      isMonthly: false,
+      headcount: 0,
+      normalHours: -bcaDevHours,
+      otHours: 0,
+      totalHours: -bcaDevHours
+    };
+  }
+
   const departmentBreakdown: OhpaDeptMetrics[] = Object.entries(deptMap)
     .map(([dept, val]) => ({
       dept,
@@ -1487,6 +1606,8 @@ export function calculateOhpaSummary(
 
     pdiDeductHours: Math.round(pdiDeductHours * 10) / 10,
     beadAddHours: Math.round(beadAddHours * 10) / 10,
+    bcaReductionHours: Math.round(bcaReductionHours * 10) / 10,
+    bcaDevHours: Math.round(bcaDevHours * 10) / 10,
     opahWorkingHours: Math.round(opahWorkingHours * 10) / 10,
 
     gyEmployeesCount,

@@ -116,6 +116,9 @@ export interface OhpaAreaMetrics {
   consumerBiasAllocatedHC?: number;
   beadAddHours?: number;
   pdiDeductHours?: number;
+  bcaReductionHours?: number;
+  bcaDevHours?: number;
+  retreadReceivedHours?: number;
   finalOpahHours?: number;
   percentageOfTotalHours: number;
   departments: OhpaAreaDeptItem[];
@@ -138,6 +141,8 @@ export interface DailyMtdItem {
   totalHours: number;
   pdiDeductHours: number;
   beadAddHours: number;
+  bcaReductionHours?: number;
+  bcaDevHours?: number;
   opahWorkingHours: number;
   cumulativeTotalHours: number;
   cumulativeOpahWorkingHours?: number;
@@ -154,6 +159,8 @@ export interface MtdOhpaSummary {
   mtdMonthlyHours: number;
   mtdPdiDeductHours: number;
   mtdBeadAddHours: number;
+  mtdBcaReductionHours?: number;
+  mtdBcaDevHours?: number;
   mtdOpahWorkingHours: number;
   mtdStockingKg: number;
   mtdStockingLbs: number;
@@ -174,9 +181,12 @@ export interface OhpaSummary {
   totalOtHours: number;
   totalWorkingHours: number;
 
-  // PDI Deduct & B-end (Bead) Adjustment for OPAH
+  // Deduction & Addition
   pdiDeductHours: number;
   beadAddHours: number;
+  bcaReductionHours?: number;
+  bcaDevHours?: number;
+  retreadReceivedHours?: number;
   opahWorkingHours: number;
 
   // Goodyear Breakdown (excluding 6320)

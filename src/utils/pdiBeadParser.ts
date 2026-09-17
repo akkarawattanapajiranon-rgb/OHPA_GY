@@ -9,11 +9,19 @@ export function parsePdiBeadWorkbook(wb: XLSX.WorkBook): PdiBeadReport {
   const pdiPersons: PdiPersonRecord[] = [];
   const pdiDailyTotals: Record<number, number> = {};
   const beadDailyTotals: Record<number, number> = {};
+  const bcaReductionDailyMinutes: Record<number, number> = {};
+  const bcaReductionDailyHours: Record<number, number> = {};
+  const bcaDevDailyMinutes: Record<number, number> = {};
+  const bcaDevDailyHours: Record<number, number> = {};
 
   // Initialize day totals 1..31 to 0
   for (let d = 1; d <= 31; d++) {
     pdiDailyTotals[d] = 0;
     beadDailyTotals[d] = 0;
+    bcaReductionDailyMinutes[d] = 0;
+    bcaReductionDailyHours[d] = 0;
+    bcaDevDailyMinutes[d] = 0;
+    bcaDevDailyHours[d] = 0;
   }
 
   // Find day column indices (columns with 1..31)
@@ -120,6 +128,41 @@ export function parsePdiBeadWorkbook(wb: XLSX.WorkBook): PdiBeadReport {
         }
       }
     }
+    // Check if BCA Reduction row: Total (Reduction for BCA) (minute)
+    const isBcaReductionRow = (
+      textAll.includes('total (reduction for bca)') ||
+      textAll.includes('reduction for bca') ||
+      (col2.toLowerCase().includes('reduction for bca') || col0.toLowerCase().includes('reduction for bca'))
+    );
+
+    if (isBcaReductionRow) {
+      for (const [cStr, d] of Object.entries(dayColMap)) {
+        const c = Number(cStr);
+        const val = parseFloat(String(row[c] || '0').trim());
+        if (!isNaN(val) && val > 0) {
+          bcaReductionDailyMinutes[d] = val;
+          bcaReductionDailyHours[d] = Math.round((val / 60) * 100) / 100;
+        }
+      }
+    }
+
+    // Check if BCA DEV row: DEV (For BCA) (minute)
+    const isBcaDevRow = (
+      textAll.includes('dev (for bca)') ||
+      textAll.includes('dev for bca') ||
+      (col2.toLowerCase().includes('dev (for bca)') || col0.toLowerCase().includes('dev (for bca)'))
+    );
+
+    if (isBcaDevRow) {
+      for (const [cStr, d] of Object.entries(dayColMap)) {
+        const c = Number(cStr);
+        const val = parseFloat(String(row[c] || '0').trim());
+        if (!isNaN(val) && val > 0) {
+          bcaDevDailyMinutes[d] = val;
+          bcaDevDailyHours[d] = Math.round((val / 60) * 100) / 100;
+        }
+      }
+    }
   }
 
   // If pdiDailyTotals were not found as an explicit row, calculate from sum of pdiPersons
@@ -137,6 +180,10 @@ export function parsePdiBeadWorkbook(wb: XLSX.WorkBook): PdiBeadReport {
     pdiPersons,
     pdiDailyTotals,
     beadDailyTotals,
+    bcaReductionDailyMinutes,
+    bcaReductionDailyHours,
+    bcaDevDailyMinutes,
+    bcaDevDailyHours,
     updatedAt: new Date().toISOString()
   };
 }

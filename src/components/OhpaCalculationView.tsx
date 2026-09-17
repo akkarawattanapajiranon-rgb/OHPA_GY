@@ -9,6 +9,7 @@ import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExp
 import {
   Calculator,
   RefreshCw,
+  RotateCcw,
   Calendar,
   ExternalLink,
   Download,
@@ -68,6 +69,35 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
   const [showPdiDetail, setShowPdiDetail] = useState<boolean>(false);
   const [showExportMenu, setShowExportMenu] = useState<boolean>(false);
+  const [isSyncingPdi, setIsSyncingPdi] = useState<boolean>(false);
+  const [syncStatus, setSyncStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleSyncPdiBead = async () => {
+    setIsSyncingPdi(true);
+    setSyncStatus(null);
+    try {
+      const res = await fetch('/api/sync-pdi-bead');
+      const data = await res.json();
+      if (data.success) {
+        setSyncStatus({
+          type: 'success',
+          message: data.message || 'ซิงค์ข้อมูล PDI & Bead & BCA สำเร็จ'
+        });
+      } else {
+        setSyncStatus({
+          type: 'error',
+          message: data.message || 'เกิดข้อผิดพลาดในการซิงค์ข้อมูล PDI & Bead'
+        });
+      }
+    } catch (err: any) {
+      setSyncStatus({
+        type: 'error',
+        message: err.message || 'ไม่สามารถเชื่อมต่อ API ซิงค์ PDI & Bead ได้'
+      });
+    } finally {
+      setIsSyncingPdi(false);
+    }
+  };
 
   const toggleArea = (key: string) => {
     setExpandedAreas(prev => ({ ...prev, [key]: !prev[key] }));
@@ -176,18 +206,22 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const activeHc = Math.round(activeAreas.reduce((s, a) => s + a.totalHeadcount, 0) * 10) / 10;
     const activePdi = Math.round(activeAreas.reduce((s, a) => s + (a.pdiDeductHours || 0), 0) * 10) / 10;
     const activeBead = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
-    const activeNetTot = Math.round((activeGrossTot - activePdi + activeBead) * 10) / 10;
+    const activeBcaRed = Math.round(activeAreas.reduce((s, a) => s + (a.bcaReductionHours || 0), 0) * 10) / 10;
+    const activeBcaDev = Math.round(activeAreas.reduce((s, a) => s + (a.bcaDevHours || 0), 0) * 10) / 10;
+    const activeNetTot = Math.round(activeAreas.reduce((s, a) => s + (a.finalOpahHours ?? (a.totalHours - (a.pdiDeductHours || 0) + (a.beadAddHours || 0))), 0) * 10) / 10;
 
     const retreadNorm = Math.round((retreadArea?.normalHours || 0) * 10) / 10;
     const retreadOt = Math.round((retreadArea?.otHours || 0) * 10) / 10;
     const retreadTot = Math.round((retreadArea?.totalHours || 0) * 10) / 10;
     const retreadHc = Math.round((retreadArea?.totalHeadcount || 0) * 10) / 10;
+    const retreadReceived = Math.round((retreadArea?.retreadReceivedHours || 0) * 10) / 10;
+    const retreadNetTot = Math.round((retreadArea?.finalOpahHours ?? (retreadTot + retreadReceived)) * 10) / 10;
 
     const grandNorm = Math.round((activeNorm + retreadNorm) * 10) / 10;
     const grandOt = Math.round((activeOt + retreadOt) * 10) / 10;
     const grandGrossTot = Math.round((activeGrossTot + retreadTot) * 10) / 10;
     const grandHc = Math.round((activeHc + retreadHc) * 10) / 10;
-    const grandNetTot = Math.round((activeNetTot + retreadTot) * 10) / 10;
+    const grandNetTot = Math.round((activeNetTot + retreadNetTot) * 10) / 10;
 
     return {
       activeNorm,
@@ -196,12 +230,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       activeTot: activeGrossTot,
       activePdi,
       activeBead,
+      activeBcaRed,
+      activeBcaDev,
       activeNetTot,
       activeHc,
       retreadNorm,
       retreadOt,
       retreadTot,
       retreadHc,
+      retreadReceived,
+      retreadNetTot,
       retreadGyHc: retreadArea?.gyHeadcount || 0,
       retreadContHc: retreadArea?.contractorHeadcount || 0,
       retreadGyTot: retreadArea?.gyTotalHours || 0,
@@ -233,6 +271,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': 'ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Total Plant Hours)', 'ค่า': ohpaSummary.totalWorkingHours.toLocaleString() + ' ชม.' },
       { 'หัวข้อ (KPI)': '🔻 Development + PDI Hours (Deduct)', 'ค่า': `-${ohpaSummary.pdiDeductHours.toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': '🟢 B-end / Bead Hours (Add)', 'ค่า': `+${ohpaSummary.beadAddHours.toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '🔻 BCA Reduction for Retread (Deduct from BCA, Add to Retread)', 'ค่า': `-${(ohpaSummary.bcaReductionHours || 0).toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '🔻 BCA DEV Compound (Deduct from BCA)', 'ค่า': `-${(ohpaSummary.bcaDevHours || 0).toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': '⭐ ชั่วโมงทำงานสุทธิที่ใช้คิด OPAH (Net OPAH Hours)', 'ค่า': `${ohpaSummary.opahWorkingHours.toLocaleString()} ชม.` },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (kg)', 'ค่า': ohpaSummary.totalTonnageKg.toLocaleString() + ' kg' },
       { 'หัวข้อ (KPI)': 'ยอด Stocking รวมประจำวัน (lbs = kg x 2.20462)', 'ค่า': ohpaSummary.totalTonnageLbs.toLocaleString() + ' lbs' },
@@ -315,6 +355,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'ชม.ฐานรวม (ชม.)': a.totalHours,
       '🔻 PDI Deduct (ชม.)': a.pdiDeductHours ? `-${a.pdiDeductHours}` : 0,
       '🟢 Bead Add (ชม.)': a.beadAddHours ? `+${a.beadAddHours}` : 0,
+      '🔄 BCA หักโอนให้ Retread (ชม.)': a.bcaReductionHours ? `-${a.bcaReductionHours}` : 0,
+      '🧪 BCA DEV หักออก (ชม.)': a.bcaDevHours ? `-${a.bcaDevHours}` : 0,
+      '📥 Retread รับโอนจาก BCA (ชม.)': a.retreadReceivedHours ? `+${a.retreadReceivedHours}` : 0,
       '⭐ ชม.สุทธิคิด OPAH (ชม.)': a.finalOpahHours || a.totalHours,
       'รหัส Stocking 55012': a.areaTonnageCodes || '-',
       'ยอด Stocking (kg)': a.areaTonnageKg || 0,
@@ -340,6 +383,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'ชม.ฐานรวมสะสม MTD (ชม.)': a.totalHours,
         '🔻 PDI Deduct MTD (ชม.)': a.pdiDeductHours ? `-${a.pdiDeductHours}` : 0,
         '🟢 Bead Add MTD (ชม.)': a.beadAddHours ? `+${a.beadAddHours}` : 0,
+        '🔄 BCA หักโอนสะสม MTD (ชม.)': a.bcaReductionHours ? `-${a.bcaReductionHours}` : 0,
+        '🧪 BCA DEV สะสม MTD (ชม.)': a.bcaDevHours ? `-${a.bcaDevHours}` : 0,
+        '📥 Retread รับโอนสะสม MTD (ชม.)': a.retreadReceivedHours ? `+${a.retreadReceivedHours}` : 0,
         '⭐ ชม.สุทธิ MTD (ชม.)': a.finalOpahHours || a.totalHours,
         'รหัส Stocking 55012': a.areaTonnageCodes || '-',
         'ยอด Stocking สะสม MTD (kg)': a.areaTonnageKg || 0,
@@ -365,6 +411,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'ชม. รวมฐานโรงงาน (ชม.)': item.totalHours,
         'PDI Deduct (ชม.)': -item.pdiDeductHours,
         'B-end Bead Add (ชม.)': item.beadAddHours,
+        'BCA โอนให้ Retread (ชม.)': -(item.bcaReductionHours || 0),
+        'BCA DEV (ชม.)': -(item.bcaDevHours || 0),
         'ชม. สุทธิคิด OPAH (ชม.)': item.opahWorkingHours,
         'ชม. สะสมสุทธิ MTD (ชม.)': item.cumulativeOpahWorkingHours || item.cumulativeTotalHours
       }));
@@ -373,10 +421,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     }
 
     // Sheet 6: PDI & B-end Breakdown
-    if (pdiBeadReport && pdiBeadReport.pdiPersons) {
-      const pdiSheetData = pdiBeadReport.pdiPersons.map(p => {
+    if (pdiBeadReport) {
+      const pdiSheetData = (pdiBeadReport.pdiPersons || []).map(p => {
         const rowObj: Record<string, any> = {
-          'ชื่อพนักงาน': p.name,
+          'รายการ / พนักงาน': p.name,
           'กลุ่ม / ฝ่าย': p.group,
           'ตำแหน่ง / หน้าที่': p.desc,
         };
@@ -385,8 +433,35 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         }
         return rowObj;
       });
+
+      // Add BCA Reduction row
+      if (pdiBeadReport.bcaReductionDailyHours) {
+        const bcaRow: Record<string, any> = {
+          'รายการ / พนักงาน': 'Total (Reduction for BCA)',
+          'กลุ่ม / ฝ่าย': 'BCA -> Retread (โอนชั่วโมง)',
+          'ตำแหน่ง / หน้าที่': 'Compound + Cement + Kamol RT27',
+        };
+        for (let d = 1; d <= 31; d++) {
+          bcaRow[`วันที่ ${d}`] = pdiBeadReport.bcaReductionDailyHours[d] || 0;
+        }
+        pdiSheetData.push(bcaRow);
+      }
+
+      // Add BCA DEV row
+      if (pdiBeadReport.bcaDevDailyHours) {
+        const devRow: Record<string, any> = {
+          'รายการ / พนักงาน': 'DEV (For BCA)',
+          'กลุ่ม / ฝ่าย': 'BCA Development (หักออก)',
+          'ตำแหน่ง / หน้าที่': 'KANT Compound DEV',
+        };
+        for (let d = 1; d <= 31; d++) {
+          devRow[`วันที่ ${d}`] = pdiBeadReport.bcaDevDailyHours[d] || 0;
+        }
+        pdiSheetData.push(devRow);
+      }
+
       const ws6 = XLSX.utils.json_to_sheet(pdiSheetData);
-      XLSX.utils.book_append_sheet(wb, ws6, 'PDI_Deduct_Persons');
+      XLSX.utils.book_append_sheet(wb, ws6, 'PDI_Bead_BCA_Adjustments');
     }
 
     // Sheet 7: Team Summary Matrix & Raw Employee Attendance Data
@@ -480,10 +555,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </span>
               <span className="bg-amber-100 text-amber-900 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300/40">
                 🔻 PDI (-{ohpaSummary.pdiDeductHours}h) &nbsp; 🟢 Bead (+{ohpaSummary.beadAddHours}h)
+                {ohpaSummary.bcaReductionHours ? ` | 🔄 โอน BCA→Retread (-${ohpaSummary.bcaReductionHours}h)` : ''}
+                {ohpaSummary.bcaDevHours ? ` | 🧪 BCA DEV (-${ohpaSummary.bcaDevHours}h)` : ''}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              คำนวณ OPAH = (Stocking kg × 2.20462) ÷ Net Working Hours [ฐานรวม - PDI ({ohpaSummary.pdiDeductHours} ชม.) + Bead ({ohpaSummary.beadAddHours} ชม.) = {ohpaSummary.opahWorkingHours} ชม.]
+              คำนวณ OPAH = (Stocking kg × 2.20462) ÷ Net Working Hours [ฐานรวม - PDI ({ohpaSummary.pdiDeductHours} ชม.) + Bead ({ohpaSummary.beadAddHours} ชม.){ohpaSummary.bcaReductionHours ? ` - BCA โอน (${ohpaSummary.bcaReductionHours} ชม.)` : ''}{ohpaSummary.bcaDevHours ? ` - BCA DEV (${ohpaSummary.bcaDevHours} ชม.)` : ''} = {ohpaSummary.opahWorkingHours} ชม.]
             </p>
           </div>
         </div>
@@ -516,17 +593,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             title="ซิงค์วันตามไฟล์สแกนนิ้วที่เลือก"
           >
-            <RefreshCw className={'w-3.5 h-3.5 ' + (isLoading ? 'animate-spin' : '')} />
-            <span>ซิงค์วันสแกน</span>
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>ตามไฟล์สแกน</span>
           </button>
 
+          {/* Sync PDI & Bead Button */}
+          <button
+            onClick={handleSyncPdiBead}
+            disabled={isSyncingPdi}
+            className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+            title="อ่านไฟล์ OPAH hour PDI& B-ead.xlsx และอัปเดตชั่วโมงหัก/บวก และ BCA Reduction อัตโนมัติ"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-amber-700 ${isSyncingPdi ? 'animate-spin' : ''}`} />
+            <span>{isSyncingPdi ? 'กำลังซิงค์...' : 'ซิงค์ PDI / Bead / BCA'}</span>
+          </button>
+
+          {/* Toggle PDI / Bead Table */}
           <button
             onClick={() => setShowPdiDetail(!showPdiDetail)}
-            className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-amber-200"
-            title="ดูรายละเอียด PDI Deduct & B-end Bead"
+            className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border ${
+              showPdiDetail
+                ? 'bg-amber-500 text-white border-amber-600 shadow-xs'
+                : 'bg-white hover:bg-amber-50 text-amber-900 border-amber-200'
+            }`}
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-amber-700" />
-            <span>{showPdiDetail ? 'ซ่อนตาราง PDI/Bead' : 'ดูตาราง PDI/Bead'}</span>
+            <FileSpreadsheet className="w-3.5 h-3.5" />
+            <span>{showPdiDetail ? 'ซ่อนตาราง PDI/BCA' : 'ดูตาราง PDI/Bead/BCA'}</span>
           </button>
 
           <a
@@ -623,6 +715,30 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
+      {/* Sync Status Banner */}
+      {syncStatus && (
+        <div className={`p-3.5 rounded-2xl text-xs flex items-center justify-between gap-3 border animate-fadeIn ${
+          syncStatus.type === 'success'
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+            : 'bg-rose-50 border-rose-200 text-rose-900'
+        }`}>
+          <div className="flex items-center gap-2">
+            {syncStatus.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            )}
+            <span className="font-medium">{syncStatus.message}</span>
+          </div>
+          <button
+            onClick={() => setSyncStatus(null)}
+            className="text-[11px] font-bold underline cursor-pointer hover:opacity-80"
+          >
+            ปิด
+          </button>
+        </div>
+      )}
+
       {/* Logic Callout Banner */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-4 shadow-md border border-indigo-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
@@ -638,14 +754,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </span>
               <span className="block text-slate-200">
                 3. <strong className="text-rose-400">🔻 หัก Development + PDI Hour (Deduct):</strong> -{ohpaSummary.pdiDeductHours} ชม. &nbsp;|&nbsp;
-                4. <strong className="text-emerald-400">🟢 รวม B-end / Bead (Include):</strong> +{ohpaSummary.beadAddHours} ชม.
+                4. <strong className="text-emerald-400">🟢 รวม B-end / Bead (Include):</strong> +{ohpaSummary.beadAddHours} ชม. &nbsp;|&nbsp;
+                5. <strong className="text-amber-400">🔄 หัก BCA โอนให้ Retread:</strong> -{ohpaSummary.bcaReductionHours || 0} ชม. (และไปบวกใน Retread) &nbsp;|&nbsp;
+                6. <strong className="text-purple-400">🧪 หัก BCA DEV:</strong> -{ohpaSummary.bcaDevHours || 0} ชม.
               </span>
             </div>
           </div>
         </div>
         <div className="flex flex-col items-end gap-1 bg-white/10 p-2.5 px-3.5 rounded-xl text-[11px] font-mono shrink-0 border border-white/10">
           <div className="text-slate-300">
-            ฐานรวม: <strong>{ohpaSummary.totalWorkingHours} ชม.</strong> - PDI <strong>({ohpaSummary.pdiDeductHours})</strong> + Bead <strong>(+{ohpaSummary.beadAddHours})</strong>
+            ฐานรวม: <strong>{ohpaSummary.totalWorkingHours} ชม.</strong> - PDI <strong>({ohpaSummary.pdiDeductHours})</strong> + Bead <strong>(+{ohpaSummary.beadAddHours})</strong> - BCAโอน <strong>(-{ohpaSummary.bcaReductionHours || 0})</strong> - BCA Dev <strong>(-{ohpaSummary.bcaDevHours || 0})</strong>
           </div>
           <div className="text-emerald-300 font-bold text-xs">
             = ชม. สุทธิคิด OPAH: <span className="text-amber-300 text-sm">{ohpaSummary.opahWorkingHours}</span> ชม.
@@ -661,10 +779,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <FileSpreadsheet className="w-5 h-5 text-amber-700" />
               <div>
                 <h3 className="text-sm font-bold text-amber-950">
-                  รายละเอียดชั่วโมง PDI Deduct & B-end Bead ประจำเดือน ({pdiBeadReport.monthYear || '09/2026'})
+                  รายละเอียดชั่วโมง PDI Deduct & B-end Bead & BCA Adjustments ประจำเดือน ({pdiBeadReport.monthYear || '09/2026'})
                 </h3>
                 <p className="text-[11px] text-amber-800">
-                  ไฟล์ต้นฉบับ: <code>OPAH hour PDI& B-ead.xlsx</code> (Development + PDI หักออก / B-end นำมาบวกเพิ่ม)
+                  ไฟล์ต้นฉบับ: <code>OPAH hour PDI& B-ead.xlsx</code> (Development + PDI หักออก / B-end นำมาบวกเพิ่ม / BCA โอนให้ Retread & Dev หักออก)
                 </p>
               </div>
             </div>
@@ -681,8 +799,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             <table className="w-full text-left text-xs border-collapse font-mono">
               <thead>
                 <tr className="bg-amber-100/80 text-amber-950 font-bold text-[11px]">
-                  <th className="py-2 px-3 font-sans min-w-[120px]">วิศวกร PDI / Dev</th>
-                  <th className="py-2 px-2 font-sans min-w-[120px]">กลุ่ม / สังกัด</th>
+                  <th className="py-2 px-3 font-sans min-w-[140px]">รายการ / วิศวกร / กลุ่ม</th>
+                  <th className="py-2 px-2 font-sans min-w-[130px]">กลุ่ม / สังกัด / การทำงาน</th>
                   {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
                     <th
                       key={day}
@@ -751,6 +869,48 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                         } ${total > 0 ? 'text-emerald-700' : 'text-slate-300'}`}
                       >
                         {total > 0 ? `+${total.toFixed(0)}` : '-'}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* Total BCA Reduction (Transfer to Retread) Row */}
+                <tr className="bg-amber-50 text-amber-950 font-bold border-t border-amber-200">
+                  <td className="py-2 px-3 font-bold text-amber-900" colSpan={2}>
+                    🔄 รวม Total (Reduction for BCA) โอนให้ Retread (ชม.)
+                  </td>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                    const total = pdiBeadReport.bcaReductionDailyHours ? pdiBeadReport.bcaReductionDailyHours[day] || 0 : 0;
+                    return (
+                      <td
+                        key={day}
+                        className={`py-2 px-1 text-center font-mono font-black ${
+                          day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-amber-200 text-amber-950 text-sm' : ''
+                        } ${total > 0 ? 'text-amber-800' : 'text-slate-300'}`}
+                        title={pdiBeadReport.bcaReductionDailyMinutes ? `${pdiBeadReport.bcaReductionDailyMinutes[day] || 0} นาที` : ''}
+                      >
+                        {total > 0 ? `-${total}` : '-'}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* DEV for BCA Row */}
+                <tr className="bg-purple-50 text-purple-950 font-bold border-t border-purple-200">
+                  <td className="py-2 px-3 font-bold text-purple-900" colSpan={2}>
+                    🧪 รวม DEV (For BCA) หักออกจาก BCA (ชม.)
+                  </td>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => {
+                    const total = pdiBeadReport.bcaDevDailyHours ? pdiBeadReport.bcaDevDailyHours[day] || 0 : 0;
+                    return (
+                      <td
+                        key={day}
+                        className={`py-2 px-1 text-center font-mono font-black ${
+                          day === (ohpaSummary.mtd?.daysCount || 14) ? 'bg-purple-200 text-purple-950 text-sm' : ''
+                        } ${total > 0 ? 'text-purple-800' : 'text-slate-300'}`}
+                        title={pdiBeadReport.bcaDevDailyMinutes ? `${pdiBeadReport.bcaDevDailyMinutes[day] || 0} นาที` : ''}
+                      >
+                        {total > 0 ? `-${total}` : '-'}
                       </td>
                     );
                   })}
@@ -869,14 +1029,22 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </span>
               </div>
               {/* Formula calculation badge */}
-              <div className="grid grid-cols-2 gap-1.5 mt-2.5 pt-2 border-t border-slate-100 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-2.5 pt-2 border-t border-slate-100 text-xs">
                 <div className="bg-rose-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
-                  <span className="text-rose-700 font-bold text-[11px]">🔻 PDI Deduct:</span>
-                  <span className="font-mono font-black text-rose-800">-{ohpaSummary.pdiDeductHours} ชม.</span>
+                  <span className="text-rose-700 font-bold text-[11px]">🔻 PDI:</span>
+                  <span className="font-mono font-black text-rose-800">-{ohpaSummary.pdiDeductHours}h</span>
                 </div>
                 <div className="bg-emerald-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
-                  <span className="text-emerald-700 font-bold text-[11px]">🟢 Bead Add:</span>
-                  <span className="font-mono font-black text-emerald-800">+{ohpaSummary.beadAddHours} ชม.</span>
+                  <span className="text-emerald-700 font-bold text-[11px]">🟢 Bead:</span>
+                  <span className="font-mono font-black text-emerald-800">+{ohpaSummary.beadAddHours}h</span>
+                </div>
+                <div className="bg-amber-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-amber-800 font-bold text-[11px]" title="โอน Compound/Cement/RT27 ไป Retread">🔄 BCA โอน:</span>
+                  <span className="font-mono font-black text-amber-900">-{ohpaSummary.bcaReductionHours || 0}h</span>
+                </div>
+                <div className="bg-purple-50 p-1.5 px-2 rounded-lg flex items-center justify-between">
+                  <span className="text-purple-800 font-bold text-[11px]" title="Development Compound ของ BCA">🧪 DEV:</span>
+                  <span className="font-mono font-black text-purple-900">-{ohpaSummary.bcaDevHours || 0}h</span>
                 </div>
               </div>
               {/* 3 Breakdown Cards: GY, Contractor, Monthly */}
@@ -1315,7 +1483,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {(area.finalOpahHours || area.totalHours).toLocaleString()} <span className="text-xs font-sans font-normal text-slate-500">ชม.สุทธิ</span>
                   </div>
                   <div className="text-[10px] text-slate-400 font-mono">
-                    (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''})
+                    (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''}{area.bcaReductionHours ? ` -โอนRetread ${area.bcaReductionHours}h` : ''}{area.bcaDevHours ? ` -DEV ${area.bcaDevHours}h` : ''}{area.retreadReceivedHours ? ` +รับโอนBCA ${area.retreadReceivedHours}h` : ''})
                   </div>
                 </div>
 
@@ -1355,7 +1523,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
         {/* Main Area Table (5 Production Areas) */}
         <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
-          <table className="w-full text-left border-collapse min-w-[880px]">
+          <table className="w-full text-left border-collapse min-w-[920px]">
             <thead>
               <tr className="bg-slate-900 text-white font-bold text-xs">
                 <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">
@@ -1379,6 +1547,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </th>
                 <th className="py-2.5 px-1.5 text-right w-14 whitespace-nowrap bg-emerald-950/60 text-emerald-300">
                   🟢 Bead
+                </th>
+                <th className="py-2.5 px-1.5 text-right w-16 whitespace-nowrap bg-amber-950/60 text-amber-300" title="BCA โอนให้ Retread & DEV หักออก / Retread รับโอน">
+                  🔄 หัก/โอน
                 </th>
                 <th className="py-2.5 px-2 text-right w-16 whitespace-nowrap bg-indigo-950/80 text-indigo-200 font-black">
                   ⭐ สุทธิ
@@ -1509,6 +1680,27 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                         {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)}` : '-'}
                       </td>
 
+                      {/* BCA / Retread Adjustments */}
+                      <td className="py-2.5 px-1.5 text-right font-mono text-xs whitespace-nowrap bg-amber-50/30">
+                        {isBCA && ((area.bcaReductionHours || 0) + (area.bcaDevHours || 0)) > 0 ? (
+                          <span
+                            className="font-bold text-amber-800"
+                            title={`โอนให้ Retread: -${area.bcaReductionHours || 0} ชม. | DEV: -${area.bcaDevHours || 0} ชม.`}
+                          >
+                            -{(((area.bcaReductionHours || 0) + (area.bcaDevHours || 0))).toFixed(1)}
+                          </span>
+                        ) : isRetread && (area.retreadReceivedHours || 0) > 0 ? (
+                          <span
+                            className="font-bold text-emerald-700"
+                            title={`รับโอนจาก BCA: +${area.retreadReceivedHours} ชม.`}
+                          >
+                            +{area.retreadReceivedHours?.toFixed(1)}
+                          </span>
+                        ) : (
+                          <span className="text-slate-300">-</span>
+                        )}
+                      </td>
+
                       {/* Final Net OPAH Hours */}
                       <td className="py-2.5 px-2 text-right font-mono font-black text-xs text-indigo-950 bg-indigo-50/40 whitespace-nowrap">
                         {(area.finalOpahHours || area.totalHours).toLocaleString()}
@@ -1549,7 +1741,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {/* Expandable Sub-departments table */}
                     {isExpanded && (
                       <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={11} className="py-2.5 px-4 sm:px-6">
+                        <td colSpan={12} className="py-2.5 px-4 sm:px-6">
                           <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-2">
                             <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-1.5">
                               <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
@@ -1681,6 +1873,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 <td className="py-2.5 px-1.5 text-right text-emerald-300 font-mono bg-emerald-950 whitespace-nowrap text-xs">
                   {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()}` : '-'}
                 </td>
+                <td className="py-2.5 px-1.5 text-right text-amber-300 font-mono bg-amber-950 whitespace-nowrap text-xs">
+                  {((areaActiveStats.activeBcaRed || 0) + (areaActiveStats.activeBcaDev || 0)) > 0 ? `-${(((areaActiveStats.activeBcaRed || 0) + (areaActiveStats.activeBcaDev || 0))).toFixed(1)}` : '-'}
+                </td>
                 <td className="py-2.5 px-2 text-right text-emerald-300 font-mono bg-emerald-950/80 font-black whitespace-nowrap text-xs">
                   {areaActiveStats.activeNetTot.toLocaleString()}
                 </td>
@@ -1731,11 +1926,14 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </td>
                   <td className="py-2.5 px-1.5 text-right font-mono text-slate-400 text-xs">-</td>
                   <td className="py-2.5 px-1.5 text-right font-mono text-slate-400 text-xs">-</td>
-                  <td className="py-2.5 px-2 text-right font-mono text-rose-300 font-black whitespace-nowrap text-xs">
-                    {areaActiveStats.retreadTot.toLocaleString()}
+                  <td className="py-2.5 px-1.5 text-right font-mono text-emerald-300 bg-rose-950 whitespace-nowrap text-xs">
+                    {(areaActiveStats.retreadReceived || 0) > 0 ? `+${(areaActiveStats.retreadReceived || 0).toFixed(1)}` : '-'}
                   </td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs">-</td>
-                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs">-</td>
+                  <td className="py-2.5 px-2 text-right font-mono text-rose-300 font-black whitespace-nowrap text-xs">
+                    {(areaActiveStats.retreadNetTot || areaActiveStats.retreadTot).toLocaleString()}
+                  </td>
+                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs whitespace-nowrap">-</td>
+                  <td className="py-2.5 px-2.5 text-right font-mono text-slate-400 text-xs whitespace-nowrap">-</td>
                 </tr>
               )}
 
@@ -1776,6 +1974,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </td>
                 <td className="py-2.5 px-1.5 text-right text-emerald-300 font-mono whitespace-nowrap text-xs">
                   {areaActiveStats.activeBead > 0 ? `+${areaActiveStats.activeBead.toLocaleString()}` : '-'}
+                </td>
+                <td className="py-2.5 px-1.5 text-right text-amber-300 font-mono whitespace-nowrap text-xs">
+                  {(areaActiveStats.activeBcaDev || 0) > 0 ? `-${(areaActiveStats.activeBcaDev || 0).toFixed(1)}` : '-'}
                 </td>
                 <td className="py-2.5 px-2 text-right text-amber-300 font-mono font-black whitespace-nowrap text-xs">
                   {areaActiveStats.grandNetTot.toLocaleString()}
