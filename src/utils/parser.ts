@@ -303,8 +303,17 @@ export function processScanRecords(
     const ins = empScans.filter(s => s.io === 'I');
     const outs = empScans.filter(s => s.io === 'O');
 
-    // Filter out accidental double-punch in morning checkout (04:00 - 08:30)
-    // If all scans occurred within 30 mins in the morning and there is an 'O' scan, it's a clock-out from previous night
+    // Filter out previous day's leftover clock-out punches:
+    // Case 1: The employee has NO IN scan (ins.length === 0) and only has OUT scans before 12:00 noon (00:00 - 11:59).
+    // These are checkouts from yesterday's Shift 2 (overtime/midnight checkout 00:00 - 04:00) or Shift 3 (morning checkout 05:00 - 11:30).
+    if (ins.length === 0 && outs.length > 0) {
+      const allBeforeNoon = outs.every(s => s.timestamp.getHours() < 12);
+      if (allBeforeNoon) {
+        return; // Skip ghost shift record from yesterday's checkout
+      }
+    }
+
+    // Case 2: Accidental double-punch in morning/early checkout (e.g. within 30 mins before 08:30 with at least one 'O' scan and no later IN scan)
     if (empScans.length > 0) {
       const allMorning = empScans.every(s => {
         const hh = s.timestamp.getHours();
