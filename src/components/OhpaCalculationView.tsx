@@ -961,24 +961,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             </select>
           </div>
 
-          <button
-            onClick={handleSyncWithScanDate}
-            className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-            title="ซิงค์วันตามไฟล์สแกนนิ้วที่เลือก"
-          >
-            <span>ตามไฟล์สแกน</span>
-          </button>
-
-          {/* Sync PDI & Bead Button */}
-          <button
-            onClick={handleSyncPdiBead}
-            disabled={isSyncingPdi}
-            className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
-            title="อ่านไฟล์ OPAH hour PDI& B-ead.xlsx และอัปเดตชั่วโมงหัก/บวก และ BCA Reduction อัตโนมัติ"
-          >
-            <span>{isSyncingPdi ? 'กำลังซิงค์...' : 'ซิงค์ PDI / Bead / BCA'}</span>
-          </button>
-
           {/* Toggle PDI / Bead Table */}
           <button
             onClick={() => setShowPdiDetail(!showPdiDetail)}
