@@ -8,6 +8,7 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminSettingsModal } from './components/AdminSettingsModal';
 import { OhpaCalculationView } from './components/OhpaCalculationView';
 import { ContractorScanRecordsView } from './components/ContractorScanRecordsView';
+import { DashboardView } from './components/DashboardView';
 
 import { SCAN_FILE_PRESETS, DEFAULT_SCAN_CONTENT, DEFAULT_FILE_NAME, ScanPreset } from './data/default_scan_record';
 import defaultEmpMappingRaw from './data/default_emp_mapping.json';
@@ -26,7 +27,8 @@ import {
   AlertCircle,
   Calculator,
   HardHat,
-  Users
+  Users,
+  LayoutDashboard
 } from 'lucide-react';
 
 export default function App() {
@@ -91,7 +93,7 @@ export default function App() {
   const [selectedShiftFilter, setSelectedShiftFilter] = useState<number | 'ALL'>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
-  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_CONTRACTOR' | 'PAGE_3_MANPOWER' | 'PAGE_4_OHPA'>('PAGE_1_DETAILS');
+  const [activeTab, setActiveTab] = useState<'PAGE_1_DETAILS' | 'PAGE_2_CONTRACTOR' | 'PAGE_3_MANPOWER' | 'PAGE_4_OHPA' | 'PAGE_5_DASHBOARD'>('PAGE_1_DETAILS');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState<boolean>(false);
   const [isLoadingFolder, setIsLoadingFolder] = useState<boolean>(false);
@@ -552,20 +554,20 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
-        {/* Tab Navigation (4 Pages) */}
-        <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {/* Tab Navigation (5 Pages) */}
+        <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2.5">
           {/* Page 1 Tab: GY Scans */}
           <button
             onClick={() => setActiveTab('PAGE_1_DETAILS')}
-            className={`py-3 px-3.5 rounded-xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+            className={`py-3 px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_1_DETAILS'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <UserCheck className="w-5 h-5 shrink-0" />
+            <UserCheck className="w-4.5 h-4.5 shrink-0" />
             <span className="truncate">ตารางสแกนนิ้ว (GY)</span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
             }`}>
               {records.length} คน
@@ -575,15 +577,15 @@ export default function App() {
           {/* Page 2 Tab: Contractor WAS Scans */}
           <button
             onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
-            className={`py-3 px-3.5 rounded-xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+            className={`py-3 px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_2_CONTRACTOR'
                 ? 'bg-teal-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <HardHat className="w-5 h-5 shrink-0" />
+            <HardHat className="w-4.5 h-4.5 shrink-0" />
             <span className="truncate">ตารางสแกนนิ้ว (Cont)</span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
             }`}>
               {currentContractorCount} คน
@@ -593,31 +595,49 @@ export default function App() {
           {/* Page 3 Tab: Standard Manpower Comparison */}
           <button
             onClick={() => setActiveTab('PAGE_3_MANPOWER')}
-            className={`py-3 px-3.5 rounded-xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+            className={`py-3 px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_3_MANPOWER'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <TableProperties className="w-5 h-5 shrink-0" />
-            <span className="truncate">ตารางเปรียบเทียบ Standard HC</span>
+            <TableProperties className="w-4.5 h-4.5 shrink-0" />
+            <span className="truncate">ตาราง Standard HC</span>
           </button>
 
           {/* Page 4 Tab: OPAH CAL */}
           <button
             onClick={() => setActiveTab('PAGE_4_OHPA')}
-            className={`py-3 px-3.5 rounded-xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+            className={`py-3 px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_4_OHPA'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <Calculator className="w-5 h-5 shrink-0" />
+            <Calculator className="w-4.5 h-4.5 shrink-0" />
             <span className="truncate">OPAH CAL</span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
             }`}>
               55012
+            </span>
+          </button>
+
+          {/* Page 5 Tab: Dashboard */}
+          <button
+            onClick={() => setActiveTab('PAGE_5_DASHBOARD')}
+            className={`py-3 px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer col-span-2 md:col-span-1 xl:col-span-1 ${
+              activeTab === 'PAGE_5_DASHBOARD'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <LayoutDashboard className="w-4.5 h-4.5 shrink-0" />
+            <span className="truncate">หน้า 5: แดชบอร์ด</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
+              activeTab === 'PAGE_5_DASHBOARD' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-800'
+            }`}>
+              ชม. & OT
             </span>
           </button>
         </div>
@@ -663,6 +683,20 @@ export default function App() {
             employeeMapping={employeeMapping}
             dailyAdjustments={dailyAdjustments}
             pdiBeadReport={pdiBeadReport}
+          />
+        )}
+
+        {/* Tab 5: Executive Dashboard View (Page 5) */}
+        {activeTab === 'PAGE_5_DASHBOARD' && (
+          <DashboardView
+            gyRecords={records}
+            contractorRecords={currentContractorRecords}
+            employeeMapping={employeeMapping}
+            currentScanDateFormatted={dateStringFormatted}
+            allScanPresets={presets}
+            contractorRecordsByDate={contractorRecordsByDate}
+            onSelectDate={handleSelectDateFromOhpa}
+            dailyAdjustments={dailyAdjustments}
           />
         )}
       </main>
