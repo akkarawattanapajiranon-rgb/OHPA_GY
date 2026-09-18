@@ -4,6 +4,7 @@ import { ParsedShiftRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaAreaMetrics } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
+import { DEFAULT_RETREAD_TONNAGE } from '../data/default_retread_tonnage';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
 import {
@@ -436,6 +437,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       const wsTrendPlant = XLSX.utils.json_to_sheet(dailyTrendPlantData);
       XLSX.utils.book_append_sheet(wb, wsTrendPlant, 'Daily_Trend_Plant');
 
+      // Sheet 2.1: Daily Trend Retread (Standalone)
+      const dailyTrendRetreadData = dailyItems.map(item => {
+        const retreadArea = (item.areaBreakdown || []).find(x => x.areaKey === 'Retread' || x.isExcluded6320);
+        return {
+          'วันที่ (Date)': item.dateStr,
+          'วันในสัปดาห์': item.dayName,
+          'Retread กำลังพลรวม (คน)': retreadArea?.totalHeadcount || 0,
+          'Goodyear (คน)': retreadArea?.gyHeadcount || 0,
+          'Contractor (คน)': retreadArea?.contractorHeadcount || 0,
+          'พนักงานรายเดือน (คน)': retreadArea?.monthlyHeadcount || 0,
+          'ชม. ปกติ (ชม.)': retreadArea?.normalHours || 0,
+          'ชม. OT (ชม.)': retreadArea?.otHours || 0,
+          'ชม. ทำงานฐานรวม (ชม.)': retreadArea?.totalHours || 0,
+          '📥 Retread รับโอนจาก BCA (ชม.)': retreadArea?.retreadReceivedHours ? `+${retreadArea.retreadReceivedHours}` : 0,
+          '⭐ ชม. สุทธิคิด OPAH Retread (ชม.)': retreadArea?.finalOpahHours || retreadArea?.totalHours || 0,
+          'รหัส Tonnage': 'Retread SAP Stock (Row 28)',
+          'ยอด Stocking Retread (kg)': retreadArea?.areaTonnageKg || 0,
+          'ยอด Stocking Retread (lbs)': retreadArea?.areaTonnageLbs || 0,
+          'ยอด Stocking Retread (Tons)': retreadArea?.areaTonnageTon || 0,
+          '🚀 Retread Daily OPAH (lbs/ชม.)': retreadArea?.areaOpahLbsPerHour ?? '-',
+          'สถานะการคิด OPAH': 'คำนวณแยกเฉพาะกลุ่ม Retread (ไม่รวมใน Plant OPAH)'
+        };
+      });
+      const wsTrendRetread = XLSX.utils.json_to_sheet(dailyTrendRetreadData);
+      XLSX.utils.book_append_sheet(wb, wsTrendRetread, 'Daily_Trend_Retread');
+
       // Sheet 3: Daily Trend By Team / Area (OPAH & Working Hours)
       const dailyTrendByTeamData: any[] = [];
       dailyItems.forEach(item => {
@@ -561,8 +588,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       XLSX.utils.book_append_sheet(wb, wsMatrixOpah, 'Daily_Trend_Matrix_OPAH');
     }
 
-    // Sheet 2: Stocking Tonnage Report 55012
+    // Sheet: Stocking Tonnage Report 55012 & SAP Stock
     if (tonnageReport.rows && tonnageReport.rows.length > 0) {
+      const cleanDate = (ohpaSummary.productionDay || '').replace(/^[^\d]*/, '').trim();
+      const retreadKgDaily = DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDate] || DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDate.replace(/\//g, '-')] || 0;
       const tonnageRows = [
         ...tonnageReport.rows.map(r => ({
           'Code': r.code,
@@ -572,19 +601,31 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           'Shift 2 Tonnage (kg)': r.shift2Tonnage,
           'Shift 3 Tonnage (kg)': r.shift3Tonnage,
           'Daily Total Tonnage (kg)': r.dailyTotalTonnage,
+          'Source': 'Stocking Report 55012'
         })),
         ...(tonnageReport.total ? [{
-          'Code': 'TOTAL',
-          'Product Category': 'TOTAL',
+          'Code': 'TOTAL PLANT',
+          'Product Category': 'Plant Total (4 Production Areas)',
           'MTD Tonnage (kg)': tonnageReport.total.mtdTonnage,
           'Shift 1 Tonnage (kg)': tonnageReport.total.shift1Tonnage,
           'Shift 2 Tonnage (kg)': tonnageReport.total.shift2Tonnage,
           'Shift 3 Tonnage (kg)': tonnageReport.total.shift3Tonnage,
           'Daily Total Tonnage (kg)': tonnageReport.total.dailyTotalTonnage,
-        }] : [])
+          'Source': 'Stocking Report 55012'
+        }] : []),
+        {
+          'Code': 'RETREAD',
+          'Product Category': 'Retread (SAP Stock Pivot Row 28)',
+          'MTD Tonnage (kg)': DEFAULT_RETREAD_TONNAGE.mtdKg,
+          'Shift 1 Tonnage (kg)': '-',
+          'Shift 2 Tonnage (kg)': '-',
+          'Shift 3 Tonnage (kg)': '-',
+          'Daily Total Tonnage (kg)': retreadKgDaily,
+          'Source': 'Retread stock by SAP code (Pivot Row 28)'
+        }
       ];
       const ws2 = XLSX.utils.json_to_sheet(tonnageRows);
-      XLSX.utils.book_append_sheet(wb, ws2, 'Daily_Stocking_55012');
+      XLSX.utils.book_append_sheet(wb, ws2, 'Daily_Stocking_55012_SAP');
     }
 
     // Sheet 3: Shift Breakdown
@@ -785,7 +826,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       records,
       contractorRecords,
       employeeMapping,
-      ohpaSummary.productionDay
+      ohpaSummary.productionDay,
+      pdiBeadReport,
+      tonnageReport
     );
 
     const formatRow = (r: any, index: number) => ({
@@ -821,10 +864,20 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'สแกนจริงรวม (คน)': s.actualTotalHc,
       'Goodyear (คน)': s.gyHc,
       'Contractor (คน)': s.contHc,
+      'รายเดือน (คน)': s.monthlyHc,
       'ชม. ปกติรวม (ชม.)': s.normalHours,
       'ชม. OT รวม (ชม.)': s.otHours,
-      'ชม. ทำงานรวมทั้งหมด (ชม.)': s.totalHours,
-      'ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
+      'ชม. ทำงานฐานรวม (ชม.)': s.totalHours,
+      '🔻 PDI Deduct (ชม.)': s.pdiDeductHours ? `-${s.pdiDeductHours}` : 0,
+      '🟢 Bead Add (ชม.)': s.beadAddHours ? `+${s.beadAddHours}` : 0,
+      '🔄 BCA หักโอน (ชม.)': s.bcaReductionHours ? `-${s.bcaReductionHours}` : 0,
+      '🧪 BCA DEV (ชม.)': s.bcaDevHours ? `-${s.bcaDevHours}` : 0,
+      '📥 Retread รับโอน (ชม.)': s.retreadReceivedHours ? `+${s.retreadReceivedHours}` : 0,
+      '⭐ ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
+      'รหัส Stocking 55012 / SAP': s.tonnageCodes || '-',
+      'ยอด Stocking (kg)': s.tonnageKg || 0,
+      'ยอด Stocking (lbs)': s.tonnageLbs || 0,
+      '🚀 Area OPAH (lbs/ชม.)': s.areaOpah ?? '-',
       'สถานะการคิด OPAH': s.isExcluded,
     })));
     XLSX.utils.book_append_sheet(wb, wsSummaryMatrix, 'Team_Summary_Matrix');
@@ -832,6 +885,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     // Sheet 8: Raw All Employees (Every single person)
     const wsRawAll = XLSX.utils.json_to_sheet(rawRows.map(formatRow));
     XLSX.utils.book_append_sheet(wb, wsRawAll, 'Raw_All_Employees');
+
+    // Sub-sheet for Total Aviation
+    const aviationRecords = rawRows.filter(r => r.areaKey === 'Bias Aero' || r.areaKey === 'Radial Aero');
+    if (aviationRecords.length > 0) {
+      const wsAv = XLSX.utils.json_to_sheet(aviationRecords.map(formatRow));
+      XLSX.utils.book_append_sheet(wb, wsAv, 'Team_Total_Aviation');
+    }
 
     // Sub-sheets 9-13: Per-team individual sheets
     const areaKeys = ['BCA', 'Consumer', 'Bias Aero', 'Radial Aero', 'Retread'];

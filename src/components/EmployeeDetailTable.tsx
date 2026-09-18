@@ -174,6 +174,14 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
     const wsAll = XLSX.utils.json_to_sheet(exportData);
     XLSX.utils.book_append_sheet(wb, wsAll, 'Raw_Data_รายคน');
 
+    // Sub-sheet for Total Aviation
+    const aviationRecords = exportData.filter(r => r['พื้นที่หลัก (5 Areas)'] === 'Bias Aero' || r['พื้นที่หลัก (5 Areas)'] === 'Radial Aero');
+    if (aviationRecords.length > 0) {
+      const renumberedAv = aviationRecords.map((r, idx) => ({ ...r, 'ลำดับ': idx + 1 }));
+      const wsAv = XLSX.utils.json_to_sheet(renumberedAv);
+      XLSX.utils.book_append_sheet(wb, wsAv, 'Team_Total_Aviation');
+    }
+
     // Sub-sheets separated by 5 Production Areas
     const areasList = ['BCA', 'Consumer', 'Bias Aero', 'Radial Aero', 'Retread'];
     areasList.forEach(areaKey => {

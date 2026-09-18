@@ -44,7 +44,11 @@ export interface TeamSummaryRow {
   totalHours: number;
   pdiDeductHours?: number;
   beadAddHours?: number;
+  bcaReductionHours?: number;
+  bcaDevHours?: number;
+  retreadReceivedHours?: number;
   netOpahHours: number;
+  tonnageCodes?: string;
   tonnageKg?: number;
   tonnageLbs?: number;
   areaOpah?: number | string;
@@ -278,6 +282,24 @@ export function buildRawEmployeeRecords(
   });
 
   // Calculate Team Summary
+  const cleanDateStr = (dateFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const dateParts = cleanDateStr.split(/[/.-]/);
+  let dayNum = 14;
+  if (dateParts.length >= 1) {
+    if (dateParts[0].length === 4 && dateParts.length >= 3) {
+      dayNum = parseInt(dateParts[2], 10) || 14;
+    } else {
+      dayNum = parseInt(dateParts[0], 10) || 14;
+    }
+  }
+
+  const pdiDeduct = pdiBeadReport?.pdiDailyTotals?.[dayNum] || 0;
+  const beadAdd = pdiBeadReport?.beadDailyTotals?.[dayNum] || 0;
+  const bcaReduction = pdiBeadReport?.bcaReductionDailyHours?.[dayNum] ||
+    (pdiBeadReport?.bcaReductionDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
+  const bcaDev = pdiBeadReport?.bcaDevDailyHours?.[dayNum] ||
+    (pdiBeadReport?.bcaDevDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
+
   const teamSummaryMap: Record<string, TeamSummaryRow> = {};
   AREA_5_KEYS.forEach((k) => {
     const meta = AREA_5_METADATA[k];
@@ -294,7 +316,11 @@ export function buildRawEmployeeRecords(
       totalHours: 0,
       pdiDeductHours: 0,
       beadAddHours: 0,
+      bcaReductionHours: 0,
+      bcaDevHours: 0,
+      retreadReceivedHours: 0,
       netOpahHours: 0,
+      tonnageCodes: '-',
       tonnageKg: 0,
       tonnageLbs: 0,
       areaOpah: '-',
@@ -313,24 +339,58 @@ export function buildRawEmployeeRecords(
       sum.normalHours += r.normalHours;
       sum.otHours += r.otHours;
       sum.totalHours += r.totalHours;
-      sum.netOpahHours += r.netOpahHours;
     }
   });
+
+  // Calculate Net OPAH hours with adjustments
+  if (teamSummaryMap['BCA']) {
+    const bca = teamSummaryMap['BCA'];
+    bca.beadAddHours = beadAdd;
+    bca.bcaReductionHours = bcaReduction;
+    bca.bcaDevHours = bcaDev;
+    bca.netOpahHours = Math.round((bca.totalHours + beadAdd - bcaReduction - bcaDev) * 10) / 10;
+  }
+  if (teamSummaryMap['Consumer']) {
+    teamSummaryMap['Consumer'].netOpahHours = teamSummaryMap['Consumer'].totalHours;
+  }
+  if (teamSummaryMap['Bias Aero']) {
+    const bias = teamSummaryMap['Bias Aero'];
+    bias.pdiDeductHours = pdiDeduct;
+    bias.netOpahHours = Math.max(0, Math.round((bias.totalHours - pdiDeduct) * 10) / 10);
+  }
+  if (teamSummaryMap['Radial Aero']) {
+    teamSummaryMap['Radial Aero'].netOpahHours = teamSummaryMap['Radial Aero'].totalHours;
+  }
+  if (teamSummaryMap['Retread']) {
+    const retread = teamSummaryMap['Retread'];
+    retread.retreadReceivedHours = bcaReduction;
+    retread.netOpahHours = Math.round((retread.totalHours + bcaReduction) * 10) / 10;
+  }
 
   // Attach Stocking Tonnage if available
   if (tonnageReport?.rows) {
     const getCodeKg = (codes: string[]) => {
-      return tonnageReport.rows
+      return (tonnageReport.rows || [])
         .filter((row) => codes.includes(row.code))
         .reduce((s, row) => s + (row.dailyTotalTonnage || 0), 0);
     };
 
-    const bcaKg = getCodeKg(['D', 'P', 'Q', 'W', 'T', '6', 'A', 'B']); // BCA supplies compound for plant
-    const conKg = getCodeKg(['Q', 'D', 'P', 'W', 'T']);
+    const bcaKg = tonnageReport.total?.dailyTotalTonnage || getCodeKg(['D', 'P', 'Q', 'W', 'T', '6', 'A', 'B']);
+    const conKg = getCodeKg(['Q', 'W']);
     const biasKg = getCodeKg(['A', 'B']);
     const radKg = getCodeKg(['6']);
 
+    if (teamSummaryMap['BCA']) {
+      teamSummaryMap['BCA'].tonnageCodes = 'TOTAL (ทุก Code)';
+      teamSummaryMap['BCA'].tonnageKg = bcaKg;
+      teamSummaryMap['BCA'].tonnageLbs = Math.round(bcaKg * 2.20462 * 100) / 100;
+      teamSummaryMap['BCA'].areaOpah =
+        teamSummaryMap['BCA'].netOpahHours > 0 && bcaKg > 0
+          ? Math.round(((bcaKg * 2.20462) / teamSummaryMap['BCA'].netOpahHours) * 100) / 100
+          : '-';
+    }
     if (teamSummaryMap['Consumer']) {
+      teamSummaryMap['Consumer'].tonnageCodes = 'CODE Q + W';
       teamSummaryMap['Consumer'].tonnageKg = conKg;
       teamSummaryMap['Consumer'].tonnageLbs = Math.round(conKg * 2.20462 * 100) / 100;
       teamSummaryMap['Consumer'].areaOpah =
@@ -339,6 +399,7 @@ export function buildRawEmployeeRecords(
           : '-';
     }
     if (teamSummaryMap['Bias Aero']) {
+      teamSummaryMap['Bias Aero'].tonnageCodes = 'CODE A + B';
       teamSummaryMap['Bias Aero'].tonnageKg = biasKg;
       teamSummaryMap['Bias Aero'].tonnageLbs = Math.round(biasKg * 2.20462 * 100) / 100;
       teamSummaryMap['Bias Aero'].areaOpah =
@@ -347,6 +408,7 @@ export function buildRawEmployeeRecords(
           : '-';
     }
     if (teamSummaryMap['Radial Aero']) {
+      teamSummaryMap['Radial Aero'].tonnageCodes = 'CODE 6';
       teamSummaryMap['Radial Aero'].tonnageKg = radKg;
       teamSummaryMap['Radial Aero'].tonnageLbs = Math.round(radKg * 2.20462 * 100) / 100;
       teamSummaryMap['Radial Aero'].areaOpah =
@@ -357,17 +419,17 @@ export function buildRawEmployeeRecords(
   }
 
   // Calculate Retread Tonnage & Standalone OPAH
-  const cleanDateStr = (dateFormatted || '').replace(/^[^\d]*/, '').trim();
   const retreadKg = (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr]) ||
     (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr.replace(/\//g, '-')]) ||
     0;
   if (teamSummaryMap['Retread']) {
+    teamSummaryMap['Retread'].tonnageCodes = 'Retread SAP Stock';
     teamSummaryMap['Retread'].tonnageKg = retreadKg;
     teamSummaryMap['Retread'].tonnageLbs = Math.round(retreadKg * 2.20462 * 100) / 100;
-    const retreadTotH = teamSummaryMap['Retread'].totalHours;
+    const retreadNetH = teamSummaryMap['Retread'].netOpahHours || teamSummaryMap['Retread'].totalHours;
     teamSummaryMap['Retread'].areaOpah =
-      retreadTotH > 0 && retreadKg > 0
-        ? Math.round(((retreadKg * 2.20462) / retreadTotH) * 100) / 100
+      retreadNetH > 0 && retreadKg > 0
+        ? Math.round(((retreadKg * 2.20462) / retreadNetH) * 100) / 100
         : '-';
   }
 
@@ -383,6 +445,7 @@ export function buildRawEmployeeRecords(
   const avNormH = (biasSum?.normalHours || 0) + (radSum?.normalHours || 0);
   const avOtH = (biasSum?.otHours || 0) + (radSum?.otHours || 0);
   const avTotH = (biasSum?.totalHours || 0) + (radSum?.totalHours || 0);
+  const avPdiH = biasSum?.pdiDeductHours || 0;
   const avNetH = (biasSum?.netOpahHours || 0) + (radSum?.netOpahHours || 0);
   const avKg = (biasSum?.tonnageKg || 0) + (radSum?.tonnageKg || 0);
   const avLbs = Math.round(avKg * 2.20462 * 100) / 100;
@@ -399,7 +462,13 @@ export function buildRawEmployeeRecords(
     normalHours: avNormH,
     otHours: avOtH,
     totalHours: avTotH,
+    pdiDeductHours: avPdiH,
+    beadAddHours: 0,
+    bcaReductionHours: 0,
+    bcaDevHours: 0,
+    retreadReceivedHours: 0,
     netOpahHours: avNetH,
+    tonnageCodes: 'CODE A + B + 6',
     tonnageKg: avKg,
     tonnageLbs: avLbs,
     areaOpah: avOpah,
@@ -469,11 +538,17 @@ export function exportTeamRawDataExcel(
     'รายเดือน (คน)': s.monthlyHc,
     'ชม. ปกติรวม (ชม.)': s.normalHours,
     'ชม. OT รวม (ชม.)': s.otHours,
-    'ชม. ทำงานรวมทั้งหมด (ชม.)': s.totalHours,
-    'ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
+    'ชม. ทำงานฐานรวม (ชม.)': s.totalHours,
+    '🔻 PDI Deduct (ชม.)': s.pdiDeductHours ? `-${s.pdiDeductHours}` : 0,
+    '🟢 Bead Add (ชม.)': s.beadAddHours ? `+${s.beadAddHours}` : 0,
+    '🔄 BCA หักโอน (ชม.)': s.bcaReductionHours ? `-${s.bcaReductionHours}` : 0,
+    '🧪 BCA DEV (ชม.)': s.bcaDevHours ? `-${s.bcaDevHours}` : 0,
+    '📥 Retread รับโอน (ชม.)': s.retreadReceivedHours ? `+${s.retreadReceivedHours}` : 0,
+    '⭐ ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
+    'รหัส Stocking 55012 / SAP': s.tonnageCodes || '-',
     'ยอด Stocking (kg)': s.tonnageKg || 0,
     'ยอด Stocking (lbs)': s.tonnageLbs || 0,
-    'Area OPAH (lbs/ชม.)': s.areaOpah ?? '-',
+    '🚀 Area OPAH (lbs/ชม.)': s.areaOpah ?? '-',
     'สถานะการคิด OPAH': s.isExcluded,
   }));
   const wsSummary = XLSX.utils.json_to_sheet(summarySheetData);
