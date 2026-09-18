@@ -302,9 +302,42 @@
     "empId": "12809",
     "empName": "ภาณุเดช แสนบุญมี",
     "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+  },
+  {
+    "id": "adj-28-12186",
+    "dateStr": "17/09/2026",
+    "empId": "12186",
+    "empName": "ณัฐพงษ์ อู่ชม",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (15.00-23.00)"
+  },
+  {
+    "id": "adj-29-09833",
+    "dateStr": "17/09/2026",
+    "empId": "09833",
+    "empName": "ปรีชา สุนทวงษ์",
+    "otMachineOverride": "54\" Band Building",
     "customStartTime": "23:00",
     "customEndTime": "07:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Chaffer Lay-up (23.00-07.00)"
+    "reason": "OT / ทำงานที่ 54\" Band Building (23.00-07.00)"
+  },
+  {
+    "id": "adj-30-12185",
+    "dateStr": "17/09/2026",
+    "empId": "12185",
+    "empName": "จักรพงษ์ โคตรแป",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (23.00-07.00)"
   }
 ]
