@@ -743,6 +743,9 @@ export function getAreaTonnage(
   } else if (areaKey === 'Radial Aero') {
     codes = 'CODE 6';
     kg = getRowKg('6');
+  } else if (areaKey === 'Total Aviation' || areaKey === 'Aviation') {
+    codes = 'CODE A + B + 6';
+    kg = getRowKg('A') + getRowKg('B') + getRowKg('6');
   } else {
     codes = 'ตัดออก (6320)';
     kg = 0;

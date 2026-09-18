@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import * as XLSX from 'xlsx';
 import { ParsedShiftRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport } from '../types/ohpa';
+import { StockingTonnageReport, OhpaAreaMetrics } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
@@ -258,6 +258,56 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
 
     const wb = XLSX.utils.book_new();
 
+    // Helper to calculate Total Aviation (Bias Aero + Radial Aero) from an area breakdown list
+    const calcAviationFromBreakdown = (breakdown: OhpaAreaMetrics[] = []) => {
+      const bias = breakdown.find(x => x.areaKey === 'Bias Aero' || x.areaName.toLowerCase().includes('bias'));
+      const radial = breakdown.find(x => x.areaKey === 'Radial Aero' || x.areaName.toLowerCase().includes('radial'));
+
+      const gyHc = Math.round(((bias?.gyHeadcount || 0) + (radial?.gyHeadcount || 0)) * 10) / 10;
+      const contHc = Math.round(((bias?.contractorHeadcount || 0) + (radial?.contractorHeadcount || 0)) * 10) / 10;
+      const monthlyHc = Math.round(((bias?.monthlyHeadcount || 0) + (radial?.monthlyHeadcount || 0)) * 10) / 10;
+      const totHc = Math.round(((bias?.totalHeadcount || 0) + (radial?.totalHeadcount || 0)) * 10) / 10;
+
+      const normalH = Math.round(((bias?.normalHours || 0) + (radial?.normalHours || 0)) * 10) / 10;
+      const otH = Math.round(((bias?.otHours || 0) + (radial?.otHours || 0)) * 10) / 10;
+      const totH = Math.round(((bias?.totalHours || 0) + (radial?.totalHours || 0)) * 10) / 10;
+      const gyTotH = Math.round(((bias?.gyTotalHours || 0) + (radial?.gyTotalHours || 0)) * 10) / 10;
+      const contTotH = Math.round(((bias?.contractorTotalHours || 0) + (radial?.contractorTotalHours || 0)) * 10) / 10;
+      const monthlyH = Math.round(((bias?.monthlyHours || 0) + (radial?.monthlyHours || 0)) * 10) / 10;
+
+      const pdiH = Math.round(((bias?.pdiDeductHours || 0) + (radial?.pdiDeductHours || 0)) * 10) / 10;
+      const netH = Math.round(((bias?.finalOpahHours ?? bias?.totalHours ?? 0) + (radial?.finalOpahHours ?? radial?.totalHours ?? 0)) * 10) / 10;
+
+      const kg = Math.round(((bias?.areaTonnageKg || 0) + (radial?.areaTonnageKg || 0)) * 100) / 100;
+      const lbs = Math.round(((bias?.areaTonnageLbs || 0) + (radial?.areaTonnageLbs || 0)) * 100) / 100;
+      const opah = (netH > 0 && kg > 0) ? Math.round(((kg * 2.20462) / netH) * 100) / 100 : '-';
+      const pct = Math.round(((bias?.percentageOfTotalHours || 0) + (radial?.percentageOfTotalHours || 0)) * 10) / 10;
+
+      return {
+        bias,
+        radial,
+        totHc,
+        gyHc,
+        contHc,
+        monthlyHc,
+        normalH,
+        otH,
+        totH,
+        gyTotH,
+        contTotH,
+        monthlyH,
+        pdiH,
+        netH,
+        kg,
+        lbs,
+        opah,
+        pct
+      };
+    };
+
+    const dailyAv = calcAviationFromBreakdown(ohpaSummary.areaBreakdown);
+    const mtdAv = calcAviationFromBreakdown(ohpaSummary.mtd?.areaBreakdown);
+
     // Sheet 1: OPAH KPI Summary (Daily & MTD)
     const summaryData = [
       { 'หัวข้อ (KPI)': 'วันที่ผลิต (Production Day)', 'ค่า': ohpaSummary.productionDay + ` (${ohpaSummary.monthlyStaff.dayName})` },
@@ -280,9 +330,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       { 'หัวข้อ (KPI)': '⭐ Daily Overall Plant OPAH [(kg x 2.20462) / Net OPAH Hours]', 'ค่า': ohpaSummary.overallOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Goodyear', 'ค่า': ohpaSummary.gyOpahLbsPerHour + ' lbs/ชม.' },
       { 'หัวข้อ (KPI)': '- Daily OPAH ส่วน Contractor', 'ค่า': ohpaSummary.contractorOpahLbsPerHour + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '⭐ Daily Total Aviation OPAH (Bias + Radial Aero)', 'ค่า': dailyAv.opah !== '-' ? `${dailyAv.opah} lbs/ชม.` : '-' },
+      { 'หัวข้อ (KPI)': '- Daily Total Aviation Hours (Net OPAH)', 'ค่า': `${dailyAv.netH.toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '- Daily Total Aviation Stocking (CODE A+B+6)', 'ค่า': `${dailyAv.kg.toLocaleString()} kg (${dailyAv.lbs.toLocaleString()} lbs)` },
       { 'หัวข้อ (KPI)': '----------------------------------------', 'ค่า': '----------------------------------------' },
       { 'หัวข้อ (KPI)': `📈 MTD สะสม (วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14})`, 'ค่า': `รวม ${ohpaSummary.mtd?.daysCount || 14} วัน` },
       { 'หัวข้อ (KPI)': '⭐ MTD Overall Plant OPAH', 'ค่า': (ohpaSummary.mtd?.mtdOpahLbsPerHour || 0) + ' lbs/ชม.' },
+      { 'หัวข้อ (KPI)': '⭐ MTD Total Aviation OPAH (Bias + Radial Aero)', 'ค่า': mtdAv.opah !== '-' ? `${mtdAv.opah} lbs/ชม.` : '-' },
+      { 'หัวข้อ (KPI)': '- MTD Total Aviation Hours (Net OPAH)', 'ค่า': `${mtdAv.netH.toLocaleString()} ชม.` },
+      { 'หัวข้อ (KPI)': '- MTD Total Aviation Stocking (CODE A+B+6)', 'ค่า': `${mtdAv.kg.toLocaleString()} kg (${mtdAv.lbs.toLocaleString()} lbs)` },
       { 'หัวข้อ (KPI)': 'MTD ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Base Hours)', 'ค่า': (ohpaSummary.mtd?.mtdTotalHours.toLocaleString() || '0') + ' ชม.' },
       { 'หัวข้อ (KPI)': 'MTD 🔻 PDI Deduct สะสม', 'ค่า': `-${ohpaSummary.mtd?.mtdPdiDeductHours.toLocaleString() || '0'} ชม.` },
       { 'หัวข้อ (KPI)': 'MTD 🟢 B-end Bead Add สะสม', 'ค่า': `+${ohpaSummary.mtd?.mtdBeadAddHours.toLocaleString() || '0'} ชม.` },
@@ -355,6 +411,36 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             '🚀 Team OPAH (lbs/ชม.)': a.areaOpahLbsPerHour ?? '-'
           });
         });
+
+        // Add summary row for Total Aviation (Bias Aero + Radial Aero) for this day
+        const dayAv = calcAviationFromBreakdown(item.areaBreakdown);
+        dailyTrendByTeamData.push({
+          'วันที่ (Date)': item.dateStr,
+          'วันในสัปดาห์': item.dayName,
+          'ทีม / พื้นที่การผลิต (Team / Area)': '⭐ Total Aviation (Bias + Radial Aero)',
+          'สถานะการคิด OPAH': 'รวมใน OPAH (Aero Combined)',
+          'เป้าหมาย Master (คน)': (typeof dayAv.bias?.headcountStandard === 'number' && typeof dayAv.radial?.headcountStandard === 'number') ? (dayAv.bias.headcountStandard + dayAv.radial.headcountStandard) : '-',
+          'สแกนนิ้วรวม (คน)': dayAv.totHc,
+          'Goodyear (คน)': dayAv.gyHc,
+          'Contractor (คน)': dayAv.contHc,
+          'พนักงานรายเดือน (คน)': dayAv.monthlyHc || 0,
+          'ชม. ปกติ (ชม.)': dayAv.normalH,
+          'ชม. OT (ชม.)': dayAv.otH,
+          'ชม. ทำงานฐานรวม (ชม.)': dayAv.totH,
+          'Goodyear ชม.รวม (ชม.)': dayAv.gyTotH,
+          'Contractor ชม.รวม (ชม.)': dayAv.contTotH,
+          'พนักงานรายเดือน ชม.รวม (ชม.)': dayAv.monthlyH || 0,
+          '🔻 PDI Deduct (ชม.)': dayAv.pdiH ? `-${dayAv.pdiH}` : 0,
+          '🟢 Bead Add (ชม.)': 0,
+          '🔄 BCA หักโอนสะสม (ชม.)': 0,
+          '🧪 BCA DEV หักออก (ชม.)': 0,
+          '📥 Retread รับโอน (ชม.)': 0,
+          '⭐ ชม. สุทธิคิด OPAH (Net OPAH Hours)': dayAv.netH,
+          'รหัส Stocking 55012': 'CODE A + B + 6',
+          'ยอด Stocking (kg)': dayAv.kg,
+          'ยอด Stocking (lbs)': dayAv.lbs,
+          '🚀 Team OPAH (lbs/ชม.)': dayAv.opah
+        });
       });
       const wsTrendTeam = XLSX.utils.json_to_sheet(dailyTrendByTeamData);
       XLSX.utils.book_append_sheet(wb, wsTrendTeam, 'Daily_Trend_By_Team');
@@ -369,11 +455,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           const a = (item.areaBreakdown || []).find(x => x.areaKey === key || x.areaName.toLowerCase().includes(key.toLowerCase()));
           return a ? a.totalHours : 0;
         };
+        const dayAv = calcAviationFromBreakdown(item.areaBreakdown);
         return {
           'วันที่ (Date)': item.dateStr,
           'วันในสัปดาห์': item.dayName,
           'BCA (ชม.)': getAreaH('BCA'),
           'Consumer (ชม.)': getAreaH('Consumer'),
+          '⭐ Total Aviation (ชม.)': dayAv.netH,
           'Bias Aero (ชม.)': getAreaH('Bias Aero'),
           'Radial Aero (ชม.)': getAreaH('Radial Aero'),
           'Retread (ชม.)': getAreaH('Retread'),
@@ -396,11 +484,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           const a = (item.areaBreakdown || []).find(x => x.areaKey === key || x.areaName.toLowerCase().includes(key.toLowerCase()));
           return a?.areaOpahLbsPerHour ?? '-';
         };
+        const dayAv = calcAviationFromBreakdown(item.areaBreakdown);
         return {
           'วันที่ (Date)': item.dateStr,
           'วันในสัปดาห์': item.dayName,
           'BCA OPAH (lbs/ชม.)': getAreaOpah('BCA'),
           'Consumer OPAH (lbs/ชม.)': getAreaOpah('Consumer'),
+          '⭐ Total Aviation OPAH (lbs/ชม.)': dayAv.opah,
           'Bias Aero OPAH (lbs/ชม.)': getAreaOpah('Bias Aero'),
           'Radial Aero OPAH (lbs/ชม.)': getAreaOpah('Radial Aero'),
           'Retread OPAH (lbs/ชม.)': getAreaOpah('Retread'),
@@ -483,6 +573,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
       '% สัดส่วน OPAH': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
     }));
+
+    // Add Total Aviation summary row to Area Breakdown Daily
+    areaDataDaily.push({
+      'พื้นที่ / กลุ่มโรงงาน (5 Areas)': '⭐ Total Aviation (Bias + Radial Aero)',
+      'เป้าหมายกำลังพล Master (คน)': (typeof dailyAv.bias?.headcountStandard === 'number' && typeof dailyAv.radial?.headcountStandard === 'number') ? (dailyAv.bias.headcountStandard + dailyAv.radial.headcountStandard) : '-',
+      'สแกนนิ้วจริงรวม (คน)': dailyAv.totHc,
+      'Goodyear (คน)': dailyAv.gyHc,
+      'Contractor (คน)': dailyAv.contHc,
+      'พนักงานรายเดือน (คน)': dailyAv.monthlyHc || 0,
+      'ชม.ปกติ (ชม.)': dailyAv.normalH,
+      'ชม. OT (ชม.)': dailyAv.otH,
+      'ชม.ฐานรวม (ชม.)': dailyAv.totH,
+      '🔻 PDI Deduct (ชม.)': dailyAv.pdiH ? `-${dailyAv.pdiH}` : 0,
+      '🟢 Bead Add (ชม.)': 0,
+      '🔄 BCA หักโอนให้ Retread (ชม.)': 0,
+      '🧪 BCA DEV หักออก (ชม.)': 0,
+      '📥 Retread รับโอนจาก BCA (ชม.)': 0,
+      '⭐ ชม.สุทธิคิด OPAH (ชม.)': dailyAv.netH,
+      'รหัส Stocking 55012': 'CODE A + B + 6',
+      'ยอด Stocking (kg)': dailyAv.kg,
+      'ยอด Stocking (lbs)': dailyAv.lbs,
+      '🚀 Area OPAH (lbs/ชม.)': dailyAv.opah,
+      'สถานะ OPAH': 'รวมใน OPAH (Aero Combined)',
+      '% สัดส่วน OPAH': dailyAv.pct + '%'
+    });
+
     const ws4 = XLSX.utils.json_to_sheet(areaDataDaily);
     XLSX.utils.book_append_sheet(wb, ws4, 'Area_Daily_5Areas');
 
@@ -511,6 +627,32 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         'สถานะ OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่)',
         '% สัดส่วน MTD': a.isExcluded6320 ? 'ตัดออกจาก OPAH' : a.percentageOfTotalHours + '%'
       }));
+
+      // Add Total Aviation summary row to Area Breakdown MTD
+      areaDataMtd.push({
+        'พื้นที่ / กลุ่มโรงงาน (5 Areas)': '⭐ Total Aviation (Bias + Radial Aero)',
+        'เป้าหมายกำลังพล Master (คน)': (typeof mtdAv.bias?.headcountStandard === 'number' && typeof mtdAv.radial?.headcountStandard === 'number') ? (mtdAv.bias.headcountStandard + mtdAv.radial.headcountStandard) : '-',
+        'สแกนเฉลี่ย/วัน (คน)': mtdAv.totHc,
+        'Goodyear เฉลี่ย (คน)': mtdAv.gyHc,
+        'Contractor เฉลี่ย (คน)': mtdAv.contHc,
+        'พนักงานรายเดือน เฉลี่ย (คน)': mtdAv.monthlyHc || 0,
+        'ชม.ปกติสะสม MTD (ชม.)': mtdAv.normalH,
+        'ชม. OT สะสม MTD (ชม.)': mtdAv.otH,
+        'ชม.ฐานรวมสะสม MTD (ชม.)': mtdAv.totH,
+        '🔻 PDI Deduct MTD (ชม.)': mtdAv.pdiH ? `-${mtdAv.pdiH}` : 0,
+        '🟢 Bead Add MTD (ชม.)': 0,
+        '🔄 BCA หักโอนสะสม MTD (ชม.)': 0,
+        '🧪 BCA DEV สะสม MTD (ชม.)': 0,
+        '📥 Retread รับโอนสะสม MTD (ชม.)': 0,
+        '⭐ ชม.สุทธิ MTD (ชม.)': mtdAv.netH,
+        'รหัส Stocking 55012': 'CODE A + B + 6',
+        'ยอด Stocking สะสม MTD (kg)': mtdAv.kg,
+        'ยอด Stocking สะสม MTD (lbs)': mtdAv.lbs,
+        '🚀 Area OPAH MTD (lbs/ชม.)': mtdAv.opah,
+        'สถานะ OPAH': 'รวมใน OPAH (Aero Combined)',
+        '% สัดส่วน MTD': mtdAv.pct + '%'
+      });
+
       const ws4Mtd = XLSX.utils.json_to_sheet(areaDataMtd);
       XLSX.utils.book_append_sheet(wb, ws4Mtd, 'Area_MTD_5Areas');
     }
