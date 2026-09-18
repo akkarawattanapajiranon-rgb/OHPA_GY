@@ -631,7 +631,6 @@ export default function App() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer disabled:opacity-75"
               title="กดเพื่อจัดการข้อมูลย้ายเครื่อง/OT (ต้องใช้สิทธิ์แอดมิน)"
             >
-              <Shuffle className={`w-3.5 h-3.5 ${isSyncingAdjustments ? 'animate-spin' : ''}`} />
               <span>{isSyncingAdjustments ? 'กำลังซิงค์ Excel...' : 'ย้ายเครื่อง / OT / เวลาพิเศษ'}</span>
               {currentDateAdjustmentsCount > 0 && !isSyncingAdjustments && (
                 <span className="bg-white text-blue-700 text-[10px] px-1.5 py-0.2 rounded-full font-extrabold shadow-xs">

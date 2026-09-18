@@ -912,9 +912,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       {/* Top Header Card */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-            <Calculator className="w-6 h-6" />
-          </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-black text-slate-900 tracking-tight">
@@ -969,7 +966,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             title="ซิงค์วันตามไฟล์สแกนนิ้วที่เลือก"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
             <span>ตามไฟล์สแกน</span>
           </button>
 
@@ -980,7 +976,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
             title="อ่านไฟล์ OPAH hour PDI& B-ead.xlsx และอัปเดตชั่วโมงหัก/บวก และ BCA Reduction อัตโนมัติ"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-amber-700 ${isSyncingPdi ? 'animate-spin' : ''}`} />
             <span>{isSyncingPdi ? 'กำลังซิงค์...' : 'ซิงค์ PDI / Bead / BCA'}</span>
           </button>
 

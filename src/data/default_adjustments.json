@@ -339,5 +339,16 @@
     "customEndTime": "07:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ 54\" Band Building (23.00-07.00)"
+  },
+  {
+    "id": "adj-31-12945",
+    "dateStr": "17/09/2026",
+    "empId": "12945",
+    "empName": "วรวุฒิ  มาพงษ์",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "07:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-18.00)"
   }
 ]
