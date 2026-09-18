@@ -857,8 +857,12 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
 
           // Find ALL scan files (excluding mapping files)
           const targetWasDir = fs.existsSync(networkWasScanDir) ? networkWasScanDir : wasScansDir;
+          const isMappingFile = (name: string) => {
+            const lower = name.toLowerCase();
+            return lower.includes('name list') || lower === 'was_รายเดือน.xlsx' || lower === 'was_รายเดือน.xls' || lower === 'was_salary.xlsx';
+          };
           const wasFiles = fs.existsSync(targetWasDir)
-            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !f.toLowerCase().includes('name list') && !f.toLowerCase().includes('รายเดือน'))
+            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !isMappingFile(f))
             : [];
 
           if (!nameListPath && !monthlyListPath && wasFiles.length === 0) {
@@ -941,7 +945,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               wb.SheetNames.forEach((sheetName: string) => {
                 const ws = wb.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
-                const isMonthlySheet = sheetName.includes('รายเดือน') || sheetName.toLowerCase().includes('salary');
+                const isMonthlySheet = sheetName.includes('รายเดือน') || sheetName.toLowerCase().includes('salary') || f.includes('รายเดือน');
 
                 let headerRow = -1;
                 for (let i = 0; i < Math.min(5, data.length); i++) {
