@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { ScanPreset } from '../data/default_scan_record';
-import { getMonthlyStaffMetrics } from '../utils/ohpaCalculator';
+import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
+import { calculateOhpaSummary, getMonthlyStaffMetrics } from '../utils/ohpaCalculator';
 import {
   BarChart,
   Bar,
@@ -38,7 +39,9 @@ import {
   SlidersHorizontal,
   CheckCircle2,
   TrendingUp,
-  LayoutDashboard
+  LayoutDashboard,
+  ArrowRight,
+  ShieldCheck
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -51,6 +54,7 @@ interface DashboardViewProps {
   contractorRecordsByDate?: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>;
   onSelectDate?: (dateFormatted: string) => void;
   dailyAdjustments?: DailyAdjustmentRecord[];
+  pdiBeadReport?: PdiBeadReport;
 }
 
 export type EmployeeGroupType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'WAS_MONTHLY';
@@ -147,7 +151,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   allScanPresets = [],
   contractorRecordsByDate = {},
   onSelectDate,
-  dailyAdjustments = []
+  dailyAdjustments = [],
+  pdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 }) => {
   const [filterGroup, setFilterGroup] = useState<'ALL' | 'GY' | 'CONTRACTOR' | 'MONTHLY'>('ALL');
   const [selectedManagerFilter, setSelectedManagerFilter] = useState<string>('ALL');
@@ -160,12 +165,81 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [expandedDepts, setExpandedDepts] = useState<Record<string, boolean>>({});
   const [expandedMachines, setExpandedMachines] = useState<Record<string, boolean>>({});
 
-  // 1. Resolve Monthly Staff Metrics for the selected date (WAS only, 9 persons)
+  // 1. Calculate Page 4 OPAH Summary for complete synchronization
+  const ohpaSummary = useMemo(() => {
+    return calculateOhpaSummary(
+      gyRecords,
+      contractorRecords,
+      null,
+      currentScanDateFormatted,
+      allScanPresets,
+      contractorRecordsByDate,
+      employeeMapping,
+      dailyAdjustments,
+      pdiBeadReport
+    );
+  }, [
+    gyRecords,
+    contractorRecords,
+    currentScanDateFormatted,
+    allScanPresets,
+    contractorRecordsByDate,
+    employeeMapping,
+    dailyAdjustments,
+    pdiBeadReport
+  ]);
+
+  // Extract Page 4 Reconciled Area Metrics
+  const page4Metrics = useMemo(() => {
+    const activeAreas = ohpaSummary.areaBreakdown.filter(a => !a.isExcluded6320);
+    const retreadArea = ohpaSummary.areaBreakdown.find(a => a.isExcluded6320);
+
+    const activeNorm = Math.round(activeAreas.reduce((s, a) => s + a.normalHours, 0) * 10) / 10;
+    const activeOt = Math.round(activeAreas.reduce((s, a) => s + a.otHours, 0) * 10) / 10;
+    const activeGrossTot = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
+    const activeHc = Math.round(activeAreas.reduce((s, a) => s + a.totalHeadcount, 0) * 10) / 10;
+    const activePdi = Math.round(activeAreas.reduce((s, a) => s + (a.pdiDeductHours || 0), 0) * 10) / 10;
+    const activeBead = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
+    const activeNetTot = Math.round(activeAreas.reduce((s, a) => s + (a.finalOpahHours ?? a.totalHours), 0) * 10) / 10;
+
+    const retreadNorm = Math.round((retreadArea?.normalHours || 0) * 10) / 10;
+    const retreadOt = Math.round((retreadArea?.otHours || 0) * 10) / 10;
+    const retreadTot = Math.round((retreadArea?.totalHours || 0) * 10) / 10;
+    const retreadHc = Math.round((retreadArea?.totalHeadcount || 0) * 10) / 10;
+
+    const grandNorm = Math.round((activeNorm + retreadNorm) * 10) / 10;
+    const grandOt = Math.round((activeOt + retreadOt) * 10) / 10;
+    const grandGrossTot = Math.round((activeGrossTot + retreadTot) * 10) / 10;
+    const grandHc = Math.round((activeHc + retreadHc) * 10) / 10;
+
+    return {
+      activeNorm,
+      activeOt,
+      activeGrossTot,
+      activeHc,
+      activePdi,
+      activeBead,
+      activeNetTot,
+      retreadNorm,
+      retreadOt,
+      retreadTot,
+      retreadHc,
+      grandNorm,
+      grandOt,
+      grandGrossTot,
+      grandHc,
+      gyTotal: ohpaSummary.gyTotalHours + (retreadArea?.gyTotalHours || 0),
+      contractorTotal: ohpaSummary.contractorTotalHours + (retreadArea?.contractorTotalHours || 0),
+      monthlyTotal: ohpaSummary.monthlyStaff.wasTotalHours || (9 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8))
+    };
+  }, [ohpaSummary]);
+
+  // 2. Resolve Monthly Staff Metrics for the selected date (WAS only, 9 persons)
   const monthlyMetrics = useMemo(() => {
     return getMonthlyStaffMetrics(currentScanDateFormatted);
   }, [currentScanDateFormatted]);
 
-  // 2. Build Unified Worker Records across GY, Contractor Hourly, and WAS Monthly
+  // 3. Build Unified Worker Records across GY, Contractor Hourly, and WAS Monthly
   const unifiedWorkers = useMemo<UnifiedWorkerRecord[]>(() => {
     const list: UnifiedWorkerRecord[] = [];
 
@@ -189,7 +263,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         } else if (dept.startsWith('A5110') || dept.startsWith('A5130') || dept.startsWith('A5210') || dept.startsWith('A5230')) {
           manager = 'Kawee Tantisattayarak (Aviation)';
         } else if (dept.startsWith('6320')) {
-          manager = 'Retread Operations';
+          manager = 'Retread Operations (6320)';
         } else if (dept.startsWith('1110')) {
           manager = 'Tanu Itthirattanakomon (Engineering)';
         } else if (dept.startsWith('1040')) {
@@ -241,7 +315,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       let manager = (empInfo?.manager || '').trim();
       if (!manager) {
         if (c.closing === '6320' || dept.includes('6320') || (c.location || '').toLowerCase().includes('retread')) {
-          manager = 'Retread Operations';
+          manager = 'Retread Operations (6320)';
         } else if (c.closing === '3200' || c.closing === '4110' || c.closing === '4200' || c.closing === '4300' || c.closing === '4400' || dept.includes('3200') || dept.includes('Banbury') || dept.includes('BCA')) {
           manager = 'Akkarawat Tanapatjiranon (BCA)';
         } else if (c.closing === '5110' || c.closing === '5130' || dept.includes('5110') || dept.includes('Consumer') || (c.location || '').toLowerCase().includes('consumer')) {
@@ -311,7 +385,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     return list;
   }, [gyRecords, contractorRecords, employeeMapping, monthlyMetrics]);
 
-  // 3. Extract unique list of Managers, Depts, Machines for filter dropdowns
+  // 4. Extract unique list of Managers, Depts, Machines for filter dropdowns
   const availableManagers = useMemo(() => {
     return Array.from(new Set(unifiedWorkers.map(w => w.manager))).filter(Boolean).sort();
   }, [unifiedWorkers]);
@@ -324,7 +398,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     return Array.from(new Set(unifiedWorkers.map(w => w.machine))).filter(Boolean).sort();
   }, [unifiedWorkers]);
 
-  // 4. Apply Filters & Search to Unified Workers
+  // 5. Apply Filters & Search to Unified Workers
   const filteredWorkers = useMemo(() => {
     return unifiedWorkers.filter(w => {
       // Group Filter
@@ -359,7 +433,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     });
   }, [unifiedWorkers, filterGroup, selectedManagerFilter, selectedDeptFilter, selectedMachineFilter, searchTerm]);
 
-  // 5. Build Aggregated Hierarchy by Manager -> Dept -> Machine
+  // 6. Build Aggregated Hierarchy by Manager -> Dept -> Machine
   const aggregatedByManager = useMemo<Record<string, ManagerAggregatedStats>>(() => {
     const managers: Record<string, ManagerAggregatedStats> = {};
 
@@ -511,7 +585,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     return managers;
   }, [filteredWorkers]);
 
-  // 6. Overall Grand Summary Totals
+  // 7. Overall Grand Summary Totals
   const overallTotals = useMemo(() => {
     let gyCount = 0, gyNormal = 0, gyOt = 0, gyTotal = 0;
     let contCount = 0, contNormal = 0, contOt = 0, contTotal = 0;
@@ -534,20 +608,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     });
 
     const grandCount = gyCount + contCount + monthlyCount;
-    const grandNormal = gyNormal + contNormal + monthlyNormal;
-    const grandOt = gyOt + contOt;
-    const grandTotal = grandNormal + grandOt;
+    const grandNormal = Math.round((gyNormal + contNormal + monthlyNormal) * 10) / 10;
+    const grandOt = Math.round((gyOt + contOt) * 10) / 10;
+    const grandTotal = Math.round((grandNormal + grandOt) * 10) / 10;
 
     return {
-      gyCount, gyNormal, gyOt, gyTotal,
-      contCount, contNormal, contOt, contTotal,
-      monthlyCount, monthlyNormal, monthlyTotal,
+      gyCount, gyNormal: Math.round(gyNormal * 10) / 10, gyOt: Math.round(gyOt * 10) / 10, gyTotal: Math.round(gyTotal * 10) / 10,
+      contCount, contNormal: Math.round(contNormal * 10) / 10, contOt: Math.round(contOt * 10) / 10, contTotal: Math.round(contTotal * 10) / 10,
+      monthlyCount, monthlyNormal: Math.round(monthlyNormal * 10) / 10, monthlyTotal: Math.round(monthlyTotal * 10) / 10,
       grandCount, grandNormal, grandOt, grandTotal
     };
   }, [aggregatedByManager]);
 
-  // 7. Chart Datasets
-  // Chart 1: Manager Bar Chart (Normal Hours vs OT Hours)
+  // 8. Chart Datasets
   const managerChartData = useMemo(() => {
     return Object.values(aggregatedByManager)
       .map(m => {
@@ -564,7 +637,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       .sort((a, b) => b['ชม. รวมทั้งหมด'] - a['ชม. รวมทั้งหมด']);
   }, [aggregatedByManager]);
 
-  // Chart 2: Top 6 Machines with Highest OT Hours
   const topOtMachinesChartData = useMemo(() => {
     const allMachines: { name: string; dept: string; manager: string; otHours: number; normalHours: number; workers: number }[] = [];
     
@@ -589,7 +661,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       .slice(0, 6);
   }, [aggregatedByManager]);
 
-  // Chart 3: Pie Chart of Total Hours by Group
   const groupPieData = useMemo(() => {
     return [
       { name: 'พนักงาน GY', value: overallTotals.gyTotal, color: '#3b82f6' },
@@ -641,7 +712,23 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const handleExportExcel = () => {
     const wb = XLSX.utils.book_new();
 
-    // 1. Manager Summary Sheet
+    // 1. Reconciliation Sheet with Page 4 OPAH
+    const reconRows = [
+      { 'หมวดหมู่': 'รวมทั้งโรงงาน (Grand Total Factory)', 'จำนวนคน (HC)': page4Metrics.grandHc, 'ชม. ปกติ': page4Metrics.grandNorm, 'ชม. OT': page4Metrics.grandOt, 'ชม. รวมสุทธิ': page4Metrics.grandGrossTot },
+      { 'หมวดหมู่': '- พนักงานประจำ GY', 'จำนวนคน (HC)': ohpaSummary.gyEmployeesCount + ohpaSummary.excluded6320GyCount, 'ชม. ปกติ': overallTotals.gyNormal, 'ชม. OT': overallTotals.gyOt, 'ชม. รวมสุทธิ': overallTotals.gyTotal },
+      { 'หมวดหมู่': '- พนักงาน Contractor WAS รายชม.', 'จำนวนคน (HC)': ohpaSummary.contractorEmployeesCount + ohpaSummary.excluded6320ContCount, 'ชม. ปกติ': overallTotals.contNormal, 'ชม. OT': overallTotals.contOt, 'ชม. รวมสุทธิ': overallTotals.contTotal },
+      { 'หมวดหมู่': '- พนักงานรายเดือน WAS (9 คน)', 'จำนวนคน (HC)': 9, 'ชม. ปกติ': overallTotals.monthlyNormal, 'ชม. OT': 0, 'ชม. รวมสุทธิ': overallTotals.monthlyTotal },
+      { 'หมวดหมู่': '----------------------------------------', 'จำนวนคน (HC)': '', 'ชม. ปกติ': '', 'ชม. OT': '', 'ชม. รวมสุทธิ': '' },
+      { 'หมวดหมู่': '4 พื้นที่หลัก (Plant OPAH Scope)', 'จำนวนคน (HC)': page4Metrics.activeHc, 'ชม. ปกติ': page4Metrics.activeNorm, 'ชม. OT': page4Metrics.activeOt, 'ชม. รวมสุทธิ': page4Metrics.activeGrossTot },
+      { 'หมวดหมู่': 'แผนก 6320 (Retread Scope)', 'จำนวนคน (HC)': page4Metrics.retreadHc, 'ชม. ปกติ': page4Metrics.retreadNorm, 'ชม. OT': page4Metrics.retreadOt, 'ชม. รวมสุทธิ': page4Metrics.retreadTot },
+      { 'หมวดหมู่': 'ปรับปรุง PDI Deduct (-)', 'จำนวนคน (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': -page4Metrics.activePdi },
+      { 'หมวดหมู่': 'ปรับปรุง Bead Add (+)', 'จำนวนคน (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeBead },
+      { 'หมวดหมู่': 'ชั่วโมงทำงานสุทธิ OPAH (Net OPAH)', 'จำนวนคน (HC)': page4Metrics.activeHc, 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeNetTot }
+    ];
+    const wsRecon = XLSX.utils.json_to_sheet(reconRows);
+    XLSX.utils.book_append_sheet(wb, wsRecon, 'ความสอดคล้อง OPAH หน้า 4');
+
+    // 2. Manager Summary Sheet
     const managerRows: any[] = [];
     Object.values(aggregatedByManager).forEach(m => {
       managerRows.push({
@@ -682,7 +769,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const wsManager = XLSX.utils.json_to_sheet(managerRows);
     XLSX.utils.book_append_sheet(wb, wsManager, 'สรุปแยก Manager');
 
-    // 2. Department Breakdown Sheet
+    // 3. Department Breakdown Sheet
     const deptRows: any[] = [];
     Object.values(aggregatedByManager).forEach(m => {
       Object.values(m.departments).forEach(d => {
@@ -710,7 +797,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const wsDept = XLSX.utils.json_to_sheet(deptRows);
     XLSX.utils.book_append_sheet(wb, wsDept, 'สรุปแยก แผนก');
 
-    // 3. Machine / Position Breakdown Sheet
+    // 4. Machine / Position Breakdown Sheet
     const machineRows: any[] = [];
     Object.values(aggregatedByManager).forEach(m => {
       Object.values(m.departments).forEach(d => {
@@ -740,7 +827,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const wsMachine = XLSX.utils.json_to_sheet(machineRows);
     XLSX.utils.book_append_sheet(wb, wsMachine, 'สรุปแยก เครื่องจักร (Machine)');
 
-    // 4. Raw Detail Workers Sheet
+    // 5. Raw Detail Workers Sheet
     const rawWorkerRows = filteredWorkers.map((w, idx) => ({
       'ลำดับ': idx + 1,
       'รหัสพนักงาน': w.empId,
@@ -771,7 +858,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>หน้า 5 • ศูนย์รวมแดชบอร์ดชั่วโมงทำงาน & OT (Executive Dashboard)</span>
+              <span>หน้า 5 • ศูนย์รวมแดชบอร์ดชั่วโมงทำงาน & OT (เชื่อมโยงกับหน้า 4 OPAH CAL 100%)</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
               แดชบอร์ดสรุปชั่วโมงทำงานและ OT ประจำวัน
@@ -783,7 +870,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Right Action: Excel Export */}
           <div className="flex flex-wrap items-center gap-3">
-            {/* Export Excel Button */}
             <button
               onClick={handleExportExcel}
               className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-2 shadow-lg shadow-emerald-900/30 transition-all cursor-pointer"
@@ -794,12 +880,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        {/* 4 KPI Summary Cards */}
+        {/* 4 Primary KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
           {/* KPI 1: Grand Total */}
           <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex flex-col justify-between">
             <div className="flex items-center justify-between text-indigo-200">
-              <span className="text-xs font-medium">รวมชั่วโมงทำงานทั้งหมด</span>
+              <span className="text-xs font-bold">รวมชั่วโมงทำงานทั้งโรงงาน</span>
               <Clock className="w-4 h-4 text-amber-400" />
             </div>
             <div className="mt-2 flex items-baseline justify-between">
@@ -882,6 +968,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span>ปกติ: <strong className="text-white">{overallTotals.monthlyNormal.toLocaleString()}</strong> ชม.</span>
               <span className="text-[11px] text-purple-300">({monthlyMetrics.hoursPerPerson} ชม./คน)</span>
             </div>
+          </div>
+        </div>
+
+        {/* Reconciliation Strip with Page 4 OPAH */}
+        <div className="bg-indigo-950/70 rounded-2xl p-3.5 border border-indigo-500/30 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2 text-indigo-200">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>
+              <strong>ความเชื่อมโยงกับหน้า 4 (OPAH CAL):</strong> รวมทั้งโรงงาน <strong>{page4Metrics.grandGrossTot.toLocaleString()} ชม.</strong> ({page4Metrics.grandHc} คน) ➔ 4 พื้นที่หลัก <strong>{page4Metrics.activeGrossTot.toLocaleString()} ชม.</strong> ({page4Metrics.activeHc} คน) + Retread (6320) <strong>{page4Metrics.retreadTot.toLocaleString()} ชม.</strong> ({page4Metrics.retreadHc} คน)
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-indigo-300 font-mono text-[11px]">
+            <span>สุทธิ OPAH: <strong className="text-emerald-400">{page4Metrics.activeNetTot.toLocaleString()}</strong> ชม.</span>
           </div>
         </div>
       </div>
