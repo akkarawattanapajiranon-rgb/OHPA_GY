@@ -1156,6 +1156,86 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
         }
       });
 
+      // API to sync Retread Tonnage from T: drive Excel (folder: RETREAD TONAGE)
+      server.middlewares.use('/api/sync-retread-tonnage', (req, res) => {
+        try {
+          const networkFile = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\RETREAD TONAGE\\Retread stock by SAP code.xlsx';
+          const localFile = path.resolve(__dirname, 'Retread stock by SAP code.xlsx');
+          const targetFile = fs.existsSync(networkFile) ? networkFile : (fs.existsSync(localFile) ? localFile : null);
+
+          if (!targetFile) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              success: false,
+              message: 'ไม่พบไฟล์ Retread stock by SAP code.xlsx บนไดรฟ์ T: หรือเครื่อง'
+            }));
+            return;
+          }
+
+          const buf = fs.readFileSync(targetFile);
+          const wb = XLSX.read(buf, { type: 'buffer' });
+          const ws = wb.Sheets['Pivot'];
+          if (!ws) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, message: 'ไม่พบแท็บ Pivot ในไฟล์ Retread stock by SAP code.xlsx' }));
+            return;
+          }
+
+          const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
+          const dateRow = data[2] || [];
+          const totalRow = data[26] || [];
+
+          const dailyKgByDate: Record<string, number> = {};
+          const dailyLbsByDate: Record<string, number> = {};
+
+          for (let col = 1; col < dateRow.length; col++) {
+            const serial = dateRow[col];
+            if (!serial || serial === '(blank)' || serial === 'Grand Total') continue;
+            const utcDays = Math.floor(Number(serial) - 25569);
+            const d = new Date(utcDays * 86400 * 1000);
+            const dd = String(d.getUTCDate()).padStart(2, '0');
+            const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+            const yyyy = d.getUTCFullYear();
+            const dateStr = `${dd}/${mm}/${yyyy}`;
+            const isoStr = `${yyyy}-${mm}-${dd}`;
+            const kg = Number(totalRow[col]) || 0;
+            const lbs = Math.round(kg * 2.20462 * 100) / 100;
+            dailyKgByDate[dateStr] = kg;
+            dailyKgByDate[isoStr] = kg;
+            dailyLbsByDate[dateStr] = lbs;
+            dailyLbsByDate[isoStr] = lbs;
+          }
+
+          const grandTotalCell = totalRow[totalRow.length - 1] || totalRow[totalRow.length - 2];
+          const mtdKg = Number(grandTotalCell) || Object.values(dailyKgByDate).reduce((a, b) => a + b, 0) / 2;
+          const mtdLbs = Math.round(mtdKg * 2.20462 * 100) / 100;
+
+          const retreadData = {
+            dailyKgByDate,
+            dailyLbsByDate,
+            mtdKg,
+            mtdLbs
+          };
+
+          // Auto persist to default_retread_tonnage.ts
+          try {
+            const tsContent = `export interface RetreadTonnageData {\n  dailyKgByDate: Record<string, number>;\n  dailyLbsByDate: Record<string, number>;\n  mtdKg: number;\n  mtdLbs: number;\n}\n\nexport const DEFAULT_RETREAD_TONNAGE: RetreadTonnageData = ${JSON.stringify(retreadData, null, 2)};\n`;
+            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_retread_tonnage.ts'), tsContent, 'utf8');
+          } catch (wErr) {}
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            success: true,
+            sourceFile: targetFile,
+            data: retreadData
+          }));
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ success: false, message: err.message }));
+        }
+      });
+
       // API to compute OHPA numbers for days 1 to 16
       server.middlewares.use('/api/calculate-all-days', async (req, res) => {
         try {

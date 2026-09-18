@@ -3,6 +3,7 @@ import { ParsedShiftRecord, EmployeeInfo } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport } from '../types/ohpa';
 import { PdiBeadReport } from '../data/default_pdi_bead';
+import { DEFAULT_RETREAD_TONNAGE } from '../data/default_retread_tonnage';
 import { classifyArea, AREA_5_KEYS, AREA_5_METADATA, Area5Key } from './ohpaCalculator';
 
 export interface RawEmployeeExportRow {
@@ -353,6 +354,21 @@ export function buildRawEmployeeRecords(
           ? Math.round(((radKg * 2.20462) / teamSummaryMap['Radial Aero'].netOpahHours) * 100) / 100
           : '-';
     }
+  }
+
+  // Calculate Retread Tonnage & Standalone OPAH
+  const cleanDateStr = (dateFormatted || '').replace(/^[^\d]*/, '').trim();
+  const retreadKg = (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr]) ||
+    (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr.replace(/\//g, '-')]) ||
+    0;
+  if (teamSummaryMap['Retread']) {
+    teamSummaryMap['Retread'].tonnageKg = retreadKg;
+    teamSummaryMap['Retread'].tonnageLbs = Math.round(retreadKg * 2.20462 * 100) / 100;
+    const retreadTotH = teamSummaryMap['Retread'].totalHours;
+    teamSummaryMap['Retread'].areaOpah =
+      retreadTotH > 0 && retreadKg > 0
+        ? Math.round(((retreadKg * 2.20462) / retreadTotH) * 100) / 100
+        : '-';
   }
 
   const teamSummary = AREA_5_KEYS.map((k) => teamSummaryMap[k]);

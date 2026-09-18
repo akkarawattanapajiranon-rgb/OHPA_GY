@@ -1796,8 +1796,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           {isTotalAviation ? '✈️ Total Aviation' : area.areaLabel}
                         </span>
                         {area.isExcluded6320 ? (
-                          <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.2 rounded border border-rose-200">
-                            ตัด 6320
+                          <span className="text-[10px] font-bold text-orange-700 bg-orange-100 px-1.5 py-0.2 rounded border border-orange-300">
+                            เฉพาะ Retread (SAP)
                           </span>
                         ) : (
                           <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded truncate max-w-[110px] ${
@@ -1834,8 +1834,22 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="my-2 p-2 bg-rose-50/80 rounded-xl border border-rose-200/80 text-[11px] text-rose-700 font-semibold">
-                          🚫 ตัดออกจาก OPAH โรงงาน (แผนก 6320 หล่อดอก)
+                        <div className="my-2 p-2 bg-gradient-to-br from-amber-50 to-orange-50/80 rounded-xl border border-amber-200/90 shadow-2xs">
+                          <div className="flex items-center justify-between text-[10px] font-bold text-amber-800 uppercase">
+                            <span>OPAH เฉพาะ Retread:</span>
+                            <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-amber-200 text-amber-950">
+                              Row 28
+                            </span>
+                          </div>
+                          <div className="text-xl font-black font-mono text-amber-950 leading-tight mt-0.5">
+                            {area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-'}
+                          </div>
+                          <div className="text-[10px] text-amber-800 font-bold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
+                            📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
+                          </div>
+                          <div className="text-[9px] text-rose-600 font-medium mt-0.5">
+                            * คำนวณเฉพาะกลุ่ม (ไม่รวมใน Plant OPAH)
+                          </div>
                         </div>
                       )}
 
@@ -2102,45 +2116,37 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           {(area.finalOpahHours || area.totalHours).toLocaleString()}
                         </td>
 
-                        {/* Stocking Tonnage 55012 */}
+                        {/* Stocking Tonnage 55012 / Retread SAP */}
                         <td className={`py-2.5 px-2.5 text-right font-mono whitespace-nowrap ${
-                          isTotalAviation ? 'bg-teal-50/70' : 'bg-emerald-50/40'
+                          isTotalAviation ? 'bg-teal-50/70' : area.isExcluded6320 ? 'bg-amber-50/40' : 'bg-emerald-50/40'
                         }`}>
-                          {area.isExcluded6320 ? (
-                            <span className="text-slate-400 text-xs">-</span>
-                          ) : (
-                            <div>
-                              <div className="font-bold text-slate-900 text-xs leading-tight">
-                                {area.areaTonnageKg?.toLocaleString()} <span className="text-[10px] text-slate-500 font-normal">kg</span>
-                              </div>
-                              <div className="text-[10px] text-slate-500 font-normal flex items-center justify-end gap-1 mt-0.5">
-                                <span>{area.areaTonnageLbs?.toLocaleString()} lbs</span>
-                                <span className={`text-[9px] px-1 py-0.2 rounded font-bold ${
-                                  isTotalAviation ? 'bg-teal-200 text-teal-950' : 'bg-emerald-200/80 text-emerald-950'
-                                }`}>{area.areaTonnageCodes}</span>
-                              </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-xs leading-tight">
+                              {area.areaTonnageKg ? area.areaTonnageKg.toLocaleString() : '-'} <span className="text-[10px] text-slate-500 font-normal">kg</span>
                             </div>
-                          )}
+                            <div className="text-[10px] text-slate-500 font-normal flex items-center justify-end gap-1 mt-0.5">
+                              <span>{area.areaTonnageLbs ? `${area.areaTonnageLbs.toLocaleString()} lbs` : '-'}</span>
+                              <span className={`text-[9px] px-1 py-0.2 rounded font-bold ${
+                                isTotalAviation ? 'bg-teal-200 text-teal-950' : area.isExcluded6320 ? 'bg-amber-200 text-amber-950' : 'bg-emerald-200/80 text-emerald-950'
+                              }`}>{area.areaTonnageCodes}</span>
+                            </div>
+                          </div>
                         </td>
 
                         {/* Area OPAH (lbs/ชม.) */}
                         <td className={`py-2.5 px-2.5 text-right font-mono whitespace-nowrap ${
-                          isTotalAviation ? 'bg-teal-100/70' : 'bg-purple-50/50'
+                          isTotalAviation ? 'bg-teal-100/70' : area.isExcluded6320 ? 'bg-amber-100/60' : 'bg-purple-50/50'
                         }`}>
-                          {area.isExcluded6320 ? (
-                            <span className="text-slate-400 text-xs">-</span>
-                          ) : (
-                            <div>
-                              <div className={`font-black text-sm leading-tight ${
-                                isTotalAviation ? 'text-teal-950' : 'text-purple-900'
-                              }`}>
-                                {area.areaOpahLbsPerHour ? area.areaOpahLbsPerHour.toLocaleString() : '-'}
-                              </div>
-                              <div className={`text-[10px] font-sans font-semibold ${
-                                isTotalAviation ? 'text-teal-700' : 'text-purple-700'
-                              }`}>lbs/ชม.</div>
+                          <div>
+                            <div className={`font-black text-sm leading-tight ${
+                              isTotalAviation ? 'text-teal-950' : area.isExcluded6320 ? 'text-amber-950' : 'text-purple-900'
+                            }`}>
+                              {area.areaOpahLbsPerHour ? area.areaOpahLbsPerHour.toLocaleString() : '-'}
                             </div>
-                          )}
+                            <div className={`text-[10px] font-sans font-semibold ${
+                              isTotalAviation ? 'text-teal-700' : area.isExcluded6320 ? 'text-amber-800' : 'text-purple-700'
+                            }`}>{area.isExcluded6320 ? 'lbs/ชม. (Retread)' : 'lbs/ชม.'}</div>
+                          </div>
                         </td>
                       </tr>
 

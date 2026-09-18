@@ -3,6 +3,7 @@ import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { DEFAULT_STOCKING_REPORTS } from '../data/default_stocking_reports';
+import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
 import { processScanRecords } from './parser';
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
@@ -712,8 +713,36 @@ export function accumulateRecordsIntoAreaMap(
 export function getAreaTonnage(
   areaKey: string,
   tonnageReport: StockingTonnageReport | null,
-  mode: 'DAILY' | 'MTD' = 'DAILY'
+  mode: 'DAILY' | 'MTD' = 'DAILY',
+  dateStr?: string,
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
 ): { codes: string; kg: number; lbs: number; ton: number } {
+  if (areaKey === 'Retread') {
+    const retreadData = retreadTonnage || DEFAULT_RETREAD_TONNAGE;
+    let kg = 0;
+    if (mode === 'MTD') {
+      kg = retreadData.mtdKg || 0;
+    } else {
+      const clean = (dateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+      kg = (clean && retreadData.dailyKgByDate[clean]) ||
+           (clean && retreadData.dailyKgByDate[clean.replace(/\//g, '-')]) ||
+           0;
+      if (!kg && dateStr) {
+        const parts = clean.split(/[/.-]/);
+        if (parts.length === 3) {
+          const d = parts[0].padStart(2, '0');
+          const m = parts[1].padStart(2, '0');
+          const y = parts[2].length === 4 ? parts[2] : (parseInt(parts[2], 10) > 2400 ? String(parseInt(parts[2], 10) - 543) : '2026');
+          kg = retreadData.dailyKgByDate[`${d}/${m}/${y}`] || retreadData.dailyKgByDate[`${y}-${m}-${d}`] || 0;
+        }
+      }
+    }
+    const LBS_FACTOR = 2.20462;
+    const lbs = Math.round(kg * LBS_FACTOR * 100) / 100;
+    const ton = Math.round((kg / 1000) * 1000) / 1000;
+    return { codes: 'Retread SAP Stock', kg, lbs, ton };
+  }
+
   if (!tonnageReport) {
     return { codes: '-', kg: 0, lbs: 0, ton: 0 };
   }
@@ -831,7 +860,9 @@ export function buildAreaBreakdownList(
   totalWorkingHours: number,
   daysCount: number = 1,
   tonnageReport: StockingTonnageReport | null = null,
-  mode: 'DAILY' | 'MTD' = 'DAILY'
+  mode: 'DAILY' | 'MTD' = 'DAILY',
+  dateStr?: string,
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
 ): OhpaAreaMetrics[] {
   const avgDays = Math.max(1, daysCount);
   const LBS_FACTOR = 2.20462;
@@ -864,8 +895,9 @@ export function buildAreaBreakdownList(
         }))
         .sort(compareDeptItems);
 
-      const areaTonnage = getAreaTonnage(a.areaKey, tonnageReport, mode);
-      const areaOpahLbsPerHour = (!a.isExcluded6320 && finalOpah > 0 && areaTonnage.kg > 0)
+      const targetDateStr = dateStr || (tonnageReport as any)?.productionDay || (tonnageReport as any)?.productionDate || '';
+      const areaTonnage = getAreaTonnage(a.areaKey, tonnageReport, mode, targetDateStr, retreadTonnage);
+      const areaOpahLbsPerHour = (finalOpah > 0 && areaTonnage.kg > 0)
         ? Math.round(((areaTonnage.kg * LBS_FACTOR) / finalOpah) * 100) / 100
         : undefined;
 
@@ -1124,7 +1156,7 @@ export function calculateMtdSummary(
          DEFAULT_STOCKING_REPORTS[`${targetYear}-09-${dPad}`] ||
          null);
 
-    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, dayTonnageReport || tonnageReport, 'DAILY');
+    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, dayTonnageReport || tonnageReport, 'DAILY', dayDateStr);
 
     // Calculate daily stocking tonnage
     let dayStockingKg = 0;
@@ -1195,7 +1227,7 @@ export function calculateMtdSummary(
     ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdContractorHours) * 100) / 100
     : 0;
 
-  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay, tonnageReport, 'MTD');
+  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay, tonnageReport, 'MTD', clean);
 
   return {
     targetDate: clean || `${String(targetDay).padStart(2, '0')}/${String(targetMonth).padStart(2, '0')}/${targetYear}`,
@@ -1269,7 +1301,7 @@ export function calculateOhpaSummary(
   );
 
   // Active 4 Areas & Retread derived from areaBreakdown
-  const areaBreakdown = buildAreaBreakdownList(areaMap, 0, 1, tonnageReport, 'DAILY');
+  const areaBreakdown = buildAreaBreakdownList(areaMap, 0, 1, tonnageReport, 'DAILY', cleanDate);
   const activeAreas = areaBreakdown.filter(a => !a.isExcluded6320);
   const retreadArea = areaBreakdown.find(a => a.isExcluded6320);
 
