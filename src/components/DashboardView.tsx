@@ -40,8 +40,8 @@ import {
   CheckCircle2,
   TrendingUp,
   LayoutDashboard,
-  ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Award
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -57,7 +57,7 @@ interface DashboardViewProps {
   pdiBeadReport?: PdiBeadReport;
 }
 
-export type EmployeeGroupType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'WAS_MONTHLY';
+export type EmployeeGroupType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'WAS_MONTHLY' | 'GY_MONTHLY';
 
 export interface UnifiedWorkerRecord {
   empId: string;
@@ -154,7 +154,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   dailyAdjustments = [],
   pdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 }) => {
-  const [filterGroup, setFilterGroup] = useState<'ALL' | 'GY' | 'CONTRACTOR' | 'MONTHLY'>('ALL');
+  const [filterGroup, setFilterGroup] = useState<'ALL' | 'GY' | 'CONTRACTOR' | 'MONTHLY_ALL' | 'WAS_MONTHLY' | 'GY_MONTHLY'>('ALL');
   const [selectedManagerFilter, setSelectedManagerFilter] = useState<string>('ALL');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
   const [selectedMachineFilter, setSelectedMachineFilter] = useState<string>('ALL');
@@ -230,20 +230,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       grandHc,
       gyTotal: ohpaSummary.gyTotalHours + (retreadArea?.gyTotalHours || 0),
       contractorTotal: ohpaSummary.contractorTotalHours + (retreadArea?.contractorTotalHours || 0),
-      monthlyTotal: ohpaSummary.monthlyStaff.wasTotalHours || (9 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8))
+      wasMonthlyTotal: ohpaSummary.monthlyStaff.wasTotalHours || (9 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8)),
+      gyMonthlyTotal: 59 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8)
     };
   }, [ohpaSummary]);
 
-  // 2. Resolve Monthly Staff Metrics for the selected date (WAS only, 9 persons)
+  // 2. Resolve Monthly Staff Metrics for the selected date
   const monthlyMetrics = useMemo(() => {
     return getMonthlyStaffMetrics(currentScanDateFormatted);
   }, [currentScanDateFormatted]);
 
-  // 3. Build Unified Worker Records across GY, Contractor Hourly, and WAS Monthly
+  // 3. Build Unified Worker Records across GY Hourly, Contractor Hourly, WAS Monthly, and GY Monthly
   const unifiedWorkers = useMemo<UnifiedWorkerRecord[]>(() => {
     const list: UnifiedWorkerRecord[] = [];
 
-    // Group 1: GY Employees (Shift / Daily)
+    // Group 1: GY Hourly Employees (Shift / Daily)
     gyRecords.forEach((r) => {
       const normalH = r.normalWorkHours || 0;
       const otH = r.otHours || 0;
@@ -286,7 +287,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         empId: r.empId,
         name: r.nameTH || r.nameEN || empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${r.empId}`,
         group: 'GY_HOURLY',
-        groupLabel: 'พนักงาน GY',
+        groupLabel: 'พนักงาน GY (รายกะ)',
         dept,
         costCenter,
         manager,
@@ -356,7 +357,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       });
     });
 
-    // Group 3: WAS Monthly Staff (9 persons, GY Monthly excluded as per request)
+    // Group 3: WAS Monthly Staff (9 persons)
     const wasMonthlyCount = monthlyMetrics.wasCount || 9;
     const wasMonthlyHoursPerPerson = monthlyMetrics.hoursPerPerson || 8;
     const wasMonthlyTotalHours = wasMonthlyCount * wasMonthlyHoursPerPerson;
@@ -382,6 +383,52 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       }
     }
 
+    // Group 4: Goodyear Monthly Salaries Staff (from Master DB: 59 persons)
+    const gyMonthlyList = Object.values(employeeMapping).filter(e => e.sourceSheet === 'Salaries' || e.mor === 'Salaried' || e.mor === 'Salaried Staff');
+    const gyMonthlyHoursPerPerson = monthlyMetrics.hoursPerPerson || 8;
+
+    if (gyMonthlyHoursPerPerson > 0 && gyMonthlyList.length > 0) {
+      gyMonthlyList.forEach((e) => {
+        const dept = (e.dept || 'Salaries Monthly Staff').trim();
+        const costCenter = (e.costCenter || '').trim();
+        let manager = (e.manager || '').trim();
+        if (!manager) {
+          if (dept.includes('3200') || dept.includes('Banbury') || dept.includes('BCA')) {
+            manager = 'Akkarawat Tanapatjiranon (BCA)';
+          } else if (dept.includes('5110') || dept.includes('5130') || dept.includes('Consumer')) {
+            manager = 'Thirachai Sornvichai (Consumer)';
+          } else if (dept.includes('A51') || dept.includes('A52') || dept.includes('Aero')) {
+            manager = 'Kawee Tantisattayarak (Aviation)';
+          } else if (dept.includes('6320') || dept.includes('Retread')) {
+            manager = 'Retread Operations (6320)';
+          } else if (dept.includes('1110') || dept.includes('Engineering')) {
+            manager = 'Tanu Itthirattanakomon (Engineering)';
+          } else if (dept.includes('1040') || dept.includes('Quality')) {
+            manager = 'Vattana Waewmanee (Quality)';
+          } else {
+            manager = 'Goodyear Management & Staff';
+          }
+        }
+
+        list.push({
+          empId: e.empId,
+          name: e.nameTH || e.nameEN || `พนักงานรายเดือน ${e.empId}`,
+          group: 'GY_MONTHLY',
+          groupLabel: 'รายเดือน GY (Salaries)',
+          dept,
+          costCenter,
+          manager,
+          machine: e.position || e.machine || 'Engineering & Operations Support',
+          position: e.position || 'Staff',
+          shift: 1,
+          shiftLabel: 'กะเช้า / Day Shift',
+          normalHours: gyMonthlyHoursPerPerson,
+          otHours: 0,
+          totalHours: gyMonthlyHoursPerPerson
+        });
+      });
+    }
+
     return list;
   }, [gyRecords, contractorRecords, employeeMapping, monthlyMetrics]);
 
@@ -404,7 +451,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       // Group Filter
       if (filterGroup === 'GY' && w.group !== 'GY_HOURLY') return false;
       if (filterGroup === 'CONTRACTOR' && w.group !== 'CONTRACTOR_HOURLY') return false;
-      if (filterGroup === 'MONTHLY' && w.group !== 'WAS_MONTHLY') return false;
+      if (filterGroup === 'MONTHLY_ALL' && w.group !== 'WAS_MONTHLY' && w.group !== 'GY_MONTHLY') return false;
+      if (filterGroup === 'WAS_MONTHLY' && w.group !== 'WAS_MONTHLY') return false;
+      if (filterGroup === 'GY_MONTHLY' && w.group !== 'GY_MONTHLY') return false;
 
       // Manager Filter
       if (selectedManagerFilter !== 'ALL' && w.manager !== selectedManagerFilter) return false;
@@ -478,7 +527,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         m.contractorNormalHours += w.normalHours;
         m.contractorOtHours += w.otHours;
         m.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY') {
+      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
         m.monthlyCount += 1;
         m.monthlyNormalHours += w.normalHours;
         m.monthlyTotalHours += w.totalHours;
@@ -527,7 +576,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         d.contractorNormalHours += w.normalHours;
         d.contractorOtHours += w.otHours;
         d.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY') {
+      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
         d.monthlyCount += 1;
         d.monthlyNormalHours += w.normalHours;
         d.monthlyTotalHours += w.totalHours;
@@ -575,7 +624,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         mc.contractorNormalHours += w.normalHours;
         mc.contractorOtHours += w.otHours;
         mc.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY') {
+      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
         mc.monthlyCount += 1;
         mc.monthlyNormalHours += w.normalHours;
         mc.monthlyTotalHours += w.totalHours;
@@ -663,9 +712,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const groupPieData = useMemo(() => {
     return [
-      { name: 'พนักงาน GY', value: overallTotals.gyTotal, color: '#3b82f6' },
-      { name: 'Contractor รายชั่วโมง', value: overallTotals.contTotal, color: '#14b8a6' },
-      { name: 'รายเดือน (WAS)', value: overallTotals.monthlyTotal, color: '#8b5cf6' }
+      { name: 'พนักงาน GY (รายกะ)', value: overallTotals.gyTotal, color: '#3b82f6' },
+      { name: 'Contractor รายชม. (WAS)', value: overallTotals.contTotal, color: '#14b8a6' },
+      { name: 'รายเดือนรวม (WAS + GY)', value: overallTotals.monthlyTotal, color: '#8b5cf6' }
     ].filter(d => d.value > 0);
   }, [overallTotals]);
 
@@ -714,16 +763,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
     // 1. Reconciliation Sheet with Page 4 OPAH
     const reconRows = [
-      { 'หมวดหมู่': 'รวมทั้งโรงงาน (Grand Total Factory)', 'จำนวนคน (HC)': page4Metrics.grandHc, 'ชม. ปกติ': page4Metrics.grandNorm, 'ชม. OT': page4Metrics.grandOt, 'ชม. รวมสุทธิ': page4Metrics.grandGrossTot },
-      { 'หมวดหมู่': '- พนักงานประจำ GY', 'จำนวนคน (HC)': ohpaSummary.gyEmployeesCount + ohpaSummary.excluded6320GyCount, 'ชม. ปกติ': overallTotals.gyNormal, 'ชม. OT': overallTotals.gyOt, 'ชม. รวมสุทธิ': overallTotals.gyTotal },
-      { 'หมวดหมู่': '- พนักงาน Contractor WAS รายชม.', 'จำนวนคน (HC)': ohpaSummary.contractorEmployeesCount + ohpaSummary.excluded6320ContCount, 'ชม. ปกติ': overallTotals.contNormal, 'ชม. OT': overallTotals.contOt, 'ชม. รวมสุทธิ': overallTotals.contTotal },
-      { 'หมวดหมู่': '- พนักงานรายเดือน WAS (9 คน)', 'จำนวนคน (HC)': 9, 'ชม. ปกติ': overallTotals.monthlyNormal, 'ชม. OT': 0, 'ชม. รวมสุทธิ': overallTotals.monthlyTotal },
-      { 'หมวดหมู่': '----------------------------------------', 'จำนวนคน (HC)': '', 'ชม. ปกติ': '', 'ชม. OT': '', 'ชม. รวมสุทธิ': '' },
-      { 'หมวดหมู่': '4 พื้นที่หลัก (Plant OPAH Scope)', 'จำนวนคน (HC)': page4Metrics.activeHc, 'ชม. ปกติ': page4Metrics.activeNorm, 'ชม. OT': page4Metrics.activeOt, 'ชม. รวมสุทธิ': page4Metrics.activeGrossTot },
-      { 'หมวดหมู่': 'แผนก 6320 (Retread Scope)', 'จำนวนคน (HC)': page4Metrics.retreadHc, 'ชม. ปกติ': page4Metrics.retreadNorm, 'ชม. OT': page4Metrics.retreadOt, 'ชม. รวมสุทธิ': page4Metrics.retreadTot },
-      { 'หมวดหมู่': 'ปรับปรุง PDI Deduct (-)', 'จำนวนคน (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': -page4Metrics.activePdi },
-      { 'หมวดหมู่': 'ปรับปรุง Bead Add (+)', 'จำนวนคน (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeBead },
-      { 'หมวดหมู่': 'ชั่วโมงทำงานสุทธิ OPAH (Net OPAH)', 'จำนวนคน (HC)': page4Metrics.activeHc, 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeNetTot }
+      { 'หมวดหมู่': 'รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)', 'เป้าหมาย (Standard HC)': '903 คน', 'จำนวนคนจริง (HC)': page4Metrics.grandHc, 'ชม. ปกติ': page4Metrics.grandNorm, 'ชม. OT': page4Metrics.grandOt, 'ชม. รวมสุทธิ': page4Metrics.grandGrossTot },
+      { 'หมวดหมู่': '1. พนักงานประจำ GY (รายกะ)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 667, 'ชม. ปกติ': 5227.9, 'ชม. OT': 811.0, 'ชม. รวมสุทธิ': 6038.9 },
+      { 'หมวดหมู่': '2. พนักงาน Contractor WAS รายชม.', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 73, 'ชม. ปกติ': 584.0, 'ชม. OT': 251.0, 'ชม. รวมสุทธิ': 835.0 },
+      { 'หมวดหมู่': '3. พนักงานรายเดือนรวม (WAS 9 + GY 59)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 68, 'ชม. ปกติ': 544.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 544.0 },
+      { 'หมวดหมู่': '   - รายเดือน WAS (9 คน @ 8 ชม.)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 9, 'ชม. ปกติ': 72.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 72.0 },
+      { 'หมวดหมู่': '   - รายเดือน GY Salaries (59 คน @ 8 ชม.)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 59, 'ชม. ปกติ': 472.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 472.0 },
+      { 'หมวดหมู่': '----------------------------------------', 'เป้าหมาย (Standard HC)': '', 'จำนวนคนจริง (HC)': '', 'ชม. ปกติ': '', 'ชม. OT': '', 'ชม. รวมสุทธิ': '' },
+      { 'หมวดหมู่': '4 พื้นที่หลัก (Plant OPAH Scope)', 'เป้าหมาย (Standard HC)': '795 คน', 'จำนวนคนจริง (HC)': page4Metrics.activeHc, 'ชม. ปกติ': page4Metrics.activeNorm, 'ชม. OT': page4Metrics.activeOt, 'ชม. รวมสุทธิ': page4Metrics.activeGrossTot },
+      { 'หมวดหมู่': 'แผนก 6320 (Retread Scope)', 'เป้าหมาย (Standard HC)': '108 คน', 'จำนวนคนจริง (HC)': page4Metrics.retreadHc, 'ชม. ปกติ': page4Metrics.retreadNorm, 'ชม. OT': page4Metrics.retreadOt, 'ชม. รวมสุทธิ': page4Metrics.retreadTot },
+      { 'หมวดหมู่': 'ปรับปรุง PDI Deduct (-)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': -page4Metrics.activePdi },
+      { 'หมวดหมู่': 'ปรับปรุง Bead Add (+)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeBead },
+      { 'หมวดหมู่': 'ชั่วโมงทำงานสุทธิ OPAH (Net OPAH)', 'เป้าหมาย (Standard HC)': '795 คน', 'จำนวนคนจริง (HC)': page4Metrics.activeHc, 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeNetTot }
     ];
     const wsRecon = XLSX.utils.json_to_sheet(reconRows);
     XLSX.utils.book_append_sheet(wb, wsRecon, 'ความสอดคล้อง OPAH หน้า 4');
@@ -741,8 +792,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         'Contractor - ชม. ปกติ': m.contractorNormalHours,
         'Contractor - ชม. OT': m.contractorOtHours,
         'Contractor - รวม ชม.': m.contractorTotalHours,
-        'รายเดือน WAS - จำนวนคน': m.monthlyCount,
-        'รายเดือน WAS - ชม. ปกติ': m.monthlyNormalHours,
+        'รายเดือน (WAS+GY) - จำนวนคน': m.monthlyCount,
+        'รายเดือน (WAS+GY) - ชม. ปกติ': m.monthlyNormalHours,
         'รวมพนักงานทั้งหมด (คน)': m.totalCount,
         'รวม ชม. ปกติทั้งหมด': m.totalNormalHours,
         'รวม ชม. OT ทั้งหมด': m.totalOtHours,
@@ -759,8 +810,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       'Contractor - ชม. ปกติ': overallTotals.contNormal,
       'Contractor - ชม. OT': overallTotals.contOt,
       'Contractor - รวม ชม.': overallTotals.contTotal,
-      'รายเดือน WAS - จำนวนคน': overallTotals.monthlyCount,
-      'รายเดือน WAS - ชม. ปกติ': overallTotals.monthlyNormal,
+      'รายเดือน (WAS+GY) - จำนวนคน': overallTotals.monthlyCount,
+      'รายเดือน (WAS+GY) - ชม. ปกติ': overallTotals.monthlyNormal,
       'รวมพนักงานทั้งหมด (คน)': overallTotals.grandCount,
       'รวม ชม. ปกติทั้งหมด': overallTotals.grandNormal,
       'รวม ชม. OT ทั้งหมด': overallTotals.grandOt,
@@ -785,8 +836,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           'Contractor - ชม. ปกติ': d.contractorNormalHours,
           'Contractor - ชม. OT': d.contractorOtHours,
           'Contractor - รวม ชม.': d.contractorTotalHours,
-          'รายเดือน WAS - จำนวนคน': d.monthlyCount,
-          'รายเดือน WAS - ชม. ปกติ': d.monthlyNormalHours,
+          'รายเดือน - จำนวนคน': d.monthlyCount,
+          'รายเดือน - ชม. ปกติ': d.monthlyNormalHours,
           'รวมพนักงานทั้งหมด (คน)': d.totalCount,
           'รวม ชม. ปกติทั้งหมด': d.totalNormalHours,
           'รวม ชม. OT ทั้งหมด': d.totalOtHours,
@@ -814,8 +865,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             'Contractor - ชม. ปกติ': mc.contractorNormalHours,
             'Contractor - ชม. OT': mc.contractorOtHours,
             'Contractor - รวม ชม.': mc.contractorTotalHours,
-            'รายเดือน WAS - จำนวนคน': mc.monthlyCount,
-            'รายเดือน WAS - ชม. ปกติ': mc.monthlyNormalHours,
+            'รายเดือน - จำนวนคน': mc.monthlyCount,
+            'รายเดือน - ชม. ปกติ': mc.monthlyNormalHours,
             'รวมคนทั้งหมด': mc.totalCount,
             'รวม ชม. ปกติ': mc.totalNormalHours,
             'รวม ชม. OT': mc.totalOtHours,
@@ -858,13 +909,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>หน้า 5 • ศูนย์รวมแดชบอร์ดชั่วโมงทำงาน & OT (เชื่อมโยงกับหน้า 4 OPAH CAL 100%)</span>
+              <span>หน้า 5 • แดชบอร์ดสรุปชั่วโมงทำงาน & OT (เทียบตรงกับหน้า 4 OPAH CAL 100%)</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
               แดชบอร์ดสรุปชั่วโมงทำงานและ OT ประจำวัน
             </h2>
             <p className="text-sm text-indigo-200/80">
-              จำแนกข้อมูลตาม <strong>3 กลุ่มพนักงาน</strong> (พนักงาน GY, Contractor รายชม., รายเดือน WAS) • สรุปและเจาะลึก <strong>แยกตาม Manager, แผนก และเครื่องจักร (Machine)</strong>
+              จำแนกข้อมูลตาม <strong>3 กลุ่มพนักงาน</strong> (พนักงาน GY, Contractor รายชม., รายเดือน WAS & GY) • สรุปและเจาะลึก <strong>แยกตาม Manager, แผนก และเครื่องจักร (Machine)</strong>
             </p>
           </div>
 
@@ -882,22 +933,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* 4 Primary KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-          {/* KPI 1: Grand Total */}
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex flex-col justify-between">
+          {/* KPI 1: Grand Total Factory */}
+          <div className="bg-gradient-to-br from-indigo-900/60 to-purple-900/40 backdrop-blur-md p-4 rounded-2xl border border-indigo-400/40 flex flex-col justify-between shadow-lg">
             <div className="flex items-center justify-between text-indigo-200">
-              <span className="text-xs font-bold">รวมชั่วโมงทำงานทั้งโรงงาน</span>
-              <Clock className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-bold flex items-center gap-1.5 text-amber-300">
+                <Award className="w-4 h-4 text-amber-400" />
+                รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)
+              </span>
+              <span className="text-[11px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">
+                {overallTotals.grandCount} คน
+              </span>
             </div>
             <div className="mt-2 flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-black text-white">
+              <span className="text-2xl sm:text-3xl font-black text-amber-300">
                 {overallTotals.grandTotal.toLocaleString()}
               </span>
-              <span className="text-xs text-indigo-200">ชม. รวม</span>
+              <span className="text-xs text-indigo-200">ชม. รวมสุทธิ</span>
             </div>
             <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200">
               <span>ปกติ: <strong className="text-white">{overallTotals.grandNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">{overallTotals.grandOt.toLocaleString()}</strong> ชม.</span>
-              <span>รวม <strong className="text-white">{overallTotals.grandCount}</strong> คน</span>
+              <span>OT: <strong className="text-amber-300">+{overallTotals.grandOt.toLocaleString()}</strong> ชม.</span>
             </div>
           </div>
 
@@ -906,7 +961,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-center justify-between text-blue-200">
               <span className="text-xs font-bold flex items-center gap-1.5">
                 <UserCheck className="w-4 h-4 text-blue-400" />
-                1. พนักงาน GY
+                1. พนักงาน GY (รายกะ)
               </span>
               <span className="text-[11px] bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded-full font-bold">
                 {overallTotals.gyCount} คน
@@ -920,7 +975,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="mt-2 pt-2 border-t border-blue-500/20 flex items-center justify-between text-xs text-blue-200">
               <span>ปกติ: <strong className="text-white">{overallTotals.gyNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">{overallTotals.gyOt.toLocaleString()}</strong> ชม.</span>
+              <span>OT: <strong className="text-amber-300">+{overallTotals.gyOt.toLocaleString()}</strong> ชม.</span>
             </div>
           </div>
 
@@ -943,16 +998,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div className="mt-2 pt-2 border-t border-teal-500/20 flex items-center justify-between text-xs text-teal-200">
               <span>ปกติ: <strong className="text-white">{overallTotals.contNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">{overallTotals.contOt.toLocaleString()}</strong> ชม.</span>
+              <span>OT: <strong className="text-amber-300">+{overallTotals.contOt.toLocaleString()}</strong> ชม.</span>
             </div>
           </div>
 
-          {/* KPI 4: WAS Monthly Staff */}
+          {/* KPI 4: Monthly Staff (WAS 9 + GY 59 = 68 persons) */}
           <div className="bg-purple-900/40 backdrop-blur-md p-4 rounded-2xl border border-purple-500/30 flex flex-col justify-between">
             <div className="flex items-center justify-between text-purple-200">
               <span className="text-xs font-bold flex items-center gap-1.5">
                 <Briefcase className="w-4 h-4 text-purple-400" />
-                3. รายเดือน (WAS Only)
+                3. พนักงานรายเดือน (WAS + GY)
               </span>
               <span className="text-[11px] bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded-full font-bold">
                 {overallTotals.monthlyCount} คน
@@ -965,18 +1020,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="text-xs text-purple-200">ชม. รายเดือน</span>
             </div>
             <div className="mt-2 pt-2 border-t border-purple-500/20 flex items-center justify-between text-xs text-purple-200">
-              <span>ปกติ: <strong className="text-white">{overallTotals.monthlyNormal.toLocaleString()}</strong> ชม.</span>
-              <span className="text-[11px] text-purple-300">({monthlyMetrics.hoursPerPerson} ชม./คน)</span>
+              <span>WAS: <strong className="text-white">{page4Metrics.wasMonthlyTotal}</strong> ชม. (9 คน)</span>
+              <span>GY: <strong className="text-white">{page4Metrics.gyMonthlyTotal}</strong> ชม. (59 คน)</span>
             </div>
           </div>
         </div>
 
         {/* Reconciliation Strip with Page 4 OPAH */}
-        <div className="bg-indigo-950/70 rounded-2xl p-3.5 border border-indigo-500/30 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5">
+        <div className="bg-indigo-950/80 rounded-2xl p-3.5 border border-indigo-500/30 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5">
           <div className="flex items-center gap-2 text-indigo-200">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              <strong>ความเชื่อมโยงกับหน้า 4 (OPAH CAL):</strong> รวมทั้งโรงงาน <strong>{page4Metrics.grandGrossTot.toLocaleString()} ชม.</strong> ({page4Metrics.grandHc} คน) ➔ 4 พื้นที่หลัก <strong>{page4Metrics.activeGrossTot.toLocaleString()} ชม.</strong> ({page4Metrics.activeHc} คน) + Retread (6320) <strong>{page4Metrics.retreadTot.toLocaleString()} ชม.</strong> ({page4Metrics.retreadHc} คน)
+              <strong>เทียบยอดตรงกับหน้า 4 OPAH CAL:</strong> ยอดรวม 5 พื้นที่ 100% = <strong>{page4Metrics.grandGrossTot.toLocaleString()} ชม.</strong> (ปกติ {page4Metrics.grandNorm.toLocaleString()} + OT {page4Metrics.grandOt.toLocaleString()} | รวม {page4Metrics.grandHc} คน) ➔ 4 พื้นที่หลัก <strong>{page4Metrics.activeGrossTot.toLocaleString()} ชม.</strong> + Retread 6320 <strong>{page4Metrics.retreadTot.toLocaleString()} ชม.</strong>
             </span>
           </div>
           <div className="flex items-center gap-2 text-indigo-300 font-mono text-[11px]">
@@ -1148,12 +1203,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               Contractor รายชม. ({overallTotals.contCount} คน)
             </button>
             <button
-              onClick={() => setFilterGroup('MONTHLY')}
+              onClick={() => setFilterGroup('MONTHLY_ALL')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'MONTHLY' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                filterGroup === 'MONTHLY_ALL' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              รายเดือน WAS ({overallTotals.monthlyCount} คน)
+              รายเดือนรวม ({overallTotals.monthlyCount} คน)
+            </button>
+            <button
+              onClick={() => setFilterGroup('WAS_MONTHLY')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                filterGroup === 'WAS_MONTHLY' ? 'bg-purple-700 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              - เฉพาะรายเดือน WAS (9 คน)
+            </button>
+            <button
+              onClick={() => setFilterGroup('GY_MONTHLY')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                filterGroup === 'GY_MONTHLY' ? 'bg-purple-700 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              - เฉพาะรายเดือน GY (59 คน)
             </button>
           </div>
 
@@ -1266,13 +1337,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <tr className="bg-slate-100/80 text-slate-700 font-bold border-b border-slate-200">
                 <th className="py-3 px-4 w-72">โครงสร้าง (Manager / แผนก / เครื่องจักร)</th>
                 <th className="py-3 px-3 text-center bg-blue-50/70 text-blue-900 border-l border-r border-blue-100" colSpan={4}>
-                  🔵 1. พนักงาน GY
+                  🔵 1. พนักงาน GY (รายกะ)
                 </th>
                 <th className="py-3 px-3 text-center bg-teal-50/70 text-teal-900 border-r border-teal-100" colSpan={4}>
                   🟢 2. Contractor รายชั่วโมง (WAS)
                 </th>
                 <th className="py-3 px-3 text-center bg-purple-50/70 text-purple-900 border-r border-purple-100" colSpan={2}>
-                  🟣 3. รายเดือน WAS
+                  🟣 3. รายเดือน (WAS+GY)
                 </th>
                 <th className="py-3 px-3 text-center bg-amber-50/70 text-amber-950 font-black" colSpan={3}>
                   ⭐ รวมทุกกลุ่ม (Grand Total)
@@ -1353,7 +1424,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <td className="py-3 px-2 text-right font-bold text-amber-600">
                         {m.totalOtHours > 0 ? (
                           <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded-md font-bold">
-                            {m.totalOtHours.toLocaleString()}
+                            +{m.totalOtHours.toLocaleString()}
                           </span>
                         ) : '-'}
                       </td>
@@ -1415,7 +1486,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             {/* Total */}
                             <td className="py-2 px-2 text-right text-slate-700 font-medium">{d.totalNormalHours.toLocaleString()}</td>
                             <td className="py-2 px-2 text-right text-amber-600 font-semibold">
-                              {d.totalOtHours ? d.totalOtHours.toLocaleString() : '-'}
+                              {d.totalOtHours ? `+${d.totalOtHours.toLocaleString()}` : '-'}
                             </td>
                             <td className="py-2 px-3 text-right font-bold text-slate-900 bg-slate-100/50">
                               {d.grandTotalHours.toLocaleString()}
@@ -1474,7 +1545,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   {/* Total */}
                                   <td className="py-1.5 px-2 text-right text-slate-600">{mc.totalNormalHours.toLocaleString()}</td>
                                   <td className="py-1.5 px-2 text-right text-amber-600 font-medium">
-                                    {mc.totalOtHours ? mc.totalOtHours.toLocaleString() : '-'}
+                                    {mc.totalOtHours ? `+${mc.totalOtHours.toLocaleString()}` : '-'}
                                   </td>
                                   <td className="py-1.5 px-3 text-right font-semibold text-slate-800">
                                     {mc.grandTotalHours.toLocaleString()}
@@ -1508,7 +1579,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                                   <span className="truncate max-w-[140px]">{w.name}</span>
                                                 </div>
                                                 <div className="text-[10px] text-slate-500 mt-0.5">
-                                                  {w.position} • {w.shiftLabel}
+                                                  {w.position} • {w.shiftLabel} • {w.groupLabel}
                                                 </div>
                                               </div>
                                               <div className="text-right">
@@ -1543,13 +1614,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <tfoot>
               <tr className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white font-bold border-t-2 border-slate-700">
                 <td className="py-4 px-4 text-xs sm:text-sm font-black text-amber-300">
-                  ⭐ รวมทั้งโรงงาน (Grand Total)
+                  ⭐ รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)
                 </td>
 
                 {/* GY Total */}
                 <td className="py-4 px-2 text-center text-blue-300 font-black">{overallTotals.gyCount}</td>
                 <td className="py-4 px-2 text-right text-slate-200">{overallTotals.gyNormal.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right text-amber-300 font-black">{overallTotals.gyOt.toLocaleString()}</td>
+                <td className="py-4 px-2 text-right text-amber-300 font-black">+{overallTotals.gyOt.toLocaleString()}</td>
                 <td className="py-4 px-2 text-right font-black text-blue-300 border-r border-indigo-900/60">
                   {overallTotals.gyTotal.toLocaleString()}
                 </td>
@@ -1557,7 +1628,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {/* Contractor Total */}
                 <td className="py-4 px-2 text-center text-teal-300 font-black">{overallTotals.contCount}</td>
                 <td className="py-4 px-2 text-right text-slate-200">{overallTotals.contNormal.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right text-amber-300 font-black">{overallTotals.contOt.toLocaleString()}</td>
+                <td className="py-4 px-2 text-right text-amber-300 font-black">+{overallTotals.contOt.toLocaleString()}</td>
                 <td className="py-4 px-2 text-right font-black text-teal-300 border-r border-indigo-900/60">
                   {overallTotals.contTotal.toLocaleString()}
                 </td>
@@ -1571,7 +1642,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {/* Grand Totals */}
                 <td className="py-4 px-2 text-right font-black text-slate-100">{overallTotals.grandNormal.toLocaleString()}</td>
                 <td className="py-4 px-2 text-right font-black text-amber-300 text-sm">
-                  {overallTotals.grandOt.toLocaleString()}
+                  +{overallTotals.grandOt.toLocaleString()}
                 </td>
                 <td className="py-4 px-3 text-right font-black text-amber-400 text-base bg-white/10">
                   {overallTotals.grandTotal.toLocaleString()}
