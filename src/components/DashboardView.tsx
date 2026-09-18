@@ -781,27 +781,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </p>
           </div>
 
-          {/* Right Action: Date Switcher & Excel Export */}
+          {/* Right Action: Excel Export */}
           <div className="flex flex-wrap items-center gap-3">
-            {/* Date Preset Selector */}
-            {allScanPresets.length > 0 && onSelectDate && (
-              <div className="flex items-center gap-2 bg-slate-800/90 px-3.5 py-2 rounded-2xl border border-indigo-700/50 shadow-inner">
-                <Calendar className="w-4 h-4 text-indigo-400" />
-                <span className="text-xs text-indigo-200">วันที่:</span>
-                <select
-                  value={currentScanDateFormatted}
-                  onChange={(e) => onSelectDate(e.target.value)}
-                  className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer"
-                >
-                  {allScanPresets.map((p) => (
-                    <option key={p.id} value={p.dateFormatted} className="bg-slate-900 text-white">
-                      {p.dateFormatted} ({p.name})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
             {/* Export Excel Button */}
             <button
               onClick={handleExportExcel}
