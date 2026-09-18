@@ -171,6 +171,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
     // Group 1: GY Employees (Shift / Daily)
     gyRecords.forEach((r) => {
+      const normalH = r.normalWorkHours || 0;
+      const otH = r.otHours || 0;
+      const totalH = normalH + otH;
+      if (totalH <= 0 && !r.inTime) return; // Skip non-working records
+
       const empInfo = employeeMapping[r.empId];
       const dept = (empInfo?.dept || r.dept || 'ไม่ระบุแผนก').trim();
       const costCenter = (empInfo?.costCenter || r.costCenter || '').trim();
@@ -215,15 +220,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         position: empInfo?.position || r.position || '-',
         shift: r.shift,
         shiftLabel: r.shiftLabel,
-        normalHours: r.normalWorkHours || 0,
-        otHours: r.otHours || 0,
-        totalHours: (r.normalWorkHours || 0) + (r.otHours || 0),
+        normalHours: normalH,
+        otHours: otH,
+        totalHours: totalH,
         isLate: r.isLate
       });
     });
 
     // Group 2: Contractor Hourly (WAS Shift Workers)
     contractorRecords.forEach((c) => {
+      const normalH = c.normalHours || 0;
+      const otH = c.otHours || 0;
+      const totalH = normalH + otH;
+      if (totalH <= 0) return; // Skip 0-hour records completely
+
       const empInfo = employeeMapping[c.empCode];
       const dept = (c.department || empInfo?.dept || c.closing || 'Contractor WAS').trim();
       const costCenter = (c.closing || empInfo?.costCenter || '').trim();
@@ -232,14 +242,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       if (!manager) {
         if (c.closing === '6320' || dept.includes('6320') || (c.location || '').toLowerCase().includes('retread')) {
           manager = 'Retread Operations';
-        } else if (c.closing === '3200' || c.closing === '4110' || c.closing === '4200' || c.closing === '4300' || c.closing === '4400') {
+        } else if (c.closing === '3200' || c.closing === '4110' || c.closing === '4200' || c.closing === '4300' || c.closing === '4400' || dept.includes('3200') || dept.includes('Banbury') || dept.includes('BCA')) {
           manager = 'Akkarawat Tanapatjiranon (BCA)';
-        } else if (c.closing === '5110' || c.closing === '5130') {
+        } else if (c.closing === '5110' || c.closing === '5130' || dept.includes('5110') || dept.includes('Consumer') || (c.location || '').toLowerCase().includes('consumer')) {
           manager = 'Thirachai Sornvichai (Consumer)';
-        } else if (c.closing?.startsWith('A51') || c.closing?.startsWith('A52')) {
+        } else if (c.closing?.startsWith('A51') || c.closing?.startsWith('A52') || dept.includes('Aero') || (c.location || '').toLowerCase().includes('aero')) {
           manager = 'Kawee Tantisattayarak (Aviation)';
+        } else if (c.closing === '1110' || dept.includes('1110') || dept.includes('Engineering')) {
+          manager = 'Tanu Itthirattanakomon (Engineering)';
+        } else if (c.closing === '1040' || dept.includes('1040') || dept.includes('Quality')) {
+          manager = 'Vattana Waewmanee (Quality)';
         } else {
-          manager = 'World Asia Solution (WAS Supervisor)';
+          manager = 'Goodyear Operations (Unassigned)';
         }
       }
 
@@ -262,9 +276,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         position: c.position || empInfo?.position || '-',
         shift: c.shiftNumber || 1,
         shiftLabel: c.shiftLabel || `กะ ${c.shiftNumber}`,
-        normalHours: c.normalHours || 0,
-        otHours: c.otHours || 0,
-        totalHours: (c.normalHours || 0) + (c.otHours || 0)
+        normalHours: normalH,
+        otHours: otH,
+        totalHours: totalH
       });
     });
 
