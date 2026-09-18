@@ -25,6 +25,7 @@ export interface StockingTonnageReport {
   availableDates: StockingTonnageDateOption[];
   rows: StockingTonnageCategoryRow[];
   total: StockingTonnageCategoryRow | null;
+  dailyReportsByDate?: Record<string, StockingTonnageReport>;
   fetchedAt?: string;
   isMock?: boolean;
 }

@@ -2,6 +2,7 @@ import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
+import { DEFAULT_STOCKING_REPORTS } from '../data/default_stocking_reports';
 import { processScanRecords } from './parser';
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
@@ -1112,12 +1113,25 @@ export function calculateMtdSummary(
     mtdOpahWorkingHours += dayOpahHours;
 
     const LBS_CONST = 2.20462;
-    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, tonnageReport, 'DAILY');
 
-    // Calculate/Estimate daily stocking tonnage
+    // Retrieve exact stocking tonnage report for day d (live or default history)
+    const dayTonnageReport: StockingTonnageReport | null = (d === targetDay && tonnageReport)
+      ? tonnageReport
+      : (tonnageReport?.dailyReportsByDate?.[dayDateStr] ||
+         tonnageReport?.dailyReportsByDate?.[`${targetYear}-09-${dPad}`] ||
+         DEFAULT_STOCKING_REPORTS[dayDateStr] ||
+         DEFAULT_STOCKING_REPORTS[`${d}/9/${targetYear}`] ||
+         DEFAULT_STOCKING_REPORTS[`${targetYear}-09-${dPad}`] ||
+         null);
+
+    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, dayTonnageReport || tonnageReport, 'DAILY');
+
+    // Calculate daily stocking tonnage
     let dayStockingKg = 0;
     if (d === targetDay && tonnageReport?.total?.dailyTotalTonnage) {
       dayStockingKg = tonnageReport.total.dailyTotalTonnage;
+    } else if (dayTonnageReport?.total?.dailyTotalTonnage) {
+      dayStockingKg = dayTonnageReport.total.dailyTotalTonnage;
     } else if (tonnageReport?.total?.mtdTonnage && targetDay > 0) {
       dayStockingKg = Math.round((tonnageReport.total.mtdTonnage / targetDay) * 100) / 100;
     } else if (tonnageReport?.total?.dailyTotalTonnage) {
@@ -1128,9 +1142,10 @@ export function calculateMtdSummary(
       ? Math.round((dayStockingLbs / dayOpahHours) * 100) / 100
       : 0;
 
-    const cumulativeStockingKg = (tonnageReport?.total?.mtdTonnage && targetDay > 0)
-      ? Math.round((tonnageReport.total.mtdTonnage / targetDay * d) * 100) / 100
-      : dayStockingKg * d;
+    // Cumulative stocking up to day d
+    const cumulativeStockingKg = (d === targetDay && tonnageReport?.total?.mtdTonnage)
+      ? tonnageReport.total.mtdTonnage
+      : (dayTonnageReport?.total?.mtdTonnage || (tonnageReport?.total?.mtdTonnage && targetDay > 0 ? Math.round((tonnageReport.total.mtdTonnage / targetDay * d) * 100) / 100 : dayStockingKg * d));
     const cumulativeOpahLbsPerHour = mtdOpahWorkingHours > 0 && cumulativeStockingKg > 0
       ? Math.round(((cumulativeStockingKg * LBS_CONST) / mtdOpahWorkingHours) * 100) / 100
       : 0;
@@ -1161,7 +1176,9 @@ export function calculateMtdSummary(
   }
 
   const LBS_FACTOR = 2.20462;
-  const mtdStockingKg = tonnageReport?.total?.mtdTonnage || (tonnageReport?.total?.dailyTotalTonnage ? tonnageReport.total.dailyTotalTonnage * targetDay : 0);
+  const mtdStockingKg = tonnageReport?.total?.mtdTonnage ||
+    dailyItems.reduce((sum, item) => sum + item.stockingKg, 0) ||
+    (tonnageReport?.total?.dailyTotalTonnage ? tonnageReport.total.dailyTotalTonnage * targetDay : 0);
   const mtdStockingLbs = Math.round(mtdStockingKg * LBS_FACTOR * 100) / 100;
   const mtdStockingTon = Math.round((mtdStockingKg / 1000) * 1000) / 1000;
   const mtdPallets = tonnageReport?.total?.mtdPallets || 0;

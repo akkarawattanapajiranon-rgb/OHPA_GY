@@ -1507,6 +1507,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   <th className="py-3 px-3 text-right border-r border-slate-800 text-rose-300 bg-rose-950/60">🔻 PDI Deduct</th>
                   <th className="py-3 px-3 text-right border-r border-slate-800 text-emerald-300 bg-emerald-950/60">🟢 Bead Add</th>
                   <th className="py-3 px-3 text-right border-r border-slate-800 text-amber-300 bg-amber-950/70 font-black">⭐ ชม.สุทธิ OPAH</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 text-teal-300 bg-teal-950/70 font-black">📦 Stocking (kg)</th>
+                  <th className="py-3 px-3 text-right border-r border-slate-800 text-yellow-300 bg-yellow-950/70 font-black">🚀 Daily OPAH</th>
                   <th className="py-3 px-3 text-right bg-indigo-950 text-indigo-200 font-black">ชม.สะสม MTD</th>
                 </tr>
               </thead>
@@ -1547,6 +1549,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       <td className="py-2.5 px-3 text-right font-mono font-black text-amber-900 border-r border-slate-100 bg-amber-50/50">
                         {item.opahWorkingHours.toLocaleString()} ชม.
                       </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-teal-800 border-r border-slate-100 bg-teal-50/40">
+                        {(item.stockingKg || 0).toLocaleString()} kg
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-black text-emerald-900 border-r border-slate-100 bg-emerald-50/60">
+                        {item.dailyOpahLbsPerHour ? `${item.dailyOpahLbsPerHour.toFixed(2)}` : '-'}
+                      </td>
                       <td className="py-2.5 px-3 text-right font-mono font-black text-indigo-900 bg-indigo-50/60">
                         {(item.cumulativeOpahWorkingHours || item.cumulativeTotalHours).toLocaleString()} ชม.
                       </td>
@@ -1579,6 +1587,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </td>
                   <td className="py-3 px-3 text-right font-mono text-amber-300 bg-amber-950 font-black text-sm">
                     {ohpaSummary.mtd.mtdOpahWorkingHours.toLocaleString()} ชม.
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-teal-300 bg-teal-950 font-black text-sm">
+                    {(ohpaSummary.mtd.mtdStockingKg || 0).toLocaleString()} kg
+                  </td>
+                  <td className="py-3 px-3 text-right font-mono text-yellow-300 bg-yellow-950 font-black text-sm">
+                    {(ohpaSummary.mtd.mtdOpahLbsPerHour || 0).toFixed(2)} lbs/ชม.
                   </td>
                   <td className="py-3 px-3 text-right font-mono text-emerald-400 bg-indigo-950 font-black text-sm">
                     {ohpaSummary.mtd.mtdOpahWorkingHours.toLocaleString()} ชม.
