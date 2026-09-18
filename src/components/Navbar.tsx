@@ -97,10 +97,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* DB Mapping Status Badge */}
-            <div className="hidden xl:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+            <div 
+              className="hidden xl:flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs cursor-help"
+              title="จำนวนรายชื่อพนักงานที่ลงทะเบียนในฐานข้อมูล Master ทั้งหมด (Master Employee Database)"
+            >
               <Users className="w-4 h-4 text-emerald-400" />
               <span className="text-slate-300">
-                พนักงาน: <strong className="text-emerald-400">{mappedEmployeesCount.toLocaleString()}</strong> คน
+                Master DB: <strong className="text-emerald-400">{mappedEmployeesCount.toLocaleString()}</strong> คน
               </span>
             </div>
 

@@ -1726,11 +1726,11 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <p className="text-xs text-slate-500">
                 {viewMode === 'MTD' ? (
                   <span>
-                    ยอดชั่วโมงและ OT <strong>สะสม MTD (วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14}/09)</strong> จำแนกตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้ารวมทั้งโรงงาน 901 คน]
+                    ยอดชั่วโมงและ OT <strong>สะสม MTD (วันที่ 1 ถึง ${ohpaSummary.mtd?.daysCount || 14}/09)</strong> จำแนกตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้าหมายมาตรฐาน 5 พื้นที่รวม 903 คน | 4 พื้นที่หลัก 795 คน]
                   </span>
                 ) : (
                   <span>
-                    จำแนกชั่วโมงทำงานและ OT ประจำวันตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้ารวมทั้งโรงงาน 901 คน]
+                    จำแนกชั่วโมงทำงานและ OT ประจำวันตาม 5 พื้นที่ Master: <strong>BCA (287)</strong>, <strong>Consumer (232)</strong>, <strong>Bias Aero (172)</strong>, <strong>Radial Aero (104)</strong> และ <strong>Retread (108)</strong> [เป้าหมายมาตรฐาน 5 พื้นที่รวม 903 คน | 4 พื้นที่หลัก 795 คน]
                   </span>
                 )}
               </p>
