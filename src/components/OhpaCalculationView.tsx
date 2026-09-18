@@ -1796,8 +1796,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           {isTotalAviation ? '✈️ Total Aviation' : area.areaLabel}
                         </span>
                         {area.isExcluded6320 ? (
-                          <span className="text-[10px] font-bold text-orange-700 bg-orange-100 px-1.5 py-0.2 rounded border border-orange-300">
-                            เฉพาะ Retread (SAP)
+                          <span className="text-[10px] font-bold text-rose-700 bg-rose-100 px-1.5 py-0.2 rounded border border-rose-200">
+                            ตัด 6320
                           </span>
                         ) : (
                           <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded truncate max-w-[110px] ${
@@ -1836,10 +1836,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       ) : (
                         <div className="my-2 p-2 bg-gradient-to-br from-amber-50 to-orange-50/80 rounded-xl border border-amber-200/90 shadow-2xs">
                           <div className="flex items-center justify-between text-[10px] font-bold text-amber-800 uppercase">
-                            <span>OPAH เฉพาะ Retread:</span>
-                            <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-amber-200 text-amber-950">
-                              Row 28
-                            </span>
+                            <span>OPAH Retread:</span>
                           </div>
                           <div className="text-xl font-black font-mono text-amber-950 leading-tight mt-0.5">
                             {area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-'}
