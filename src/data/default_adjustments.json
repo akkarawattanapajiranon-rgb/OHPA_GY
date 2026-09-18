@@ -265,7 +265,7 @@
   },
   {
     "id": "adj-24-12809",
-    "dateStr": "17/09/2027",
+    "dateStr": "17/09/2026",
     "empId": "12809",
     "empName": "ภาณุเดช แสนบุญมี",
     "otMachineOverride": "Chaffer Lay-up",
@@ -273,5 +273,27 @@
     "customEndTime": "15:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ Chaffer Lay-up (07.00-15.00)"
+  },
+  {
+    "id": "adj-25-12732",
+    "dateStr": "17/09/2026",
+    "empId": "12732",
+    "empName": "ขันธ์ทศพร จุดจันทึก",
+    "otMachineOverride": "Pigment",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Pigment (23.00-07.00)"
+  },
+  {
+    "id": "adj-26-12890",
+    "dateStr": "17/09/2026",
+    "empId": "12890",
+    "empName": "ปณัฐชา ปัตถา",
+    "otMachineOverride": "Pigment",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Pigment (23.00-07.00)"
   }
 ]

@@ -136,32 +136,43 @@ function scanFolderApiPlugin(): Plugin {
         }
       });
 
-      // API to sync adjustments from T: drive Excel (Daily_Adjustments_Template.xlsx)
+      // API to sync adjustments from T: drive Excel (folder: ทำงานไม่ตรง ตำแหน่ง)
       server.middlewares.use('/api/sync-adjustments', (req, res) => {
         try {
-          const networkPath = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\ทำงานไม่ตรง ตำแหน่ง\\Daily_Adjustments_Template.xlsx';
-          const localPath = path.resolve(__dirname, 'Daily_Adjustments_Template.xlsx');
+          const networkDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\ทำงานไม่ตรง ตำแหน่ง';
+          const localDir = path.resolve(__dirname, 'ทำงานไม่ตรง ตำแหน่ง');
+          const localFile = path.resolve(__dirname, 'Daily_Adjustments_Template.xlsx');
           
-          let targetPath = '';
-          if (fs.existsSync(networkPath)) {
-            targetPath = networkPath;
-          } else if (fs.existsSync(localPath)) {
-            targetPath = localPath;
-          } else {
+          const filesToRead: string[] = [];
+          
+          if (fs.existsSync(networkDir)) {
+            try {
+              const netFiles = fs.readdirSync(networkDir)
+                .filter(f => (f.endsWith('.xlsx') || f.endsWith('.xls')) && !f.startsWith('~$'));
+              netFiles.forEach(f => filesToRead.push(path.join(networkDir, f)));
+            } catch (e) {}
+          }
+          
+          if (filesToRead.length === 0 && fs.existsSync(localDir)) {
+            try {
+              const locFiles = fs.readdirSync(localDir)
+                .filter(f => (f.endsWith('.xlsx') || f.endsWith('.xls')) && !f.startsWith('~$'));
+              locFiles.forEach(f => filesToRead.push(path.join(localDir, f)));
+            } catch (e) {}
+          }
+          
+          if (filesToRead.length === 0 && fs.existsSync(localFile)) {
+            filesToRead.push(localFile);
+          }
+
+          if (filesToRead.length === 0) {
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({
               success: false,
-              message: 'ไม่พบไฟล์ Daily_Adjustments_Template.xlsx ทั้งบนไดรฟ์ T: และเครื่อง'
+              message: 'ไม่พบไฟล์ปรับเปลี่ยนตำแหน่งในโฟลเดอร์ ทำงานไม่ตรง ตำแหน่ง ทั้งบนไดรฟ์ T: และเครื่อง'
             }));
             return;
           }
-
-          const stat = fs.statSync(targetPath);
-          const buf = fs.readFileSync(targetPath);
-          const wb = XLSX.read(buf, { type: 'buffer' });
-          const wsName = wb.SheetNames[0];
-          const ws = wb.Sheets[wsName];
-          const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
 
           let empMap: Record<string, any> = {};
           const empMapPath = path.resolve(__dirname, 'src/data/default_emp_mapping.json');
@@ -172,104 +183,156 @@ function scanFolderApiPlugin(): Plugin {
           }
 
           const parsedAdjustments: any[] = [];
+          const seenKey = new Set<string>();
 
-          rawRows.forEach((row: any, idx: number) => {
-            const keys = Object.keys(row);
-            const findVal = (keywords: string[]) => {
-              const matchKey = keys.find(k => keywords.some(kw => k.toLowerCase().includes(kw.toLowerCase())));
-              return matchKey && row[matchKey] !== undefined && row[matchKey] !== null ? String(row[matchKey]).trim() : '';
-            };
+          filesToRead.forEach(filePath => {
+            try {
+              const buf = fs.readFileSync(filePath);
+              const wb = XLSX.read(buf, { type: 'buffer' });
+              
+              wb.SheetNames.forEach(sheetName => {
+                const ws = wb.Sheets[sheetName];
+                if (!ws) return;
+                const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
+                if (!Array.isArray(rawRows)) return;
 
-            const rawEmpId = findVal(['รหัส', 'empid', 'emp id', 'id', 'emp']);
-            if (!rawEmpId) return;
+                rawRows.forEach((row: any, idx: number) => {
+                  const keys = Object.keys(row);
+                  const findVal = (keywords: string[]) => {
+                    const matchKey = keys.find(k => keywords.some(kw => k.toLowerCase().includes(kw.toLowerCase())));
+                    return matchKey && row[matchKey] !== undefined && row[matchKey] !== null ? String(row[matchKey]).trim() : '';
+                  };
 
-            let cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
-            // Handle alias / typos from Excel (e.g. 12626 -> 12678 Pongsatron Ketkaew - Band 72)
-            if (cleanId === '12626') {
-              cleanId = '12678';
+                  const rawEmpId = findVal(['รหัส', 'empid', 'emp id', 'id', 'emp']);
+                  if (!rawEmpId) return;
+
+                  let cleanId = rawEmpId.replace(/\D/g, '').padStart(5, '0');
+                  // Handle alias / typos from Excel (e.g. 12626 -> 12678 Pongsatron Ketkaew - Band 72)
+                  if (cleanId === '12626') {
+                    cleanId = '12678';
+                  }
+                  const rawDate = findVal(['วัน', 'date']);
+                  let dateStr = '';
+
+                  if (rawDate) {
+                    const numDate = Number(rawDate);
+                    if (!isNaN(numDate) && numDate >= 30000 && numDate <= 70000) {
+                      const utcDays = Math.floor(numDate - 25569);
+                      const dateInfo = new Date(utcDays * 86400 * 1000);
+                      const mm = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+                      const dd = String(dateInfo.getUTCDate()).padStart(2, '0');
+                      const yyyy = String(dateInfo.getUTCFullYear());
+                      dateStr = `${dd}/${mm}/${yyyy}`;
+                    } else {
+                      // Normalize DD/MM/YYYY or YYYY-MM-DD
+                      const dateParts = rawDate.split(/[/.-]/).map((p: string) => p.trim());
+                      if (dateParts.length === 3) {
+                        let dd = '';
+                        let mm = '';
+                        let yyyy = '';
+                        if (dateParts[2].length >= 2) {
+                          dd = dateParts[0].replace(/\D/g, '').padStart(2, '0');
+                          mm = dateParts[1].replace(/\D/g, '').padStart(2, '0');
+                          let y = parseInt(dateParts[2].replace(/\D/g, ''), 10);
+                          if (y > 2400) y -= 543;
+                          else if (y < 100) y += 2000;
+                          else if (y === 2027) y = 2026; // Fix common typo 2027 -> 2026
+                          yyyy = String(y);
+                          dateStr = `${dd}/${mm}/${yyyy}`;
+                        } else if (dateParts[0].length === 4) {
+                          let y = parseInt(dateParts[0].replace(/\D/g, ''), 10);
+                          if (y > 2400) y -= 543;
+                          else if (y === 2027) y = 2026;
+                          yyyy = String(y);
+                          mm = dateParts[1].replace(/\D/g, '').padStart(2, '0');
+                          dd = dateParts[2].replace(/\D/g, '').padStart(2, '0');
+                          dateStr = `${dd}/${mm}/${yyyy}`;
+                        } else {
+                          dateStr = rawDate;
+                        }
+                      } else {
+                        dateStr = rawDate;
+                      }
+                    }
+                  }
+
+                  const machineTarget = findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'เครื่องจักร', 'โอที', 'ot', 'machine']);
+                  const regMachine = findVal(['เครื่องจักรที่ทำเวลาปกติ', 'regular machine', 'กะปกติ', 'regular']);
+                  const timeStr = findVal(['เวลา', 'time']);
+                  const reason = findVal(['เหตุผล', 'หมายเหตุ', 'reason', 'note']);
+
+                  let customStart: string | undefined = undefined;
+                  let customEnd: string | undefined = undefined;
+                  let isApproved = false;
+
+                  if (timeStr) {
+                    isApproved = true;
+                    const normTime = timeStr.replace(/\./g, ':');
+                    const timeMatches = normTime.match(/\d{1,2}:\d{2}/g);
+                    if (timeMatches && timeMatches.length >= 1) {
+                      customStart = timeMatches[0].padStart(5, '0');
+                      if (timeMatches.length >= 2) {
+                        customEnd = timeMatches[1].padStart(5, '0');
+                      }
+                    } else if (!isNaN(Number(timeStr))) {
+                      customStart = `${timeStr.padStart(2, '0')}:00`;
+                    }
+                  }
+
+                  let finalOtMachine = machineTarget || undefined;
+                  if (finalOtMachine) {
+                    if (/3\s*roll/i.test(finalOtMachine)) finalOtMachine = '3-Roll Calender';
+                    else if (/mixer\s*2/i.test(finalOtMachine)) finalOtMachine = 'Mixer 2';
+                    else if (/mixer\s*1/i.test(finalOtMachine)) finalOtMachine = 'Mixer 1';
+                    else if (/pigment/i.test(finalOtMachine)) finalOtMachine = 'Pigment';
+                    else if (/chaffer/i.test(finalOtMachine)) finalOtMachine = 'Chaffer Lay-up';
+                    else if (/54/i.test(finalOtMachine)) finalOtMachine = '54" Band Building';
+                    else if (/72/i.test(finalOtMachine)) finalOtMachine = '72" Band Building';
+                    else if (/was/i.test(finalOtMachine)) finalOtMachine = 'แทน WAS';
+                  }
+
+                  let finalRegMachine = regMachine || undefined;
+                  if (finalRegMachine) {
+                    if (/chaffer/i.test(finalRegMachine)) finalRegMachine = 'Chaffer Lay-up';
+                    else if (/pigment/i.test(finalRegMachine)) finalRegMachine = 'Pigment';
+                    else if (/3\s*roll/i.test(finalRegMachine)) finalRegMachine = '3-Roll Calender';
+                    else if (/was/i.test(finalRegMachine)) finalRegMachine = 'แทน WAS';
+                  }
+
+                  const empInfo = empMap[cleanId];
+
+                  let defaultReason = reason;
+                  if (!defaultReason) {
+                    if (finalOtMachine && timeStr) {
+                      defaultReason = `OT / ทำงานที่ ${finalOtMachine} (${timeStr})`;
+                    } else if (timeStr) {
+                      defaultReason = `เวลาพิเศษ ${timeStr}`;
+                    } else if (finalOtMachine) {
+                      defaultReason = `ย้ายทำ ${finalOtMachine}`;
+                    }
+                  }
+
+                  const uniqueKey = `${dateStr}_${cleanId}_${finalOtMachine || ''}_${finalRegMachine || ''}_${customStart || ''}`;
+                  if (seenKey.has(uniqueKey)) return;
+                  seenKey.add(uniqueKey);
+
+                  parsedAdjustments.push({
+                    id: `adj-${parsedAdjustments.length}-${cleanId}`,
+                    dateStr: dateStr || '14/09/2026',
+                    empId: cleanId,
+                    empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
+                    regularMachineOverride: finalRegMachine,
+                    otMachineOverride: finalOtMachine,
+                    customStartTime: customStart,
+                    customEndTime: customEnd,
+                    isApprovedTiming: isApproved,
+                    reason: defaultReason
+                  });
+                });
+              });
+            } catch (fileErr) {
+              console.warn('Error reading adjustment file:', filePath, fileErr);
             }
-            const rawDate = findVal(['วัน', 'date']);
-            let dateStr = '';
-
-            if (rawDate) {
-              const numDate = Number(rawDate);
-              if (!isNaN(numDate) && numDate >= 30000 && numDate <= 70000) {
-                const utcDays = Math.floor(numDate - 25569);
-                const dateInfo = new Date(utcDays * 86400 * 1000);
-                const mm = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
-                const dd = String(dateInfo.getUTCDate()).padStart(2, '0');
-                const yyyy = String(dateInfo.getUTCFullYear());
-                dateStr = `${dd}/${mm}/${yyyy}`;
-              } else {
-                dateStr = rawDate;
-              }
-            }
-
-            const machineTarget = findVal(['เครื่องจักรที่ไปทำ ot', 'ot machine', 'เครื่องจักร', 'โอที', 'ot', 'machine']);
-            const regMachine = findVal(['เครื่องจักรที่ทำเวลาปกติ', 'regular machine', 'กะปกติ', 'regular']);
-            const timeStr = findVal(['เวลา', 'time']);
-            const reason = findVal(['เหตุผล', 'หมายเหตุ', 'reason', 'note']);
-
-            let customStart: string | undefined = undefined;
-            let customEnd: string | undefined = undefined;
-            let isApproved = false;
-
-            if (timeStr) {
-              isApproved = true;
-              const normTime = timeStr.replace(/\./g, ':');
-              const timeMatches = normTime.match(/\d{1,2}:\d{2}/g);
-              if (timeMatches && timeMatches.length >= 1) {
-                customStart = timeMatches[0].padStart(5, '0');
-                if (timeMatches.length >= 2) {
-                  customEnd = timeMatches[1].padStart(5, '0');
-                }
-              } else if (!isNaN(Number(timeStr))) {
-                customStart = `${timeStr.padStart(2, '0')}:00`;
-              }
-            }
-
-            let finalOtMachine = machineTarget || undefined;
-            if (finalOtMachine) {
-              if (/3\s*roll/i.test(finalOtMachine)) finalOtMachine = '3-Roll Calender';
-              else if (/mixer\s*2/i.test(finalOtMachine)) finalOtMachine = 'Mixer 2';
-              else if (/pigment/i.test(finalOtMachine)) finalOtMachine = 'Pigment';
-              else if (/chaffer/i.test(finalOtMachine)) finalOtMachine = 'Chaffer Lay-up';
-              else if (/54/i.test(finalOtMachine)) finalOtMachine = '54" Band Building';
-              else if (/72/i.test(finalOtMachine)) finalOtMachine = '72" Band Building';
-            }
-
-            let finalRegMachine = regMachine || undefined;
-            if (finalRegMachine) {
-              if (/chaffer/i.test(finalRegMachine)) finalRegMachine = 'Chaffer Lay-up';
-              else if (/pigment/i.test(finalRegMachine)) finalRegMachine = 'Pigment';
-              else if (/3\s*roll/i.test(finalRegMachine)) finalRegMachine = '3-Roll Calender';
-            }
-
-            const empInfo = empMap[cleanId];
-
-            let defaultReason = reason;
-            if (!defaultReason) {
-              if (finalOtMachine && timeStr) {
-                defaultReason = `OT / ทำงานที่ ${finalOtMachine} (${timeStr})`;
-              } else if (timeStr) {
-                defaultReason = `เวลาพิเศษ ${timeStr}`;
-              } else if (finalOtMachine) {
-                defaultReason = `ย้ายทำ ${finalOtMachine}`;
-              }
-            }
-
-            parsedAdjustments.push({
-              id: `adj-${idx}-${cleanId}`,
-              dateStr: dateStr || '14/09/2026',
-              empId: cleanId,
-              empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
-              regularMachineOverride: finalRegMachine,
-              otMachineOverride: finalOtMachine,
-              customStartTime: customStart,
-              customEndTime: customEnd,
-              isApprovedTiming: isApproved,
-              reason: defaultReason
-            });
           });
 
           // Save to default_adjustments.json
@@ -283,8 +346,7 @@ function scanFolderApiPlugin(): Plugin {
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
             success: true,
-            targetPath,
-            modifiedTime: stat.mtime.toISOString(),
+            files: filesToRead,
             count: parsedAdjustments.length,
             adjustments: parsedAdjustments
           }));

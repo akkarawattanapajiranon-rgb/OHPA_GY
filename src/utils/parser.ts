@@ -20,7 +20,14 @@ export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!clean) return '';
 
   if (clean.length === 8 && /^\d{8}$/.test(clean)) {
-    return clean; // Already MMDDYYYY or YYYYMMDD
+    // If it starts with 202x, it is YYYYMMDD -> convert to MMDDYYYY
+    if (clean.startsWith('202')) {
+      const yyyy = clean.slice(0, 4);
+      const mm = clean.slice(4, 6);
+      const dd = clean.slice(6, 8);
+      return `${mm}${dd}${yyyy}`;
+    }
+    return clean; // Already MMDDYYYY
   }
   // Check Excel serial dates (e.g. 46277 -> 12/09/2026)
   if (!isNaN(Number(clean)) && Number(clean) >= 30000 && Number(clean) <= 70000) {
@@ -32,20 +39,28 @@ export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
     const yyyy = String(dateInfo.getUTCFullYear());
     return `${mm}${dd}${yyyy}`;
   }
-  // Check DD/MM/YYYY or DD-MM-YYYY
+  // Check DD/MM/YYYY or DD-MM-YYYY or YYYY-MM-DD
   const parts = clean.split(/[/.-]/).map(p => p.trim());
   if (parts.length === 3) {
-    if (parts[2].length === 4) {
-      // DD/MM/YYYY -> MMDDYYYY
-      const dd = parts[0].replace(/\D/g, '').padStart(2, '0');
-      const mm = parts[1].replace(/\D/g, '').padStart(2, '0');
-      const yyyy = parts[2].replace(/\D/g, '');
+    let yyyy = '';
+    let mm = '';
+    let dd = '';
+    if (parts[2].length >= 2) {
+      // DD/MM/YYYY or DD/MM/YY
+      dd = parts[0].replace(/\D/g, '').padStart(2, '0');
+      mm = parts[1].replace(/\D/g, '').padStart(2, '0');
+      let y = parseInt(parts[2].replace(/\D/g, ''), 10);
+      if (y > 2400) y -= 543;
+      else if (y < 100) y += 2000;
+      yyyy = String(y);
       return `${mm}${dd}${yyyy}`;
     } else if (parts[0].length === 4) {
-      // YYYY-MM-DD -> MMDDYYYY
-      const yyyy = parts[0].replace(/\D/g, '');
-      const mm = parts[1].replace(/\D/g, '').padStart(2, '0');
-      const dd = parts[2].replace(/\D/g, '').padStart(2, '0');
+      // YYYY-MM-DD
+      let y = parseInt(parts[0].replace(/\D/g, ''), 10);
+      if (y > 2400) y -= 543;
+      yyyy = String(y);
+      mm = parts[1].replace(/\D/g, '').padStart(2, '0');
+      dd = parts[2].replace(/\D/g, '').padStart(2, '0');
       return `${mm}${dd}${yyyy}`;
     }
   }
@@ -259,7 +274,17 @@ export function processScanRecords(
       cleanId = '12678'; // 12678 พงศธร เกตุแก้ว (Band 72)
     }
     const normAdjDate = normalizeDateToMMDDYYYY(adj.dateStr);
-    if (!normAdjDate || !firstValidDate || normAdjDate === firstValidDate) {
+    let isDateMatch = false;
+    if (!normAdjDate || !firstValidDate || normAdjDate === firstValidDate || adj.dateStr === 'ALL') {
+      isDateMatch = true;
+    } else if (normAdjDate.length === 8 && firstValidDate.length === 8) {
+      // If month and day match (first 4 digits MMDD in MMDDYYYY), treat as match
+      if (normAdjDate.slice(0, 4) === firstValidDate.slice(0, 4)) {
+        isDateMatch = true;
+      }
+    }
+
+    if (isDateMatch) {
       if (!adjMap[cleanId]) adjMap[cleanId] = [];
       adjMap[cleanId].push(adj);
     }

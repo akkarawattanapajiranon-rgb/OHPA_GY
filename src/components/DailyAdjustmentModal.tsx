@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { DailyAdjustmentRecord, EmployeeInfo } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
+import { normalizeDateToMMDDYYYY } from '../utils/parser';
 import {
   X,
   Upload,
@@ -36,7 +37,9 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
   isSyncing = false
 }) => {
   const [localAdjustments, setLocalAdjustments] = useState<DailyAdjustmentRecord[]>(adjustments);
+  const [dateFilterTab, setDateFilterTab] = useState<'current' | 'all'>('current');
   const [newEmpId, setNewEmpId] = useState('');
+  const [newDateStr, setNewDateStr] = useState(currentDateFormatted || '17/09/2026');
   const [newRegMachine, setNewRegMachine] = useState('');
   const [newOtMachine, setNewOtMachine] = useState('');
   const [newCustomStart, setNewCustomStart] = useState('');
@@ -52,6 +55,12 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
     setLocalAdjustments(adjustments);
   }, [adjustments]);
 
+  React.useEffect(() => {
+    if (currentDateFormatted) {
+      setNewDateStr(currentDateFormatted);
+    }
+  }, [currentDateFormatted]);
+
   if (!isOpen) return null;
 
   const machineOptions = TEAM_A_STANDARD_HC.map(s => s.positionName);
@@ -60,9 +69,10 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
     if (!newEmpId.trim()) return;
     const cleanId = newEmpId.trim().replace(/\D/g, '').padStart(5, '0');
     const empInfo = employeeMap[cleanId];
+    const targetDate = newDateStr.trim() || currentDateFormatted || '17/09/2026';
     const newRecord: DailyAdjustmentRecord = {
       id: `adj-${Date.now()}-${cleanId}`,
-      dateStr: currentDateFormatted,
+      dateStr: targetDate,
       empId: cleanId,
       empName: empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${cleanId}`,
       regularMachineOverride: newRegMachine || undefined,
@@ -73,7 +83,7 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
       reason: newReason.trim() || undefined
     };
 
-    const updated = [...localAdjustments.filter(a => !(a.empId === cleanId && a.dateStr === currentDateFormatted)), newRecord];
+    const updated = [...localAdjustments.filter(a => !(a.empId === cleanId && a.dateStr === targetDate)), newRecord];
     setLocalAdjustments(updated);
     onSaveAdjustments(updated);
 
@@ -486,11 +496,39 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
           </div>
 
           {/* Adjustment List Table */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-slate-800">
-                รายการปรับเปลี่ยนของวันที่ {currentDateFormatted} ({localAdjustments.length} รายการ)
-              </h4>
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDateFilterTab('current')}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                    dateFilterTab === 'current'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  เฉพาะวันที่ {currentDateFormatted} ({
+                    localAdjustments.filter(r => {
+                      const n1 = normalizeDateToMMDDYYYY(r.dateStr);
+                      const n2 = normalizeDateToMMDDYYYY(currentDateFormatted);
+                      return !r.dateStr || r.dateStr === 'ALL' || n1 === n2 || (n1.length === 8 && n2.length === 8 && n1.slice(0, 4) === n2.slice(0, 4));
+                    }).length
+                  } รายการ)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDateFilterTab('all')}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                    dateFilterTab === 'all'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  ทั้งหมดในระบบ ({localAdjustments.length} รายการ)
+                </button>
+              </div>
+
               {localAdjustments.length > 0 && (
                 <button
                   onClick={() => {
@@ -504,84 +542,101 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
               )}
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-slate-200">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
-                  <tr>
-                    <th className="py-2.5 px-3 text-center">#</th>
-                    <th className="py-2.5 px-3">รหัสพนักงาน</th>
-                    <th className="py-2.5 px-4">ชื่อ-นามสกุล</th>
-                    <th className="py-2.5 px-3">ย้ายเครื่องกะปกติ</th>
-                    <th className="py-2.5 px-3">ย้ายเครื่องทำ OT</th>
-                    <th className="py-2.5 px-3">เวลาพิเศษ</th>
-                    <th className="py-2.5 px-4">หมายเหตุ</th>
-                    <th className="py-2.5 px-3 text-center">จัดการ</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-800">
-                  {localAdjustments.map((row, idx) => (
-                    <tr key={row.id} className="hover:bg-slate-50">
-                      <td className="py-2 px-3 text-center text-slate-400 font-mono">
-                        {idx + 1}
-                      </td>
-                      <td className="py-2 px-3 font-mono font-bold text-blue-600">
-                        {row.empId}
-                      </td>
-                      <td className="py-2 px-4 font-medium">
-                        {row.empName || employeeMap[row.empId]?.nameTH || '-'}
-                      </td>
-                      <td className="py-2 px-3">
-                        {row.regularMachineOverride ? (
-                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-amber-200">
-                            🔄 {row.regularMachineOverride}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">-</span>
-                        )}
-                      </td>
-                      <td className="py-2 px-3">
-                        {row.otMachineOverride ? (
-                          <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-purple-200">
-                            ⭐ OT: {row.otMachineOverride}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">-</span>
-                        )}
-                      </td>
-                      <td className="py-2 px-3 font-mono">
-                        {row.customStartTime ? (
-                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-emerald-200">
-                            ⏰ {row.customStartTime} {row.customEndTime ? `- ${row.customEndTime}` : ''}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">-</span>
-                        )}
-                      </td>
-                      <td className="py-2 px-4 text-slate-600 text-[11px]">
-                        {row.reason || '-'}
-                      </td>
-                      <td className="py-2 px-3 text-center">
-                        <button
-                          onClick={() => handleDeleteRow(row.id)}
-                          className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
-                          title="ลบรายการ"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+            {(() => {
+              const displayedRows = localAdjustments.filter(r => {
+                if (dateFilterTab === 'all') return true;
+                const n1 = normalizeDateToMMDDYYYY(r.dateStr);
+                const n2 = normalizeDateToMMDDYYYY(currentDateFormatted);
+                return !r.dateStr || r.dateStr === 'ALL' || n1 === n2 || (n1.length === 8 && n2.length === 8 && n1.slice(0, 4) === n2.slice(0, 4));
+              });
 
-                  {localAdjustments.length === 0 && (
-                    <tr>
-                      <td colSpan={8} className="py-6 text-center text-slate-400 text-xs">
-                        ยังไม่มีรายการปรับเปลี่ยนของวันนี้ (ท่านสามารถเพิ่มรายคนด้านบน หรือนำเข้าไฟล์ Excel ได้)
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+              return (
+                <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                      <tr>
+                        <th className="py-2.5 px-3 text-center">#</th>
+                        <th className="py-2.5 px-3">วันที่</th>
+                        <th className="py-2.5 px-3">รหัสพนักงาน</th>
+                        <th className="py-2.5 px-4">ชื่อ-นามสกุล</th>
+                        <th className="py-2.5 px-3">ย้ายเครื่องกะปกติ</th>
+                        <th className="py-2.5 px-3">ย้ายเครื่องทำ OT</th>
+                        <th className="py-2.5 px-3">เวลาพิเศษ</th>
+                        <th className="py-2.5 px-4">หมายเหตุ</th>
+                        <th className="py-2.5 px-3 text-center">จัดการ</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-800">
+                      {displayedRows.map((row, idx) => (
+                        <tr key={row.id} className="hover:bg-slate-50">
+                          <td className="py-2 px-3 text-center text-slate-400 font-mono">
+                            {idx + 1}
+                          </td>
+                          <td className="py-2 px-3 font-mono text-[11px] font-semibold text-slate-700">
+                            {row.dateStr || '-'}
+                          </td>
+                          <td className="py-2 px-3 font-mono font-bold text-blue-600">
+                            {row.empId}
+                          </td>
+                          <td className="py-2 px-4 font-medium">
+                            {row.empName || employeeMap[row.empId]?.nameTH || '-'}
+                          </td>
+                          <td className="py-2 px-3">
+                            {row.regularMachineOverride ? (
+                              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-amber-200">
+                                🔄 {row.regularMachineOverride}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400">-</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3">
+                            {row.otMachineOverride ? (
+                              <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-purple-200">
+                                ⭐ OT: {row.otMachineOverride}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400">-</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3 font-mono">
+                            {row.customStartTime ? (
+                              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[11px] font-semibold border border-emerald-200">
+                                ⏰ {row.customStartTime} {row.customEndTime ? `- ${row.customEndTime}` : ''}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400">-</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-4 text-slate-600 text-[11px]">
+                            {row.reason || '-'}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <button
+                              onClick={() => handleDeleteRow(row.id)}
+                              className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
+                              title="ลบรายการ"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+
+                      {displayedRows.length === 0 && (
+                        <tr>
+                          <td colSpan={9} className="py-6 text-center text-slate-400 text-xs">
+                            {dateFilterTab === 'current'
+                              ? `ยังไม่มีรายการปรับเปลี่ยนของวันที่ ${currentDateFormatted} (ท่านสามารถกดแท็บ 'ทั้งหมดในระบบ' หรือเพิ่มรายคนด้านบน)`
+                              : 'ยังไม่มีรายการปรับเปลี่ยนในระบบ (ท่านสามารถเพิ่มรายคนด้านบน หรือกดดึงข้อมูลจากไดรฟ์ T:)'}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()}
           </div>
 
         </div>

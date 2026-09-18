@@ -475,9 +475,14 @@ export default function App() {
   // Count adjustments for current date
   const currentDateAdjustmentsCount = useMemo(() => {
     const cleanCurrentDate = dateStringFormatted.trim();
+    const normCur = normalizeDateToMMDDYYYY(cleanCurrentDate);
     return dailyAdjustments.filter(a => {
       const adjDate = (a.dateStr || '').trim();
-      return adjDate === cleanCurrentDate || adjDate === '' || adjDate === 'ALL';
+      if (!adjDate || adjDate === 'ALL') return true;
+      const normAdj = normalizeDateToMMDDYYYY(adjDate);
+      if (normAdj === normCur) return true;
+      if (normAdj.length === 8 && normCur.length === 8 && normAdj.slice(0, 4) === normCur.slice(0, 4)) return true;
+      return adjDate === cleanCurrentDate;
     }).length;
   }, [dailyAdjustments, dateStringFormatted]);
 
