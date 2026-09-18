@@ -986,7 +986,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                         contractorRecords,
                         employeeMapping,
                         ohpaSummary.productionDay,
-                        'ALL'
+                        'ALL',
+                        pdiBeadReport,
+                        tonnageReport
                       )
                     }
                     className="w-full text-left px-2.5 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
@@ -1001,6 +1003,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     เลือกเฉพาะทีม (Specific Team):
                   </div>
                   {[
+                    { key: 'Total Aviation', label: '⭐ Total Aviation (Bias+Radial 276 คน)' },
                     { key: 'BCA', label: '🏭 ทีม BCA (287 คน)' },
                     { key: 'Consumer', label: '🚗 ทีม Consumer (232 คน)' },
                     { key: 'Bias Aero', label: '✈️ ทีม Bias Aero (172 คน)' },
@@ -1015,7 +1018,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           contractorRecords,
                           employeeMapping,
                           ohpaSummary.productionDay,
-                          team.key
+                          team.key,
+                          pdiBeadReport,
+                          tonnageReport
                         )
                       }
                       className="w-full text-left px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg flex items-center justify-between transition-colors cursor-pointer"
@@ -1703,7 +1708,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   contractorRecords,
                   employeeMapping,
                   ohpaSummary.productionDay,
-                  'ALL'
+                  'ALL',
+                  pdiBeadReport,
+                  tonnageReport
                 )
               }
               className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -1858,7 +1865,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                               contractorRecords,
                               employeeMapping,
                               ohpaSummary.productionDay,
-                              area.areaKey
+                              area.areaKey,
+                              pdiBeadReport,
+                              tonnageReport
                             );
                           }}
                           className={`text-[10px] font-bold flex items-center gap-1 hover:underline cursor-pointer ${
