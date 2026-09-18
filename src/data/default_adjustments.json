@@ -295,5 +295,16 @@
     "customEndTime": "07:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ Pigment (23.00-07.00)"
+  },
+  {
+    "id": "adj-27-12809",
+    "dateStr": "17/09/2026",
+    "empId": "12809",
+    "empName": "ภาณุเดช แสนบุญมี",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (23.00-07.00)"
   }
 ]
