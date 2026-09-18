@@ -253,6 +253,63 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     };
   }, [activeAreaBreakdown]);
 
+  const totalAviationStats = useMemo(() => {
+    const bias = activeAreaBreakdown.find(a => a.areaKey === 'Bias Aero');
+    const radial = activeAreaBreakdown.find(a => a.areaKey === 'Radial Aero');
+    if (!bias && !radial) return null;
+
+    const targetHc = (typeof bias?.headcountStandard === 'number' && typeof radial?.headcountStandard === 'number')
+      ? bias.headcountStandard + radial.headcountStandard
+      : ((bias?.headcountStandard || 0) + (radial?.headcountStandard || 0) || 276);
+
+    const totalHc = Math.round(((bias?.totalHeadcount || 0) + (radial?.totalHeadcount || 0)) * 10) / 10;
+    const gyHc = Math.round(((bias?.gyHeadcount || 0) + (radial?.gyHeadcount || 0)) * 10) / 10;
+    const contHc = Math.round(((bias?.contractorHeadcount || 0) + (radial?.contractorHeadcount || 0)) * 10) / 10;
+    const monthlyHc = Math.round(((bias?.monthlyHeadcount || 0) + (radial?.monthlyHeadcount || 0)) * 10) / 10;
+
+    const normalHours = Math.round(((bias?.normalHours || 0) + (radial?.normalHours || 0)) * 10) / 10;
+    const otHours = Math.round(((bias?.otHours || 0) + (radial?.otHours || 0)) * 10) / 10;
+    const totalHours = Math.round(((bias?.totalHours || 0) + (radial?.totalHours || 0)) * 10) / 10;
+
+    const pdiDeductHours = Math.round(((bias?.pdiDeductHours || 0) + (radial?.pdiDeductHours || 0)) * 10) / 10;
+    const finalOpahHours = Math.round(((bias?.finalOpahHours ?? bias?.totalHours ?? 0) + (radial?.finalOpahHours ?? radial?.totalHours ?? 0)) * 10) / 10;
+
+    const areaTonnageKg = Math.round(((bias?.areaTonnageKg || 0) + (radial?.areaTonnageKg || 0)) * 100) / 100;
+    const areaTonnageLbs = Math.round(((bias?.areaTonnageLbs || 0) + (radial?.areaTonnageLbs || 0)) * 100) / 100;
+    const areaOpahLbsPerHour = (finalOpahHours > 0 && areaTonnageKg > 0) ? Math.round(((areaTonnageKg * 2.20462) / finalOpahHours) * 100) / 100 : 0;
+    const percentageOfTotalHours = Math.round(((bias?.percentageOfTotalHours || 0) + (radial?.percentageOfTotalHours || 0)) * 10) / 10;
+
+    const combinedDepts = [...(bias?.departments || []), ...(radial?.departments || [])];
+
+    return {
+      areaKey: 'Total Aviation',
+      areaName: 'Total Aviation (รวม Bias Aero + Radial Aero)',
+      areaLabel: 'Total Aviation',
+      areaTonnageCodes: 'CODE A + B + 6',
+      headcountStandard: targetHc,
+      totalHeadcount: totalHc,
+      gyHeadcount: gyHc,
+      contractorHeadcount: contHc,
+      monthlyHeadcount: monthlyHc,
+      normalHours,
+      otHours,
+      totalHours,
+      pdiDeductHours,
+      beadAddHours: 0,
+      bcaReductionHours: 0,
+      bcaDevHours: 0,
+      retreadReceivedHours: 0,
+      finalOpahHours,
+      areaTonnageKg,
+      areaTonnageLbs,
+      areaOpahLbsPerHour,
+      percentageOfTotalHours,
+      departments: combinedDepts,
+      bias,
+      radial
+    };
+  }, [activeAreaBreakdown]);
+
   const handleExportExcel = () => {
     if (!tonnageReport) return;
 
@@ -1674,133 +1731,160 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           </div>
         </div>
 
-        {/* 5 Area Summary Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-          {activeAreaBreakdown.map((area) => {
-            const isBCA = area.areaKey === 'BCA';
-            const isConsumer = area.areaKey === 'Consumer';
-            const isBiasAero = area.areaKey === 'Bias Aero';
-            const isRadialAero = area.areaKey === 'Radial Aero';
-            const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
+        {/* Area Summary Cards Grid (Including Total Aviation) */}
+        {(() => {
+          const displayCards: (OhpaAreaMetrics | any)[] = [];
+          activeAreaBreakdown.forEach((a) => {
+            displayCards.push(a);
+            if (a.areaKey === 'Consumer' && totalAviationStats) {
+              displayCards.push(totalAviationStats);
+            }
+          });
 
-            const cardBorder = isBCA
-              ? 'border-amber-200 bg-amber-50/40 hover:bg-amber-50/70'
-              : isConsumer
-              ? 'border-blue-200 bg-blue-50/40 hover:bg-blue-50/70'
-              : isBiasAero
-              ? 'border-sky-200 bg-sky-50/40 hover:bg-sky-50/70'
-              : isRadialAero
-              ? 'border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/70'
-              : 'border-rose-200 bg-rose-50/30 hover:bg-rose-50/60';
+          return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5">
+              {displayCards.map((area) => {
+                const isBCA = area.areaKey === 'BCA';
+                const isConsumer = area.areaKey === 'Consumer';
+                const isTotalAviation = area.areaKey === 'Total Aviation';
+                const isBiasAero = area.areaKey === 'Bias Aero';
+                const isRadialAero = area.areaKey === 'Radial Aero';
+                const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
 
-            const badgeBg = isBCA
-              ? 'bg-amber-500 text-white'
-              : isConsumer
-              ? 'bg-blue-600 text-white'
-              : isBiasAero
-              ? 'bg-sky-600 text-white'
-              : isRadialAero
-              ? 'bg-indigo-600 text-white'
-              : 'bg-rose-600 text-white';
+                const cardBorder = isTotalAviation
+                  ? 'border-teal-300 bg-teal-50/50 hover:bg-teal-50/80 shadow-md ring-2 ring-teal-500/20'
+                  : isBCA
+                  ? 'border-amber-200 bg-amber-50/40 hover:bg-amber-50/70'
+                  : isConsumer
+                  ? 'border-blue-200 bg-blue-50/40 hover:bg-blue-50/70'
+                  : isBiasAero
+                  ? 'border-sky-200 bg-sky-50/40 hover:bg-sky-50/70'
+                  : isRadialAero
+                  ? 'border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/70'
+                  : 'border-rose-200 bg-rose-50/30 hover:bg-rose-50/60';
 
-            const opahText = area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-';
+                const badgeBg = isTotalAviation
+                  ? 'bg-gradient-to-r from-sky-600 to-indigo-600 text-white font-black'
+                  : isBCA
+                  ? 'bg-amber-500 text-white'
+                  : isConsumer
+                  ? 'bg-blue-600 text-white'
+                  : isBiasAero
+                  ? 'bg-sky-600 text-white'
+                  : isRadialAero
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-rose-600 text-white';
 
-            return (
-              <div
-                key={area.areaKey}
-                onClick={() => toggleArea(area.areaKey)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs flex flex-col justify-between ${cardBorder}`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-1 gap-1">
-                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md truncate ${badgeBg}`} title={area.areaKey}>
-                      {area.areaLabel}
-                    </span>
-                    {area.isExcluded6320 ? (
-                      <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.2 rounded border border-rose-200">
-                        ตัด 6320
-                      </span>
-                    ) : (
-                      <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded bg-slate-900 text-white truncate max-w-[110px]" title={area.areaTonnageCodes}>
-                        {area.areaTonnageCodes || area.areaKey}
-                      </span>
-                    )}
-                  </div>
+                const opahText = area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-';
 
-                  <div className="text-[11px] text-slate-500 font-medium">
-                    เป้า Master: <strong className="text-slate-800">{area.headcountStandard || '-'} คน</strong>
-                  </div>
-
-                  {!area.isExcluded6320 ? (
-                    <div className="my-2 p-2 bg-white/90 rounded-xl border border-slate-200/80 shadow-2xs">
-                      <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase">
-                        <span>OPAH ประจำพื้นที่:</span>
-                        <span className="text-[9px] font-mono font-bold text-indigo-600 bg-indigo-50 px-1 py-0.2 rounded">
-                          {area.percentageOfTotalHours}%
+                return (
+                  <div
+                    key={area.areaKey}
+                    onClick={() => toggleArea(area.areaKey)}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer shadow-2xs flex flex-col justify-between ${cardBorder}`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1 gap-1">
+                        <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md truncate ${badgeBg}`} title={area.areaKey}>
+                          {isTotalAviation ? '✈️ Total Aviation' : area.areaLabel}
                         </span>
+                        {area.isExcluded6320 ? (
+                          <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-1.5 py-0.2 rounded border border-rose-200">
+                            ตัด 6320
+                          </span>
+                        ) : (
+                          <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded truncate max-w-[110px] ${
+                            isTotalAviation ? 'bg-teal-900 text-teal-100' : 'bg-slate-900 text-white'
+                          }`} title={area.areaTonnageCodes}>
+                            {area.areaTonnageCodes || area.areaKey}
+                          </span>
+                        )}
                       </div>
-                      <div className="text-xl font-black text-indigo-900 font-mono leading-tight mt-0.5">
-                        {opahText}
+
+                      <div className="text-[11px] text-slate-500 font-medium">
+                        เป้า Master: <strong className="text-slate-800">{area.headcountStandard || '-'} คน</strong>
                       </div>
-                      <div className="text-[10px] text-emerald-700 font-semibold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
-                        📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
+
+                      {!area.isExcluded6320 ? (
+                        <div className={`my-2 p-2 rounded-xl border shadow-2xs ${
+                          isTotalAviation ? 'bg-white/95 border-teal-200 ring-1 ring-teal-400/20' : 'bg-white/90 border-slate-200/80'
+                        }`}>
+                          <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase">
+                            <span>OPAH ประจำพื้นที่:</span>
+                            <span className={`text-[9px] font-mono font-bold px-1 py-0.2 rounded ${
+                              isTotalAviation ? 'text-teal-700 bg-teal-50' : 'text-indigo-600 bg-indigo-50'
+                            }`}>
+                              {area.percentageOfTotalHours}%
+                            </span>
+                          </div>
+                          <div className={`text-xl font-black font-mono leading-tight mt-0.5 ${
+                            isTotalAviation ? 'text-teal-950' : 'text-indigo-900'
+                          }`}>
+                            {opahText}
+                          </div>
+                          <div className="text-[10px] text-emerald-700 font-semibold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
+                            📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="my-2 p-2 bg-rose-50/80 rounded-xl border border-rose-200/80 text-[11px] text-rose-700 font-semibold">
+                          🚫 ตัดออกจาก OPAH โรงงาน (แผนก 6320 หล่อดอก)
+                        </div>
+                      )}
+
+                      <div className="text-sm font-black text-slate-900 font-mono leading-tight">
+                        {(area.finalOpahHours || area.totalHours).toLocaleString()} <span className="text-xs font-sans font-normal text-slate-500">ชม.สุทธิ</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-mono">
+                        (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''}{area.bcaReductionHours ? ` -โอนRetread ${area.bcaReductionHours}h` : ''}{area.bcaDevHours ? ` -DEV ${area.bcaDevHours}h` : ''}{area.retreadReceivedHours ? ` +รับโอนBCA ${area.retreadReceivedHours}h` : ''})
                       </div>
                     </div>
-                  ) : (
-                    <div className="my-2 p-2 bg-rose-50/80 rounded-xl border border-rose-200/80 text-[11px] text-rose-700 font-semibold">
-                      🚫 ตัดออกจาก OPAH โรงงาน (แผนก 6320 หล่อดอก)
+
+                    <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-xs">
+                      <div className="flex items-center justify-between text-slate-600 font-mono">
+                        <span>ปกติ: {area.normalHours.toLocaleString()}</span>
+                        <span className="text-amber-700 font-bold">+{area.otHours.toLocaleString()}</span>
+                      </div>
+                      <div className="text-slate-500 mt-1 text-[11px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
+                        {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} / Cont {area.contractorHeadcount})
+                      </div>
+                      <div className="mt-1.5 pt-1 border-t border-slate-200/40 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            exportTeamRawDataExcel(
+                              records,
+                              contractorRecords,
+                              employeeMapping,
+                              ohpaSummary.productionDay,
+                              area.areaKey
+                            );
+                          }}
+                          className={`text-[10px] font-bold flex items-center gap-1 hover:underline cursor-pointer ${
+                            isTotalAviation ? 'text-teal-700 hover:text-teal-900' : 'text-indigo-700 hover:text-indigo-900'
+                          }`}
+                          title={`ส่งออก Raw Data รายคนเฉพาะทีม ${area.areaKey}`}
+                        >
+                          <Download className="w-3 h-3" />
+                          <span>Export Raw Data ({area.areaKey})</span>
+                        </button>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
-                  <div className="text-sm font-black text-slate-900 font-mono leading-tight">
-                    {(area.finalOpahHours || area.totalHours).toLocaleString()} <span className="text-xs font-sans font-normal text-slate-500">ชม.สุทธิ</span>
-                  </div>
-                  <div className="text-[10px] text-slate-400 font-mono">
-                    (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''}{area.bcaReductionHours ? ` -โอนRetread ${area.bcaReductionHours}h` : ''}{area.bcaDevHours ? ` -DEV ${area.bcaDevHours}h` : ''}{area.retreadReceivedHours ? ` +รับโอนBCA ${area.retreadReceivedHours}h` : ''})
-                  </div>
-                </div>
-
-                <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-xs">
-                  <div className="flex items-center justify-between text-slate-600 font-mono">
-                    <span>ปกติ: {area.normalHours.toLocaleString()}</span>
-                    <span className="text-amber-700 font-bold">+{area.otHours.toLocaleString()}</span>
-                  </div>
-                  <div className="text-slate-500 mt-1 text-[11px] truncate" title={`GY ${area.gyHeadcount} | Cont ${area.contractorHeadcount}${area.monthlyHeadcount ? ` | รายเดือน ${area.monthlyHeadcount}` : ''}`}>
-                    {viewMode === 'MTD' ? 'เฉลี่ย: ' : 'สแกน: '}<strong>{area.totalHeadcount} คน</strong> (GY {area.gyHeadcount} / Cont {area.contractorHeadcount})
-                  </div>
-                  <div className="mt-1.5 pt-1 border-t border-slate-200/40 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        exportTeamRawDataExcel(
-                          records,
-                          contractorRecords,
-                          employeeMapping,
-                          ohpaSummary.productionDay,
-                          area.areaKey
-                        );
-                      }}
-                      className="text-[10px] text-indigo-700 hover:text-indigo-900 font-bold flex items-center gap-1 hover:underline cursor-pointer"
-                      title={`ส่งออก Raw Data รายคนเฉพาะทีม ${area.areaKey}`}
-                    >
-                      <Download className="w-3 h-3 text-indigo-600" />
-                      <span>Export Raw Data ({area.areaKey})</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Main Area Table (5 Production Areas) */}
+        {/* Main Area Table (5 Production Areas + Total Aviation) */}
         <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
           <table className="w-full text-left border-collapse min-w-[920px]">
             <thead>
               <tr className="bg-slate-900 text-white font-bold text-xs">
                 <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">
-                  พื้นที่ (5 Areas)
+                  พื้นที่ (Areas Breakdown)
                 </th>
                 <th className="py-2.5 px-1.5 text-center w-12 whitespace-nowrap" title="เป้าหมายกำลังพล Master">เป้า</th>
                 <th className="py-2.5 px-2 text-center w-20 whitespace-nowrap" title="จำนวนคนสแกนจริง / เฉลี่ยต่อวัน">
@@ -1836,277 +1920,313 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs">
-              {activeAreaBreakdown.map((area) => {
-                const isExpanded = Boolean(expandedAreas[area.areaKey]);
-                const isBCA = area.areaKey === 'BCA';
-                const isConsumer = area.areaKey === 'Consumer';
-                const isBiasAero = area.areaKey === 'Bias Aero';
-                const isRadialAero = area.areaKey === 'Radial Aero';
-                const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
+              {(() => {
+                const tableCards: (OhpaAreaMetrics | any)[] = [];
+                activeAreaBreakdown.forEach((a) => {
+                  tableCards.push(a);
+                  if (a.areaKey === 'Consumer' && totalAviationStats) {
+                    tableCards.push(totalAviationStats);
+                  }
+                });
 
-                const rowBg = isExpanded
-                  ? 'bg-slate-50/80'
-                  : isBCA
-                  ? 'hover:bg-amber-50/30'
-                  : isConsumer
-                  ? 'hover:bg-blue-50/30'
-                  : isBiasAero
-                  ? 'hover:bg-sky-50/30'
-                  : isRadialAero
-                  ? 'hover:bg-indigo-50/30'
-                  : 'hover:bg-rose-50/30 bg-rose-50/15';
+                return tableCards.map((area) => {
+                  const isExpanded = Boolean(expandedAreas[area.areaKey]);
+                  const isBCA = area.areaKey === 'BCA';
+                  const isConsumer = area.areaKey === 'Consumer';
+                  const isTotalAviation = area.areaKey === 'Total Aviation';
+                  const isBiasAero = area.areaKey === 'Bias Aero';
+                  const isRadialAero = area.areaKey === 'Radial Aero';
+                  const isRetread = area.areaKey === 'Retread' || area.isExcluded6320;
 
-                const iconElem = isBCA ? (
-                  <Factory className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                ) : isConsumer ? (
-                  <Car className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                ) : isBiasAero ? (
-                  <Plane className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-                ) : isRadialAero ? (
-                  <Plane className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                ) : (
-                  <RefreshCw className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-                );
+                  const rowBg = isTotalAviation
+                    ? (isExpanded ? 'bg-teal-100/80 border-y-2 border-teal-400 font-bold' : 'bg-gradient-to-r from-sky-50/90 via-teal-50/90 to-indigo-50/90 hover:bg-teal-100/60 border-y border-teal-300 font-bold')
+                    : isExpanded
+                    ? 'bg-slate-50/80'
+                    : isBCA
+                    ? 'hover:bg-amber-50/30'
+                    : isConsumer
+                    ? 'hover:bg-blue-50/30'
+                    : isBiasAero
+                    ? 'hover:bg-sky-50/30'
+                    : isRadialAero
+                    ? 'hover:bg-indigo-50/30'
+                    : 'hover:bg-rose-50/30 bg-rose-50/15';
 
-                return (
-                  <React.Fragment key={area.areaKey}>
-                    {/* Area Primary Row */}
-                    <tr
-                      onClick={() => toggleArea(area.areaKey)}
-                      className={`transition-colors cursor-pointer ${rowBg}`}
-                    >
-                      <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            className="p-0.5 rounded text-slate-400 hover:text-slate-700 transition-colors"
-                            title={isExpanded ? 'ย่อรายละเอียด' : 'คลิกเพื่อดูรายละเอียดแผนกย่อย'}
-                          >
-                            {isExpanded ? (
-                              <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
-                            ) : (
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-                          <div className="p-1 rounded-lg bg-white shadow-2xs border border-slate-200 shrink-0">
-                            {iconElem}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-black text-slate-900">{area.areaKey}</span>
-                              {area.isExcluded6320 && (
-                                <span className="text-[9px] font-bold bg-rose-100 text-rose-700 px-1 py-0.2 rounded border border-rose-200 whitespace-nowrap">
-                                  ตัด 6320
-                                </span>
+                  const iconElem = isTotalAviation ? (
+                    <Plane className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                  ) : isBCA ? (
+                    <Factory className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  ) : isConsumer ? (
+                    <Car className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  ) : isBiasAero ? (
+                    <Plane className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                  ) : isRadialAero ? (
+                    <Plane className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                  ) : (
+                    <RefreshCw className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                  );
+
+                  return (
+                    <React.Fragment key={area.areaKey}>
+                      {/* Area Primary Row */}
+                      <tr
+                        onClick={() => toggleArea(area.areaKey)}
+                        className={`transition-colors cursor-pointer ${rowBg}`}
+                      >
+                        <td className="py-2.5 px-3 font-bold text-slate-900 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              className="p-0.5 rounded text-slate-400 hover:text-slate-700 transition-colors"
+                              title={isExpanded ? 'ย่อรายละเอียด' : 'คลิกเพื่อดูรายละเอียดแผนกย่อย'}
+                            >
+                              {isExpanded ? (
+                                <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                              ) : (
+                                <ChevronRight className="w-3.5 h-3.5" />
                               )}
+                            </button>
+                            <div className="p-1 rounded-lg bg-white shadow-2xs border border-slate-200 shrink-0">
+                              {iconElem}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-normal truncate max-w-[150px]" title={area.areaName}>
-                              {area.areaName}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Standard Master Headcount */}
-                      <td className="py-2.5 px-1.5 text-center font-bold text-slate-700 whitespace-nowrap">
-                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 font-mono font-bold text-xs">
-                          {area.headcountStandard ? `${area.headcountStandard}` : '-'}
-                        </span>
-                      </td>
-
-                      {/* Actual Scanned Headcount */}
-                      <td className="py-2.5 px-2 text-center whitespace-nowrap">
-                        <div className="inline-flex flex-col items-center">
-                          <span className={`px-2 py-0.5 rounded-full text-white font-black text-xs leading-none ${
-                            area.isExcluded6320 ? 'bg-rose-700' : 'bg-slate-900'
-                          }`}>
-                            {area.totalHeadcount} คน
-                          </span>
-                          <span className="text-[9px] text-slate-400 mt-0.5 font-mono">
-                            GY {area.gyHeadcount} | Cont {area.contractorHeadcount}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Normal Hours */}
-                      <td className="py-2.5 px-2 text-right font-mono font-semibold text-slate-700 bg-slate-50/50 whitespace-nowrap text-xs">
-                        {area.normalHours.toLocaleString()}
-                      </td>
-
-                      {/* OT Hours */}
-                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-amber-700 bg-amber-50/40 whitespace-nowrap text-xs">
-                        {area.otHours > 0 ? `+${area.otHours.toLocaleString()}` : '-'}
-                      </td>
-
-                      {/* Gross Base Hours */}
-                      <td className="py-2.5 px-2 text-right font-mono font-bold text-slate-900 bg-slate-100/50 whitespace-nowrap text-xs">
-                        {area.totalHours.toLocaleString()}
-                      </td>
-
-                      {/* PDI Deduct */}
-                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-rose-700 bg-rose-50/30 whitespace-nowrap text-xs">
-                        {area.pdiDeductHours && area.pdiDeductHours > 0 ? `-${area.pdiDeductHours.toLocaleString()}` : '-'}
-                      </td>
-
-                      {/* Bead Add */}
-                      <td className="py-2.5 px-1.5 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30 whitespace-nowrap text-xs">
-                        {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)}` : '-'}
-                      </td>
-
-                      {/* BCA / Retread Adjustments */}
-                      <td className="py-2.5 px-1.5 text-right font-mono text-xs whitespace-nowrap bg-amber-50/30">
-                        {isBCA && ((area.bcaReductionHours || 0) + (area.bcaDevHours || 0)) > 0 ? (
-                          <span
-                            className="font-bold text-amber-800"
-                            title={`โอนให้ Retread: -${area.bcaReductionHours || 0} ชม. | DEV: -${area.bcaDevHours || 0} ชม.`}
-                          >
-                            -{(((area.bcaReductionHours || 0) + (area.bcaDevHours || 0))).toFixed(1)}
-                          </span>
-                        ) : isRetread && (area.retreadReceivedHours || 0) > 0 ? (
-                          <span
-                            className="font-bold text-emerald-700"
-                            title={`รับโอนจาก BCA: +${area.retreadReceivedHours} ชม.`}
-                          >
-                            +{area.retreadReceivedHours?.toFixed(1)}
-                          </span>
-                        ) : (
-                          <span className="text-slate-300">-</span>
-                        )}
-                      </td>
-
-                      {/* Final Net OPAH Hours */}
-                      <td className="py-2.5 px-2 text-right font-mono font-black text-xs text-indigo-950 bg-indigo-50/40 whitespace-nowrap">
-                        {(area.finalOpahHours || area.totalHours).toLocaleString()}
-                      </td>
-
-                      {/* Stocking Tonnage 55012 */}
-                      <td className="py-2.5 px-2.5 text-right font-mono bg-emerald-50/40 whitespace-nowrap">
-                        {area.isExcluded6320 ? (
-                          <span className="text-slate-400 text-xs">-</span>
-                        ) : (
-                          <div>
-                            <div className="font-bold text-slate-900 text-xs leading-tight">
-                              {area.areaTonnageKg?.toLocaleString()} <span className="text-[10px] text-slate-500 font-normal">kg</span>
-                            </div>
-                            <div className="text-[10px] text-slate-500 font-normal flex items-center justify-end gap-1 mt-0.5">
-                              <span>{area.areaTonnageLbs?.toLocaleString()} lbs</span>
-                              <span className="text-[9px] bg-emerald-200/80 text-emerald-950 px-1 py-0.2 rounded font-bold">{area.areaTonnageCodes}</span>
-                            </div>
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Area OPAH (lbs/ชม.) */}
-                      <td className="py-2.5 px-2.5 text-right font-mono bg-purple-50/50 whitespace-nowrap">
-                        {area.isExcluded6320 ? (
-                          <span className="text-slate-400 text-xs">-</span>
-                        ) : (
-                          <div>
-                            <div className="font-black text-purple-900 text-sm leading-tight">
-                              {area.areaOpahLbsPerHour ? area.areaOpahLbsPerHour.toLocaleString() : '-'}
-                            </div>
-                            <div className="text-[10px] text-purple-700 font-sans font-semibold">lbs/ชม.</div>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-
-                    {/* Expandable Sub-departments table */}
-                    {isExpanded && (
-                      <tr className="bg-slate-50/90 border-y border-slate-200">
-                        <td colSpan={12} className="py-2.5 px-4 sm:px-6">
-                          <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-2">
-                            <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-1.5">
-                              <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
-                              <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
-                            </div>
-
-                            <div className="overflow-x-auto">
-                              <table className="w-full text-left text-xs border-collapse">
-                                <thead>
-                                  <tr className="text-slate-500 font-bold border-b border-slate-100 text-[10px]">
-                                    <th className="py-1 px-2.5">แผนก / Cost Center / สังกัด</th>
-                                    <th className="py-1 px-2 text-center">ประเภท</th>
-                                    <th className="py-1 px-2 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน' : 'คนสแกน'}</th>
-                                    <th className="py-1 px-2 text-right">ชม.ปกติ</th>
-                                    <th className="py-1 px-2 text-right">ชม. OT</th>
-                                    <th className="py-1 px-2 text-right font-black">ชม.รวม</th>
-                                  </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-50 font-sans text-xs">
-                                  {area.departments.map((sub, sIdx) => (
-                                    <tr key={sub.dept + sIdx} className="hover:bg-slate-50/80">
-                                      <td className="py-1.5 px-2.5 font-medium text-slate-800 flex items-center gap-1.5">
-                                        {sub.isBead ? (
-                                          <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                        ) : sub.dept.includes('PDI') ? (
-                                          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-                                        ) : sub.isMonthly ? (
-                                          <Briefcase className={`w-3.5 h-3.5 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
-                                        ) : sub.isContractor ? (
-                                          <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                                        ) : (
-                                          <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                                        )}
-                                        <span className="truncate max-w-[280px] text-xs">{sub.dept}</span>
-                                      </td>
-                                      <td className="py-1.5 px-2 text-center">
-                                        <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                                          sub.isBead
-                                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                                            : sub.dept.includes('PDI')
-                                            ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                                            : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
-                                            ? (sub.isMonthly ? 'bg-purple-50 text-purple-700 border border-purple-200' : sub.isContractor ? 'bg-teal-50 text-teal-700 border border-teal-200' : 'bg-slate-100 text-slate-700 border border-slate-200')
-                                            : sub.dept.includes('50% Con/Bias')
-                                            ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                                            : sub.isMonthly && sub.isContractor
-                                            ? 'bg-teal-100 text-teal-800 border border-teal-200'
-                                            : sub.isMonthly
-                                            ? 'bg-purple-100 text-purple-800 border border-purple-200'
-                                            : sub.isContractor
-                                            ? 'bg-teal-100 text-teal-800'
-                                            : 'bg-blue-100 text-blue-800'
-                                        }`}>
-                                          {sub.isBead
-                                            ? 'Bead (+)'
-                                            : sub.dept.includes('PDI')
-                                            ? 'PDI (-)'
-                                            : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
-                                            ? (sub.isMonthly ? 'Non-HPT (รายเดือน)' : sub.isContractor ? 'Non-HPT (Cont)' : 'Non-HPT (GY)')
-                                            : sub.dept.includes('50% Con/Bias')
-                                            ? (sub.isMonthly ? 'Shared (รายเดือน)' : sub.isContractor ? 'Shared (Cont)' : 'Shared (GY)')
-                                            : sub.isMonthly
-                                            ? (sub.isContractor ? 'WAS Mon' : 'Salaries')
-                                            : sub.isContractor
-                                            ? 'Contractor'
-                                            : 'Goodyear'}
-                                        </span>
-                                      </td>
-                                      <td className="py-1.5 px-2 text-center font-bold text-slate-700 text-xs">
-                                        {sub.headcount > 0 ? `${sub.headcount} คน` : '-'}
-                                      </td>
-                                      <td className="py-1.5 px-2 text-right text-slate-600 font-mono text-xs">
-                                        {sub.normalHours.toLocaleString()}
-                                      </td>
-                                      <td className="py-1.5 px-2 text-right font-mono font-bold text-amber-600 text-xs">
-                                        {sub.otHours > 0 ? `+${sub.otHours.toLocaleString()}` : '-'}
-                                      </td>
-                                      <td className="py-1.5 px-2 text-right font-mono font-black text-slate-900 text-xs">
-                                        {sub.totalHours.toLocaleString()}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className={`text-xs font-black ${isTotalAviation ? 'text-teal-950 font-extrabold' : 'text-slate-900'}`}>
+                                  {isTotalAviation ? '✈️ Total Aviation' : area.areaKey}
+                                </span>
+                                {area.isExcluded6320 ? (
+                                  <span className="text-[9px] font-bold bg-rose-100 text-rose-700 px-1 py-0.2 rounded border border-rose-200 whitespace-nowrap">
+                                    ตัด 6320
+                                  </span>
+                                ) : (
+                                  <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded whitespace-nowrap ${
+                                    isTotalAviation ? 'bg-teal-700 text-white' : 'bg-slate-800 text-white'
+                                  }`}>
+                                    {area.areaTonnageCodes}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-normal truncate max-w-[150px]" title={area.areaName}>
+                                {area.areaName}
+                              </div>
                             </div>
                           </div>
                         </td>
+
+                        {/* Standard Master Headcount */}
+                        <td className="py-2.5 px-1.5 text-center font-bold text-slate-700 whitespace-nowrap">
+                          <span className={`px-1.5 py-0.5 rounded font-mono font-bold text-xs ${
+                            isTotalAviation ? 'bg-teal-100 text-teal-900 ring-1 ring-teal-300' : 'bg-slate-100 text-slate-800'
+                          }`}>
+                            {area.headcountStandard ? `${area.headcountStandard}` : '-'}
+                          </span>
+                        </td>
+
+                        {/* Actual Scanned Headcount */}
+                        <td className="py-2.5 px-2 text-center whitespace-nowrap">
+                          <div className="inline-flex flex-col items-center">
+                            <span className={`px-2 py-0.5 rounded-full text-white font-black text-xs leading-none ${
+                              area.isExcluded6320 ? 'bg-rose-700' : isTotalAviation ? 'bg-teal-800' : 'bg-slate-900'
+                            }`}>
+                              {area.totalHeadcount} คน
+                            </span>
+                            <span className="text-[9px] text-slate-400 mt-0.5 font-mono">
+                              GY {area.gyHeadcount} | Cont {area.contractorHeadcount}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Normal Hours */}
+                        <td className={`py-2.5 px-2 text-right font-mono font-semibold whitespace-nowrap text-xs ${
+                          isTotalAviation ? 'text-teal-950 bg-teal-50/70 font-bold' : 'text-slate-700 bg-slate-50/50'
+                        }`}>
+                          {area.normalHours.toLocaleString()}
+                        </td>
+
+                        {/* OT Hours */}
+                        <td className="py-2.5 px-1.5 text-right font-mono font-bold text-amber-700 bg-amber-50/40 whitespace-nowrap text-xs">
+                          {area.otHours > 0 ? `+${area.otHours.toLocaleString()}` : '-'}
+                        </td>
+
+                        {/* Gross Base Hours */}
+                        <td className={`py-2.5 px-2 text-right font-mono font-bold whitespace-nowrap text-xs ${
+                          isTotalAviation ? 'text-teal-950 bg-teal-100/50' : 'text-slate-900 bg-slate-100/50'
+                        }`}>
+                          {area.totalHours.toLocaleString()}
+                        </td>
+
+                        {/* PDI Deduct */}
+                        <td className="py-2.5 px-1.5 text-right font-mono font-bold text-rose-700 bg-rose-50/30 whitespace-nowrap text-xs">
+                          {area.pdiDeductHours && area.pdiDeductHours > 0 ? `-${area.pdiDeductHours.toLocaleString()}` : '-'}
+                        </td>
+
+                        {/* Bead Add */}
+                        <td className="py-2.5 px-1.5 text-right font-mono font-bold text-emerald-700 bg-emerald-50/30 whitespace-nowrap text-xs">
+                          {area.beadAddHours && area.beadAddHours > 0 ? `+${area.beadAddHours.toFixed(1)}` : '-'}
+                        </td>
+
+                        {/* BCA / Retread Adjustments */}
+                        <td className="py-2.5 px-1.5 text-right font-mono text-xs whitespace-nowrap bg-amber-50/30">
+                          {isBCA && ((area.bcaReductionHours || 0) + (area.bcaDevHours || 0)) > 0 ? (
+                            <span
+                              className="font-bold text-amber-800"
+                              title={`โอนให้ Retread: -${area.bcaReductionHours || 0} ชม. | DEV: -${area.bcaDevHours || 0} ชม.`}
+                            >
+                              -{(((area.bcaReductionHours || 0) + (area.bcaDevHours || 0))).toFixed(1)}
+                            </span>
+                          ) : isRetread && (area.retreadReceivedHours || 0) > 0 ? (
+                            <span
+                              className="font-bold text-emerald-700"
+                              title={`รับโอนจาก BCA: +${area.retreadReceivedHours} ชม.`}
+                            >
+                              +{area.retreadReceivedHours?.toFixed(1)}
+                            </span>
+                          ) : (
+                            <span className="text-slate-300">-</span>
+                          )}
+                        </td>
+
+                        {/* Final Net OPAH Hours */}
+                        <td className={`py-2.5 px-2 text-right font-mono font-black text-xs whitespace-nowrap ${
+                          isTotalAviation ? 'text-teal-950 bg-teal-100/80 font-black' : 'text-indigo-950 bg-indigo-50/40'
+                        }`}>
+                          {(area.finalOpahHours || area.totalHours).toLocaleString()}
+                        </td>
+
+                        {/* Stocking Tonnage 55012 */}
+                        <td className={`py-2.5 px-2.5 text-right font-mono whitespace-nowrap ${
+                          isTotalAviation ? 'bg-teal-50/70' : 'bg-emerald-50/40'
+                        }`}>
+                          {area.isExcluded6320 ? (
+                            <span className="text-slate-400 text-xs">-</span>
+                          ) : (
+                            <div>
+                              <div className="font-bold text-slate-900 text-xs leading-tight">
+                                {area.areaTonnageKg?.toLocaleString()} <span className="text-[10px] text-slate-500 font-normal">kg</span>
+                              </div>
+                              <div className="text-[10px] text-slate-500 font-normal flex items-center justify-end gap-1 mt-0.5">
+                                <span>{area.areaTonnageLbs?.toLocaleString()} lbs</span>
+                                <span className={`text-[9px] px-1 py-0.2 rounded font-bold ${
+                                  isTotalAviation ? 'bg-teal-200 text-teal-950' : 'bg-emerald-200/80 text-emerald-950'
+                                }`}>{area.areaTonnageCodes}</span>
+                              </div>
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Area OPAH (lbs/ชม.) */}
+                        <td className={`py-2.5 px-2.5 text-right font-mono whitespace-nowrap ${
+                          isTotalAviation ? 'bg-teal-100/70' : 'bg-purple-50/50'
+                        }`}>
+                          {area.isExcluded6320 ? (
+                            <span className="text-slate-400 text-xs">-</span>
+                          ) : (
+                            <div>
+                              <div className={`font-black text-sm leading-tight ${
+                                isTotalAviation ? 'text-teal-950' : 'text-purple-900'
+                              }`}>
+                                {area.areaOpahLbsPerHour ? area.areaOpahLbsPerHour.toLocaleString() : '-'}
+                              </div>
+                              <div className={`text-[10px] font-sans font-semibold ${
+                                isTotalAviation ? 'text-teal-700' : 'text-purple-700'
+                              }`}>lbs/ชม.</div>
+                            </div>
+                          )}
+                        </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+
+                      {/* Expandable Sub-departments table */}
+                      {isExpanded && (
+                        <tr className="bg-slate-50/90 border-y border-slate-200">
+                          <td colSpan={12} className="py-2.5 px-4 sm:px-6">
+                            <div className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs space-y-2">
+                              <div className="flex items-center justify-between text-xs font-bold text-slate-700 border-b border-slate-100 pb-1.5">
+                                <span>รายละเอียดหน่วยงานย่อยในกลุ่ม: {area.areaName} ({viewMode === 'MTD' ? `สะสม ${ohpaSummary.mtd?.daysCount || 14} วัน` : 'ประจำวัน'})</span>
+                                <span className="text-slate-400 font-normal">ทั้งหมด {area.departments.length} รายการ</span>
+                              </div>
+
+                              <div className="overflow-x-auto">
+                                <table className="w-full text-left text-xs border-collapse">
+                                  <thead>
+                                    <tr className="text-slate-500 font-bold border-b border-slate-100 text-[10px]">
+                                      <th className="py-1 px-2.5">แผนก / Cost Center / สังกัด</th>
+                                      <th className="py-1 px-2 text-center">ประเภท</th>
+                                      <th className="py-1 px-2 text-center">{viewMode === 'MTD' ? 'เฉลี่ยคน' : 'คนสแกน'}</th>
+                                      <th className="py-1 px-2 text-right">ชม.ปกติ</th>
+                                      <th className="py-1 px-2 text-right">ชม. OT</th>
+                                      <th className="py-1 px-2 text-right font-black">ชม.รวม</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-slate-50 font-sans text-xs">
+                                    {area.departments.map((sub: any, sIdx: number) => (
+                                      <tr key={sub.dept + sIdx} className="hover:bg-slate-50/80">
+                                        <td className="py-1.5 px-2.5 font-medium text-slate-800 flex items-center gap-1.5">
+                                          {sub.isBead ? (
+                                            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                          ) : sub.dept.includes('PDI') ? (
+                                            <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                                          ) : sub.isMonthly ? (
+                                            <Briefcase className={`w-3.5 h-3.5 ${sub.isContractor ? 'text-teal-600' : 'text-purple-600'} shrink-0`} />
+                                          ) : sub.isContractor ? (
+                                            <HardHat className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                                          ) : (
+                                            <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                          )}
+                                          <span className="truncate max-w-[280px] text-xs">{sub.dept}</span>
+                                        </td>
+                                        <td className="py-1.5 px-2 text-center">
+                                          <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
+                                            sub.isBead
+                                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                              : sub.dept.includes('PDI')
+                                              ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                                              : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
+                                              ? (sub.isMonthly ? 'bg-purple-50 text-purple-700 border border-purple-200' : sub.isContractor ? 'bg-teal-50 text-teal-700 border border-teal-200' : 'bg-slate-100 text-slate-700 border border-slate-200')
+                                              : sub.isMonthly
+                                              ? 'bg-purple-100 text-purple-800 border border-purple-300'
+                                              : sub.isContractor
+                                              ? 'bg-teal-100 text-teal-800 border border-teal-300'
+                                              : 'bg-blue-100 text-blue-800 border border-blue-300'
+                                          }`}>
+                                            {sub.isBead
+                                              ? 'B-end Bead'
+                                              : sub.dept.includes('PDI')
+                                              ? 'PDI หักออก'
+                                              : sub.dept.includes('Non-HPT') || sub.dept.includes('1/5')
+                                              ? 'Non-HPT จัดสรร'
+                                              : sub.isMonthly
+                                              ? 'รายเดือน'
+                                              : sub.isContractor
+                                              ? 'Contractor'
+                                              : 'Goodyear'}
+                                          </span>
+                                        </td>
+                                        <td className="py-1.5 px-2 text-center font-mono font-bold text-slate-700 text-xs">
+                                          {sub.headcount}
+                                        </td>
+                                        <td className="py-1.5 px-2 text-right font-mono text-slate-600 text-xs">
+                                          {sub.normalHours.toLocaleString()}
+                                        </td>
+                                        <td className="py-1.5 px-2 text-right font-mono font-bold text-amber-700 text-xs">
+                                          {sub.otHours > 0 ? `+${sub.otHours.toLocaleString()}` : '-'}
+                                        </td>
+                                        <td className="py-1.5 px-2 text-right font-mono font-black text-slate-900 text-xs">
+                                          {sub.totalHours.toLocaleString()}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                });
+              })()}
+
 
               {/* Row 1: OPAH Active Total (4 Production Areas: BCA, Consumer, Bias Aero, Radial Aero) */}
               <tr className="bg-slate-900 text-white font-black border-t-2 border-slate-700 text-xs">

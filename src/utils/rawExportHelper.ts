@@ -287,15 +287,24 @@ export function exportTeamRawDataExcel(
 
   if (specificTeamKey && specificTeamKey !== 'ALL') {
     // Export specific team only
-    const teamRows = rows.filter((r) => r.areaKey === specificTeamKey);
+    const isAv = specificTeamKey === 'Total Aviation' || specificTeamKey === 'Aviation';
+    const teamRows = rows.filter((r) => isAv ? (r.areaKey === 'Bias Aero' || r.areaKey === 'Radial Aero') : r.areaKey === specificTeamKey);
     const wsTeam = XLSX.utils.json_to_sheet(teamRows.map(formatRow));
-    const safeSheetName = `Team_${specificTeamKey.replace(/\s+/g, '_')}`;
+    const safeSheetName = isAv ? 'Team_Total_Aviation' : `Team_${specificTeamKey.replace(/\s+/g, '_')}`;
     XLSX.utils.book_append_sheet(wb, wsTeam, safeSheetName);
   } else {
     // Sheet 2: All Employees Raw Data
     const allData = rows.map(formatRow);
     const wsAll = XLSX.utils.json_to_sheet(allData);
     XLSX.utils.book_append_sheet(wb, wsAll, 'Raw_All_Employees');
+
+    // Sub-sheet for Total Aviation
+    const aviationRows = rows.filter((r) => r.areaKey === 'Bias Aero' || r.areaKey === 'Radial Aero');
+    if (aviationRows.length > 0) {
+      const avData = aviationRows.map(formatRow);
+      const wsAv = XLSX.utils.json_to_sheet(avData);
+      XLSX.utils.book_append_sheet(wb, wsAv, 'Team_Total_Aviation');
+    }
 
     // Sub-sheets for each of the 5 Teams
     AREA_5_KEYS.forEach((areaKey) => {
