@@ -564,7 +564,6 @@ export default function App() {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <TableProperties className="w-4 h-4" />
               <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (GY)</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                 activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
@@ -582,7 +581,6 @@ export default function App() {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <HardHat className="w-4 h-4" />
               <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (Cont)</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                 activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
@@ -600,7 +598,6 @@ export default function App() {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <UserCheck className="w-4 h-4" />
               <span>หน้า 3: ตารางเปรียบเทียบ Standard HC</span>
             </button>
 
@@ -613,7 +610,6 @@ export default function App() {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Calculator className="w-4 h-4" />
               <span>หน้า 4: OPAH CAL</span>
               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                 activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
