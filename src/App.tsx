@@ -553,78 +553,73 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
         {/* Tab Navigation (4 Pages) */}
-        <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col xl:flex-row items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-            {/* Page 1 Tab: GY Scans */}
-            <button
-              onClick={() => setActiveTab('PAGE_1_DETAILS')}
-              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_1_DETAILS'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (GY)</span>
-              <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
-              }`}>
-                {records.length} คน
-              </span>
-            </button>
+        <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-2 lg:grid-cols-4 gap-2">
+          {/* Page 1 Tab: GY Scans */}
+          <button
+            onClick={() => setActiveTab('PAGE_1_DETAILS')}
+            className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === 'PAGE_1_DETAILS'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <UserCheck className="w-4 h-4 shrink-0" />
+            <span className="truncate">ตารางสแกนนิ้ว (GY)</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold shrink-0 ${
+              activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
+            }`}>
+              {records.length} คน
+            </span>
+          </button>
 
-            {/* Page 2 Tab: Contractor WAS Scans */}
-            <button
-              onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
-              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_2_CONTRACTOR'
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <span>ตารางบันทึกการสแกนนิ้วรายบุคคล (Cont)</span>
-              <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
-              }`}>
-                {currentContractorCount} คน
-              </span>
-            </button>
+          {/* Page 2 Tab: Contractor WAS Scans */}
+          <button
+            onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
+            className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === 'PAGE_2_CONTRACTOR'
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <HardHat className="w-4 h-4 shrink-0" />
+            <span className="truncate">ตารางสแกนนิ้ว (Cont)</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold shrink-0 ${
+              activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
+            }`}>
+              {currentContractorCount} คน
+            </span>
+          </button>
 
-            {/* Page 3 Tab: Standard Manpower Comparison */}
-            <button
-              onClick={() => setActiveTab('PAGE_3_MANPOWER')}
-              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_3_MANPOWER'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <span>หน้า 3: ตารางเปรียบเทียบ Standard HC</span>
-            </button>
+          {/* Page 3 Tab: Standard Manpower Comparison */}
+          <button
+            onClick={() => setActiveTab('PAGE_3_MANPOWER')}
+            className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === 'PAGE_3_MANPOWER'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <TableProperties className="w-4 h-4 shrink-0" />
+            <span className="truncate">ตารางเปรียบเทียบ Standard HC</span>
+          </button>
 
-            {/* Page 4 Tab: OPAH CAL */}
-            <button
-              onClick={() => setActiveTab('PAGE_4_OHPA')}
-              className={`flex-1 sm:flex-none py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                activeTab === 'PAGE_4_OHPA'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <span>หน้า 4: OPAH CAL</span>
-              <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
-              }`}>
-                55012
-              </span>
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 w-full xl:w-auto justify-end">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 px-2.5 py-1.5 bg-slate-50 rounded-xl border border-slate-200">
-              <Calendar className="w-3.5 h-3.5 text-blue-500" />
-              <span>วันที่: <strong className="text-slate-800">{dateStringFormatted}</strong></span>
-            </div>
-          </div>
+          {/* Page 4 Tab: OPAH CAL */}
+          <button
+            onClick={() => setActiveTab('PAGE_4_OHPA')}
+            className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              activeTab === 'PAGE_4_OHPA'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Calculator className="w-4 h-4 shrink-0" />
+            <span className="truncate">OPAH CAL</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold shrink-0 ${
+              activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
+            }`}>
+              55012
+            </span>
+          </button>
         </div>
 
         {/* Tab 1: GY Employee Detail Table */}
