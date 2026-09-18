@@ -1108,6 +1108,30 @@ export function calculateMtdSummary(
     mtdBcaDevHours += bcaDevHours;
     mtdOpahWorkingHours += dayOpahHours;
 
+    const LBS_CONST = 2.20462;
+    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, tonnageReport, 'DAILY');
+
+    // Calculate/Estimate daily stocking tonnage
+    let dayStockingKg = 0;
+    if (d === targetDay && tonnageReport?.total?.dailyTotalTonnage) {
+      dayStockingKg = tonnageReport.total.dailyTotalTonnage;
+    } else if (tonnageReport?.total?.mtdTonnage && targetDay > 0) {
+      dayStockingKg = Math.round((tonnageReport.total.mtdTonnage / targetDay) * 100) / 100;
+    } else if (tonnageReport?.total?.dailyTotalTonnage) {
+      dayStockingKg = tonnageReport.total.dailyTotalTonnage;
+    }
+    const dayStockingLbs = Math.round(dayStockingKg * LBS_CONST * 100) / 100;
+    const dailyOpahLbsPerHour = dayOpahHours > 0 && dayStockingLbs > 0
+      ? Math.round((dayStockingLbs / dayOpahHours) * 100) / 100
+      : 0;
+
+    const cumulativeStockingKg = (tonnageReport?.total?.mtdTonnage && targetDay > 0)
+      ? Math.round((tonnageReport.total.mtdTonnage / targetDay * d) * 100) / 100
+      : dayStockingKg * d;
+    const cumulativeOpahLbsPerHour = mtdOpahWorkingHours > 0 && cumulativeStockingKg > 0
+      ? Math.round(((cumulativeStockingKg * LBS_CONST) / mtdOpahWorkingHours) * 100) / 100
+      : 0;
+
     dailyItems.push({
       day: d,
       dateStr: dayDateStr,
@@ -1124,7 +1148,12 @@ export function calculateMtdSummary(
       bcaDevHours: Math.round(bcaDevHours * 10) / 10,
       opahWorkingHours: Math.round(dayOpahHours * 10) / 10,
       cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10,
-      cumulativeOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10
+      cumulativeOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10,
+      stockingKg: dayStockingKg,
+      stockingLbs: dayStockingLbs,
+      dailyOpahLbsPerHour,
+      cumulativeOpahLbsPerHour,
+      areaBreakdown: dayAreaBreakdown
     });
   }
 

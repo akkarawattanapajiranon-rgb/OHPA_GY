@@ -148,6 +148,9 @@ export interface DailyMtdItem {
   cumulativeOpahWorkingHours?: number;
   stockingKg?: number;
   stockingLbs?: number;
+  dailyOpahLbsPerHour?: number;
+  cumulativeOpahLbsPerHour?: number;
+  areaBreakdown?: OhpaAreaMetrics[];
 }
 
 export interface MtdOhpaSummary {

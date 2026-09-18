@@ -297,6 +297,123 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     const ws1 = XLSX.utils.json_to_sheet(summaryData);
     XLSX.utils.book_append_sheet(wb, ws1, 'OPAH_KPI_Summary');
 
+    // Sheet 2: Daily Trend Plant (OPAH & Working Hours)
+    const dailyItems = ohpaSummary.mtd?.dailyItems || [];
+    if (dailyItems.length > 0) {
+      const dailyTrendPlantData = dailyItems.map(item => ({
+        'วันที่ (Date)': item.dateStr,
+        'วันในสัปดาห์': item.dayName,
+        'GY กำลังพล (คน)': item.gyHeadcount,
+        'GY ชั่วโมงทำงาน (ชม.)': item.gyHours,
+        'Cont กำลังพล (คน)': item.contractorHeadcount,
+        'Cont ชั่วโมงทำงาน (ชม.)': item.contractorHours,
+        'พนักงานรายเดือน (ชม.)': item.monthlyHours,
+        'ชั่วโมงทำงานฐานรวมทั้งโรงงาน (Base Hours)': item.totalHours,
+        '🔻 PDI Deduct (ชม.)': -item.pdiDeductHours,
+        '🟢 Bead Add (ชม.)': item.beadAddHours,
+        '🔻 BCA โอนให้ Retread (ชม.)': -(item.bcaReductionHours || 0),
+        '🔻 BCA DEV หักออก (ชม.)': -(item.bcaDevHours || 0),
+        '⭐ ชั่วโมงสุทธิคิด OPAH (Net OPAH Hours)': item.opahWorkingHours,
+        'ยอด Stocking รวม (kg)': item.stockingKg || 0,
+        'ยอด Stocking รวม (lbs)': item.stockingLbs || 0,
+        '🚀 Daily Plant OPAH (lbs/ชม.)': item.dailyOpahLbsPerHour || ohpaSummary.overallOpahLbsPerHour,
+        'ชั่วโมงสะสมสุทธิ MTD (ชม.)': item.cumulativeOpahWorkingHours || item.cumulativeTotalHours,
+        '📈 MTD Cumulative Plant OPAH (lbs/ชม.)': item.cumulativeOpahLbsPerHour || (ohpaSummary.mtd?.mtdOpahLbsPerHour || 0)
+      }));
+      const wsTrendPlant = XLSX.utils.json_to_sheet(dailyTrendPlantData);
+      XLSX.utils.book_append_sheet(wb, wsTrendPlant, 'Daily_Trend_Plant');
+
+      // Sheet 3: Daily Trend By Team / Area (OPAH & Working Hours)
+      const dailyTrendByTeamData: any[] = [];
+      dailyItems.forEach(item => {
+        (item.areaBreakdown || []).forEach(a => {
+          dailyTrendByTeamData.push({
+            'วันที่ (Date)': item.dateStr,
+            'วันในสัปดาห์': item.dayName,
+            'ทีม / พื้นที่การผลิต (Team / Area)': a.areaName,
+            'สถานะการคิด OPAH': a.isExcluded6320 ? 'ตัดออกจากการคำนวณ OPAH (6320)' : 'รวมใน OPAH (4 พื้นที่หลัก)',
+            'เป้าหมาย Master (คน)': a.headcountStandard || '-',
+            'สแกนนิ้วรวม (คน)': a.totalHeadcount,
+            'Goodyear (คน)': a.gyHeadcount,
+            'Contractor (คน)': a.contractorHeadcount,
+            'พนักงานรายเดือน (คน)': a.monthlyHeadcount || 0,
+            'ชม. ปกติ (ชม.)': a.normalHours,
+            'ชม. OT (ชม.)': a.otHours,
+            'ชม. ทำงานฐานรวม (ชม.)': a.totalHours,
+            'Goodyear ชม.รวม (ชม.)': a.gyTotalHours,
+            'Contractor ชม.รวม (ชม.)': a.contractorTotalHours,
+            'พนักงานรายเดือน ชม.รวม (ชม.)': a.monthlyHours || 0,
+            '🔻 PDI Deduct (ชม.)': a.pdiDeductHours ? `-${a.pdiDeductHours}` : 0,
+            '🟢 Bead Add (ชม.)': a.beadAddHours ? `+${a.beadAddHours}` : 0,
+            '🔄 BCA หักโอนสะสม (ชม.)': a.bcaReductionHours ? `-${a.bcaReductionHours}` : 0,
+            '🧪 BCA DEV หักออก (ชม.)': a.bcaDevHours ? `-${a.bcaDevHours}` : 0,
+            '📥 Retread รับโอน (ชม.)': a.retreadReceivedHours ? `+${a.retreadReceivedHours}` : 0,
+            '⭐ ชม. สุทธิคิด OPAH (Net OPAH Hours)': a.finalOpahHours ?? a.totalHours,
+            'รหัส Stocking 55012': a.areaTonnageCodes || '-',
+            'ยอด Stocking (kg)': a.areaTonnageKg || 0,
+            'ยอด Stocking (lbs)': a.areaTonnageLbs || 0,
+            '🚀 Team OPAH (lbs/ชม.)': a.areaOpahLbsPerHour ?? '-'
+          });
+        });
+      });
+      const wsTrendTeam = XLSX.utils.json_to_sheet(dailyTrendByTeamData);
+      XLSX.utils.book_append_sheet(wb, wsTrendTeam, 'Daily_Trend_By_Team');
+
+      // Sheet 4: Daily Trend Matrix - Working Hours (Pivot format)
+      const matrixHoursData = dailyItems.map(item => {
+        const getAreaH = (key: string) => {
+          const a = (item.areaBreakdown || []).find(x => x.areaKey === key || x.areaName.toLowerCase().includes(key.toLowerCase()));
+          return a ? (a.finalOpahHours ?? a.totalHours) : 0;
+        };
+        const getAreaBaseH = (key: string) => {
+          const a = (item.areaBreakdown || []).find(x => x.areaKey === key || x.areaName.toLowerCase().includes(key.toLowerCase()));
+          return a ? a.totalHours : 0;
+        };
+        return {
+          'วันที่ (Date)': item.dateStr,
+          'วันในสัปดาห์': item.dayName,
+          'BCA (ชม.)': getAreaH('BCA'),
+          'Consumer (ชม.)': getAreaH('Consumer'),
+          'Bias Aero (ชม.)': getAreaH('Bias Aero'),
+          'Radial Aero (ชม.)': getAreaH('Radial Aero'),
+          'Retread (ชม.)': getAreaH('Retread'),
+          'Non-MFG 6320 (ชม.)': getAreaBaseH('Non-MFG'),
+          'ชั่วโมงฐานรวมทั้งโรงงาน (Base Hours)': item.totalHours,
+          '🔻 PDI Deduct (ชม.)': -item.pdiDeductHours,
+          '🟢 Bead Add (ชม.)': item.beadAddHours,
+          '🔻 BCA โอนให้ Retread (ชม.)': -(item.bcaReductionHours || 0),
+          '🔻 BCA DEV (ชม.)': -(item.bcaDevHours || 0),
+          '⭐ ชั่วโมงสุทธิคิด OPAH โรงงาน (Net OPAH Hours)': item.opahWorkingHours,
+          'ชม. สะสมสุทธิ MTD (ชม.)': item.cumulativeOpahWorkingHours || item.cumulativeTotalHours
+        };
+      });
+      const wsMatrixHours = XLSX.utils.json_to_sheet(matrixHoursData);
+      XLSX.utils.book_append_sheet(wb, wsMatrixHours, 'Daily_Trend_Matrix_Hours');
+
+      // Sheet 5: Daily Trend Matrix - OPAH (Pivot format)
+      const matrixOpahData = dailyItems.map(item => {
+        const getAreaOpah = (key: string) => {
+          const a = (item.areaBreakdown || []).find(x => x.areaKey === key || x.areaName.toLowerCase().includes(key.toLowerCase()));
+          return a?.areaOpahLbsPerHour ?? '-';
+        };
+        return {
+          'วันที่ (Date)': item.dateStr,
+          'วันในสัปดาห์': item.dayName,
+          'BCA OPAH (lbs/ชม.)': getAreaOpah('BCA'),
+          'Consumer OPAH (lbs/ชม.)': getAreaOpah('Consumer'),
+          'Bias Aero OPAH (lbs/ชม.)': getAreaOpah('Bias Aero'),
+          'Radial Aero OPAH (lbs/ชม.)': getAreaOpah('Radial Aero'),
+          'Retread OPAH (lbs/ชม.)': getAreaOpah('Retread'),
+          'ยอด Stocking รวมโรงงาน (kg)': item.stockingKg || 0,
+          'ยอด Stocking รวมโรงงาน (lbs)': item.stockingLbs || 0,
+          '🚀 Daily Plant OPAH (lbs/ชม.)': item.dailyOpahLbsPerHour || (ohpaSummary.overallOpahLbsPerHour),
+          '📈 MTD Cumulative Plant OPAH (lbs/ชม.)': item.cumulativeOpahLbsPerHour || (ohpaSummary.mtd?.mtdOpahLbsPerHour || 0)
+        };
+      });
+      const wsMatrixOpah = XLSX.utils.json_to_sheet(matrixOpahData);
+      XLSX.utils.book_append_sheet(wb, wsMatrixOpah, 'Daily_Trend_Matrix_OPAH');
+    }
+
     // Sheet 2: Stocking Tonnage Report 55012
     if (tonnageReport.rows && tonnageReport.rows.length > 0) {
       const tonnageRows = [
