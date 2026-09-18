@@ -1736,43 +1736,6 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() =>
-                exportTeamRawDataExcel(
-                  records,
-                  contractorRecords,
-                  employeeMapping,
-                  ohpaSummary.productionDay,
-                  'ALL',
-                  pdiBeadReport,
-                  tonnageReport
-                )
-              }
-              className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="ส่งออก Raw Data รายคนครบทั้ง 5 ทีม (แยกแท็บตามทีม)"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Export Raw Data (5 ทีม)</span>
-            </button>
-
-            <button
-              onClick={() => {
-                const allKeys = activeAreaBreakdown.map(a => a.areaKey);
-                const isAllExpanded = allKeys.every(k => expandedAreas[k]);
-                const nextState: Record<string, boolean> = {};
-                allKeys.forEach(k => {
-                  nextState[k] = !isAllExpanded;
-                });
-                setExpandedAreas(nextState);
-              }}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <Info className="w-3.5 h-3.5 text-slate-500" />
-              <span>{Object.values(expandedAreas).some(Boolean) ? 'ย่อแผนกย่อยทั้งหมด' : 'ขยายแผนกย่อยทั้งหมด'}</span>
-            </button>
-          </div>
         </div>
 
         {/* Area Summary Cards Grid (Including Total Aviation) */}
