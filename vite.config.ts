@@ -6,6 +6,18 @@ import path from 'path';
 import { exec } from 'child_process';
 import * as XLSX from 'xlsx';
 
+function writeFileIfChanged(filePath: string, newContent: string) {
+  try {
+    if (fs.existsSync(filePath)) {
+      const existing = fs.readFileSync(filePath, 'utf8');
+      if (existing === newContent) return; // No change, skip write
+    }
+    fs.writeFileSync(filePath, newContent, 'utf8');
+  } catch (e) {
+    console.warn(`Could not write to ${filePath}:`, e);
+  }
+}
+
 function registerApiMiddlewares(middlewares: any) {
   // API to read all scan files from the scans/ folder
   middlewares.use('/api/scan-folder', (req: any, res: any) => {
@@ -334,11 +346,7 @@ function registerApiMiddlewares(middlewares: any) {
 
           // Save to default_adjustments.json
           const adjPath = path.resolve(__dirname, 'src/data/default_adjustments.json');
-          try {
-            fs.writeFileSync(adjPath, JSON.stringify(parsedAdjustments, null, 2), 'utf8');
-          } catch (writeErr) {
-            console.warn('Could not write default_adjustments.json:', writeErr);
-          }
+          writeFileIfChanged(adjPath, JSON.stringify(parsedAdjustments, null, 2));
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
@@ -568,9 +576,7 @@ export interface PdiBeadReport {
 
 export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, null, 2)};
 `;
-          try {
-            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_pdi_bead.ts'), codeContent, 'utf8');
-          } catch (wErr) {}
+          writeFileIfChanged(path.resolve(__dirname, 'src/data/default_pdi_bead.ts'), codeContent);
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
@@ -1155,8 +1161,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           }
 
           // Auto persist to default_contractor_data.ts
-          try {
-            const contractorTs = `import { ContractorScanRecord, ContractorEmployeeInfo } from '../types/contractor';
+          const contractorTs = `import { ContractorScanRecord, ContractorEmployeeInfo } from '../types/contractor';
 
 export const DEFAULT_CONTRACTOR_MAPPING: Record<string, ContractorEmployeeInfo> = ${JSON.stringify(contractorMapping, null, 2)};
 
@@ -1167,8 +1172,7 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
   records: ContractorScanRecord[];
 }> = ${JSON.stringify(recordsByDate, null, 2)};
 `;
-            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_contractor_data.ts'), contractorTs, 'utf8');
-          } catch (wErr) {}
+          writeFileIfChanged(path.resolve(__dirname, 'src/data/default_contractor_data.ts'), contractorTs);
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
@@ -1267,10 +1271,8 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
           };
 
           // Auto persist to default_retread_tonnage.ts
-          try {
-            const tsContent = `export interface RetreadTonnageData {\n  dailyKgByDate: Record<string, number>;\n  dailyLbsByDate: Record<string, number>;\n  mtdKg: number;\n  mtdLbs: number;\n}\n\nexport const DEFAULT_RETREAD_TONNAGE: RetreadTonnageData = ${JSON.stringify(retreadData, null, 2)};\n`;
-            fs.writeFileSync(path.resolve(__dirname, 'src/data/default_retread_tonnage.ts'), tsContent, 'utf8');
-          } catch (wErr) {}
+          const tsContent = `export interface RetreadTonnageData {\n  dailyKgByDate: Record<string, number>;\n  dailyLbsByDate: Record<string, number>;\n  mtdKg: number;\n  mtdLbs: number;\n}\n\nexport const DEFAULT_RETREAD_TONNAGE: RetreadTonnageData = ${JSON.stringify(retreadData, null, 2)};\n`;
+          writeFileIfChanged(path.resolve(__dirname, 'src/data/default_retread_tonnage.ts'), tsContent);
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
@@ -1440,9 +1442,8 @@ export default defineConfig({
         '**/*.bat',
         '**/*.xlsx',
         '**/*.xls',
-        '**/src/data/default_contractor_data.ts',
-        '**/src/data/default_pdi_bead.ts',
-        '**/src/data/default_adjustments.json',
+        '**/src/data/**',
+        '**/.git/**',
         '**/node_modules/**'
       ]
     }
