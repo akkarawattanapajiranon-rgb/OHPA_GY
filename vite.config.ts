@@ -1008,57 +1008,92 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                   const deptRaw = row[10] ? String(row[10]).trim() : '';
                   const isWorkDay = row[11] === 1 || row[11] === '1' || row[11] === true;
                   let otCol = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
-
                   const hasScannedIn = Boolean(scanIn);
+
                   let shiftNumber = 1;
                   let shiftLabel = 'กะ 1 (07:00 - 15:00)';
                   let normalHours = hasScannedIn ? 8 : 0;
-                  let otHours = otCol;
+                  let otHours = 0;
 
                   if (hasScannedIn) {
                     const inParts = scanIn.split(':');
-                    const inHour = parseInt(inParts[0], 10);
+                    const inHour = parseInt(inParts[0], 10) || 0;
+                    const inMin = parseInt(inParts[1], 10) || 0;
+                    const inTotalMins = inHour * 60 + inMin;
 
                     let outHour = -1;
+                    let outMin = 0;
                     if (scanOut) {
                       const outParts = scanOut.split(':');
-                      outHour = parseInt(outParts[0], 10);
+                      outHour = parseInt(outParts[0], 10) || 0;
+                      outMin = parseInt(outParts[1], 10) || 0;
                     }
 
-                    // 1. เข้า 7.00 - 19.00 -> กะ 1 พร้อม OT 4 ชม
+                    // 1. เข้า 05:00 - 11:59 -> กะ 1 (07:00 - 15:00)
+                    // สแกนก่อน 07:00 ไม่คิด OT (เป็นการสแกนเข้าปกติ)
                     if (inHour >= 5 && inHour < 12) {
                       shiftNumber = 1;
-                      if (otCol >= 4 || outHour >= 19) {
-                        shiftLabel = 'กะ 1 + OT 4h (07:00 - 19:00)';
-                        if (otHours === 0) otHours = 4;
+                      if (outHour >= 0) {
+                        const isNextDay = outHour < 12 && (outHour * 60 + outMin < inTotalMins);
+                        const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
+                        const minsPast15 = totalOutMins - 15 * 60;
+                        if (minsPast15 >= 45) {
+                          otHours = Math.floor((minsPast15 + 15) / 60);
+                        } else if (otCol > 0) {
+                          otHours = otCol;
+                        }
                       } else if (otCol > 0) {
-                        shiftLabel = `กะ 1 + OT ${otCol}h`;
+                        otHours = otCol;
+                      }
+
+                      if (otHours > 0) {
+                        shiftLabel = `กะ 1 + OT ${otHours}h`;
                       } else {
                         shiftLabel = 'กะ 1 (07:00 - 15:00)';
                       }
                     }
-                    // 2. เข้า 15.00 - 07.00 -> กะ 2 + OT 8 ชม ข้ามไปกะ 3
+                    // 2. เข้า 12:00 - 16:59 -> กะ 2 (15:00 - 23:00)
+                    // สแกนก่อน 15:00 (เช่น 14:43) ไม่คิด OT ก่อน 15:00
                     else if (inHour >= 12 && inHour < 17) {
-                      shiftNumber = 3;
-                      if (outHour >= 6 && outHour <= 9) {
-                        shiftLabel = 'กะ 3 + OT ก่อนกะ 8h (15:00 - 07:00)';
-                        if (otHours === 0) otHours = 8;
+                      shiftNumber = 2;
+                      if (outHour >= 0) {
+                        const isNextDay = outHour < 12;
+                        const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
+                        const minsPast23 = totalOutMins - 23 * 60;
+                        if (minsPast23 >= 45) {
+                          otHours = Math.floor((minsPast23 + 15) / 60);
+                        } else if (otCol > 0) {
+                          otHours = otCol;
+                        }
+                      } else if (otCol > 0) {
+                        otHours = otCol;
+                      }
+
+                      if (otHours > 0) {
+                        shiftLabel = `กะ 2 + OT ${otHours}h`;
                       } else {
-                        shiftNumber = 2;
                         shiftLabel = 'กะ 2 (15:00 - 23:00)';
                       }
                     }
-                    // 3. เข้า 18.00 / 19.00 - 07.00 -> กะ 3 พร้อม OT 4-5 ชม ก่อนกะ
+                    // 3. เข้า 17:00 - 21:59 -> กะ 3 เข้า 19:00 (19:00 - 07:00)
+                    // สแกนก่อน 19:00 (เช่น 18:14, 18:49) ไม่คิด OT ก่อน 19:00 -> OT ก่อนกะ = 4 ชม. (19:00 - 23:00) เท่านั้น
                     else if (inHour >= 17 && inHour < 22) {
                       shiftNumber = 3;
-                      const otCalculated = Math.max(0, 23 - inHour);
-                      if (otHours === 0) otHours = otCalculated;
-                      shiftLabel = `กะ 3 + OT ก่อนกะ ${otHours}h (${scanIn} - 07:00)`;
+                      otHours = 4;
+                      shiftLabel = `กะ 3 + OT ก่อนกะ 4h (19:00 - 07:00)`;
                     }
-                    // 4. เข้า 23.00 - 07.00 -> กะ 3
+                    // 4. เข้า 22:00 - 04:59 -> กะ 3 (23:00 - 07:00)
                     else {
                       shiftNumber = 3;
-                      shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                      if (otCol > 0) {
+                        otHours = otCol;
+                        shiftLabel = `กะ 3 + OT ${otHours}h`;
+                      } else if (outHour >= 7 && (outHour * 60 + outMin - 7 * 60 >= 45)) {
+                        otHours = Math.floor(((outHour * 60 + outMin - 7 * 60) + 15) / 60);
+                        shiftLabel = `กะ 3 + OT ${otHours}h`;
+                      } else {
+                        shiftLabel = 'กะ 3 (23:00 - 07:00)';
+                      }
                     }
                   } else {
                     if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {

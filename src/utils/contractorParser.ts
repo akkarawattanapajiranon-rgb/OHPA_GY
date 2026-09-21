@@ -1,6 +1,127 @@
 import * as XLSX from 'xlsx';
 import { ContractorEmployeeInfo, ContractorScanRecord, ContractorDaySummary } from '../types/contractor';
 
+export function calculateContractorShiftAndHours(
+  scanIn: string,
+  scanOut: string,
+  shiftRaw: string = '',
+  otCol: number = 0
+): {
+  shiftNumber: 1 | 2 | 3;
+  shiftLabel: string;
+  normalHours: number;
+  otHours: number;
+  totalHours: number;
+} {
+  const hasScannedIn = Boolean(scanIn && scanIn.trim());
+  if (!hasScannedIn) {
+    let shiftNumber: 1 | 2 | 3 = 1;
+    let shiftLabel = 'กะ 1 (07:00 - 15:00)';
+    if (shiftRaw.includes('15.00') || shiftRaw.includes('บ่าย')) {
+      shiftNumber = 2;
+      shiftLabel = 'กะ 2 (15:00 - 23:00)';
+    } else if (shiftRaw.includes('23.00') || shiftRaw.includes('ดึก')) {
+      shiftNumber = 3;
+      shiftLabel = 'กะ 3 (23:00 - 07:00)';
+    }
+    return { shiftNumber, shiftLabel, normalHours: 0, otHours: 0, totalHours: 0 };
+  }
+
+  const inParts = scanIn.split(':');
+  const inHour = parseInt(inParts[0], 10) || 0;
+  const inMin = parseInt(inParts[1], 10) || 0;
+  const inTotalMins = inHour * 60 + inMin;
+
+  let outHour = -1;
+  let outMin = 0;
+  if (scanOut && scanOut.trim()) {
+    const outParts = scanOut.split(':');
+    outHour = parseInt(outParts[0], 10) || 0;
+    outMin = parseInt(outParts[1], 10) || 0;
+  }
+
+  let shiftNumber: 1 | 2 | 3 = 1;
+  let shiftLabel = 'กะ 1 (07:00 - 15:00)';
+  let normalHours = 8;
+  let otHours = 0;
+
+  // 1. เข้า 05:00 - 11:59 -> กะ 1 (07:00 - 15:00)
+  // สแกนก่อน 07:00 ไม่คิด OT (เป็นการสแกนเข้าปกติ)
+  if (inHour >= 5 && inHour < 12) {
+    shiftNumber = 1;
+    if (outHour >= 0) {
+      const isNextDay = outHour < 12 && (outHour * 60 + outMin < inTotalMins);
+      const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
+      const minsPast15 = totalOutMins - 15 * 60;
+      if (minsPast15 >= 45) {
+        otHours = Math.floor((minsPast15 + 15) / 60);
+      } else if (otCol > 0) {
+        otHours = otCol;
+      }
+    } else if (otCol > 0) {
+      otHours = otCol;
+    }
+
+    if (otHours > 0) {
+      shiftLabel = `กะ 1 + OT ${otHours}h`;
+    } else {
+      shiftLabel = 'กะ 1 (07:00 - 15:00)';
+    }
+  }
+  // 2. เข้า 12:00 - 16:59 -> กะ 2 (15:00 - 23:00)
+  // สแกนก่อน 15:00 (เช่น 14:43) ไม่คิด OT ก่อน 15:00
+  else if (inHour >= 12 && inHour < 17) {
+    shiftNumber = 2;
+    if (outHour >= 0) {
+      const isNextDay = outHour < 12;
+      const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
+      const minsPast23 = totalOutMins - 23 * 60;
+      if (minsPast23 >= 45) {
+        otHours = Math.floor((minsPast23 + 15) / 60);
+      } else if (otCol > 0) {
+        otHours = otCol;
+      }
+    } else if (otCol > 0) {
+      otHours = otCol;
+    }
+
+    if (otHours > 0) {
+      shiftLabel = `กะ 2 + OT ${otHours}h`;
+    } else {
+      shiftLabel = 'กะ 2 (15:00 - 23:00)';
+    }
+  }
+  // 3. เข้า 17:00 - 21:59 -> กะ 3 เข้า 19:00 (19:00 - 07:00)
+  // สแกนก่อน 19:00 (เช่น 18:14, 18:49) ไม่คิด OT ก่อน 19:00 -> OT ก่อนกะ = 4 ชม. (19:00 - 23:00) เท่านั้น
+  else if (inHour >= 17 && inHour < 22) {
+    shiftNumber = 3;
+    otHours = 4;
+    shiftLabel = `กะ 3 + OT ก่อนกะ 4h (19:00 - 07:00)`;
+  }
+  // 4. เข้า 22:00 - 04:59 -> กะ 3 (23:00 - 07:00)
+  else {
+    shiftNumber = 3;
+    if (otCol > 0) {
+      otHours = otCol;
+      shiftLabel = `กะ 3 + OT ${otHours}h`;
+    } else if (outHour >= 7 && (outHour * 60 + outMin - 7 * 60 >= 45)) {
+      otHours = Math.floor(((outHour * 60 + outMin - 7 * 60) + 15) / 60);
+      shiftLabel = `กะ 3 + OT ${otHours}h`;
+    } else {
+      shiftLabel = 'กะ 3 (23:00 - 07:00)';
+    }
+  }
+
+  const totalHours = normalHours + otHours;
+  return {
+    shiftNumber,
+    shiftLabel,
+    normalHours,
+    otHours,
+    totalHours
+  };
+}
+
 export function isValidContractorDate(input: any): boolean {
   if (!input) return false;
   if (typeof input === 'number') {
