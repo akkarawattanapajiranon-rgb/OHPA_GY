@@ -115,7 +115,7 @@ function registerApiMiddlewares(middlewares: any) {
       });
 
       // API to open folder in Windows Explorer
-      server.middlewares.use('/api/open-folder', (req, res) => {
+      middlewares.use('/api/open-folder', (req, res) => {
         try {
           const networkScanDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\SCAN นิ้ว GY';
           const scansDir = path.resolve(__dirname, 'scans');
@@ -134,7 +134,7 @@ function registerApiMiddlewares(middlewares: any) {
       });
 
       // API to sync adjustments from T: drive Excel (folder: ทำงานไม่ตรง ตำแหน่ง)
-      server.middlewares.use('/api/sync-adjustments', (req, res) => {
+      middlewares.use('/api/sync-adjustments', (req, res) => {
         try {
           const networkDir = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\ทำงานไม่ตรง ตำแหน่ง';
           const localDir = path.resolve(__dirname, 'ทำงานไม่ตรง ตำแหน่ง');
@@ -358,7 +358,7 @@ function registerApiMiddlewares(middlewares: any) {
       });
 
       // API to sync PDI and B-end Bead data from T: drive Excel (OPAH hour PDI& B-ead.xlsx)
-      server.middlewares.use('/api/sync-pdi-bead', (req, res) => {
+      middlewares.use('/api/sync-pdi-bead', (req, res) => {
         try {
           const networkPath = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\OPAH hour PDI& B-ead.xlsx';
           const localPath = path.resolve(__dirname, 'OPAH hour PDI& B-ead.xlsx');
@@ -590,7 +590,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
       });
 
       // API to fetch Stocking Tonnage Report 55012 from 10.124.129.34
-      server.middlewares.use('/api/stocking-tonnage', (req, res) => {
+      middlewares.use('/api/stocking-tonnage', (req, res) => {
         const urlObj = new URL(req.url || '', 'http://localhost');
         let pdParam = urlObj.searchParams.get('pd') || '';
         const dateParam = urlObj.searchParams.get('date') || '';
@@ -756,7 +756,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
       });
 
       // API to fetch Contractor (WAS) records
-      server.middlewares.use('/api/contractor-data', (req, res) => {
+      middlewares.use('/api/contractor-data', (req, res) => {
         try {
           const wasScansDir = path.resolve(__dirname, 'scans_was');
           if (!fs.existsSync(wasScansDir)) {
@@ -1186,7 +1186,7 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
       });
 
       // API to sync Retread Tonnage from T: drive Excel (folder: RETREAD TONAGE)
-      server.middlewares.use('/api/sync-retread-tonnage', (req, res) => {
+      middlewares.use('/api/sync-retread-tonnage', (req, res) => {
         try {
           const networkFile = 'T:\\10.30 A.M. Production Meeting\\สแกนนิ้ว record\\RETREAD TONAGE\\Retread stock by SAP code.xlsx';
           const localFile = path.resolve(__dirname, 'Retread stock by SAP code.xlsx');
@@ -1266,7 +1266,7 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
       });
 
       // API to compute OHPA numbers for days 1 to 16
-      server.middlewares.use('/api/calculate-all-days', async (req, res) => {
+      middlewares.use('/api/calculate-all-days', async (req, res) => {
         try {
           const defaultEmpMappingRaw = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'src/data/default_emp_mapping.json'), 'utf8'));
           const defaultAdjustmentsRaw = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'src/data/default_adjustments.json'), 'utf8'));
