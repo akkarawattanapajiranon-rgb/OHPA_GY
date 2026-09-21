@@ -232,6 +232,10 @@ export interface OhpaSummary {
 
   // Monthly Shift Cycle Metadata (Day 1: 4 shifts, Normal: 3 shifts, Last Day: 2 shifts)
   shiftCycleInfo?: MonthShiftCycleInfo;
+
+  // Effective Scanned Records used for calculations (with shift cycle rules applied)
+  effectiveGyRecords?: any[];
+  effectiveContRecords?: any[];
 }
 
 export interface MonthShiftCycleInfo {

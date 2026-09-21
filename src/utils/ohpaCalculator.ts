@@ -1372,13 +1372,63 @@ export function calculateOhpaSummary(
   pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
   retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
 ): OhpaSummary {
-  const rawContActive = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
+  const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const dateParts = cleanDate.split(/[/.-]/);
+  let targetDay = 14, targetMonth = 9, targetYear = 2026;
+  if (dateParts.length === 3) {
+    if (dateParts[2].length === 4) {
+      targetDay = parseInt(dateParts[0], 10) || 14;
+      targetMonth = parseInt(dateParts[1], 10) || 9;
+      targetYear = parseInt(dateParts[2], 10) || 2026;
+    } else if (dateParts[0].length === 4) {
+      targetYear = parseInt(dateParts[0], 10) || 2026;
+      targetMonth = parseInt(dateParts[1], 10) || 9;
+      targetDay = parseInt(dateParts[2], 10) || 14;
+    }
+  }
+
+  const dPad = String(targetDay).padStart(2, '0');
+  const mPad = String(targetMonth).padStart(2, '0');
+  const dayDateStr = `${dPad}/${mPad}/${targetYear}`;
+  const dayDateShort = `${targetDay}/${targetMonth}/${targetYear}`;
+  const isoDateStr = `${targetYear}-${mPad}-${dPad}`;
+
+  let resolvedGyRecords = [...records];
+  if (resolvedGyRecords.length === 0 && allScanPresets && allScanPresets.length > 0) {
+    const preset = allScanPresets.find(p => {
+      const pName = p.name || '';
+      const pDate = p.dateFormatted || '';
+      return (
+        pName.includes(`${targetYear}${mPad}${dPad}`) ||
+        pName.includes(`${mPad}${dPad}${targetYear}`) ||
+        pDate.includes(dayDateStr) ||
+        pDate.includes(dayDateShort) ||
+        pDate.includes(cleanDate)
+      );
+    });
+    if (preset && preset.content) {
+      const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
+      resolvedGyRecords = parsed.records;
+    }
+  }
+
+  let resolvedContRecords = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
+  if (resolvedContRecords.length === 0 && contractorRecordsByDate) {
+    const contEntry =
+      contractorRecordsByDate[dayDateShort] ||
+      contractorRecordsByDate[dayDateStr] ||
+      contractorRecordsByDate[cleanDate] ||
+      contractorRecordsByDate[isoDateStr];
+    if (contEntry && contEntry.records) {
+      resolvedContRecords = contEntry.records.filter(r => r && (r.hasScannedIn || r.totalHours > 0));
+    }
+  }
 
   // Shift Cycle Information (Day 1: 4 shifts, Normal: 3 shifts, Last Day: 2 shifts)
   const cycleInfo = getMonthShiftCycleInfo(productionDayFormatted);
 
-  let effectiveGyRecords = [...records];
-  let effectiveContRecords = [...rawContActive];
+  let effectiveGyRecords = [...resolvedGyRecords];
+  let effectiveContRecords = [...resolvedContRecords];
   let prevMonthShift3Gy: ParsedShiftRecord[] = [];
   let prevMonthShift3Cont: ContractorScanRecord[] = [];
 
@@ -1392,11 +1442,11 @@ export function calculateOhpaSummary(
     );
     prevMonthShift3Gy = prevMonthShift3.gyRecords;
     prevMonthShift3Cont = prevMonthShift3.contRecords;
-    effectiveGyRecords = [...prevMonthShift3Gy, ...records];
-    effectiveContRecords = [...prevMonthShift3Cont, ...rawContActive];
+    effectiveGyRecords = [...prevMonthShift3Gy, ...resolvedGyRecords];
+    effectiveContRecords = [...prevMonthShift3Cont, ...resolvedContRecords];
   } else if (cycleInfo.isLastDayOfMonth) {
-    effectiveGyRecords = records.filter(r => r.shift !== 3);
-    effectiveContRecords = rawContActive.filter(r => r.shiftNumber !== 3);
+    effectiveGyRecords = resolvedGyRecords.filter(r => r.shift !== 3);
+    effectiveContRecords = resolvedContRecords.filter(r => r.shiftNumber !== 3);
   }
 
   // 1. Monthly Staff
@@ -1406,13 +1456,6 @@ export function calculateOhpaSummary(
   const fallbackWasHours = hasScannedWasMonthly ? 0 : (monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson));
 
   // 2. PDI Deduct & B-end (Bead) Addition for OPAH
-  const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
-  const dateParts = cleanDate.split(/[/.-]/);
-  let targetDay = 14;
-  if (dateParts.length === 3) {
-    if (dateParts[2].length === 4) targetDay = parseInt(dateParts[0], 10) || 14;
-    else if (dateParts[0].length === 4) targetDay = parseInt(dateParts[2], 10) || 14;
-  }
   const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[targetDay] || 0;
   const beadAddHours = pdiBeadReport?.beadDailyTotals?.[targetDay] || 0;
   const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[targetDay] || (pdiBeadReport?.bcaReductionDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
@@ -1867,7 +1910,9 @@ export function calculateOhpaSummary(
     areaBreakdown,
     departmentBreakdown,
     mtd,
-    shiftCycleInfo: cycleInfo
+    shiftCycleInfo: cycleInfo,
+    effectiveGyRecords,
+    effectiveContRecords
   };
 }
 

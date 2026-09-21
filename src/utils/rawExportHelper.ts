@@ -1,10 +1,10 @@
 import * as XLSX from 'xlsx';
 import { ParsedShiftRecord, EmployeeInfo } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport } from '../types/ohpa';
+import { StockingTonnageReport, OhpaAreaMetrics } from '../types/ohpa';
 import { PdiBeadReport } from '../data/default_pdi_bead';
 import { DEFAULT_RETREAD_TONNAGE } from '../data/default_retread_tonnage';
-import { classifyArea, AREA_5_KEYS, AREA_5_METADATA, Area5Key } from './ohpaCalculator';
+import { classifyArea, AREA_5_KEYS, AREA_5_METADATA, Area5Key, getMonthlyStaffMetrics } from './ohpaCalculator';
 
 export interface RawEmployeeExportRow {
   no: number;
@@ -73,12 +73,12 @@ function resolveEmpArea(
   costCenter?: string,
   location?: string,
   closing?: string
-): { key: Area5Key | string; name: string; isExcluded6320: boolean } {
+): { key: string; name: string; isExcluded6320: boolean } {
   const muClean = (mu || '').trim();
   if (muClean && AREA_5_METADATA[muClean as Area5Key]) {
     const meta = AREA_5_METADATA[muClean as Area5Key];
     return {
-      key: muClean as Area5Key,
+      key: muClean,
       name: meta.name,
       isExcluded6320: !!meta.isExcluded6320
     };
@@ -86,16 +86,16 @@ function resolveEmpArea(
 
   if (muClean === 'Consumer/Bias Aero') {
     return {
-      key: 'Consumer',
-      name: 'Consumer (Shared 50% Con/Bias)',
+      key: 'Shared Con/Bias',
+      name: 'Consumer & Bias Aero (แบ่ง 50% / 50%)',
       isExcluded6320: false
     };
   }
 
   if (muClean === 'Non-HPT') {
     return {
-      key: 'BCA',
-      name: 'BCA (Non-HPT จัดสรร 1/5)',
+      key: 'Non-HPT',
+      name: 'Non-HPT (จัดสรร 20% ให้ 5 พื้นที่)',
       isExcluded6320: false
     };
   }
@@ -117,7 +117,8 @@ export function buildRawEmployeeRecords(
   employeeMapping: Record<string, EmployeeInfo> = {},
   dateFormatted: string = '',
   pdiBeadReport?: PdiBeadReport | null,
-  tonnageReport?: StockingTonnageReport | null
+  tonnageReport?: StockingTonnageReport | null,
+  areaBreakdown?: OhpaAreaMetrics[] | null
 ): { rows: RawEmployeeExportRow[]; teamSummary: TeamSummaryRow[] } {
   const rows: RawEmployeeExportRow[] = [];
   let counter = 1;
@@ -247,6 +248,9 @@ export function buildRawEmployeeRecords(
     (e) => e.sourceSheet === 'Salaries' || e.mor === 'Salaried'
   );
 
+  const monthlyMetrics = getMonthlyStaffMetrics(dateFormatted);
+  const monthlyHoursPerPerson = monthlyMetrics.hoursPerPerson; // 8 Mon-Fri, 4 Sat, 0 Sun
+
   gyMonthlyStaff.forEach((e) => {
     const rawId = (e.empId || '').replace(/\D/g, '');
     const mu = (e.mu || 'Non-HPT').trim();
@@ -269,211 +273,248 @@ export function buildRawEmployeeRecords(
       machine: e.machine || e.position || 'Office/Plant',
       shift: 'Day (08:00 - 17:00)',
       inTime: '08:00',
-      outTime: '17:00',
-      normalHours: 8,
+      outTime: monthlyHoursPerPerson > 0 ? (monthlyHoursPerPerson === 4 ? '12:00' : '17:00') : 'วันหยุด',
+      normalHours: monthlyHoursPerPerson,
       otHours: 0,
-      totalHours: 8,
+      totalHours: monthlyHoursPerPerson,
       pdiBeadAdjustment: '-',
-      netOpahHours: isExcluded ? 0 : 8,
+      netOpahHours: isExcluded ? 0 : (areaKey === 'Non-HPT' ? Math.round(monthlyHoursPerPerson * 0.8 * 10) / 10 : monthlyHoursPerPerson),
       isIncludedInPlantOpah: isExcluded ? 'ไม่นับ (ตัด 6320)' : 'นับคำนวณ OPAH',
-      scanStatus: 'พนักงานประจำรายเดือน (Salaried Staff 8 ชม.)',
+      scanStatus: `พนักงานประจำรายเดือน (${monthlyHoursPerPerson} ชม./คน - ${monthlyMetrics.dayName})`,
       otNote: '-',
     });
   });
 
   // Calculate Team Summary
-  const cleanDateStr = (dateFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
-  const dateParts = cleanDateStr.split(/[/.-]/);
-  let dayNum = 14;
-  if (dateParts.length >= 1) {
-    if (dateParts[0].length === 4 && dateParts.length >= 3) {
-      dayNum = parseInt(dateParts[2], 10) || 14;
-    } else {
-      dayNum = parseInt(dateParts[0], 10) || 14;
+  let teamSummary: TeamSummaryRow[] = [];
+
+  if (areaBreakdown && areaBreakdown.length > 0) {
+    // 1. Use the official calculated Area Breakdown metrics for 100% mathematical consistency
+    teamSummary = areaBreakdown.map((a) => ({
+      areaKey: a.areaKey,
+      areaName: a.areaName,
+      targetHc: a.headcountStandard || '-',
+      actualTotalHc: a.totalHeadcount,
+      gyHc: a.gyHeadcount,
+      contHc: a.contractorHeadcount,
+      monthlyHc: a.monthlyHeadcount || 0,
+      normalHours: a.normalHours,
+      otHours: a.otHours,
+      totalHours: a.totalHours,
+      pdiDeductHours: a.pdiDeductHours || 0,
+      beadAddHours: a.beadAddHours || 0,
+      bcaReductionHours: a.bcaReductionHours || 0,
+      bcaDevHours: a.bcaDevHours || 0,
+      retreadReceivedHours: a.retreadReceivedHours || 0,
+      netOpahHours: a.finalOpahHours ?? a.totalHours,
+      tonnageCodes: a.areaTonnageCodes || '-',
+      tonnageKg: a.areaTonnageKg || 0,
+      tonnageLbs: a.areaTonnageLbs || 0,
+      areaOpah: a.areaOpahLbsPerHour ?? '-',
+      isExcluded: a.isExcluded6320 ? 'ตัดออกจากการคิด OPAH (6320)' : 'รวมในการคิด OPAH (4 พื้นที่หลัก)',
+    }));
+
+    // Add Total Aviation row if not already present
+    if (!teamSummary.some((s) => s.areaKey === 'Total Aviation' || s.areaKey.includes('Total Aviation'))) {
+      const biasSum = teamSummary.find((s) => s.areaKey === 'Bias Aero');
+      const radSum = teamSummary.find((s) => s.areaKey === 'Radial Aero');
+      if (biasSum || radSum) {
+        const avTotHc = Math.round(((biasSum?.actualTotalHc || 0) + (radSum?.actualTotalHc || 0)) * 10) / 10;
+        const avGyHc = Math.round(((biasSum?.gyHc || 0) + (radSum?.gyHc || 0)) * 10) / 10;
+        const avContHc = Math.round(((biasSum?.contHc || 0) + (radSum?.contHc || 0)) * 10) / 10;
+        const avMonHc = Math.round(((biasSum?.monthlyHc || 0) + (radSum?.monthlyHc || 0)) * 10) / 10;
+        const avNormH = Math.round(((biasSum?.normalHours || 0) + (radSum?.normalHours || 0)) * 10) / 10;
+        const avOtH = Math.round(((biasSum?.otHours || 0) + (radSum?.otHours || 0)) * 10) / 10;
+        const avTotH = Math.round(((biasSum?.totalHours || 0) + (radSum?.totalHours || 0)) * 10) / 10;
+        const avPdiH = biasSum?.pdiDeductHours || 0;
+        const avNetH = Math.round(((biasSum?.netOpahHours || 0) + (radSum?.netOpahHours || 0)) * 10) / 10;
+        const avKg = Math.round(((biasSum?.tonnageKg || 0) + (radSum?.tonnageKg || 0)) * 100) / 100;
+        const avLbs = Math.round(avKg * 2.20462 * 100) / 100;
+        const avOpah = avNetH > 0 && avKg > 0 ? Math.round(((avKg * 2.20462) / avNetH) * 100) / 100 : '-';
+
+        const insertIdx = teamSummary.findIndex((s) => s.areaKey === 'Radial Aero');
+        const avRow: TeamSummaryRow = {
+          areaKey: 'Total Aviation',
+          areaName: '⭐ Total Aviation (Bias + Radial Aero)',
+          targetHc: 276,
+          actualTotalHc: avTotHc,
+          gyHc: avGyHc,
+          contHc: avContHc,
+          monthlyHc: avMonHc,
+          normalHours: avNormH,
+          otHours: avOtH,
+          totalHours: avTotH,
+          pdiDeductHours: avPdiH,
+          beadAddHours: 0,
+          bcaReductionHours: 0,
+          bcaDevHours: 0,
+          retreadReceivedHours: 0,
+          netOpahHours: avNetH,
+          tonnageCodes: 'CODE A + B + 6',
+          tonnageKg: avKg,
+          tonnageLbs: avLbs,
+          areaOpah: avOpah,
+          isExcluded: 'รวมในการคิด OPAH (Aero Combined)',
+        };
+        if (insertIdx !== -1) {
+          teamSummary.splice(insertIdx, 0, avRow);
+        } else {
+          teamSummary.push(avRow);
+        }
+      }
     }
-  }
-
-  const pdiDeduct = pdiBeadReport?.pdiDailyTotals?.[dayNum] || 0;
-  const beadAdd = pdiBeadReport?.beadDailyTotals?.[dayNum] || 0;
-  const bcaReduction = pdiBeadReport?.bcaReductionDailyHours?.[dayNum] ||
-    (pdiBeadReport?.bcaReductionDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
-  const bcaDev = pdiBeadReport?.bcaDevDailyHours?.[dayNum] ||
-    (pdiBeadReport?.bcaDevDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
-
-  const teamSummaryMap: Record<string, TeamSummaryRow> = {};
-  AREA_5_KEYS.forEach((k) => {
-    const meta = AREA_5_METADATA[k];
-    teamSummaryMap[k] = {
-      areaKey: k,
-      areaName: meta.name,
-      targetHc: meta.headcountStandard,
-      actualTotalHc: 0,
-      gyHc: 0,
-      contHc: 0,
-      monthlyHc: 0,
-      normalHours: 0,
-      otHours: 0,
-      totalHours: 0,
-      pdiDeductHours: 0,
-      beadAddHours: 0,
-      bcaReductionHours: 0,
-      bcaDevHours: 0,
-      retreadReceivedHours: 0,
-      netOpahHours: 0,
-      tonnageCodes: '-',
-      tonnageKg: 0,
-      tonnageLbs: 0,
-      areaOpah: '-',
-      isExcluded: meta.isExcluded6320 ? 'ตัดออกจากการคิด OPAH (6320)' : 'รวมในการคิด OPAH',
-    };
-  });
-
-  rows.forEach((r) => {
-    const sum = teamSummaryMap[r.areaKey as Area5Key];
-    if (sum) {
-      sum.actualTotalHc += 1;
-      if (r.empType === 'Goodyear') sum.gyHc += 1;
-      else if (r.empType === 'Contractor (WAS)') sum.contHc += 1;
-      else sum.monthlyHc += 1;
-
-      sum.normalHours += r.normalHours;
-      sum.otHours += r.otHours;
-      sum.totalHours += r.totalHours;
+  } else {
+    // Fallback if areaBreakdown is not provided
+    const cleanDateStr = (dateFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+    const dateParts = cleanDateStr.split(/[/.-]/);
+    let dayNum = 14;
+    if (dateParts.length >= 1) {
+      if (dateParts[0].length === 4 && dateParts.length >= 3) {
+        dayNum = parseInt(dateParts[2], 10) || 14;
+      } else {
+        dayNum = parseInt(dateParts[0], 10) || 14;
+      }
     }
-  });
 
-  // Calculate Net OPAH hours with adjustments
-  if (teamSummaryMap['BCA']) {
-    const bca = teamSummaryMap['BCA'];
-    bca.beadAddHours = beadAdd;
-    bca.bcaReductionHours = bcaReduction;
-    bca.bcaDevHours = bcaDev;
-    bca.netOpahHours = Math.round((bca.totalHours + beadAdd - bcaReduction - bcaDev) * 10) / 10;
-  }
-  if (teamSummaryMap['Consumer']) {
-    teamSummaryMap['Consumer'].netOpahHours = teamSummaryMap['Consumer'].totalHours;
-  }
-  if (teamSummaryMap['Bias Aero']) {
-    const bias = teamSummaryMap['Bias Aero'];
-    bias.pdiDeductHours = pdiDeduct;
-    bias.netOpahHours = Math.max(0, Math.round((bias.totalHours - pdiDeduct) * 10) / 10);
-  }
-  if (teamSummaryMap['Radial Aero']) {
-    teamSummaryMap['Radial Aero'].netOpahHours = teamSummaryMap['Radial Aero'].totalHours;
-  }
-  if (teamSummaryMap['Retread']) {
-    const retread = teamSummaryMap['Retread'];
-    retread.retreadReceivedHours = bcaReduction;
-    retread.netOpahHours = Math.round((retread.totalHours + bcaReduction) * 10) / 10;
-  }
+    const pdiDeduct = pdiBeadReport?.pdiDailyTotals?.[dayNum] || 0;
+    const beadAdd = pdiBeadReport?.beadDailyTotals?.[dayNum] || 0;
+    const bcaReduction = pdiBeadReport?.bcaReductionDailyHours?.[dayNum] ||
+      (pdiBeadReport?.bcaReductionDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
+    const bcaDev = pdiBeadReport?.bcaDevDailyHours?.[dayNum] ||
+      (pdiBeadReport?.bcaDevDailyMinutes?.[dayNum] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[dayNum] / 60) * 10) / 10 : 0);
 
-  // Attach Stocking Tonnage if available
-  if (tonnageReport?.rows) {
-    const getCodeKg = (codes: string[]) => {
-      return (tonnageReport.rows || [])
-        .filter((row) => codes.includes(row.code))
-        .reduce((s, row) => s + (row.dailyTotalTonnage || 0), 0);
-    };
+    const teamSummaryMap: Record<string, TeamSummaryRow> = {};
+    AREA_5_KEYS.forEach((k) => {
+      const meta = AREA_5_METADATA[k];
+      teamSummaryMap[k] = {
+        areaKey: k,
+        areaName: meta.name,
+        targetHc: meta.headcountStandard,
+        actualTotalHc: 0,
+        gyHc: 0,
+        contHc: 0,
+        monthlyHc: 0,
+        normalHours: 0,
+        otHours: 0,
+        totalHours: 0,
+        pdiDeductHours: 0,
+        beadAddHours: 0,
+        bcaReductionHours: 0,
+        bcaDevHours: 0,
+        retreadReceivedHours: 0,
+        netOpahHours: 0,
+        tonnageCodes: '-',
+        tonnageKg: 0,
+        tonnageLbs: 0,
+        areaOpah: '-',
+        isExcluded: meta.isExcluded6320 ? 'ตัดออกจากการคิด OPAH (6320)' : 'รวมในการคิด OPAH',
+      };
+    });
 
-    const bcaKg = tonnageReport.total?.dailyTotalTonnage || getCodeKg(['D', 'P', 'Q', 'W', 'T', '6', 'A', 'B']);
-    const conKg = getCodeKg(['Q', 'W']);
-    const biasKg = getCodeKg(['A', 'B']);
-    const radKg = getCodeKg(['6']);
+    rows.forEach((r) => {
+      const sum = teamSummaryMap[r.areaKey as Area5Key];
+      if (sum) {
+        sum.actualTotalHc += 1;
+        if (r.empType === 'Goodyear') sum.gyHc += 1;
+        else if (r.empType === 'Contractor (WAS)') sum.contHc += 1;
+        else sum.monthlyHc += 1;
+
+        sum.normalHours += r.normalHours;
+        sum.otHours += r.otHours;
+        sum.totalHours += r.totalHours;
+      }
+    });
 
     if (teamSummaryMap['BCA']) {
-      teamSummaryMap['BCA'].tonnageCodes = 'TOTAL (ทุก Code)';
-      teamSummaryMap['BCA'].tonnageKg = bcaKg;
-      teamSummaryMap['BCA'].tonnageLbs = Math.round(bcaKg * 2.20462 * 100) / 100;
-      teamSummaryMap['BCA'].areaOpah =
-        teamSummaryMap['BCA'].netOpahHours > 0 && bcaKg > 0
-          ? Math.round(((bcaKg * 2.20462) / teamSummaryMap['BCA'].netOpahHours) * 100) / 100
-          : '-';
+      const bca = teamSummaryMap['BCA'];
+      bca.beadAddHours = beadAdd;
+      bca.bcaReductionHours = bcaReduction;
+      bca.bcaDevHours = bcaDev;
+      bca.netOpahHours = Math.round((bca.totalHours + beadAdd - bcaReduction - bcaDev) * 10) / 10;
     }
     if (teamSummaryMap['Consumer']) {
-      teamSummaryMap['Consumer'].tonnageCodes = 'CODE Q + W';
-      teamSummaryMap['Consumer'].tonnageKg = conKg;
-      teamSummaryMap['Consumer'].tonnageLbs = Math.round(conKg * 2.20462 * 100) / 100;
-      teamSummaryMap['Consumer'].areaOpah =
-        teamSummaryMap['Consumer'].netOpahHours > 0 && conKg > 0
-          ? Math.round(((conKg * 2.20462) / teamSummaryMap['Consumer'].netOpahHours) * 100) / 100
-          : '-';
+      teamSummaryMap['Consumer'].netOpahHours = teamSummaryMap['Consumer'].totalHours;
     }
     if (teamSummaryMap['Bias Aero']) {
-      teamSummaryMap['Bias Aero'].tonnageCodes = 'CODE A + B';
-      teamSummaryMap['Bias Aero'].tonnageKg = biasKg;
-      teamSummaryMap['Bias Aero'].tonnageLbs = Math.round(biasKg * 2.20462 * 100) / 100;
-      teamSummaryMap['Bias Aero'].areaOpah =
-        teamSummaryMap['Bias Aero'].netOpahHours > 0 && biasKg > 0
-          ? Math.round(((biasKg * 2.20462) / teamSummaryMap['Bias Aero'].netOpahHours) * 100) / 100
-          : '-';
+      const bias = teamSummaryMap['Bias Aero'];
+      bias.pdiDeductHours = pdiDeduct;
+      bias.netOpahHours = Math.max(0, Math.round((bias.totalHours - pdiDeduct) * 10) / 10);
     }
     if (teamSummaryMap['Radial Aero']) {
-      teamSummaryMap['Radial Aero'].tonnageCodes = 'CODE 6';
-      teamSummaryMap['Radial Aero'].tonnageKg = radKg;
-      teamSummaryMap['Radial Aero'].tonnageLbs = Math.round(radKg * 2.20462 * 100) / 100;
-      teamSummaryMap['Radial Aero'].areaOpah =
-        teamSummaryMap['Radial Aero'].netOpahHours > 0 && radKg > 0
-          ? Math.round(((radKg * 2.20462) / teamSummaryMap['Radial Aero'].netOpahHours) * 100) / 100
+      teamSummaryMap['Radial Aero'].netOpahHours = teamSummaryMap['Radial Aero'].totalHours;
+    }
+    if (teamSummaryMap['Retread']) {
+      const retread = teamSummaryMap['Retread'];
+      retread.retreadReceivedHours = bcaReduction;
+      retread.netOpahHours = Math.round((retread.totalHours + bcaReduction) * 10) / 10;
+    }
+
+    if (tonnageReport?.rows) {
+      const getCodeKg = (codes: string[]) => {
+        return (tonnageReport.rows || [])
+          .filter((row) => codes.includes(row.code))
+          .reduce((s, row) => s + (row.dailyTotalTonnage || 0), 0);
+      };
+
+      const bcaKg = tonnageReport.total?.dailyTotalTonnage || getCodeKg(['D', 'P', 'Q', 'W', 'T', '6', 'A', 'B']);
+      const conKg = getCodeKg(['Q', 'W']);
+      const biasKg = getCodeKg(['A', 'B']);
+      const radKg = getCodeKg(['6']);
+
+      if (teamSummaryMap['BCA']) {
+        teamSummaryMap['BCA'].tonnageCodes = 'TOTAL (ทุก Code)';
+        teamSummaryMap['BCA'].tonnageKg = bcaKg;
+        teamSummaryMap['BCA'].tonnageLbs = Math.round(bcaKg * 2.20462 * 100) / 100;
+        teamSummaryMap['BCA'].areaOpah =
+          teamSummaryMap['BCA'].netOpahHours > 0 && bcaKg > 0
+            ? Math.round(((bcaKg * 2.20462) / teamSummaryMap['BCA'].netOpahHours) * 100) / 100
+            : '-';
+      }
+      if (teamSummaryMap['Consumer']) {
+        teamSummaryMap['Consumer'].tonnageCodes = 'CODE Q + W';
+        teamSummaryMap['Consumer'].tonnageKg = conKg;
+        teamSummaryMap['Consumer'].tonnageLbs = Math.round(conKg * 2.20462 * 100) / 100;
+        teamSummaryMap['Consumer'].areaOpah =
+          teamSummaryMap['Consumer'].netOpahHours > 0 && conKg > 0
+            ? Math.round(((conKg * 2.20462) / teamSummaryMap['Consumer'].netOpahHours) * 100) / 100
+            : '-';
+      }
+      if (teamSummaryMap['Bias Aero']) {
+        teamSummaryMap['Bias Aero'].tonnageCodes = 'CODE A + B';
+        teamSummaryMap['Bias Aero'].tonnageKg = biasKg;
+        teamSummaryMap['Bias Aero'].tonnageLbs = Math.round(biasKg * 2.20462 * 100) / 100;
+        teamSummaryMap['Bias Aero'].areaOpah =
+          teamSummaryMap['Bias Aero'].netOpahHours > 0 && biasKg > 0
+            ? Math.round(((biasKg * 2.20462) / teamSummaryMap['Bias Aero'].netOpahHours) * 100) / 100
+            : '-';
+      }
+      if (teamSummaryMap['Radial Aero']) {
+        teamSummaryMap['Radial Aero'].tonnageCodes = 'CODE 6';
+        teamSummaryMap['Radial Aero'].tonnageKg = radKg;
+        teamSummaryMap['Radial Aero'].tonnageLbs = Math.round(radKg * 2.20462 * 100) / 100;
+        teamSummaryMap['Radial Aero'].areaOpah =
+          teamSummaryMap['Radial Aero'].netOpahHours > 0 && radKg > 0
+            ? Math.round(((radKg * 2.20462) / teamSummaryMap['Radial Aero'].netOpahHours) * 100) / 100
+            : '-';
+      }
+    }
+
+    const retreadKg = (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr]) ||
+      (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr.replace(/\//g, '-')]) ||
+      0;
+    if (teamSummaryMap['Retread']) {
+      teamSummaryMap['Retread'].tonnageCodes = 'Retread SAP Stock';
+      teamSummaryMap['Retread'].tonnageKg = retreadKg;
+      teamSummaryMap['Retread'].tonnageLbs = Math.round(retreadKg * 2.20462 * 100) / 100;
+      const retreadNetH = teamSummaryMap['Retread'].netOpahHours || teamSummaryMap['Retread'].totalHours;
+      teamSummaryMap['Retread'].areaOpah =
+        retreadNetH > 0 && retreadKg > 0
+          ? Math.round(((retreadKg * 2.20462) / retreadNetH) * 100) / 100
           : '-';
     }
+
+    teamSummary = AREA_5_KEYS.map((k) => teamSummaryMap[k]);
   }
-
-  // Calculate Retread Tonnage & Standalone OPAH
-  const retreadKg = (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr]) ||
-    (cleanDateStr && DEFAULT_RETREAD_TONNAGE.dailyKgByDate[cleanDateStr.replace(/\//g, '-')]) ||
-    0;
-  if (teamSummaryMap['Retread']) {
-    teamSummaryMap['Retread'].tonnageCodes = 'Retread SAP Stock';
-    teamSummaryMap['Retread'].tonnageKg = retreadKg;
-    teamSummaryMap['Retread'].tonnageLbs = Math.round(retreadKg * 2.20462 * 100) / 100;
-    const retreadNetH = teamSummaryMap['Retread'].netOpahHours || teamSummaryMap['Retread'].totalHours;
-    teamSummaryMap['Retread'].areaOpah =
-      retreadNetH > 0 && retreadKg > 0
-        ? Math.round(((retreadKg * 2.20462) / retreadNetH) * 100) / 100
-        : '-';
-  }
-
-  const teamSummary = AREA_5_KEYS.map((k) => teamSummaryMap[k]);
-
-  // Add Total Aviation summary row
-  const biasSum = teamSummaryMap['Bias Aero'];
-  const radSum = teamSummaryMap['Radial Aero'];
-  const avTotHc = (biasSum?.actualTotalHc || 0) + (radSum?.actualTotalHc || 0);
-  const avGyHc = (biasSum?.gyHc || 0) + (radSum?.gyHc || 0);
-  const avContHc = (biasSum?.contHc || 0) + (radSum?.contHc || 0);
-  const avMonHc = (biasSum?.monthlyHc || 0) + (radSum?.monthlyHc || 0);
-  const avNormH = (biasSum?.normalHours || 0) + (radSum?.normalHours || 0);
-  const avOtH = (biasSum?.otHours || 0) + (radSum?.otHours || 0);
-  const avTotH = (biasSum?.totalHours || 0) + (radSum?.totalHours || 0);
-  const avPdiH = biasSum?.pdiDeductHours || 0;
-  const avNetH = (biasSum?.netOpahHours || 0) + (radSum?.netOpahHours || 0);
-  const avKg = (biasSum?.tonnageKg || 0) + (radSum?.tonnageKg || 0);
-  const avLbs = Math.round(avKg * 2.20462 * 100) / 100;
-  const avOpah = avNetH > 0 && avKg > 0 ? Math.round(((avKg * 2.20462) / avNetH) * 100) / 100 : '-';
-
-  teamSummary.splice(3, 0, {
-    areaKey: 'Total Aviation',
-    areaName: '⭐ Total Aviation (Bias + Radial Aero)',
-    targetHc: 276,
-    actualTotalHc: avTotHc,
-    gyHc: avGyHc,
-    contHc: avContHc,
-    monthlyHc: avMonHc,
-    normalHours: avNormH,
-    otHours: avOtH,
-    totalHours: avTotH,
-    pdiDeductHours: avPdiH,
-    beadAddHours: 0,
-    bcaReductionHours: 0,
-    bcaDevHours: 0,
-    retreadReceivedHours: 0,
-    netOpahHours: avNetH,
-    tonnageCodes: 'CODE A + B + 6',
-    tonnageKg: avKg,
-    tonnageLbs: avLbs,
-    areaOpah: avOpah,
-    isExcluded: 'รวมในการคิด OPAH (Aero Combined)',
-  });
 
   return { rows, teamSummary };
 }
@@ -488,7 +529,8 @@ export function exportTeamRawDataExcel(
   dateFormatted: string = '',
   specificTeamKey?: string,
   pdiBeadReport?: PdiBeadReport | null,
-  tonnageReport?: StockingTonnageReport | null
+  tonnageReport?: StockingTonnageReport | null,
+  areaBreakdown?: OhpaAreaMetrics[] | null
 ) {
   const { rows, teamSummary } = buildRawEmployeeRecords(
     gyRecords,
@@ -496,7 +538,8 @@ export function exportTeamRawDataExcel(
     employeeMapping,
     dateFormatted,
     pdiBeadReport,
-    tonnageReport
+    tonnageReport,
+    areaBreakdown
   );
 
   const wb = XLSX.utils.book_new();
@@ -557,7 +600,11 @@ export function exportTeamRawDataExcel(
   if (specificTeamKey && specificTeamKey !== 'ALL') {
     // Export specific team only
     const isAv = specificTeamKey === 'Total Aviation' || specificTeamKey === 'Aviation';
-    const teamRows = rows.filter((r) => isAv ? (r.areaKey === 'Bias Aero' || r.areaKey === 'Radial Aero') : r.areaKey === specificTeamKey);
+    const teamRows = rows.filter((r) =>
+      isAv
+        ? (r.areaKey === 'Bias Aero' || r.areaKey === 'Radial Aero')
+        : (r.areaKey === specificTeamKey || (specificTeamKey === 'BCA' && r.areaKey === 'Non-HPT'))
+    );
     const wsTeam = XLSX.utils.json_to_sheet(teamRows.map(formatRow));
     const safeSheetName = isAv ? 'Team_Total_Aviation' : `Team_${specificTeamKey.replace(/\s+/g, '_')}`;
     XLSX.utils.book_append_sheet(wb, wsTeam, safeSheetName);
@@ -585,6 +632,14 @@ export function exportTeamRawDataExcel(
         XLSX.utils.book_append_sheet(wb, wsTeam, safeSheetName);
       }
     });
+
+    // Sub-sheet for Non-HPT Support
+    const nonHptRows = rows.filter((r) => r.areaKey === 'Non-HPT');
+    if (nonHptRows.length > 0) {
+      const nonHptData = nonHptRows.map(formatRow);
+      const wsNonHpt = XLSX.utils.json_to_sheet(nonHptData);
+      XLSX.utils.book_append_sheet(wb, wsNonHpt, 'Team_Non_HPT_Support');
+    }
   }
 
   const cleanDate = (dateFormatted || new Date().toLocaleDateString('th-TH')).replace(/[\/\\]/g, '-');

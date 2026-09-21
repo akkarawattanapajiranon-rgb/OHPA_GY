@@ -832,13 +832,17 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     }
 
     // Sheet 7: Team Summary Matrix & Raw Employee Attendance Data
+    const effGy = ohpaSummary.effectiveGyRecords && ohpaSummary.effectiveGyRecords.length > 0 ? ohpaSummary.effectiveGyRecords : records;
+    const effCont = ohpaSummary.effectiveContRecords && ohpaSummary.effectiveContRecords.length > 0 ? ohpaSummary.effectiveContRecords : contractorRecords;
+
     const { rows: rawRows, teamSummary } = buildRawEmployeeRecords(
-      records,
-      contractorRecords,
+      effGy,
+      effCont,
       employeeMapping,
       ohpaSummary.productionDay,
       pdiBeadReport,
-      tonnageReport
+      tonnageReport,
+      ohpaSummary.areaBreakdown
     );
 
     const formatRow = (r: any, index: number) => ({
@@ -1042,17 +1046,20 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     ส่งออก Raw Data & Team Allocation
                   </div>
                   <button
-                    onClick={() =>
+                    onClick={() => {
+                      const effGy = ohpaSummary.effectiveGyRecords && ohpaSummary.effectiveGyRecords.length > 0 ? ohpaSummary.effectiveGyRecords : records;
+                      const effCont = ohpaSummary.effectiveContRecords && ohpaSummary.effectiveContRecords.length > 0 ? ohpaSummary.effectiveContRecords : contractorRecords;
                       exportTeamRawDataExcel(
-                        records,
-                        contractorRecords,
+                        effGy,
+                        effCont,
                         employeeMapping,
                         ohpaSummary.productionDay,
                         'ALL',
                         pdiBeadReport,
-                        tonnageReport
-                      )
-                    }
+                        tonnageReport,
+                        ohpaSummary.areaBreakdown
+                      );
+                    }}
                     className="w-full text-left px-2.5 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-800 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5 text-emerald-600" />
@@ -1074,17 +1081,20 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   ].map((team) => (
                     <button
                       key={team.key}
-                      onClick={() =>
+                      onClick={() => {
+                        const effGy = ohpaSummary.effectiveGyRecords && ohpaSummary.effectiveGyRecords.length > 0 ? ohpaSummary.effectiveGyRecords : records;
+                        const effCont = ohpaSummary.effectiveContRecords && ohpaSummary.effectiveContRecords.length > 0 ? ohpaSummary.effectiveContRecords : contractorRecords;
                         exportTeamRawDataExcel(
-                          records,
-                          contractorRecords,
+                          effGy,
+                          effCont,
                           employeeMapping,
                           ohpaSummary.productionDay,
                           team.key,
                           pdiBeadReport,
-                          tonnageReport
-                        )
-                      }
+                          tonnageReport,
+                          ohpaSummary.areaBreakdown
+                        );
+                      }}
                       className="w-full text-left px-2.5 py-1.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg flex items-center justify-between transition-colors cursor-pointer"
                     >
                       <span>{team.label}</span>
