@@ -1,10 +1,114 @@
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem } from '../types/ohpa';
+import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, OhpaAreaMetrics, OhpaAreaDeptItem, MonthlyStaffMetrics, MtdOhpaSummary, DailyMtdItem, MonthShiftCycleInfo } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { DEFAULT_STOCKING_REPORTS } from '../data/default_stocking_reports';
 import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
 import { processScanRecords } from './parser';
+
+export function parseDateComponents(dateStr: string): { day: number; month: number; year: number } {
+  const clean = (dateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const parts = clean.split(/[/.-]/);
+  let day = 14, month = 9, year = 2026;
+  if (parts.length === 3) {
+    if (parts[2].length === 4) {
+      day = parseInt(parts[0], 10) || 14;
+      month = parseInt(parts[1], 10) || 9;
+      year = parseInt(parts[2], 10) || 2026;
+    } else if (parts[0].length === 4) {
+      year = parseInt(parts[0], 10) || 2026;
+      month = parseInt(parts[1], 10) || 9;
+      day = parseInt(parts[2], 10) || 14;
+    }
+  }
+  return { day, month, year };
+}
+
+export function getMonthShiftCycleInfo(dateStr: string): MonthShiftCycleInfo {
+  const { day, month, year } = parseDateComponents(dateStr);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const prevMonthDate = new Date(year, month - 1, 0);
+  const prevDay = prevMonthDate.getDate();
+  const prevM = prevMonthDate.getMonth() + 1;
+  const prevY = prevMonthDate.getFullYear();
+  const prevMonthLastDayDateStr = `${String(prevDay).padStart(2, '0')}/${String(prevM).padStart(2, '0')}/${prevY}`;
+
+  const isFirstDayOfMonth = (day === 1);
+  const isLastDayOfMonth = (day === daysInMonth);
+  const isNormalDay = !isFirstDayOfMonth && !isLastDayOfMonth;
+  const shiftCount = isFirstDayOfMonth ? 4 : (isLastDayOfMonth ? 2 : 3);
+
+  let cycleDescription = `รอบปกติ (3 กะ: กะ 1, 2, 3 เวลา 07:00-07:00 น.)`;
+  if (isFirstDayOfMonth) {
+    cycleDescription = `รอบต้นเดือน (4 กะ: รวม กะ 3 ของวันที่ ${prevMonthLastDayDateStr} + กะ 1, 2, 3 ของวันที่ ${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year})`;
+  } else if (isLastDayOfMonth) {
+    cycleDescription = `รอบสิ้นเดือน (2 กะ: กะ 1 และ กะ 2 เวลา 07:00-23:00 น. ยกยอดกะ 3 ไปคิดให้ต้นเดือนถัดไป)`;
+  }
+
+  return {
+    isFirstDayOfMonth,
+    isLastDayOfMonth,
+    isNormalDay,
+    targetDay: day,
+    targetMonth: month,
+    targetYear: year,
+    daysInMonth,
+    prevMonthLastDayDateStr,
+    shiftCount,
+    cycleDescription
+  };
+}
+
+export function getPreviousMonthShift3Records(
+  prevMonthLastDayDateStr: string,
+  allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
+  contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
+  employeeMapping: Record<string, EmployeeInfo> = {},
+  dailyAdjustments: DailyAdjustmentRecord[] = []
+): { gyRecords: ParsedShiftRecord[]; contRecords: ContractorScanRecord[] } {
+  const { day, month, year } = parseDateComponents(prevMonthLastDayDateStr);
+  const dPad = String(day).padStart(2, '0');
+  const mPad = String(month).padStart(2, '0');
+  const yStr = String(year);
+
+  let gyRecords: ParsedShiftRecord[] = [];
+  let contRecords: ContractorScanRecord[] = [];
+
+  // Find GY scan preset for prev month last day
+  const preset = allScanPresets.find(p => {
+    const pName = p.name || '';
+    const pDate = p.dateFormatted || '';
+    if (pName.includes(`${yStr}${mPad}${dPad}`) || pName.includes(`${mPad}${dPad}${yStr}`)) return true;
+    if (pDate.includes(prevMonthLastDayDateStr) || pDate.includes(`${day}/${month}/${year}`)) return true;
+    return false;
+  });
+
+  if (preset && preset.content) {
+    const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
+    // Filter shift === 3 and tag notes
+    gyRecords = parsed.records.filter(r => r.shift === 3).map(r => ({
+      ...r,
+      notes: r.notes ? `${r.notes} (กะ 3 ยกมาจาก ${prevMonthLastDayDateStr})` : `กะ 3 ยกมาจาก ${prevMonthLastDayDateStr}`
+    }));
+  }
+
+  // Find Contractor records for prev month last day
+  const contEntry = contractorRecordsByDate[`${day}/${month}/${year}`] ||
+    contractorRecordsByDate[prevMonthLastDayDateStr] ||
+    contractorRecordsByDate[`${yStr}-${mPad}-${dPad}`] ||
+    contractorRecordsByDate[`${day}/${Number(month)}/${year}`];
+
+  if (contEntry && contEntry.records) {
+    contRecords = contEntry.records
+      .filter(r => (r.hasScannedIn || r.totalHours > 0) && r.shiftNumber === 3)
+      .map(r => ({
+        ...r,
+        department: r.department ? `${r.department} (กะ 3 จาก ${prevMonthLastDayDateStr})` : `กะ 3 จาก ${prevMonthLastDayDateStr}`
+      }));
+  }
+
+  return { gyRecords, contRecords };
+}
 
 export function isGyDept6320(r: ParsedShiftRecord): boolean {
   const cc = (r.costCenter || '').trim();
@@ -1030,21 +1134,14 @@ export function calculateMtdSummary(
     const dt = new Date(targetYear, targetMonth - 1, d);
     const dayOfWeek = dt.getDay();
     const dayName = dayNames[dayOfWeek];
+    const dayCycleInfo = getMonthShiftCycleInfo(dayDateStr);
 
     let dayGyRecords: ParsedShiftRecord[] = [];
-    let gyHeadcount = 0;
-    let gyHours = 0;
-
     let dayContRecords: ContractorScanRecord[] = [];
-    let contractorHeadcount = 0;
-    let contractorHours = 0;
 
     // 1. Goodyear Data
     if (d === targetDay) {
-      dayGyRecords = currentGyRecords;
-      const active = currentGyRecords.filter(r => !isGyDept6320(r));
-      gyHeadcount = active.length;
-      gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
+      dayGyRecords = [...currentGyRecords];
     } else {
       const preset = allScanPresets.find(p => {
         const pName = p.name || '';
@@ -1057,23 +1154,12 @@ export function calculateMtdSummary(
       if (preset && preset.content) {
         const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
         dayGyRecords = parsed.records;
-        const active = parsed.records.filter(r => !isGyDept6320(r));
-        gyHeadcount = active.length;
-        gyHours = active.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
       }
     }
 
     // 2. Contractor Data
-    let contHourlyRecords: ContractorScanRecord[] = [];
-    let contMonthlyRecords: ContractorScanRecord[] = [];
-
     if (d === targetDay) {
       dayContRecords = currentContRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
-      const active = dayContRecords.filter(r => !isContDept6320(r));
-      contHourlyRecords = active.filter(r => r.type !== 'Salary' && !(r as any).isMonthly);
-      contMonthlyRecords = active.filter(r => r.type === 'Salary' || (r as any).isMonthly);
-      contractorHeadcount = contHourlyRecords.length;
-      contractorHours = contHourlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
     } else {
       const contEntry = contractorRecordsByDate[`${d}/${targetMonth}/${targetYear}`] ||
         contractorRecordsByDate[dayDateStr] ||
@@ -1081,15 +1167,35 @@ export function calculateMtdSummary(
 
       if (contEntry && contEntry.records) {
         dayContRecords = contEntry.records.filter(r => r.hasScannedIn || r.totalHours > 0);
-        const active = dayContRecords.filter(r => !isContDept6320(r));
-        contHourlyRecords = active.filter(r => r.type !== 'Salary' && !(r as any).isMonthly);
-        contMonthlyRecords = active.filter(r => r.type === 'Salary' || (r as any).isMonthly);
-        contractorHeadcount = contHourlyRecords.length;
-        contractorHours = contHourlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
       }
     }
 
-    // 3. Monthly Staff Data (Goodyear 62 + WAS 9)
+    // 3. Apply Shift Cycle Rules for day d (Day 1: include prev month shift 3; Last Day: exclude shift 3)
+    if (dayCycleInfo.isFirstDayOfMonth) {
+      const prevMonthShift3 = getPreviousMonthShift3Records(
+        dayCycleInfo.prevMonthLastDayDateStr,
+        allScanPresets,
+        contractorRecordsByDate,
+        employeeMapping,
+        dailyAdjustments
+      );
+      dayGyRecords = [...prevMonthShift3.gyRecords, ...dayGyRecords];
+      dayContRecords = [...prevMonthShift3.contRecords, ...dayContRecords];
+    } else if (dayCycleInfo.isLastDayOfMonth) {
+      dayGyRecords = dayGyRecords.filter(r => r.shift !== 3);
+      dayContRecords = dayContRecords.filter(r => r.shiftNumber !== 3);
+    }
+
+    const activeGy = dayGyRecords.filter(r => !isGyDept6320(r));
+    const gyHeadcount = activeGy.length;
+    const gyHours = activeGy.reduce((sum, r) => sum + (r.normalWorkHours || 0) + (r.otHours || 0), 0);
+
+    const activeCont = dayContRecords.filter(r => !isContDept6320(r));
+    const contHourlyRecords = activeCont.filter(r => r.type !== 'Salary' && !(r as any).isMonthly);
+    const contractorHeadcount = contHourlyRecords.length;
+    const contractorHours = contHourlyRecords.reduce((sum, r) => sum + (r.normalHours || 0) + (r.otHours || 0), 0);
+
+    // 4. Monthly Staff Data (Goodyear 62 + WAS 9)
     const monthlyStaff = getMonthlyStaffMetrics(dayDateStr);
 
     const pdiDeductHours = pdiBeadReport?.pdiDailyTotals?.[d] || 0;
@@ -1268,9 +1374,34 @@ export function calculateOhpaSummary(
 ): OhpaSummary {
   const rawContActive = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
 
+  // Shift Cycle Information (Day 1: 4 shifts, Normal: 3 shifts, Last Day: 2 shifts)
+  const cycleInfo = getMonthShiftCycleInfo(productionDayFormatted);
+
+  let effectiveGyRecords = [...records];
+  let effectiveContRecords = [...rawContActive];
+  let prevMonthShift3Gy: ParsedShiftRecord[] = [];
+  let prevMonthShift3Cont: ContractorScanRecord[] = [];
+
+  if (cycleInfo.isFirstDayOfMonth) {
+    const prevMonthShift3 = getPreviousMonthShift3Records(
+      cycleInfo.prevMonthLastDayDateStr,
+      allScanPresets,
+      contractorRecordsByDate,
+      employeeMapping,
+      dailyAdjustments
+    );
+    prevMonthShift3Gy = prevMonthShift3.gyRecords;
+    prevMonthShift3Cont = prevMonthShift3.contRecords;
+    effectiveGyRecords = [...prevMonthShift3Gy, ...records];
+    effectiveContRecords = [...prevMonthShift3Cont, ...rawContActive];
+  } else if (cycleInfo.isLastDayOfMonth) {
+    effectiveGyRecords = records.filter(r => r.shift !== 3);
+    effectiveContRecords = rawContActive.filter(r => r.shiftNumber !== 3);
+  }
+
   // 1. Monthly Staff
   const monthlyStaff = getMonthlyStaffMetrics(productionDayFormatted);
-  const hasScannedWasMonthly = rawContActive.some(r => r.type === 'Salary' || (r as any).isMonthly);
+  const hasScannedWasMonthly = effectiveContRecords.some(r => r.type === 'Salary' || (r as any).isMonthly);
   const fallbackWasCount = hasScannedWasMonthly ? 0 : (monthlyStaff.wasCount ?? 9);
   const fallbackWasHours = hasScannedWasMonthly ? 0 : (monthlyStaff.wasTotalHours ?? (fallbackWasCount * monthlyStaff.hoursPerPerson));
 
@@ -1292,8 +1423,8 @@ export function calculateOhpaSummary(
   const areaMap = createEmptyAreaMap();
   accumulateRecordsIntoAreaMap(
     areaMap,
-    records,
-    rawContActive,
+    effectiveGyRecords,
+    effectiveContRecords,
     monthlyStaff,
     beadAddHours,
     pdiDeductMap,
@@ -1359,19 +1490,19 @@ export function calculateOhpaSummary(
     return 'Non-HPT';
   };
 
-  const gyActiveRecords = records.filter(r => {
+  const gyActiveRecords = effectiveGyRecords.filter(r => {
     const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
     return mu !== 'Retread' && !isGyDept6320(r);
   });
 
-  const contActiveRecords = rawContActive.filter(r => {
+  const contActiveRecords = effectiveContRecords.filter(r => {
     const empCode = r.empCode || (r as any).workerId || '';
     const mu = getEmpMu(empCode, '', '', r.department, r.closing);
     return mu !== 'Retread' && !isContDept6320(r);
   });
 
   // 7. Shift Breakdown (Allocating working hours & OT to the actual shift operating time window)
-  const shiftAlloc: Record<1 | 2 | 3, {
+  const shiftAlloc: Record<number, {
     gyNorm: number;
     gyOt: number;
     gyHc: number;
@@ -1379,6 +1510,7 @@ export function calculateOhpaSummary(
     contOt: number;
     contHc: number;
   }> = {
+    0: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 },
     1: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 },
     2: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 },
     3: { gyNorm: 0, gyOt: 0, gyHc: 0, contNorm: 0, contOt: 0, contHc: 0 }
@@ -1386,13 +1518,18 @@ export function calculateOhpaSummary(
 
   // Goodyear Allocation (Applying Non-HPT 80% active weight)
   gyActiveRecords.forEach(r => {
-    const s = r.shift;
+    const isPrevShift3 = r.notes?.includes('กะ 3 ยกมาจาก') || r.notes?.includes('กะ 3 ยกยอด');
+    const s = isPrevShift3 ? 0 : r.shift;
     const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
     const weight = mu === 'Non-HPT' ? 0.8 : 1.0;
     const norm = (r.normalWorkHours || 0) * weight;
     const ot = (r.otHours || 0) * weight;
 
-    if (s === 1) {
+    if (s === 0) {
+      shiftAlloc[0].gyNorm += norm;
+      shiftAlloc[0].gyOt += ot;
+      shiftAlloc[0].gyHc += weight;
+    } else if (s === 1) {
       shiftAlloc[1].gyNorm += norm;
       shiftAlloc[1].gyHc += weight;
       if (ot > 0) {
@@ -1431,14 +1568,19 @@ export function calculateOhpaSummary(
 
   // Contractor Allocation (Applying Non-HPT 80% active weight)
   contActiveRecords.forEach(r => {
-    const s = r.shiftNumber;
+    const isPrevShift3 = r.department?.includes('กะ 3 จาก') || r.department?.includes('กะ 3 ยกยอด');
+    const s = isPrevShift3 ? 0 : r.shiftNumber;
     const empCode = r.empCode || (r as any).workerId || '';
     const mu = getEmpMu(empCode, '', '', r.department, r.closing);
     const weight = mu === 'Non-HPT' ? 0.8 : 1.0;
     const norm = (r.normalHours || 0) * weight;
     const ot = (r.otHours || 0) * weight;
 
-    if (s === 1) {
+    if (s === 0) {
+      shiftAlloc[0].contNorm += norm;
+      shiftAlloc[0].contOt += ot;
+      shiftAlloc[0].contHc += weight;
+    } else if (s === 1) {
       shiftAlloc[1].contNorm += norm;
       shiftAlloc[1].contHc += weight;
       if (ot > 0) {
@@ -1463,7 +1605,9 @@ export function calculateOhpaSummary(
   const totalMonthlyHours = (monthlyStaff.combinedTotalHours || (monthlyStaff.totalHours + (monthlyStaff.wasTotalHours || 0))) || 560;
   const totalMonthlyHc = monthlyStaff.combinedCount || 70;
 
-  const shiftList: (1 | 2 | 3)[] = [1, 2, 3];
+  const shiftList: number[] = cycleInfo.isFirstDayOfMonth ? [0, 1, 2, 3] : (cycleInfo.isLastDayOfMonth ? [1, 2] : [1, 2, 3]);
+  const numShifts = shiftList.length;
+
   const shifts: OhpaShiftMetrics[] = shiftList.map(shiftNum => {
     const alloc = shiftAlloc[shiftNum];
     const gyHc = Math.round(alloc.gyHc * 10) / 10;
@@ -1481,20 +1625,12 @@ export function calculateOhpaSummary(
     const normalHours = Math.round((gyNorm + contNorm) * 10) / 10;
     const otHours = Math.round((gyOt + contOt) * 10) / 10;
 
-    // Distribute monthly staff, PDI deduct, and Bead add equally across 3 shifts
-    const monthlyHours = shiftNum === 3
-      ? Math.round((totalMonthlyHours - Math.round(totalMonthlyHours / 3 * 10) / 10 * 2) * 10) / 10
-      : Math.round(totalMonthlyHours / 3 * 10) / 10;
+    // Distribute monthly staff, PDI deduct, and Bead add equally across active shifts
+    const monthlyHours = Math.round((totalMonthlyHours / numShifts) * 10) / 10;
+    const monthlyHeadcount = Math.round((totalMonthlyHc / numShifts) * 10) / 10;
 
-    const monthlyHeadcount = Math.round(totalMonthlyHc / 3 * 10) / 10;
-
-    const shiftPdiDeduct = shiftNum === 3
-      ? Math.round((activePdiHours - Math.round(activePdiHours / 3 * 10) / 10 * 2) * 10) / 10
-      : Math.round(activePdiHours / 3 * 10) / 10;
-
-    const shiftBeadAdd = shiftNum === 3
-      ? Math.round((activeBeadHours - Math.round(activeBeadHours / 3 * 10) / 10 * 2) * 10) / 10
-      : Math.round(activeBeadHours / 3 * 10) / 10;
+    const shiftPdiDeduct = Math.round((activePdiHours / numShifts) * 10) / 10;
+    const shiftBeadAdd = Math.round((activeBeadHours / numShifts) * 10) / 10;
 
     const grossHours = Math.round((gyTot + contTot + monthlyHours) * 10) / 10;
     const opahWorkingHours = Math.round((grossHours - shiftPdiDeduct + shiftBeadAdd) * 10) / 10;
@@ -1503,7 +1639,14 @@ export function calculateOhpaSummary(
     let tonnageKg = 0;
     let pallets = 0;
 
-    if (tonnageReport?.total) {
+    if (shiftNum === 0) {
+      const prevReport = DEFAULT_STOCKING_REPORTS[cycleInfo.prevMonthLastDayDateStr] ||
+        DEFAULT_STOCKING_REPORTS[cycleInfo.prevMonthLastDayDateStr.replace(/^0+/, '')];
+      if (prevReport?.total) {
+        tonnageKg = prevReport.total.shift3Tonnage;
+        pallets = prevReport.total.shift3Pallets;
+      }
+    } else if (tonnageReport?.total) {
       if (shiftNum === 1) {
         tonnageKg = tonnageReport.total.shift1Tonnage;
         pallets = tonnageReport.total.shift1Pallets;
@@ -1522,7 +1665,9 @@ export function calculateOhpaSummary(
       ? Math.round(((tonnageKg * LBS_CONVERSION_FACTOR) / opahWorkingHours) * 100) / 100
       : 0;
 
-    const shiftLabel = shiftNum === 1
+    const shiftLabel = shiftNum === 0
+      ? `กะ 3 เดือนก่อน (${cycleInfo.prevMonthLastDayDateStr} 23:00 - 07:00)`
+      : shiftNum === 1
       ? 'กะ 1 (07:00 - 15:00)'
       : shiftNum === 2
       ? 'กะ 2 (15:00 - 23:00)'
@@ -1556,7 +1701,7 @@ export function calculateOhpaSummary(
   // 8. Department Breakdown (for backwards compatibility)
   const deptMap: Record<string, { isContractor: boolean; isMonthly?: boolean; isBead?: boolean; isExcluded6320?: boolean; headcount: number; normalHours: number; otHours: number; totalHours: number }> = {};
 
-  records.forEach(r => {
+  effectiveGyRecords.forEach(r => {
     const isExcluded = isGyDept6320(r);
     const d = r.dept || 'ไม่ระบุแผนก (GY)';
     const nHours = r.normalWorkHours || 0;
@@ -1572,7 +1717,7 @@ export function calculateOhpaSummary(
     deptMap[d].totalHours += totH;
   });
 
-  rawContActive.forEach(r => {
+  effectiveContRecords.forEach(r => {
     const isExcluded = isContDept6320(r);
     const isMonthlyCont = r.type === 'Salary' || (r as any).isMonthly;
     const code = (r.closing || r.department || 'MFG').trim();
@@ -1721,7 +1866,8 @@ export function calculateOhpaSummary(
     shifts,
     areaBreakdown,
     departmentBreakdown,
-    mtd
+    mtd,
+    shiftCycleInfo: cycleInfo
   };
 }
 

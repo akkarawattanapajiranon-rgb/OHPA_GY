@@ -31,7 +31,7 @@ export interface StockingTonnageReport {
 }
 
 export interface OhpaShiftMetrics {
-  shift: 1 | 2 | 3;
+  shift: number;
   shiftLabel: string;
   headcount: number;
   gyHeadcount: number;
@@ -229,6 +229,22 @@ export interface OhpaSummary {
 
   // Month-To-Date (MTD) metrics from day 1 to selected date
   mtd?: MtdOhpaSummary;
+
+  // Monthly Shift Cycle Metadata (Day 1: 4 shifts, Normal: 3 shifts, Last Day: 2 shifts)
+  shiftCycleInfo?: MonthShiftCycleInfo;
+}
+
+export interface MonthShiftCycleInfo {
+  isFirstDayOfMonth: boolean;
+  isLastDayOfMonth: boolean;
+  isNormalDay: boolean;
+  targetDay: number;
+  targetMonth: number;
+  targetYear: number;
+  daysInMonth: number;
+  prevMonthLastDayDateStr: string; // e.g. "31/08/2026"
+  shiftCount: number; // 4 for Day 1, 2 for Last Day, 3 for normal days
+  cycleDescription: string;
 }
 
 

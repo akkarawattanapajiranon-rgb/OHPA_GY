@@ -115,6 +115,7 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       const params = new URLSearchParams();
       if (pdVal) params.append('pd', pdVal);
       else if (dateStr) params.append('date', dateStr);
+      params.append('_t', String(Date.now())); // Force refresh from server without cache
 
       const qs = params.toString();
       if (qs) url += '?' + qs;
@@ -129,6 +130,12 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         }
         if (!data.success && data.message) {
           setFetchError(data.message);
+        } else if (data.success) {
+          setSyncStatus({
+            type: 'success',
+            message: `ดึงข้อมูล Stock 55012 จากเซิร์ฟเวอร์เรียบร้อย (${data.productionDay || 'สดใหม่'})`
+          });
+          setTimeout(() => setSyncStatus(null), 4000);
         }
       }
     } catch (err: any) {
@@ -964,6 +971,21 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
             </select>
           </div>
 
+          {/* Refresh Stock Button */}
+          <button
+            onClick={() => fetchTonnageData(selectedPdValue, currentScanDateFormatted)}
+            disabled={isLoading}
+            className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+              isLoading
+                ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                : 'bg-indigo-600 hover:bg-indigo-500 text-white border-indigo-700 shadow-xs'
+            }`}
+            title="รีเฟรชดึงข้อมูล Stock 55012 จาก Server (10.124.129.34) สดใหม่ทุกครั้ง"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+            <span>{isLoading ? 'กำลังโหลด...' : 'รีเฟรช Stock 55012'}</span>
+          </button>
+
           {/* Toggle PDI / Bead Table */}
           <button
             onClick={() => setShowPdiDetail(!showPdiDetail)}
@@ -1097,6 +1119,52 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           >
             ปิด
           </button>
+        </div>
+      )}
+
+      {/* Monthly Shift Cycle Banner */}
+      {ohpaSummary.shiftCycleInfo && (
+        <div className={`p-4 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs border animate-fadeIn ${
+          ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
+            ? 'bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-amber-300 text-amber-950'
+            : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
+            ? 'bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-transparent border-blue-300 text-blue-950'
+            : 'bg-slate-50 border-slate-200 text-slate-700'
+        }`}>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl p-1.5 bg-white rounded-xl shadow-xs border border-slate-200/80">
+              {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth ? '🌅' : ohpaSummary.shiftCycleInfo.isLastDayOfMonth ? '🌙' : '📅'}
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <strong className="font-extrabold text-sm">
+                  {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
+                    ? 'รอบต้นเดือน (นับรวม 4 กะ)'
+                    : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
+                    ? 'รอบสิ้นเดือน (นับ 2 กะ 07:00-23:00 น.)'
+                    : 'รอบปกติประจำวัน (3 กะ)'}
+                </strong>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
+                    ? 'bg-amber-100 text-amber-800'
+                    : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-slate-100 text-slate-800'
+                }`}>
+                  {ohpaSummary.shiftCycleInfo.shiftCount} กะ
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 mt-0.5">
+                {ohpaSummary.shiftCycleInfo.cycleDescription}
+              </p>
+            </div>
+          </div>
+          <div className="text-right text-[11px] font-mono shrink-0 pl-1">
+            <span className="text-slate-500">รอบเดือนคำนวณ OPAH:</span>{' '}
+            <strong className="text-indigo-950 font-bold">
+              กะ 3 ({ohpaSummary.shiftCycleInfo.prevMonthLastDayDateStr}) ➡️ กะ 2 ({ohpaSummary.shiftCycleInfo.daysInMonth}/{String(ohpaSummary.shiftCycleInfo.targetMonth).padStart(2, '0')}/{ohpaSummary.shiftCycleInfo.targetYear})
+            </strong>
+          </div>
         </div>
       )}
 
@@ -2409,7 +2477,13 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className={`grid grid-cols-1 ${
+          ohpaSummary.shifts.length === 4
+            ? 'md:grid-cols-2 lg:grid-cols-4'
+            : ohpaSummary.shifts.length === 2
+            ? 'md:grid-cols-2'
+            : 'md:grid-cols-3'
+        } gap-5`}>
           {ohpaSummary.shifts.map((s) => (
             <div
               key={s.shift}

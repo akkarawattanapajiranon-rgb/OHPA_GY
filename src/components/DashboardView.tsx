@@ -931,6 +931,43 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
+        {/* Monthly Shift Cycle Indicator */}
+        {ohpaSummary.shiftCycleInfo && (
+          <div className={`p-3.5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs border backdrop-blur-md ${
+            ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
+              ? 'bg-amber-500/20 border-amber-400/40 text-amber-200'
+              : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
+              ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
+              : 'bg-white/10 border-white/10 text-indigo-200'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">
+                {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth ? '🌅' : ohpaSummary.shiftCycleInfo.isLastDayOfMonth ? '🌙' : '📅'}
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <strong className="text-white font-bold">
+                    {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
+                      ? 'รอบต้นเดือน (นับ 4 กะ รวมกะ 3 เดือนก่อน)'
+                      : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
+                      ? 'รอบสิ้นเดือน (นับ 2 กะ 07:00-23:00 น.)'
+                      : 'รอบปกติประจำวัน (3 กะ)'}
+                  </strong>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">
+                    {ohpaSummary.shiftCycleInfo.shiftCount} กะ
+                  </span>
+                </div>
+                <p className="text-[11px] text-indigo-200/90 mt-0.5">
+                  {ohpaSummary.shiftCycleInfo.cycleDescription}
+                </p>
+              </div>
+            </div>
+            <div className="text-right text-[11px] font-mono text-indigo-300">
+              รอบเดือน: กะ 3 ({ohpaSummary.shiftCycleInfo.prevMonthLastDayDateStr}) ➡️ กะ 2 ({ohpaSummary.shiftCycleInfo.daysInMonth}/{String(ohpaSummary.shiftCycleInfo.targetMonth).padStart(2, '0')}/{ohpaSummary.shiftCycleInfo.targetYear})
+            </div>
+          </div>
+        )}
+
         {/* 4 Primary KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
           {/* KPI 1: Grand Total Factory */}

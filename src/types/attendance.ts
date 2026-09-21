@@ -85,6 +85,7 @@ export interface ParsedShiftRecord {
   adjustmentInfo?: DailyAdjustmentRecord;
   regularMachineOverride?: string;
   otMachineOverride?: string;
+  notes?: string;
 }
 
 export interface ShiftSummary {
