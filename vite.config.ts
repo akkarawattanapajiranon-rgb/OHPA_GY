@@ -1211,32 +1211,52 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
           }
 
           const data = XLSX.utils.sheet_to_json(ws, { header: 1 }) as any[][];
-          const dateRow = data[2] || [];
-          const totalRow = data[26] || [];
+          let dateRow: any[] | null = null;
+          let totalRow: any[] | null = null;
+
+          for (let r = 0; r < data.length; r++) {
+            const row = data[r] || [];
+            const col0 = String(row[0] || '').trim();
+            if (col0.toLowerCase() === 'sap code' || (typeof row[1] === 'number' && row[1] >= 40000 && row[1] <= 60000)) {
+              if (!dateRow) dateRow = row;
+            }
+            if (col0.toLowerCase() === 'grand total') {
+              totalRow = row;
+              break; // first Grand Total in 'By Weight' section
+            }
+          }
+
+          if (!dateRow || !totalRow) {
+            dateRow = data[2] || [];
+            totalRow = data[data.length - 1] || [];
+          }
 
           const dailyKgByDate: Record<string, number> = {};
           const dailyLbsByDate: Record<string, number> = {};
 
           for (let col = 1; col < dateRow.length; col++) {
             const serial = dateRow[col];
-            if (!serial || serial === '(blank)' || serial === 'Grand Total') continue;
+            if (!serial || serial === '(blank)' || String(serial).trim() === 'Grand Total') continue;
             const utcDays = Math.floor(Number(serial) - 25569);
             const d = new Date(utcDays * 86400 * 1000);
             const dd = String(d.getUTCDate()).padStart(2, '0');
             const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
             const yyyy = d.getUTCFullYear();
-            const dateStr = `${dd}/${mm}/${yyyy}`;
+            const dateStr = `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${yyyy}`;
+            const dateStrPad = `${dd}/${mm}/${yyyy}`;
             const isoStr = `${yyyy}-${mm}-${dd}`;
             const kg = Number(totalRow[col]) || 0;
             const lbs = Math.round(kg * 2.20462 * 100) / 100;
             dailyKgByDate[dateStr] = kg;
+            dailyKgByDate[dateStrPad] = kg;
             dailyKgByDate[isoStr] = kg;
             dailyLbsByDate[dateStr] = lbs;
+            dailyLbsByDate[dateStrPad] = lbs;
             dailyLbsByDate[isoStr] = lbs;
           }
 
           const grandTotalCell = totalRow[totalRow.length - 1] || totalRow[totalRow.length - 2];
-          const mtdKg = Number(grandTotalCell) || Object.values(dailyKgByDate).reduce((a, b) => a + b, 0) / 2;
+          const mtdKg = Number(grandTotalCell) || Object.values(dailyKgByDate).reduce((a, b) => a + b, 0) / 3;
           const mtdLbs = Math.round(mtdKg * 2.20462 * 100) / 100;
 
           const retreadData = {

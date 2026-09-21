@@ -15,6 +15,7 @@ import defaultEmpMappingRaw from './data/default_emp_mapping.json';
 import defaultAdjustmentsRaw from './data/default_adjustments.json';
 import { DEFAULT_CONTRACTOR_MAPPING, DEFAULT_CONTRACTOR_RECORDS_BY_DATE } from './data/default_contractor_data';
 import { DEFAULT_PDI_BEAD_REPORT, PdiBeadReport } from './data/default_pdi_bead';
+import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from './data/default_retread_tonnage';
 import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
 import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
 import { ContractorScanRecord } from './types/contractor';
@@ -56,6 +57,20 @@ export default function App() {
       return DEFAULT_PDI_BEAD_REPORT;
     } catch {
       return DEFAULT_PDI_BEAD_REPORT;
+    }
+  });
+
+  // Retread SAP Tonnage state
+  const [retreadTonnage, setRetreadTonnage] = useState<RetreadTonnageData>(() => {
+    try {
+      const saved = localStorage.getItem('ohpa_retread_tonnage');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.dailyKgByDate && Object.keys(parsed.dailyKgByDate).length > 0) return parsed;
+      }
+      return DEFAULT_RETREAD_TONNAGE;
+    } catch {
+      return DEFAULT_RETREAD_TONNAGE;
     }
   });
 
@@ -346,6 +361,23 @@ export default function App() {
         }
       } catch (e: any) {
         console.warn('Sync adjustments error:', e);
+      }
+
+      // 5. Fetch Retread Tonnage from /api/sync-retread-tonnage
+      try {
+        const retreadRes = await fetch('/api/sync-retread-tonnage');
+        if (retreadRes.ok) {
+          const retreadData = await retreadRes.json();
+          if (retreadData.success && retreadData.data) {
+            setRetreadTonnage(retreadData.data);
+            try {
+              localStorage.setItem('ohpa_retread_tonnage', JSON.stringify(retreadData.data));
+            } catch (e) {}
+            syncSummary.push('Retread Tonnage SAP');
+          }
+        }
+      } catch (e: any) {
+        console.warn('Sync retread tonnage error:', e);
       }
 
       if (syncSummary.length > 0) {
@@ -683,6 +715,7 @@ export default function App() {
             employeeMapping={employeeMapping}
             dailyAdjustments={dailyAdjustments}
             pdiBeadReport={pdiBeadReport}
+            retreadTonnage={retreadTonnage}
           />
         )}
 

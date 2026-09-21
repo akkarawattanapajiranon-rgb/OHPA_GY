@@ -4,7 +4,7 @@ import { ParsedShiftRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaAreaMetrics } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
-import { DEFAULT_RETREAD_TONNAGE } from '../data/default_retread_tonnage';
+import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
 import {
@@ -49,6 +49,7 @@ interface OhpaCalculationViewProps {
   employeeMapping?: Record<string, any>;
   dailyAdjustments?: any[];
   pdiBeadReport?: PdiBeadReport;
+  retreadTonnage?: RetreadTonnageData;
 }
 
 export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
@@ -60,7 +61,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   contractorRecordsByDate = {},
   employeeMapping = {},
   dailyAdjustments = [],
-  pdiBeadReport = DEFAULT_PDI_BEAD_REPORT
+  pdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
+  retreadTonnage = DEFAULT_RETREAD_TONNAGE
 }) => {
   const [tonnageReport, setTonnageReport] = useState<StockingTonnageReport | null>(null);
   const [selectedPdValue, setSelectedPdValue] = useState<string>('');
@@ -186,9 +188,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       contractorRecordsByDate,
       employeeMapping,
       dailyAdjustments,
-      pdiBeadReport
+      pdiBeadReport,
+      retreadTonnage
     );
-  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport]);
+  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport, retreadTonnage]);
 
   const activeAreaBreakdown = useMemo(() => {
     if (viewMode === 'MTD' && ohpaSummary.mtd?.areaBreakdown && ohpaSummary.mtd.areaBreakdown.length > 0) {

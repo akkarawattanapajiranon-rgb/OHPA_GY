@@ -456,8 +456,10 @@
     "empId": "12809",
     "empName": "ภาณุเดช แสนบุญมี",
     "otMachineOverride": "Chaffer Lay-up",
-    "isApprovedTiming": false,
-    "reason": "ย้ายทำ Chaffer Lay-up"
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (23.00-07.00)"
   },
   {
     "id": "adj-42-12110",
@@ -482,10 +484,21 @@
     "reason": "OT / ทำงานที่ 54\" Band Building (15.00-23.00)"
   },
   {
-    "id": "adj-44-12186",
+    "id": "adj-44-12851",
+    "dateStr": "19/09/2026",
+    "empId": "12851",
+    "empName": "ศรายุทธ พิมพ์แก้ว",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
+  },
+  {
+    "id": "adj-45-12115",
     "dateStr": "20/09/2026",
-    "empId": "12186",
-    "empName": "ณัฐพงษ์ อู่ชม",
+    "empId": "12115",
+    "empName": "สมนึก จุรัมย์",
     "otMachineOverride": "54\" Band Building",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
@@ -493,7 +506,7 @@
     "reason": "OT / ทำงานที่ 54\" Band Building (15.00-23.00)"
   },
   {
-    "id": "adj-45-12651",
+    "id": "adj-46-12651",
     "dateStr": "20/09/2026",
     "empId": "12651",
     "empName": "วีระชน ทิณเสวก",
@@ -504,7 +517,7 @@
     "reason": "OT / ทำงานที่ wrap (07.00-15.00)"
   },
   {
-    "id": "adj-46-12732",
+    "id": "adj-47-12732",
     "dateStr": "20/09/2026",
     "empId": "12732",
     "empName": "ขันธ์ทศพร จุดจันทึก",
@@ -515,7 +528,7 @@
     "reason": "OT / ทำงานที่ Pigment (07.00-15.00)"
   },
   {
-    "id": "adj-47-12890",
+    "id": "adj-48-12890",
     "dateStr": "20/09/2026",
     "empId": "12890",
     "empName": "ปณัฐชา ปัตถา",

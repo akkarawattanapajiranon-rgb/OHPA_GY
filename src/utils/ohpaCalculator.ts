@@ -991,7 +991,8 @@ export function calculateMtdSummary(
   contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
   dailyAdjustments: DailyAdjustmentRecord[] = [],
-  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
+  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
 ): MtdOhpaSummary {
   const clean = (targetDateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
   const parts = clean.split(/[/.-]/);
@@ -1227,7 +1228,7 @@ export function calculateMtdSummary(
     ? Math.round(((mtdStockingKg * LBS_FACTOR) / mtdContractorHours) * 100) / 100
     : 0;
 
-  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay, tonnageReport, 'MTD', clean);
+  const areaBreakdown = buildAreaBreakdownList(mtdAreaMap, mtdTotalHours, targetDay, tonnageReport, 'MTD', clean, retreadTonnage);
 
   return {
     targetDate: clean || `${String(targetDay).padStart(2, '0')}/${String(targetMonth).padStart(2, '0')}/${targetYear}`,
@@ -1262,7 +1263,8 @@ export function calculateOhpaSummary(
   contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
   dailyAdjustments: DailyAdjustmentRecord[] = [],
-  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT
+  pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
 ): OhpaSummary {
   const rawContActive = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
 
@@ -1301,7 +1303,7 @@ export function calculateOhpaSummary(
   );
 
   // Active 4 Areas & Retread derived from areaBreakdown
-  const areaBreakdown = buildAreaBreakdownList(areaMap, 0, 1, tonnageReport, 'DAILY', cleanDate);
+  const areaBreakdown = buildAreaBreakdownList(areaMap, 0, 1, tonnageReport, 'DAILY', cleanDate, retreadTonnage);
   const activeAreas = areaBreakdown.filter(a => !a.isExcluded6320);
   const retreadArea = areaBreakdown.find(a => a.isExcluded6320);
 
@@ -1675,7 +1677,8 @@ export function calculateOhpaSummary(
     contractorRecordsByDate,
     employeeMapping,
     dailyAdjustments,
-    pdiBeadReport
+    pdiBeadReport,
+    retreadTonnage
   );
 
   return {
