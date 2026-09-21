@@ -1,6 +1,20 @@
 import * as XLSX from 'xlsx';
 import { ContractorEmployeeInfo, ContractorScanRecord, ContractorDaySummary } from '../types/contractor';
 
+export function isValidContractorDate(input: any): boolean {
+  if (!input) return false;
+  if (typeof input === 'number') {
+    return input >= 30000 && input <= 70000;
+  }
+  const str = String(input).trim();
+  const clean = str.replace(/^[^\d]*/, '').trim();
+  return (
+    /^(\d{1,2})[/.-](\d{1,2})[/.-](\d{2,4})$/.test(clean) ||
+    /^(\d{4})[/.-](\d{1,2})[/.-](\d{1,2})$/.test(clean) ||
+    /^\d{8}$/.test(clean)
+  );
+}
+
 /**
  * Normalize any date format (e.g. "1/9/2026", "01/09/2026", "2026-09-01", "📅 วันที่ 1/9/2026") to "D/M/YYYY"
  */
@@ -35,7 +49,7 @@ export function normalizeToDMY(input: any): string {
     return `${d}/${m}/${y}`;
   }
 
-  return clean;
+  return /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(clean) ? clean : '';
 }
 
 export function normalizeContractorDate(serialOrStr: any): {
@@ -88,19 +102,19 @@ export function getContractorDaySummary(
   const targetNorm = normalizeToDMY(targetDate);
 
   // 1. Try exact match on key
-  let entry = recordsByDate[targetDate] || recordsByDate[targetNorm];
+  let entry = recordsByDate[targetDate] || (targetNorm ? recordsByDate[targetNorm] : undefined);
 
-  // 2. Try normalized match across all keys
-  if (!entry) {
+  // 2. Try normalized match across all valid date keys
+  if (!entry && targetNorm) {
     const foundKey = Object.keys(recordsByDate).find(k => {
-      return normalizeToDMY(k) === targetNorm;
+      return /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(k) && normalizeToDMY(k) === targetNorm;
     });
     if (foundKey) entry = recordsByDate[foundKey];
   }
 
-  // 3. Fallback to latest date if not found
+  // 3. Fallback to latest valid date if not found
   if (!entry) {
-    const keys = Object.keys(recordsByDate);
+    const keys = Object.keys(recordsByDate).filter(k => /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(k));
     if (keys.length > 0) entry = recordsByDate[keys[0]];
   }
 

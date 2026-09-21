@@ -6,12 +6,9 @@ import path from 'path';
 import { exec } from 'child_process';
 import * as XLSX from 'xlsx';
 
-function scanFolderApiPlugin(): Plugin {
-  return {
-    name: 'scan-folder-api',
-    configureServer(server) {
-      // API to read all scan files from the scans/ folder
-      server.middlewares.use('/api/scan-folder', (req, res) => {
+function registerApiMiddlewares(middlewares: any) {
+  // API to read all scan files from the scans/ folder
+  middlewares.use('/api/scan-folder', (req: any, res: any) => {
         try {
           const scansDir = path.resolve(__dirname, 'scans');
           if (!fs.existsSync(scansDir)) {
@@ -855,14 +852,24 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           if (nameListPath) parseContractorSheet(nameListPath);
           if (monthlyListPath) parseContractorSheet(monthlyListPath);
 
-          // Find ALL scan files (excluding mapping files)
+          // Find ALL scan files (excluding mapping files & non-contractor files)
           const targetWasDir = fs.existsSync(networkWasScanDir) ? networkWasScanDir : wasScansDir;
-          const isMappingFile = (name: string) => {
+          const isNonContractorScanFile = (name: string) => {
             const lower = name.toLowerCase();
-            return lower.includes('name list') || lower === 'was_รายเดือน.xlsx' || lower === 'was_รายเดือน.xls' || lower === 'was_salary.xlsx';
+            return (
+              lower.includes('name list') ||
+              lower === 'was_รายเดือน.xlsx' ||
+              lower === 'was_รายเดือน.xls' ||
+              lower === 'was_salary.xlsx' ||
+              lower.includes('opah hour') ||
+              lower.includes('pdi') ||
+              lower.includes('bead') ||
+              lower.includes('retread') ||
+              lower.startsWith('~$')
+            );
           };
           const wasFiles = fs.existsSync(targetWasDir)
-            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !isMappingFile(f))
+            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !isNonContractorScanFile(f))
             : [];
 
           if (!nameListPath && !monthlyListPath && wasFiles.length === 0) {
@@ -884,7 +891,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           };
 
           const excelDateToDateObj = (serial: any) => {
-            if (typeof serial === 'number') {
+            if (typeof serial === 'number' && serial >= 30000 && serial <= 70000) {
               const utc_days = Math.floor(serial - 25569);
               const utc_value = utc_days * 86400;
               const d = new Date(utc_value * 1000);
@@ -893,6 +900,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               const year = d.getUTCFullYear();
               const pad = (n: number) => String(n).padStart(2, '0');
               return {
+                isValid: true,
                 iso: `${year}-${pad(month)}-${pad(day)}`,
                 formattedThai: `วันที่ ${day}/${month}/${year}`,
                 formattedShort: `${day}/${month}/${year}`
@@ -904,15 +912,21 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
             if (parts.length === 3) {
               const d = parseInt(parts[0], 10);
               const m = parseInt(parts[1], 10);
-              const y = parts[2].length === 2 ? `20${parts[2]}` : parts[2];
-              const pad = (n: number) => String(n).padStart(2, '0');
-              return {
-                iso: `${y}-${pad(m)}-${pad(d)}`,
-                formattedThai: `วันที่ ${d}/${m}/${y}`,
-                formattedShort: `${d}/${m}/${y}`
-              };
+              let y = parseInt(parts[2], 10);
+              if (y < 100) y += 2000;
+              else if (y > 2400) y -= 543;
+              if (d >= 1 && d <= 31 && m >= 1 && m <= 12 && y >= 2020 && y <= 2035) {
+                const pad = (n: number) => String(n).padStart(2, '0');
+                return {
+                  isValid: true,
+                  iso: `${y}-${pad(m)}-${pad(d)}`,
+                  formattedThai: `วันที่ ${d}/${m}/${y}`,
+                  formattedShort: `${d}/${m}/${y}`
+                };
+              }
             }
             return {
+              isValid: false,
               iso: str,
               formattedThai: `วันที่ ${str}`,
               formattedShort: str
@@ -927,7 +941,13 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               const defContent = fs.readFileSync(defaultContractorPath, 'utf8');
               const recMatch = defContent.match(/export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE[\s\S]*?=\s*({[\s\S]*});?\s*$/);
               if (recMatch && recMatch[1]) {
-                recordsByDate = JSON.parse(recMatch[1].replace(/;\s*$/, ''));
+                const rawObj = JSON.parse(recMatch[1].replace(/;\s*$/, ''));
+                recordsByDate = {};
+                for (const [k, v] of Object.entries(rawObj)) {
+                  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(k)) {
+                    recordsByDate[k] = v;
+                  }
+                }
               }
             } catch (pErr) {}
           }
@@ -962,8 +982,16 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                   if (!row || !row[0] || row[0] === 'รหัสพนักงาน') continue;
 
                   const empCode = String(row[0]).trim();
+                  if (!empCode || empCode.length < 3 || !/^\d+$/.test(empCode)) continue;
+
                   const scanNameTh = String(row[1] || '').trim();
                   const serialDate = row[2];
+                  const dateInfo = excelDateToDateObj(serialDate);
+                  if (!dateInfo.isValid) continue;
+
+                  const dateKey = dateInfo.formattedShort;
+                  if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateKey)) continue;
+
                   const shiftRaw = String(row[3] || '').trim();
                   const scanIn = formatExcelTime(row[4]);
                   const scanOut = formatExcelTime(row[5]);
@@ -974,9 +1002,6 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                   const deptRaw = row[10] ? String(row[10]).trim() : '';
                   const isWorkDay = row[11] === 1 || row[11] === '1' || row[11] === true;
                   let otCol = (row[12] !== undefined && row[12] !== null && row[12] !== '') ? parseFloat(row[12]) || 0 : 0;
-
-                  const dateInfo = excelDateToDateObj(serialDate);
-                  const dateKey = dateInfo.formattedShort;
 
                   const hasScannedIn = Boolean(scanIn);
                   let shiftNumber = 1;
@@ -1364,6 +1389,16 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
           res.end(JSON.stringify({ success: false, message: err.message, stack: err.stack }));
         }
       });
+}
+
+function scanFolderApiPlugin(): Plugin {
+  return {
+    name: 'scan-folder-api',
+    configureServer(server) {
+      registerApiMiddlewares(server.middlewares);
+    },
+    configurePreviewServer(server) {
+      registerApiMiddlewares(server.middlewares);
     }
   };
 }

@@ -35,18 +35,20 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
 
   const [localDateKey, setLocalDateKey] = useState<string>('');
 
-  // Sort available date keys in descending order (latest date first)
+  // Sort available date keys in descending order (latest date first) - only valid date keys (D/M/YYYY)
   const sortedDateKeys = useMemo(() => {
-    return Object.keys(recordsByDate).sort((a, b) => {
-      const pA = a.split('/').map(n => parseInt(n, 10));
-      const pB = b.split('/').map(n => parseInt(n, 10));
-      if (pA.length === 3 && pB.length === 3) {
-        const timeA = new Date(pA[2], pA[1] - 1, pA[0]).getTime();
-        const timeB = new Date(pB[2], pB[1] - 1, pB[0]).getTime();
-        return timeB - timeA;
-      }
-      return b.localeCompare(a);
-    });
+    return Object.keys(recordsByDate)
+      .filter(k => /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(k))
+      .sort((a, b) => {
+        const pA = a.split('/').map(n => parseInt(n, 10));
+        const pB = b.split('/').map(n => parseInt(n, 10));
+        if (pA.length === 3 && pB.length === 3) {
+          const timeA = new Date(pA[2], pA[1] - 1, pA[0]).getTime();
+          const timeB = new Date(pB[2], pB[1] - 1, pB[0]).getTime();
+          return timeB - timeA;
+        }
+        return b.localeCompare(a);
+      });
   }, [recordsByDate]);
 
   // When currentDateFormatted changes from top navbar, reset local override to stay in sync
