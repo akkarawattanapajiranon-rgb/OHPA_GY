@@ -1,52 +1,258 @@
-import { StockingTonnageReport } from '../types/ohpa';
+import { StockingTonnageReport } from "../types/ohpa";
 
 export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
-  "01/09/2026": {
-    "productionDay": "01/09/2026",
-    "productionDayValue": "20260901000000",
-    "availableDates": [],
+  "2026-09-26": {
+    "productionDay": "26/09/2026",
+    "productionDayValue": "20260926000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 14873,
-        "mtdPallets": 205,
-        "shift1Tonnage": 4545,
-        "shift1Pallets": 63,
-        "shift2Tonnage": 5018,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 5309,
-        "shift3Pallets": 73,
-        "dailyTotalTonnage": 14872,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 195,
-        "mtdPallets": 43,
-        "shift1Tonnage": 21,
-        "shift1Pallets": 5,
-        "shift2Tonnage": 34,
-        "shift2Pallets": 6,
-        "shift3Tonnage": 139,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 194,
-        "dailyTotalPallets": 43
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 12101,
-        "mtdPallets": 190,
-        "shift1Tonnage": 2047,
-        "shift1Pallets": 30,
-        "shift2Tonnage": 5405,
-        "shift2Pallets": 85,
-        "shift3Tonnage": 4647,
-        "shift3Pallets": 75,
-        "dailyTotalTonnage": 12099,
-        "dailyTotalPallets": 190
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -79,16 +285,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 11469,
-        "mtdPallets": 1086,
-        "shift1Tonnage": 3016,
-        "shift1Pallets": 287,
-        "shift2Tonnage": 4879,
-        "shift2Pallets": 462,
-        "shift3Tonnage": 3573,
-        "shift3Pallets": 337,
-        "dailyTotalTonnage": 11468,
-        "dailyTotalPallets": 1086
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "T",
@@ -107,80 +313,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 46260,
-        "mtdPallets": 3279,
-        "shift1Tonnage": 4218,
-        "shift1Pallets": 231,
-        "shift2Tonnage": 21583,
-        "shift2Pallets": 1582,
-        "shift3Tonnage": 20458,
-        "shift3Pallets": 1466,
-        "dailyTotalTonnage": 46259,
-        "dailyTotalPallets": 3279
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 84898,
-      "mtdPallets": 4803,
-      "shift1Tonnage": 13847,
-      "shift1Pallets": 616,
-      "shift2Tonnage": 36919,
-      "shift2Pallets": 2204,
-      "shift3Tonnage": 34126,
-      "shift3Pallets": 1983,
-      "dailyTotalTonnage": 84892,
-      "dailyTotalPallets": 4803
-    },
-    "fetchedAt": "2026-09-18T03:47:02.026Z"
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
   },
-  "2026-09-01": {
-    "productionDay": "01/09/2026",
-    "productionDayValue": "20260901000000",
-    "availableDates": [],
+  "26/09/2026": {
+    "productionDay": "26/09/2026",
+    "productionDayValue": "20260926000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 14873,
-        "mtdPallets": 205,
-        "shift1Tonnage": 4545,
-        "shift1Pallets": 63,
-        "shift2Tonnage": 5018,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 5309,
-        "shift3Pallets": 73,
-        "dailyTotalTonnage": 14872,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 195,
-        "mtdPallets": 43,
-        "shift1Tonnage": 21,
-        "shift1Pallets": 5,
-        "shift2Tonnage": 34,
-        "shift2Pallets": 6,
-        "shift3Tonnage": 139,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 194,
-        "dailyTotalPallets": 43
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 12101,
-        "mtdPallets": 190,
-        "shift1Tonnage": 2047,
-        "shift1Pallets": 30,
-        "shift2Tonnage": 5405,
-        "shift2Pallets": 85,
-        "shift3Tonnage": 4647,
-        "shift3Pallets": 75,
-        "dailyTotalTonnage": 12099,
-        "dailyTotalPallets": 190
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -213,16 +624,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 11469,
-        "mtdPallets": 1086,
-        "shift1Tonnage": 3016,
-        "shift1Pallets": 287,
-        "shift2Tonnage": 4879,
-        "shift2Pallets": 462,
-        "shift3Tonnage": 3573,
-        "shift3Pallets": 337,
-        "dailyTotalTonnage": 11468,
-        "dailyTotalPallets": 1086
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "T",
@@ -241,80 +652,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 46260,
-        "mtdPallets": 3279,
-        "shift1Tonnage": 4218,
-        "shift1Pallets": 231,
-        "shift2Tonnage": 21583,
-        "shift2Pallets": 1582,
-        "shift3Tonnage": 20458,
-        "shift3Pallets": 1466,
-        "dailyTotalTonnage": 46259,
-        "dailyTotalPallets": 3279
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 84898,
-      "mtdPallets": 4803,
-      "shift1Tonnage": 13847,
-      "shift1Pallets": 616,
-      "shift2Tonnage": 36919,
-      "shift2Pallets": 2204,
-      "shift3Tonnage": 34126,
-      "shift3Pallets": 1983,
-      "dailyTotalTonnage": 84892,
-      "dailyTotalPallets": 4803
-    },
-    "fetchedAt": "2026-09-18T03:47:02.026Z"
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
   },
-  "1/9/2026": {
-    "productionDay": "01/09/2026",
-    "productionDayValue": "20260901000000",
-    "availableDates": [],
+  "26/9/2026": {
+    "productionDay": "26/09/2026",
+    "productionDayValue": "20260926000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 14873,
-        "mtdPallets": 205,
-        "shift1Tonnage": 4545,
-        "shift1Pallets": 63,
-        "shift2Tonnage": 5018,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 5309,
-        "shift3Pallets": 73,
-        "dailyTotalTonnage": 14872,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 195,
-        "mtdPallets": 43,
-        "shift1Tonnage": 21,
-        "shift1Pallets": 5,
-        "shift2Tonnage": 34,
-        "shift2Pallets": 6,
-        "shift3Tonnage": 139,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 194,
-        "dailyTotalPallets": 43
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 12101,
-        "mtdPallets": 190,
-        "shift1Tonnage": 2047,
-        "shift1Pallets": 30,
-        "shift2Tonnage": 5405,
-        "shift2Pallets": 85,
-        "shift3Tonnage": 4647,
-        "shift3Pallets": 75,
-        "dailyTotalTonnage": 12099,
-        "dailyTotalPallets": 190
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -347,16 +963,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 11469,
-        "mtdPallets": 1086,
-        "shift1Tonnage": 3016,
-        "shift1Pallets": 287,
-        "shift2Tonnage": 4879,
-        "shift2Pallets": 462,
-        "shift3Tonnage": 3573,
-        "shift3Pallets": 337,
-        "dailyTotalTonnage": 11468,
-        "dailyTotalPallets": 1086
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "T",
@@ -375,80 +991,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 46260,
-        "mtdPallets": 3279,
-        "shift1Tonnage": 4218,
-        "shift1Pallets": 231,
-        "shift2Tonnage": 21583,
-        "shift2Pallets": 1582,
-        "shift3Tonnage": 20458,
-        "shift3Pallets": 1466,
-        "dailyTotalTonnage": 46259,
-        "dailyTotalPallets": 3279
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 84898,
-      "mtdPallets": 4803,
-      "shift1Tonnage": 13847,
-      "shift1Pallets": 616,
-      "shift2Tonnage": 36919,
-      "shift2Pallets": 2204,
-      "shift3Tonnage": 34126,
-      "shift3Pallets": 1983,
-      "dailyTotalTonnage": 84892,
-      "dailyTotalPallets": 4803
-    },
-    "fetchedAt": "2026-09-18T03:47:02.026Z"
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
   },
-  "02/09/2026": {
-    "productionDay": "02/09/2026",
-    "productionDayValue": "20260902000000",
-    "availableDates": [],
+  "2026-09-25": {
+    "productionDay": "25/09/2026",
+    "productionDayValue": "20260925000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
-        "mtdPallets": 410,
-        "shift1Tonnage": 5010,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4695,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 749,
-        "mtdPallets": 170,
-        "shift1Tonnage": 91,
-        "shift1Pallets": 21,
-        "shift2Tonnage": 252,
-        "shift2Pallets": 58,
-        "shift3Tonnage": 209,
-        "shift3Pallets": 48,
-        "dailyTotalTonnage": 552,
-        "dailyTotalPallets": 127
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 24977,
-        "mtdPallets": 439,
-        "shift1Tonnage": 3612,
-        "shift1Pallets": 79,
-        "shift2Tonnage": 4725,
-        "shift2Pallets": 93,
-        "shift3Tonnage": 4539,
-        "shift3Pallets": 77,
-        "dailyTotalTonnage": 12876,
-        "dailyTotalPallets": 249
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -481,5602 +1302,313 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 19069,
-        "mtdPallets": 1800,
-        "shift1Tonnage": 1362,
-        "shift1Pallets": 133,
-        "shift2Tonnage": 2440,
-        "shift2Pallets": 232,
-        "shift3Tonnage": 3797,
-        "shift3Pallets": 349,
-        "dailyTotalTonnage": 7599,
-        "dailyTotalPallets": 714
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 259,
+        "shift1Pallets": 25,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 104628,
-        "mtdPallets": 7403,
-        "shift1Tonnage": 15790,
-        "shift1Pallets": 1092,
-        "shift2Tonnage": 20663,
-        "shift2Pallets": 1475,
-        "shift3Tonnage": 21914,
-        "shift3Pallets": 1557,
-        "dailyTotalTonnage": 58367,
-        "dailyTotalPallets": 4124
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
-      "mtdPallets": 10222,
-      "shift1Tonnage": 25865,
-      "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
-      "shift2Pallets": 1928,
-      "shift3Tonnage": 35154,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
-      "dailyTotalPallets": 5419
-    },
-    "fetchedAt": "2026-09-18T03:47:02.466Z"
-  },
-  "2026-09-02": {
-    "productionDay": "02/09/2026",
-    "productionDayValue": "20260902000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
-        "mtdPallets": 410,
-        "shift1Tonnage": 5010,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4695,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 749,
-        "mtdPallets": 170,
-        "shift1Tonnage": 91,
-        "shift1Pallets": 21,
-        "shift2Tonnage": 252,
-        "shift2Pallets": 58,
-        "shift3Tonnage": 209,
-        "shift3Pallets": 48,
-        "dailyTotalTonnage": 552,
-        "dailyTotalPallets": 127
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 24977,
-        "mtdPallets": 439,
-        "shift1Tonnage": 3612,
-        "shift1Pallets": 79,
-        "shift2Tonnage": 4725,
-        "shift2Pallets": 93,
-        "shift3Tonnage": 4539,
-        "shift3Pallets": 77,
-        "dailyTotalTonnage": 12876,
-        "dailyTotalPallets": 249
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 19069,
-        "mtdPallets": 1800,
-        "shift1Tonnage": 1362,
-        "shift1Pallets": 133,
-        "shift2Tonnage": 2440,
-        "shift2Pallets": 232,
-        "shift3Tonnage": 3797,
-        "shift3Pallets": 349,
-        "dailyTotalTonnage": 7599,
-        "dailyTotalPallets": 714
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 104628,
-        "mtdPallets": 7403,
-        "shift1Tonnage": 15790,
-        "shift1Pallets": 1092,
-        "shift2Tonnage": 20663,
-        "shift2Pallets": 1475,
-        "shift3Tonnage": 21914,
-        "shift3Pallets": 1557,
-        "dailyTotalTonnage": 58367,
-        "dailyTotalPallets": 4124
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
-      "mtdPallets": 10222,
-      "shift1Tonnage": 25865,
-      "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
-      "shift2Pallets": 1928,
-      "shift3Tonnage": 35154,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
-      "dailyTotalPallets": 5419
-    },
-    "fetchedAt": "2026-09-18T03:47:02.466Z"
-  },
-  "2/9/2026": {
-    "productionDay": "02/09/2026",
-    "productionDayValue": "20260902000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
-        "mtdPallets": 410,
-        "shift1Tonnage": 5010,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4695,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 749,
-        "mtdPallets": 170,
-        "shift1Tonnage": 91,
-        "shift1Pallets": 21,
-        "shift2Tonnage": 252,
-        "shift2Pallets": 58,
-        "shift3Tonnage": 209,
-        "shift3Pallets": 48,
-        "dailyTotalTonnage": 552,
-        "dailyTotalPallets": 127
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 24977,
-        "mtdPallets": 439,
-        "shift1Tonnage": 3612,
-        "shift1Pallets": 79,
-        "shift2Tonnage": 4725,
-        "shift2Pallets": 93,
-        "shift3Tonnage": 4539,
-        "shift3Pallets": 77,
-        "dailyTotalTonnage": 12876,
-        "dailyTotalPallets": 249
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 19069,
-        "mtdPallets": 1800,
-        "shift1Tonnage": 1362,
-        "shift1Pallets": 133,
-        "shift2Tonnage": 2440,
-        "shift2Pallets": 232,
-        "shift3Tonnage": 3797,
-        "shift3Pallets": 349,
-        "dailyTotalTonnage": 7599,
-        "dailyTotalPallets": 714
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 104628,
-        "mtdPallets": 7403,
-        "shift1Tonnage": 15790,
-        "shift1Pallets": 1092,
-        "shift2Tonnage": 20663,
-        "shift2Pallets": 1475,
-        "shift3Tonnage": 21914,
-        "shift3Pallets": 1557,
-        "dailyTotalTonnage": 58367,
-        "dailyTotalPallets": 4124
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
-      "mtdPallets": 10222,
-      "shift1Tonnage": 25865,
-      "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
-      "shift2Pallets": 1928,
-      "shift3Tonnage": 35154,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
-      "dailyTotalPallets": 5419
-    },
-    "fetchedAt": "2026-09-18T03:47:02.466Z"
-  },
-  "03/09/2026": {
-    "productionDay": "03/09/2026",
-    "productionDayValue": "20260903000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
-        "mtdPallets": 615,
-        "shift1Tonnage": 5152,
-        "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3596,
-        "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 1425,
-        "mtdPallets": 325,
-        "shift1Tonnage": 287,
-        "shift1Pallets": 66,
-        "shift2Tonnage": 191,
-        "shift2Pallets": 44,
-        "shift3Tonnage": 196,
-        "shift3Pallets": 45,
-        "dailyTotalTonnage": 674,
-        "dailyTotalPallets": 155
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 41390,
-        "mtdPallets": 734,
-        "shift1Tonnage": 4026,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 6858,
-        "shift2Pallets": 106,
-        "shift3Tonnage": 5528,
-        "shift3Pallets": 105,
-        "dailyTotalTonnage": 16412,
-        "dailyTotalPallets": 295
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 28885,
-        "mtdPallets": 2711,
-        "shift1Tonnage": 2992,
-        "shift1Pallets": 277,
-        "shift2Tonnage": 4002,
-        "shift2Pallets": 368,
-        "shift3Tonnage": 2821,
-        "shift3Pallets": 266,
-        "dailyTotalTonnage": 9815,
-        "dailyTotalPallets": 911
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 170229,
-        "mtdPallets": 12048,
-        "shift1Tonnage": 18706,
-        "shift1Pallets": 1338,
-        "shift2Tonnage": 21856,
-        "shift2Pallets": 1544,
-        "shift3Tonnage": 25036,
-        "shift3Pallets": 1763,
-        "dailyTotalTonnage": 65598,
-        "dailyTotalPallets": 4645
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
-      "mtdPallets": 16433,
-      "shift1Tonnage": 31163,
-      "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
-      "shift2Pallets": 2132,
-      "shift3Tonnage": 37177,
-      "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
-      "dailyTotalPallets": 6211
-    },
-    "fetchedAt": "2026-09-18T03:47:02.872Z"
-  },
-  "2026-09-03": {
-    "productionDay": "03/09/2026",
-    "productionDayValue": "20260903000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
-        "mtdPallets": 615,
-        "shift1Tonnage": 5152,
-        "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3596,
-        "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 1425,
-        "mtdPallets": 325,
-        "shift1Tonnage": 287,
-        "shift1Pallets": 66,
-        "shift2Tonnage": 191,
-        "shift2Pallets": 44,
-        "shift3Tonnage": 196,
-        "shift3Pallets": 45,
-        "dailyTotalTonnage": 674,
-        "dailyTotalPallets": 155
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 41390,
-        "mtdPallets": 734,
-        "shift1Tonnage": 4026,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 6858,
-        "shift2Pallets": 106,
-        "shift3Tonnage": 5528,
-        "shift3Pallets": 105,
-        "dailyTotalTonnage": 16412,
-        "dailyTotalPallets": 295
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 28885,
-        "mtdPallets": 2711,
-        "shift1Tonnage": 2992,
-        "shift1Pallets": 277,
-        "shift2Tonnage": 4002,
-        "shift2Pallets": 368,
-        "shift3Tonnage": 2821,
-        "shift3Pallets": 266,
-        "dailyTotalTonnage": 9815,
-        "dailyTotalPallets": 911
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 170229,
-        "mtdPallets": 12048,
-        "shift1Tonnage": 18706,
-        "shift1Pallets": 1338,
-        "shift2Tonnage": 21856,
-        "shift2Pallets": 1544,
-        "shift3Tonnage": 25036,
-        "shift3Pallets": 1763,
-        "dailyTotalTonnage": 65598,
-        "dailyTotalPallets": 4645
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
-      "mtdPallets": 16433,
-      "shift1Tonnage": 31163,
-      "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
-      "shift2Pallets": 2132,
-      "shift3Tonnage": 37177,
-      "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
-      "dailyTotalPallets": 6211
-    },
-    "fetchedAt": "2026-09-18T03:47:02.872Z"
-  },
-  "3/9/2026": {
-    "productionDay": "03/09/2026",
-    "productionDayValue": "20260903000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
-        "mtdPallets": 615,
-        "shift1Tonnage": 5152,
-        "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3596,
-        "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 1425,
-        "mtdPallets": 325,
-        "shift1Tonnage": 287,
-        "shift1Pallets": 66,
-        "shift2Tonnage": 191,
-        "shift2Pallets": 44,
-        "shift3Tonnage": 196,
-        "shift3Pallets": 45,
-        "dailyTotalTonnage": 674,
-        "dailyTotalPallets": 155
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 41390,
-        "mtdPallets": 734,
-        "shift1Tonnage": 4026,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 6858,
-        "shift2Pallets": 106,
-        "shift3Tonnage": 5528,
-        "shift3Pallets": 105,
-        "dailyTotalTonnage": 16412,
-        "dailyTotalPallets": 295
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 28885,
-        "mtdPallets": 2711,
-        "shift1Tonnage": 2992,
-        "shift1Pallets": 277,
-        "shift2Tonnage": 4002,
-        "shift2Pallets": 368,
-        "shift3Tonnage": 2821,
-        "shift3Pallets": 266,
-        "dailyTotalTonnage": 9815,
-        "dailyTotalPallets": 911
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 170229,
-        "mtdPallets": 12048,
-        "shift1Tonnage": 18706,
-        "shift1Pallets": 1338,
-        "shift2Tonnage": 21856,
-        "shift2Pallets": 1544,
-        "shift3Tonnage": 25036,
-        "shift3Pallets": 1763,
-        "dailyTotalTonnage": 65598,
-        "dailyTotalPallets": 4645
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
-      "mtdPallets": 16433,
-      "shift1Tonnage": 31163,
-      "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
-      "shift2Pallets": 2132,
-      "shift3Tonnage": 37177,
-      "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
-      "dailyTotalPallets": 6211
-    },
-    "fetchedAt": "2026-09-18T03:47:02.872Z"
-  },
-  "04/09/2026": {
-    "productionDay": "04/09/2026",
-    "productionDayValue": "20260904000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
-        "mtdPallets": 820,
-        "shift1Tonnage": 4945,
-        "shift1Pallets": 68,
-        "shift2Tonnage": 5034,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4802,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 14781,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2030,
-        "mtdPallets": 464,
-        "shift1Tonnage": 226,
-        "shift1Pallets": 52,
-        "shift2Tonnage": 161,
-        "shift2Pallets": 37,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 50,
-        "dailyTotalTonnage": 604,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 56797,
-        "mtdPallets": 1054,
-        "shift1Tonnage": 4623,
-        "shift1Pallets": 100,
-        "shift2Tonnage": 3518,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 7264,
-        "shift3Pallets": 104,
-        "dailyTotalTonnage": 15405,
-        "dailyTotalPallets": 320
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 37945,
-        "mtdPallets": 3530,
-        "shift1Tonnage": 2684,
-        "shift1Pallets": 246,
-        "shift2Tonnage": 3037,
-        "shift2Pallets": 269,
-        "shift3Tonnage": 3337,
-        "shift3Pallets": 304,
-        "dailyTotalTonnage": 9058,
-        "dailyTotalPallets": 819
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 236934,
-        "mtdPallets": 16764,
-        "shift1Tonnage": 20715,
-        "shift1Pallets": 1461,
-        "shift2Tonnage": 23174,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22815,
-        "shift3Pallets": 1611,
-        "dailyTotalTonnage": 66704,
-        "dailyTotalPallets": 4716
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
-      "mtdPallets": 22632,
-      "shift1Tonnage": 33193,
-      "shift1Pallets": 1927,
-      "shift2Tonnage": 34924,
-      "shift2Pallets": 2136,
-      "shift3Tonnage": 38435,
-      "shift3Pallets": 2136,
-      "dailyTotalTonnage": 106552,
-      "dailyTotalPallets": 6199
-    },
-    "fetchedAt": "2026-09-18T03:47:03.248Z"
-  },
-  "2026-09-04": {
-    "productionDay": "04/09/2026",
-    "productionDayValue": "20260904000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
-        "mtdPallets": 820,
-        "shift1Tonnage": 4945,
-        "shift1Pallets": 68,
-        "shift2Tonnage": 5034,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4802,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 14781,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2030,
-        "mtdPallets": 464,
-        "shift1Tonnage": 226,
-        "shift1Pallets": 52,
-        "shift2Tonnage": 161,
-        "shift2Pallets": 37,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 50,
-        "dailyTotalTonnage": 604,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 56797,
-        "mtdPallets": 1054,
-        "shift1Tonnage": 4623,
-        "shift1Pallets": 100,
-        "shift2Tonnage": 3518,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 7264,
-        "shift3Pallets": 104,
-        "dailyTotalTonnage": 15405,
-        "dailyTotalPallets": 320
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 37945,
-        "mtdPallets": 3530,
-        "shift1Tonnage": 2684,
-        "shift1Pallets": 246,
-        "shift2Tonnage": 3037,
-        "shift2Pallets": 269,
-        "shift3Tonnage": 3337,
-        "shift3Pallets": 304,
-        "dailyTotalTonnage": 9058,
-        "dailyTotalPallets": 819
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 236934,
-        "mtdPallets": 16764,
-        "shift1Tonnage": 20715,
-        "shift1Pallets": 1461,
-        "shift2Tonnage": 23174,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22815,
-        "shift3Pallets": 1611,
-        "dailyTotalTonnage": 66704,
-        "dailyTotalPallets": 4716
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
-      "mtdPallets": 22632,
-      "shift1Tonnage": 33193,
-      "shift1Pallets": 1927,
-      "shift2Tonnage": 34924,
-      "shift2Pallets": 2136,
-      "shift3Tonnage": 38435,
-      "shift3Pallets": 2136,
-      "dailyTotalTonnage": 106552,
-      "dailyTotalPallets": 6199
-    },
-    "fetchedAt": "2026-09-18T03:47:03.248Z"
-  },
-  "4/9/2026": {
-    "productionDay": "04/09/2026",
-    "productionDayValue": "20260904000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
-        "mtdPallets": 820,
-        "shift1Tonnage": 4945,
-        "shift1Pallets": 68,
-        "shift2Tonnage": 5034,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4802,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 14781,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2030,
-        "mtdPallets": 464,
-        "shift1Tonnage": 226,
-        "shift1Pallets": 52,
-        "shift2Tonnage": 161,
-        "shift2Pallets": 37,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 50,
-        "dailyTotalTonnage": 604,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 56797,
-        "mtdPallets": 1054,
-        "shift1Tonnage": 4623,
-        "shift1Pallets": 100,
-        "shift2Tonnage": 3518,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 7264,
-        "shift3Pallets": 104,
-        "dailyTotalTonnage": 15405,
-        "dailyTotalPallets": 320
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 37945,
-        "mtdPallets": 3530,
-        "shift1Tonnage": 2684,
-        "shift1Pallets": 246,
-        "shift2Tonnage": 3037,
-        "shift2Pallets": 269,
-        "shift3Tonnage": 3337,
-        "shift3Pallets": 304,
-        "dailyTotalTonnage": 9058,
-        "dailyTotalPallets": 819
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 236934,
-        "mtdPallets": 16764,
-        "shift1Tonnage": 20715,
-        "shift1Pallets": 1461,
-        "shift2Tonnage": 23174,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22815,
-        "shift3Pallets": 1611,
-        "dailyTotalTonnage": 66704,
-        "dailyTotalPallets": 4716
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
-      "mtdPallets": 22632,
-      "shift1Tonnage": 33193,
-      "shift1Pallets": 1927,
-      "shift2Tonnage": 34924,
-      "shift2Pallets": 2136,
-      "shift3Tonnage": 38435,
-      "shift3Pallets": 2136,
-      "dailyTotalTonnage": 106552,
-      "dailyTotalPallets": 6199
-    },
-    "fetchedAt": "2026-09-18T03:47:03.248Z"
-  },
-  "05/09/2026": {
-    "productionDay": "05/09/2026",
-    "productionDayValue": "20260905000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 5071,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2619,
-        "mtdPallets": 599,
-        "shift1Tonnage": 239,
-        "shift1Pallets": 55,
-        "shift2Tonnage": 222,
-        "shift2Pallets": 51,
-        "shift3Tonnage": 126,
-        "shift3Pallets": 29,
-        "dailyTotalTonnage": 587,
-        "dailyTotalPallets": 135
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 72199,
-        "mtdPallets": 1355,
-        "shift1Tonnage": 4807,
-        "shift1Pallets": 98,
-        "shift2Tonnage": 5827,
-        "shift2Pallets": 102,
-        "shift3Tonnage": 4766,
-        "shift3Pallets": 101,
-        "dailyTotalTonnage": 15400,
-        "dailyTotalPallets": 301
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 48215,
-        "mtdPallets": 4450,
-        "shift1Tonnage": 1655,
-        "shift1Pallets": 150,
-        "shift2Tonnage": 4814,
-        "shift2Pallets": 428,
-        "shift3Tonnage": 3799,
-        "shift3Pallets": 342,
-        "dailyTotalTonnage": 10268,
-        "dailyTotalPallets": 920
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 303728,
-        "mtdPallets": 21494,
-        "shift1Tonnage": 22067,
-        "shift1Pallets": 1566,
-        "shift2Tonnage": 21291,
-        "shift2Pallets": 1486,
-        "shift3Tonnage": 23435,
-        "shift3Pallets": 1678,
-        "dailyTotalTonnage": 66793,
-        "dailyTotalPallets": 4730
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
-      "mtdPallets": 28923,
-      "shift1Tonnage": 33839,
-      "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
-      "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
-      "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
-      "dailyTotalPallets": 6291
-    },
-    "fetchedAt": "2026-09-18T03:47:03.695Z"
-  },
-  "2026-09-05": {
-    "productionDay": "05/09/2026",
-    "productionDayValue": "20260905000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 5071,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2619,
-        "mtdPallets": 599,
-        "shift1Tonnage": 239,
-        "shift1Pallets": 55,
-        "shift2Tonnage": 222,
-        "shift2Pallets": 51,
-        "shift3Tonnage": 126,
-        "shift3Pallets": 29,
-        "dailyTotalTonnage": 587,
-        "dailyTotalPallets": 135
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 72199,
-        "mtdPallets": 1355,
-        "shift1Tonnage": 4807,
-        "shift1Pallets": 98,
-        "shift2Tonnage": 5827,
-        "shift2Pallets": 102,
-        "shift3Tonnage": 4766,
-        "shift3Pallets": 101,
-        "dailyTotalTonnage": 15400,
-        "dailyTotalPallets": 301
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 48215,
-        "mtdPallets": 4450,
-        "shift1Tonnage": 1655,
-        "shift1Pallets": 150,
-        "shift2Tonnage": 4814,
-        "shift2Pallets": 428,
-        "shift3Tonnage": 3799,
-        "shift3Pallets": 342,
-        "dailyTotalTonnage": 10268,
-        "dailyTotalPallets": 920
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 303728,
-        "mtdPallets": 21494,
-        "shift1Tonnage": 22067,
-        "shift1Pallets": 1566,
-        "shift2Tonnage": 21291,
-        "shift2Pallets": 1486,
-        "shift3Tonnage": 23435,
-        "shift3Pallets": 1678,
-        "dailyTotalTonnage": 66793,
-        "dailyTotalPallets": 4730
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
-      "mtdPallets": 28923,
-      "shift1Tonnage": 33839,
-      "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
-      "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
-      "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
-      "dailyTotalPallets": 6291
-    },
-    "fetchedAt": "2026-09-18T03:47:03.695Z"
-  },
-  "5/9/2026": {
-    "productionDay": "05/09/2026",
-    "productionDayValue": "20260905000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 5071,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 2619,
-        "mtdPallets": 599,
-        "shift1Tonnage": 239,
-        "shift1Pallets": 55,
-        "shift2Tonnage": 222,
-        "shift2Pallets": 51,
-        "shift3Tonnage": 126,
-        "shift3Pallets": 29,
-        "dailyTotalTonnage": 587,
-        "dailyTotalPallets": 135
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 72199,
-        "mtdPallets": 1355,
-        "shift1Tonnage": 4807,
-        "shift1Pallets": 98,
-        "shift2Tonnage": 5827,
-        "shift2Pallets": 102,
-        "shift3Tonnage": 4766,
-        "shift3Pallets": 101,
-        "dailyTotalTonnage": 15400,
-        "dailyTotalPallets": 301
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 48215,
-        "mtdPallets": 4450,
-        "shift1Tonnage": 1655,
-        "shift1Pallets": 150,
-        "shift2Tonnage": 4814,
-        "shift2Pallets": 428,
-        "shift3Tonnage": 3799,
-        "shift3Pallets": 342,
-        "dailyTotalTonnage": 10268,
-        "dailyTotalPallets": 920
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 303728,
-        "mtdPallets": 21494,
-        "shift1Tonnage": 22067,
-        "shift1Pallets": 1566,
-        "shift2Tonnage": 21291,
-        "shift2Pallets": 1486,
-        "shift3Tonnage": 23435,
-        "shift3Pallets": 1678,
-        "dailyTotalTonnage": 66793,
-        "dailyTotalPallets": 4730
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
-      "mtdPallets": 28923,
-      "shift1Tonnage": 33839,
-      "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
-      "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
-      "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
-      "dailyTotalPallets": 6291
-    },
-    "fetchedAt": "2026-09-18T03:47:03.695Z"
-  },
-  "06/09/2026": {
-    "productionDay": "06/09/2026",
-    "productionDayValue": "20260906000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3226,
-        "mtdPallets": 738,
-        "shift1Tonnage": 135,
-        "shift1Pallets": 31,
-        "shift2Tonnage": 270,
-        "shift2Pallets": 62,
-        "shift3Tonnage": 200,
-        "shift3Pallets": 46,
-        "dailyTotalTonnage": 605,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 83284,
-        "mtdPallets": 1613,
-        "shift1Tonnage": 4826,
-        "shift1Pallets": 122,
-        "shift2Tonnage": 4084,
-        "shift2Pallets": 76,
-        "shift3Tonnage": 2174,
-        "shift3Pallets": 60,
-        "dailyTotalTonnage": 11084,
-        "dailyTotalPallets": 258
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 58028,
-        "mtdPallets": 5339,
-        "shift1Tonnage": 4179,
-        "shift1Pallets": 378,
-        "shift2Tonnage": 2628,
-        "shift2Pallets": 233,
-        "shift3Tonnage": 3004,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 9811,
-        "dailyTotalPallets": 889
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 361867,
-        "mtdPallets": 25619,
-        "shift1Tonnage": 18700,
-        "shift1Pallets": 1335,
-        "shift2Tonnage": 23189,
-        "shift2Pallets": 1640,
-        "shift3Tonnage": 16248,
-        "shift3Pallets": 1150,
-        "dailyTotalTonnage": 58137,
-        "dailyTotalPallets": 4125
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
-      "mtdPallets": 34334,
-      "shift1Tonnage": 27840,
-      "shift1Pallets": 1866,
-      "shift2Tonnage": 30171,
-      "shift2Pallets": 2011,
-      "shift3Tonnage": 21626,
-      "shift3Pallets": 1534,
-      "dailyTotalTonnage": 79637,
-      "dailyTotalPallets": 5411
-    },
-    "fetchedAt": "2026-09-18T03:47:04.102Z"
-  },
-  "2026-09-06": {
-    "productionDay": "06/09/2026",
-    "productionDayValue": "20260906000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3226,
-        "mtdPallets": 738,
-        "shift1Tonnage": 135,
-        "shift1Pallets": 31,
-        "shift2Tonnage": 270,
-        "shift2Pallets": 62,
-        "shift3Tonnage": 200,
-        "shift3Pallets": 46,
-        "dailyTotalTonnage": 605,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 83284,
-        "mtdPallets": 1613,
-        "shift1Tonnage": 4826,
-        "shift1Pallets": 122,
-        "shift2Tonnage": 4084,
-        "shift2Pallets": 76,
-        "shift3Tonnage": 2174,
-        "shift3Pallets": 60,
-        "dailyTotalTonnage": 11084,
-        "dailyTotalPallets": 258
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 58028,
-        "mtdPallets": 5339,
-        "shift1Tonnage": 4179,
-        "shift1Pallets": 378,
-        "shift2Tonnage": 2628,
-        "shift2Pallets": 233,
-        "shift3Tonnage": 3004,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 9811,
-        "dailyTotalPallets": 889
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 361867,
-        "mtdPallets": 25619,
-        "shift1Tonnage": 18700,
-        "shift1Pallets": 1335,
-        "shift2Tonnage": 23189,
-        "shift2Pallets": 1640,
-        "shift3Tonnage": 16248,
-        "shift3Pallets": 1150,
-        "dailyTotalTonnage": 58137,
-        "dailyTotalPallets": 4125
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
-      "mtdPallets": 34334,
-      "shift1Tonnage": 27840,
-      "shift1Pallets": 1866,
-      "shift2Tonnage": 30171,
-      "shift2Pallets": 2011,
-      "shift3Tonnage": 21626,
-      "shift3Pallets": 1534,
-      "dailyTotalTonnage": 79637,
-      "dailyTotalPallets": 5411
-    },
-    "fetchedAt": "2026-09-18T03:47:04.102Z"
-  },
-  "6/9/2026": {
-    "productionDay": "06/09/2026",
-    "productionDayValue": "20260906000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
-        "mtdPallets": 1025,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3226,
-        "mtdPallets": 738,
-        "shift1Tonnage": 135,
-        "shift1Pallets": 31,
-        "shift2Tonnage": 270,
-        "shift2Pallets": 62,
-        "shift3Tonnage": 200,
-        "shift3Pallets": 46,
-        "dailyTotalTonnage": 605,
-        "dailyTotalPallets": 139
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 83284,
-        "mtdPallets": 1613,
-        "shift1Tonnage": 4826,
-        "shift1Pallets": 122,
-        "shift2Tonnage": 4084,
-        "shift2Pallets": 76,
-        "shift3Tonnage": 2174,
-        "shift3Pallets": 60,
-        "dailyTotalTonnage": 11084,
-        "dailyTotalPallets": 258
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 58028,
-        "mtdPallets": 5339,
-        "shift1Tonnage": 4179,
-        "shift1Pallets": 378,
-        "shift2Tonnage": 2628,
-        "shift2Pallets": 233,
-        "shift3Tonnage": 3004,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 9811,
-        "dailyTotalPallets": 889
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 361867,
-        "mtdPallets": 25619,
-        "shift1Tonnage": 18700,
-        "shift1Pallets": 1335,
-        "shift2Tonnage": 23189,
-        "shift2Pallets": 1640,
-        "shift3Tonnage": 16248,
-        "shift3Pallets": 1150,
-        "dailyTotalTonnage": 58137,
-        "dailyTotalPallets": 4125
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
-      "mtdPallets": 34334,
-      "shift1Tonnage": 27840,
-      "shift1Pallets": 1866,
-      "shift2Tonnage": 30171,
-      "shift2Pallets": 2011,
-      "shift3Tonnage": 21626,
-      "shift3Pallets": 1534,
-      "dailyTotalTonnage": 79637,
-      "dailyTotalPallets": 5411
-    },
-    "fetchedAt": "2026-09-18T03:47:04.102Z"
-  },
-  "07/09/2026": {
-    "productionDay": "07/09/2026",
-    "productionDayValue": "20260907000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
-        "mtdPallets": 1230,
-        "shift1Tonnage": 6450,
-        "shift1Pallets": 74,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4372,
-        "shift3Pallets": 61,
-        "dailyTotalTonnage": 12463,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3709,
-        "mtdPallets": 849,
-        "shift1Tonnage": 152,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 248,
-        "shift2Pallets": 57,
-        "shift3Tonnage": 82,
-        "shift3Pallets": 19,
-        "dailyTotalTonnage": 482,
-        "dailyTotalPallets": 111
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 100882,
-        "mtdPallets": 1968,
-        "shift1Tonnage": 6420,
-        "shift1Pallets": 120,
-        "shift2Tonnage": 2816,
-        "shift2Pallets": 100,
-        "shift3Tonnage": 8361,
-        "shift3Pallets": 135,
-        "dailyTotalTonnage": 17597,
-        "dailyTotalPallets": 355
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 65490,
-        "mtdPallets": 6009,
-        "shift1Tonnage": 2306,
-        "shift1Pallets": 207,
-        "shift2Tonnage": 2033,
-        "shift2Pallets": 185,
-        "shift3Tonnage": 3122,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 7461,
-        "dailyTotalPallets": 670
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 423661,
-        "mtdPallets": 29969,
-        "shift1Tonnage": 14076,
-        "shift1Pallets": 993,
-        "shift2Tonnage": 24524,
-        "shift2Pallets": 1730,
-        "shift3Tonnage": 23193,
-        "shift3Pallets": 1627,
-        "dailyTotalTonnage": 61793,
-        "dailyTotalPallets": 4350
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
-      "mtdPallets": 40025,
-      "shift1Tonnage": 29404,
-      "shift1Pallets": 1429,
-      "shift2Tonnage": 31262,
-      "shift2Pallets": 2142,
-      "shift3Tonnage": 39130,
-      "shift3Pallets": 2120,
-      "dailyTotalTonnage": 99796,
-      "dailyTotalPallets": 5691
-    },
-    "fetchedAt": "2026-09-18T03:47:04.520Z"
-  },
-  "2026-09-07": {
-    "productionDay": "07/09/2026",
-    "productionDayValue": "20260907000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
-        "mtdPallets": 1230,
-        "shift1Tonnage": 6450,
-        "shift1Pallets": 74,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4372,
-        "shift3Pallets": 61,
-        "dailyTotalTonnage": 12463,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3709,
-        "mtdPallets": 849,
-        "shift1Tonnage": 152,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 248,
-        "shift2Pallets": 57,
-        "shift3Tonnage": 82,
-        "shift3Pallets": 19,
-        "dailyTotalTonnage": 482,
-        "dailyTotalPallets": 111
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 100882,
-        "mtdPallets": 1968,
-        "shift1Tonnage": 6420,
-        "shift1Pallets": 120,
-        "shift2Tonnage": 2816,
-        "shift2Pallets": 100,
-        "shift3Tonnage": 8361,
-        "shift3Pallets": 135,
-        "dailyTotalTonnage": 17597,
-        "dailyTotalPallets": 355
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 65490,
-        "mtdPallets": 6009,
-        "shift1Tonnage": 2306,
-        "shift1Pallets": 207,
-        "shift2Tonnage": 2033,
-        "shift2Pallets": 185,
-        "shift3Tonnage": 3122,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 7461,
-        "dailyTotalPallets": 670
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 423661,
-        "mtdPallets": 29969,
-        "shift1Tonnage": 14076,
-        "shift1Pallets": 993,
-        "shift2Tonnage": 24524,
-        "shift2Pallets": 1730,
-        "shift3Tonnage": 23193,
-        "shift3Pallets": 1627,
-        "dailyTotalTonnage": 61793,
-        "dailyTotalPallets": 4350
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
-      "mtdPallets": 40025,
-      "shift1Tonnage": 29404,
-      "shift1Pallets": 1429,
-      "shift2Tonnage": 31262,
-      "shift2Pallets": 2142,
-      "shift3Tonnage": 39130,
-      "shift3Pallets": 2120,
-      "dailyTotalTonnage": 99796,
-      "dailyTotalPallets": 5691
-    },
-    "fetchedAt": "2026-09-18T03:47:04.520Z"
-  },
-  "7/9/2026": {
-    "productionDay": "07/09/2026",
-    "productionDayValue": "20260907000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
-        "mtdPallets": 1230,
-        "shift1Tonnage": 6450,
-        "shift1Pallets": 74,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4372,
-        "shift3Pallets": 61,
-        "dailyTotalTonnage": 12463,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 3709,
-        "mtdPallets": 849,
-        "shift1Tonnage": 152,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 248,
-        "shift2Pallets": 57,
-        "shift3Tonnage": 82,
-        "shift3Pallets": 19,
-        "dailyTotalTonnage": 482,
-        "dailyTotalPallets": 111
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 100882,
-        "mtdPallets": 1968,
-        "shift1Tonnage": 6420,
-        "shift1Pallets": 120,
-        "shift2Tonnage": 2816,
-        "shift2Pallets": 100,
-        "shift3Tonnage": 8361,
-        "shift3Pallets": 135,
-        "dailyTotalTonnage": 17597,
-        "dailyTotalPallets": 355
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 65490,
-        "mtdPallets": 6009,
-        "shift1Tonnage": 2306,
-        "shift1Pallets": 207,
-        "shift2Tonnage": 2033,
-        "shift2Pallets": 185,
-        "shift3Tonnage": 3122,
-        "shift3Pallets": 278,
-        "dailyTotalTonnage": 7461,
-        "dailyTotalPallets": 670
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 423661,
-        "mtdPallets": 29969,
-        "shift1Tonnage": 14076,
-        "shift1Pallets": 993,
-        "shift2Tonnage": 24524,
-        "shift2Pallets": 1730,
-        "shift3Tonnage": 23193,
-        "shift3Pallets": 1627,
-        "dailyTotalTonnage": 61793,
-        "dailyTotalPallets": 4350
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
-      "mtdPallets": 40025,
-      "shift1Tonnage": 29404,
-      "shift1Pallets": 1429,
-      "shift2Tonnage": 31262,
-      "shift2Pallets": 2142,
-      "shift3Tonnage": 39130,
-      "shift3Pallets": 2120,
-      "dailyTotalTonnage": 99796,
-      "dailyTotalPallets": 5691
-    },
-    "fetchedAt": "2026-09-18T03:47:04.520Z"
-  },
-  "08/09/2026": {
-    "productionDay": "08/09/2026",
-    "productionDayValue": "20260908000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
-        "mtdPallets": 1435,
-        "shift1Tonnage": 4302,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4663,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4373,
-        "mtdPallets": 1001,
-        "shift1Tonnage": 335,
-        "shift1Pallets": 77,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 142,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 661,
-        "dailyTotalPallets": 152
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 116195,
-        "mtdPallets": 2247,
-        "shift1Tonnage": 2895,
-        "shift1Pallets": 73,
-        "shift2Tonnage": 7076,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5340,
-        "shift3Pallets": 99,
-        "dailyTotalTonnage": 15311,
-        "dailyTotalPallets": 279
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 73203,
-        "mtdPallets": 6710,
-        "shift1Tonnage": 2224,
-        "shift1Pallets": 201,
-        "shift2Tonnage": 2233,
-        "shift2Pallets": 201,
-        "shift3Tonnage": 3254,
-        "shift3Pallets": 299,
-        "dailyTotalTonnage": 7711,
-        "dailyTotalPallets": 701
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 489276,
-        "mtdPallets": 34599,
-        "shift1Tonnage": 18507,
-        "shift1Pallets": 1321,
-        "shift2Tonnage": 24472,
-        "shift2Pallets": 1708,
-        "shift3Tonnage": 22634,
-        "shift3Pallets": 1601,
-        "dailyTotalTonnage": 65613,
-        "dailyTotalPallets": 4630
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
-      "mtdPallets": 45992,
-      "shift1Tonnage": 28263,
-      "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
-      "shift2Pallets": 2129,
-      "shift3Tonnage": 36033,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
-      "dailyTotalPallets": 5967
-    },
-    "fetchedAt": "2026-09-18T03:47:04.882Z"
-  },
-  "2026-09-08": {
-    "productionDay": "08/09/2026",
-    "productionDayValue": "20260908000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
-        "mtdPallets": 1435,
-        "shift1Tonnage": 4302,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4663,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4373,
-        "mtdPallets": 1001,
-        "shift1Tonnage": 335,
-        "shift1Pallets": 77,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 142,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 661,
-        "dailyTotalPallets": 152
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 116195,
-        "mtdPallets": 2247,
-        "shift1Tonnage": 2895,
-        "shift1Pallets": 73,
-        "shift2Tonnage": 7076,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5340,
-        "shift3Pallets": 99,
-        "dailyTotalTonnage": 15311,
-        "dailyTotalPallets": 279
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 73203,
-        "mtdPallets": 6710,
-        "shift1Tonnage": 2224,
-        "shift1Pallets": 201,
-        "shift2Tonnage": 2233,
-        "shift2Pallets": 201,
-        "shift3Tonnage": 3254,
-        "shift3Pallets": 299,
-        "dailyTotalTonnage": 7711,
-        "dailyTotalPallets": 701
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 489276,
-        "mtdPallets": 34599,
-        "shift1Tonnage": 18507,
-        "shift1Pallets": 1321,
-        "shift2Tonnage": 24472,
-        "shift2Pallets": 1708,
-        "shift3Tonnage": 22634,
-        "shift3Pallets": 1601,
-        "dailyTotalTonnage": 65613,
-        "dailyTotalPallets": 4630
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
-      "mtdPallets": 45992,
-      "shift1Tonnage": 28263,
-      "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
-      "shift2Pallets": 2129,
-      "shift3Tonnage": 36033,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
-      "dailyTotalPallets": 5967
-    },
-    "fetchedAt": "2026-09-18T03:47:04.882Z"
-  },
-  "8/9/2026": {
-    "productionDay": "08/09/2026",
-    "productionDayValue": "20260908000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
-        "mtdPallets": 1435,
-        "shift1Tonnage": 4302,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4663,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4373,
-        "mtdPallets": 1001,
-        "shift1Tonnage": 335,
-        "shift1Pallets": 77,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 142,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 661,
-        "dailyTotalPallets": 152
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 116195,
-        "mtdPallets": 2247,
-        "shift1Tonnage": 2895,
-        "shift1Pallets": 73,
-        "shift2Tonnage": 7076,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5340,
-        "shift3Pallets": 99,
-        "dailyTotalTonnage": 15311,
-        "dailyTotalPallets": 279
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 73203,
-        "mtdPallets": 6710,
-        "shift1Tonnage": 2224,
-        "shift1Pallets": 201,
-        "shift2Tonnage": 2233,
-        "shift2Pallets": 201,
-        "shift3Tonnage": 3254,
-        "shift3Pallets": 299,
-        "dailyTotalTonnage": 7711,
-        "dailyTotalPallets": 701
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 489276,
-        "mtdPallets": 34599,
-        "shift1Tonnage": 18507,
-        "shift1Pallets": 1321,
-        "shift2Tonnage": 24472,
-        "shift2Pallets": 1708,
-        "shift3Tonnage": 22634,
-        "shift3Pallets": 1601,
-        "dailyTotalTonnage": 65613,
-        "dailyTotalPallets": 4630
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
-      "mtdPallets": 45992,
-      "shift1Tonnage": 28263,
-      "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
-      "shift2Pallets": 2129,
-      "shift3Tonnage": 36033,
-      "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
-      "dailyTotalPallets": 5967
-    },
-    "fetchedAt": "2026-09-18T03:47:04.882Z"
-  },
-  "09/09/2026": {
-    "productionDay": "09/09/2026",
-    "productionDayValue": "20260909000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
-        "mtdPallets": 1640,
-        "shift1Tonnage": 3589,
-        "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 3542,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4851,
-        "mtdPallets": 1110,
-        "shift1Tonnage": 100,
-        "shift1Pallets": 23,
-        "shift2Tonnage": 65,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 311,
-        "shift3Pallets": 71,
-        "dailyTotalTonnage": 476,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 129712,
-        "mtdPallets": 2593,
-        "shift1Tonnage": 4094,
-        "shift1Pallets": 127,
-        "shift2Tonnage": 5960,
-        "shift2Pallets": 135,
-        "shift3Tonnage": 3461,
-        "shift3Pallets": 84,
-        "dailyTotalTonnage": 13515,
-        "dailyTotalPallets": 346
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 80384,
-        "mtdPallets": 7377,
-        "shift1Tonnage": 1852,
-        "shift1Pallets": 176,
-        "shift2Tonnage": 2767,
-        "shift2Pallets": 254,
-        "shift3Tonnage": 2561,
-        "shift3Pallets": 237,
-        "dailyTotalTonnage": 7180,
-        "dailyTotalPallets": 667
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 550334,
-        "mtdPallets": 38906,
-        "shift1Tonnage": 19768,
-        "shift1Pallets": 1378,
-        "shift2Tonnage": 21713,
-        "shift2Pallets": 1547,
-        "shift3Tonnage": 19576,
-        "shift3Pallets": 1382,
-        "dailyTotalTonnage": 61057,
-        "dailyTotalPallets": 4307
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
-      "mtdPallets": 51626,
-      "shift1Tonnage": 29403,
-      "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
-      "shift2Pallets": 2020,
-      "shift3Tonnage": 29451,
-      "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
-      "dailyTotalPallets": 5634
-    },
-    "fetchedAt": "2026-09-18T03:47:05.260Z"
-  },
-  "2026-09-09": {
-    "productionDay": "09/09/2026",
-    "productionDayValue": "20260909000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
-        "mtdPallets": 1640,
-        "shift1Tonnage": 3589,
-        "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 3542,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4851,
-        "mtdPallets": 1110,
-        "shift1Tonnage": 100,
-        "shift1Pallets": 23,
-        "shift2Tonnage": 65,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 311,
-        "shift3Pallets": 71,
-        "dailyTotalTonnage": 476,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 129712,
-        "mtdPallets": 2593,
-        "shift1Tonnage": 4094,
-        "shift1Pallets": 127,
-        "shift2Tonnage": 5960,
-        "shift2Pallets": 135,
-        "shift3Tonnage": 3461,
-        "shift3Pallets": 84,
-        "dailyTotalTonnage": 13515,
-        "dailyTotalPallets": 346
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 80384,
-        "mtdPallets": 7377,
-        "shift1Tonnage": 1852,
-        "shift1Pallets": 176,
-        "shift2Tonnage": 2767,
-        "shift2Pallets": 254,
-        "shift3Tonnage": 2561,
-        "shift3Pallets": 237,
-        "dailyTotalTonnage": 7180,
-        "dailyTotalPallets": 667
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 550334,
-        "mtdPallets": 38906,
-        "shift1Tonnage": 19768,
-        "shift1Pallets": 1378,
-        "shift2Tonnage": 21713,
-        "shift2Pallets": 1547,
-        "shift3Tonnage": 19576,
-        "shift3Pallets": 1382,
-        "dailyTotalTonnage": 61057,
-        "dailyTotalPallets": 4307
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
-      "mtdPallets": 51626,
-      "shift1Tonnage": 29403,
-      "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
-      "shift2Pallets": 2020,
-      "shift3Tonnage": 29451,
-      "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
-      "dailyTotalPallets": 5634
-    },
-    "fetchedAt": "2026-09-18T03:47:05.260Z"
-  },
-  "9/9/2026": {
-    "productionDay": "09/09/2026",
-    "productionDayValue": "20260909000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
-        "mtdPallets": 1640,
-        "shift1Tonnage": 3589,
-        "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
-        "shift2Pallets": 69,
-        "shift3Tonnage": 3542,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 4851,
-        "mtdPallets": 1110,
-        "shift1Tonnage": 100,
-        "shift1Pallets": 23,
-        "shift2Tonnage": 65,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 311,
-        "shift3Pallets": 71,
-        "dailyTotalTonnage": 476,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 129712,
-        "mtdPallets": 2593,
-        "shift1Tonnage": 4094,
-        "shift1Pallets": 127,
-        "shift2Tonnage": 5960,
-        "shift2Pallets": 135,
-        "shift3Tonnage": 3461,
-        "shift3Pallets": 84,
-        "dailyTotalTonnage": 13515,
-        "dailyTotalPallets": 346
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 80384,
-        "mtdPallets": 7377,
-        "shift1Tonnage": 1852,
-        "shift1Pallets": 176,
-        "shift2Tonnage": 2767,
-        "shift2Pallets": 254,
-        "shift3Tonnage": 2561,
-        "shift3Pallets": 237,
-        "dailyTotalTonnage": 7180,
-        "dailyTotalPallets": 667
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 550334,
-        "mtdPallets": 38906,
-        "shift1Tonnage": 19768,
-        "shift1Pallets": 1378,
-        "shift2Tonnage": 21713,
-        "shift2Pallets": 1547,
-        "shift3Tonnage": 19576,
-        "shift3Pallets": 1382,
-        "dailyTotalTonnage": 61057,
-        "dailyTotalPallets": 4307
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
-      "mtdPallets": 51626,
-      "shift1Tonnage": 29403,
-      "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
-      "shift2Pallets": 2020,
-      "shift3Tonnage": 29451,
-      "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
-      "dailyTotalPallets": 5634
-    },
-    "fetchedAt": "2026-09-18T03:47:05.260Z"
-  },
-  "10/09/2026": {
-    "productionDay": "10/09/2026",
-    "productionDayValue": "20260910000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
-        "mtdPallets": 1845,
-        "shift1Tonnage": 3262,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4684,
-        "shift2Pallets": 65,
-        "shift3Tonnage": 5050,
-        "shift3Pallets": 70,
-        "dailyTotalTonnage": 12996,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5330,
-        "mtdPallets": 1219,
-        "shift1Tonnage": 210,
-        "shift1Pallets": 48,
-        "shift2Tonnage": 61,
-        "shift2Pallets": 14,
-        "shift3Tonnage": 206,
-        "shift3Pallets": 47,
-        "dailyTotalTonnage": 477,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 146405,
-        "mtdPallets": 2938,
-        "shift1Tonnage": 5007,
-        "shift1Pallets": 102,
-        "shift2Tonnage": 6596,
-        "shift2Pallets": 136,
-        "shift3Tonnage": 5089,
-        "shift3Pallets": 107,
-        "dailyTotalTonnage": 16692,
-        "dailyTotalPallets": 345
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 90541,
-        "mtdPallets": 8281,
-        "shift1Tonnage": 2387,
-        "shift1Pallets": 221,
-        "shift2Tonnage": 4296,
-        "shift2Pallets": 374,
-        "shift3Tonnage": 3473,
-        "shift3Pallets": 309,
-        "dailyTotalTonnage": 10156,
-        "dailyTotalPallets": 904
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 612540,
-        "mtdPallets": 43331,
-        "shift1Tonnage": 18021,
-        "shift1Pallets": 1290,
-        "shift2Tonnage": 21473,
-        "shift2Pallets": 1527,
-        "shift3Tonnage": 22710,
-        "shift3Pallets": 1608,
-        "dailyTotalTonnage": 62204,
-        "dailyTotalPallets": 4425
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
-      "mtdPallets": 57614,
-      "shift1Tonnage": 28887,
-      "shift1Pallets": 1731,
-      "shift2Tonnage": 37110,
-      "shift2Pallets": 2116,
-      "shift3Tonnage": 36528,
-      "shift3Pallets": 2141,
-      "dailyTotalTonnage": 102525,
-      "dailyTotalPallets": 5988
-    },
-    "fetchedAt": "2026-09-18T03:47:05.640Z"
-  },
-  "2026-09-10": {
-    "productionDay": "10/09/2026",
-    "productionDayValue": "20260910000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
-        "mtdPallets": 1845,
-        "shift1Tonnage": 3262,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4684,
-        "shift2Pallets": 65,
-        "shift3Tonnage": 5050,
-        "shift3Pallets": 70,
-        "dailyTotalTonnage": 12996,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5330,
-        "mtdPallets": 1219,
-        "shift1Tonnage": 210,
-        "shift1Pallets": 48,
-        "shift2Tonnage": 61,
-        "shift2Pallets": 14,
-        "shift3Tonnage": 206,
-        "shift3Pallets": 47,
-        "dailyTotalTonnage": 477,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 146405,
-        "mtdPallets": 2938,
-        "shift1Tonnage": 5007,
-        "shift1Pallets": 102,
-        "shift2Tonnage": 6596,
-        "shift2Pallets": 136,
-        "shift3Tonnage": 5089,
-        "shift3Pallets": 107,
-        "dailyTotalTonnage": 16692,
-        "dailyTotalPallets": 345
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 90541,
-        "mtdPallets": 8281,
-        "shift1Tonnage": 2387,
-        "shift1Pallets": 221,
-        "shift2Tonnage": 4296,
-        "shift2Pallets": 374,
-        "shift3Tonnage": 3473,
-        "shift3Pallets": 309,
-        "dailyTotalTonnage": 10156,
-        "dailyTotalPallets": 904
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 612540,
-        "mtdPallets": 43331,
-        "shift1Tonnage": 18021,
-        "shift1Pallets": 1290,
-        "shift2Tonnage": 21473,
-        "shift2Pallets": 1527,
-        "shift3Tonnage": 22710,
-        "shift3Pallets": 1608,
-        "dailyTotalTonnage": 62204,
-        "dailyTotalPallets": 4425
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
-      "mtdPallets": 57614,
-      "shift1Tonnage": 28887,
-      "shift1Pallets": 1731,
-      "shift2Tonnage": 37110,
-      "shift2Pallets": 2116,
-      "shift3Tonnage": 36528,
-      "shift3Pallets": 2141,
-      "dailyTotalTonnage": 102525,
-      "dailyTotalPallets": 5988
-    },
-    "fetchedAt": "2026-09-18T03:47:05.640Z"
-  },
-  "10/9/2026": {
-    "productionDay": "10/09/2026",
-    "productionDayValue": "20260910000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
-        "mtdPallets": 1845,
-        "shift1Tonnage": 3262,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4684,
-        "shift2Pallets": 65,
-        "shift3Tonnage": 5050,
-        "shift3Pallets": 70,
-        "dailyTotalTonnage": 12996,
-        "dailyTotalPallets": 205
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5330,
-        "mtdPallets": 1219,
-        "shift1Tonnage": 210,
-        "shift1Pallets": 48,
-        "shift2Tonnage": 61,
-        "shift2Pallets": 14,
-        "shift3Tonnage": 206,
-        "shift3Pallets": 47,
-        "dailyTotalTonnage": 477,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 146405,
-        "mtdPallets": 2938,
-        "shift1Tonnage": 5007,
-        "shift1Pallets": 102,
-        "shift2Tonnage": 6596,
-        "shift2Pallets": 136,
-        "shift3Tonnage": 5089,
-        "shift3Pallets": 107,
-        "dailyTotalTonnage": 16692,
-        "dailyTotalPallets": 345
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 90541,
-        "mtdPallets": 8281,
-        "shift1Tonnage": 2387,
-        "shift1Pallets": 221,
-        "shift2Tonnage": 4296,
-        "shift2Pallets": 374,
-        "shift3Tonnage": 3473,
-        "shift3Pallets": 309,
-        "dailyTotalTonnage": 10156,
-        "dailyTotalPallets": 904
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 612540,
-        "mtdPallets": 43331,
-        "shift1Tonnage": 18021,
-        "shift1Pallets": 1290,
-        "shift2Tonnage": 21473,
-        "shift2Pallets": 1527,
-        "shift3Tonnage": 22710,
-        "shift3Pallets": 1608,
-        "dailyTotalTonnage": 62204,
-        "dailyTotalPallets": 4425
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
-      "mtdPallets": 57614,
-      "shift1Tonnage": 28887,
-      "shift1Pallets": 1731,
-      "shift2Tonnage": 37110,
-      "shift2Pallets": 2116,
-      "shift3Tonnage": 36528,
-      "shift3Pallets": 2141,
-      "dailyTotalTonnage": 102525,
-      "dailyTotalPallets": 5988
-    },
-    "fetchedAt": "2026-09-18T03:47:05.640Z"
-  },
-  "11/09/2026": {
-    "productionDay": "11/09/2026",
-    "productionDayValue": "20260911000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
-        "mtdPallets": 2051,
-        "shift1Tonnage": 5042,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3469,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 10152,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5809,
-        "mtdPallets": 1328,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 180,
-        "shift2Pallets": 41,
-        "shift3Tonnage": 145,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 478,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 162802,
-        "mtdPallets": 3285,
-        "shift1Tonnage": 5583,
-        "shift1Pallets": 115,
-        "shift2Tonnage": 5876,
-        "shift2Pallets": 109,
-        "shift3Tonnage": 4937,
-        "shift3Pallets": 123,
-        "dailyTotalTonnage": 16396,
-        "dailyTotalPallets": 347
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 102416,
-        "mtdPallets": 9327,
-        "shift1Tonnage": 4018,
-        "shift1Pallets": 357,
-        "shift2Tonnage": 4507,
-        "shift2Pallets": 384,
-        "shift3Tonnage": 3349,
-        "shift3Pallets": 305,
-        "dailyTotalTonnage": 11874,
-        "dailyTotalPallets": 1046
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 677266,
-        "mtdPallets": 47913,
-        "shift1Tonnage": 20409,
-        "shift1Pallets": 1449,
-        "shift2Tonnage": 22913,
-        "shift2Pallets": 1618,
-        "shift3Tonnage": 21402,
-        "shift3Pallets": 1515,
-        "dailyTotalTonnage": 64724,
-        "dailyTotalPallets": 4582
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
-      "mtdPallets": 63904,
-      "shift1Tonnage": 35205,
-      "shift1Pallets": 2026,
-      "shift2Tonnage": 35117,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 33302,
-      "shift3Pallets": 2042,
-      "dailyTotalTonnage": 103624,
-      "dailyTotalPallets": 6290
-    },
-    "fetchedAt": "2026-09-18T03:47:06.049Z"
-  },
-  "2026-09-11": {
-    "productionDay": "11/09/2026",
-    "productionDayValue": "20260911000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
-        "mtdPallets": 2051,
-        "shift1Tonnage": 5042,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3469,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 10152,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5809,
-        "mtdPallets": 1328,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 180,
-        "shift2Pallets": 41,
-        "shift3Tonnage": 145,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 478,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 162802,
-        "mtdPallets": 3285,
-        "shift1Tonnage": 5583,
-        "shift1Pallets": 115,
-        "shift2Tonnage": 5876,
-        "shift2Pallets": 109,
-        "shift3Tonnage": 4937,
-        "shift3Pallets": 123,
-        "dailyTotalTonnage": 16396,
-        "dailyTotalPallets": 347
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 102416,
-        "mtdPallets": 9327,
-        "shift1Tonnage": 4018,
-        "shift1Pallets": 357,
-        "shift2Tonnage": 4507,
-        "shift2Pallets": 384,
-        "shift3Tonnage": 3349,
-        "shift3Pallets": 305,
-        "dailyTotalTonnage": 11874,
-        "dailyTotalPallets": 1046
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 677266,
-        "mtdPallets": 47913,
-        "shift1Tonnage": 20409,
-        "shift1Pallets": 1449,
-        "shift2Tonnage": 22913,
-        "shift2Pallets": 1618,
-        "shift3Tonnage": 21402,
-        "shift3Pallets": 1515,
-        "dailyTotalTonnage": 64724,
-        "dailyTotalPallets": 4582
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
-      "mtdPallets": 63904,
-      "shift1Tonnage": 35205,
-      "shift1Pallets": 2026,
-      "shift2Tonnage": 35117,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 33302,
-      "shift3Pallets": 2042,
-      "dailyTotalTonnage": 103624,
-      "dailyTotalPallets": 6290
-    },
-    "fetchedAt": "2026-09-18T03:47:06.049Z"
-  },
-  "11/9/2026": {
-    "productionDay": "11/09/2026",
-    "productionDayValue": "20260911000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
-        "mtdPallets": 2051,
-        "shift1Tonnage": 5042,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 1641,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3469,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 10152,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 5809,
-        "mtdPallets": 1328,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 180,
-        "shift2Pallets": 41,
-        "shift3Tonnage": 145,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 478,
-        "dailyTotalPallets": 109
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 162802,
-        "mtdPallets": 3285,
-        "shift1Tonnage": 5583,
-        "shift1Pallets": 115,
-        "shift2Tonnage": 5876,
-        "shift2Pallets": 109,
-        "shift3Tonnage": 4937,
-        "shift3Pallets": 123,
-        "dailyTotalTonnage": 16396,
-        "dailyTotalPallets": 347
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 102416,
-        "mtdPallets": 9327,
-        "shift1Tonnage": 4018,
-        "shift1Pallets": 357,
-        "shift2Tonnage": 4507,
-        "shift2Pallets": 384,
-        "shift3Tonnage": 3349,
-        "shift3Pallets": 305,
-        "dailyTotalTonnage": 11874,
-        "dailyTotalPallets": 1046
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 677266,
-        "mtdPallets": 47913,
-        "shift1Tonnage": 20409,
-        "shift1Pallets": 1449,
-        "shift2Tonnage": 22913,
-        "shift2Pallets": 1618,
-        "shift3Tonnage": 21402,
-        "shift3Pallets": 1515,
-        "dailyTotalTonnage": 64724,
-        "dailyTotalPallets": 4582
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
-      "mtdPallets": 63904,
-      "shift1Tonnage": 35205,
-      "shift1Pallets": 2026,
-      "shift2Tonnage": 35117,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 33302,
-      "shift3Pallets": 2042,
-      "dailyTotalTonnage": 103624,
-      "dailyTotalPallets": 6290
-    },
-    "fetchedAt": "2026-09-18T03:47:06.049Z"
-  },
-  "12/09/2026": {
-    "productionDay": "12/09/2026",
-    "productionDayValue": "20260912000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
-        "mtdPallets": 2258,
-        "shift1Tonnage": 4529,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5059,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3405,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 12993,
-        "dailyTotalPallets": 207
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6336,
-        "mtdPallets": 1448,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 42,
-        "shift3Tonnage": 188,
-        "shift3Pallets": 43,
-        "dailyTotalTonnage": 525,
-        "dailyTotalPallets": 120
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 177577,
-        "mtdPallets": 3578,
-        "shift1Tonnage": 4411,
-        "shift1Pallets": 87,
-        "shift2Tonnage": 3837,
-        "shift2Pallets": 108,
-        "shift3Tonnage": 6526,
-        "shift3Pallets": 98,
-        "dailyTotalTonnage": 14774,
-        "dailyTotalPallets": 293
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 110437,
-        "mtdPallets": 10039,
-        "shift1Tonnage": 3157,
-        "shift1Pallets": 284,
-        "shift2Tonnage": 2878,
-        "shift2Pallets": 251,
-        "shift3Tonnage": 1984,
-        "shift3Pallets": 177,
-        "dailyTotalTonnage": 8019,
-        "dailyTotalPallets": 712
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 742176,
-        "mtdPallets": 52512,
-        "shift1Tonnage": 24291,
-        "shift1Pallets": 1718,
-        "shift2Tonnage": 24789,
-        "shift2Pallets": 1751,
-        "shift3Tonnage": 15828,
-        "shift3Pallets": 1130,
-        "dailyTotalTonnage": 64908,
-        "dailyTotalPallets": 4599
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
-      "mtdPallets": 69835,
-      "shift1Tonnage": 36541,
-      "shift1Pallets": 2194,
-      "shift2Tonnage": 36747,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 27931,
-      "shift3Pallets": 1515,
-      "dailyTotalTonnage": 101219,
-      "dailyTotalPallets": 5931
-    },
-    "fetchedAt": "2026-09-18T03:47:06.424Z"
-  },
-  "2026-09-12": {
-    "productionDay": "12/09/2026",
-    "productionDayValue": "20260912000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
-        "mtdPallets": 2258,
-        "shift1Tonnage": 4529,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5059,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3405,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 12993,
-        "dailyTotalPallets": 207
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6336,
-        "mtdPallets": 1448,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 42,
-        "shift3Tonnage": 188,
-        "shift3Pallets": 43,
-        "dailyTotalTonnage": 525,
-        "dailyTotalPallets": 120
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 177577,
-        "mtdPallets": 3578,
-        "shift1Tonnage": 4411,
-        "shift1Pallets": 87,
-        "shift2Tonnage": 3837,
-        "shift2Pallets": 108,
-        "shift3Tonnage": 6526,
-        "shift3Pallets": 98,
-        "dailyTotalTonnage": 14774,
-        "dailyTotalPallets": 293
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 110437,
-        "mtdPallets": 10039,
-        "shift1Tonnage": 3157,
-        "shift1Pallets": 284,
-        "shift2Tonnage": 2878,
-        "shift2Pallets": 251,
-        "shift3Tonnage": 1984,
-        "shift3Pallets": 177,
-        "dailyTotalTonnage": 8019,
-        "dailyTotalPallets": 712
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 742176,
-        "mtdPallets": 52512,
-        "shift1Tonnage": 24291,
-        "shift1Pallets": 1718,
-        "shift2Tonnage": 24789,
-        "shift2Pallets": 1751,
-        "shift3Tonnage": 15828,
-        "shift3Pallets": 1130,
-        "dailyTotalTonnage": 64908,
-        "dailyTotalPallets": 4599
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
-      "mtdPallets": 69835,
-      "shift1Tonnage": 36541,
-      "shift1Pallets": 2194,
-      "shift2Tonnage": 36747,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 27931,
-      "shift3Pallets": 1515,
-      "dailyTotalTonnage": 101219,
-      "dailyTotalPallets": 5931
-    },
-    "fetchedAt": "2026-09-18T03:47:06.424Z"
-  },
-  "12/9/2026": {
-    "productionDay": "12/09/2026",
-    "productionDayValue": "20260912000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
-        "mtdPallets": 2258,
-        "shift1Tonnage": 4529,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5059,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 3405,
-        "shift3Pallets": 67,
-        "dailyTotalTonnage": 12993,
-        "dailyTotalPallets": 207
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6336,
-        "mtdPallets": 1448,
-        "shift1Tonnage": 153,
-        "shift1Pallets": 35,
-        "shift2Tonnage": 184,
-        "shift2Pallets": 42,
-        "shift3Tonnage": 188,
-        "shift3Pallets": 43,
-        "dailyTotalTonnage": 525,
-        "dailyTotalPallets": 120
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 177577,
-        "mtdPallets": 3578,
-        "shift1Tonnage": 4411,
-        "shift1Pallets": 87,
-        "shift2Tonnage": 3837,
-        "shift2Pallets": 108,
-        "shift3Tonnage": 6526,
-        "shift3Pallets": 98,
-        "dailyTotalTonnage": 14774,
-        "dailyTotalPallets": 293
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 110437,
-        "mtdPallets": 10039,
-        "shift1Tonnage": 3157,
-        "shift1Pallets": 284,
-        "shift2Tonnage": 2878,
-        "shift2Pallets": 251,
-        "shift3Tonnage": 1984,
-        "shift3Pallets": 177,
-        "dailyTotalTonnage": 8019,
-        "dailyTotalPallets": 712
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 742176,
-        "mtdPallets": 52512,
-        "shift1Tonnage": 24291,
-        "shift1Pallets": 1718,
-        "shift2Tonnage": 24789,
-        "shift2Pallets": 1751,
-        "shift3Tonnage": 15828,
-        "shift3Pallets": 1130,
-        "dailyTotalTonnage": 64908,
-        "dailyTotalPallets": 4599
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
-      "mtdPallets": 69835,
-      "shift1Tonnage": 36541,
-      "shift1Pallets": 2194,
-      "shift2Tonnage": 36747,
-      "shift2Pallets": 2222,
-      "shift3Tonnage": 27931,
-      "shift3Pallets": 1515,
-      "dailyTotalTonnage": 101219,
-      "dailyTotalPallets": 5931
-    },
-    "fetchedAt": "2026-09-18T03:47:06.424Z"
-  },
-  "13/09/2026": {
-    "productionDay": "13/09/2026",
-    "productionDayValue": "20260913000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
-        "mtdPallets": 2292,
-        "shift1Tonnage": 797,
-        "shift1Pallets": 34,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 797,
-        "dailyTotalPallets": 34
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6648,
-        "mtdPallets": 1518,
-        "shift1Tonnage": 105,
-        "shift1Pallets": 24,
-        "shift2Tonnage": 153,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 52,
-        "shift3Pallets": 11,
-        "dailyTotalTonnage": 310,
-        "dailyTotalPallets": 70
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 192695,
-        "mtdPallets": 3888,
-        "shift1Tonnage": 4896,
-        "shift1Pallets": 89,
-        "shift2Tonnage": 4478,
-        "shift2Pallets": 81,
-        "shift3Tonnage": 5741,
-        "shift3Pallets": 140,
-        "dailyTotalTonnage": 15115,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 117646,
-        "mtdPallets": 10699,
-        "shift1Tonnage": 2842,
-        "shift1Pallets": 252,
-        "shift2Tonnage": 2202,
-        "shift2Pallets": 208,
-        "shift3Tonnage": 2163,
-        "shift3Pallets": 200,
-        "dailyTotalTonnage": 7207,
-        "dailyTotalPallets": 660
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 797924,
-        "mtdPallets": 56476,
-        "shift1Tonnage": 16296,
-        "shift1Pallets": 1150,
-        "shift2Tonnage": 18286,
-        "shift2Pallets": 1294,
-        "shift3Tonnage": 21164,
-        "shift3Pallets": 1520,
-        "dailyTotalTonnage": 55746,
-        "dailyTotalPallets": 3964
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
-      "mtdPallets": 74873,
-      "shift1Tonnage": 24936,
-      "shift1Pallets": 1549,
-      "shift2Tonnage": 25119,
-      "shift2Pallets": 1618,
-      "shift3Tonnage": 29120,
-      "shift3Pallets": 1871,
-      "dailyTotalTonnage": 79175,
-      "dailyTotalPallets": 5038
-    },
-    "fetchedAt": "2026-09-18T03:47:06.867Z"
-  },
-  "2026-09-13": {
-    "productionDay": "13/09/2026",
-    "productionDayValue": "20260913000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
-        "mtdPallets": 2292,
-        "shift1Tonnage": 797,
-        "shift1Pallets": 34,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 797,
-        "dailyTotalPallets": 34
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6648,
-        "mtdPallets": 1518,
-        "shift1Tonnage": 105,
-        "shift1Pallets": 24,
-        "shift2Tonnage": 153,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 52,
-        "shift3Pallets": 11,
-        "dailyTotalTonnage": 310,
-        "dailyTotalPallets": 70
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 192695,
-        "mtdPallets": 3888,
-        "shift1Tonnage": 4896,
-        "shift1Pallets": 89,
-        "shift2Tonnage": 4478,
-        "shift2Pallets": 81,
-        "shift3Tonnage": 5741,
-        "shift3Pallets": 140,
-        "dailyTotalTonnage": 15115,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 117646,
-        "mtdPallets": 10699,
-        "shift1Tonnage": 2842,
-        "shift1Pallets": 252,
-        "shift2Tonnage": 2202,
-        "shift2Pallets": 208,
-        "shift3Tonnage": 2163,
-        "shift3Pallets": 200,
-        "dailyTotalTonnage": 7207,
-        "dailyTotalPallets": 660
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 797924,
-        "mtdPallets": 56476,
-        "shift1Tonnage": 16296,
-        "shift1Pallets": 1150,
-        "shift2Tonnage": 18286,
-        "shift2Pallets": 1294,
-        "shift3Tonnage": 21164,
-        "shift3Pallets": 1520,
-        "dailyTotalTonnage": 55746,
-        "dailyTotalPallets": 3964
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
-      "mtdPallets": 74873,
-      "shift1Tonnage": 24936,
-      "shift1Pallets": 1549,
-      "shift2Tonnage": 25119,
-      "shift2Pallets": 1618,
-      "shift3Tonnage": 29120,
-      "shift3Pallets": 1871,
-      "dailyTotalTonnage": 79175,
-      "dailyTotalPallets": 5038
-    },
-    "fetchedAt": "2026-09-18T03:47:06.867Z"
-  },
-  "13/9/2026": {
-    "productionDay": "13/09/2026",
-    "productionDayValue": "20260913000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
-        "mtdPallets": 2292,
-        "shift1Tonnage": 797,
-        "shift1Pallets": 34,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 797,
-        "dailyTotalPallets": 34
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 6648,
-        "mtdPallets": 1518,
-        "shift1Tonnage": 105,
-        "shift1Pallets": 24,
-        "shift2Tonnage": 153,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 52,
-        "shift3Pallets": 11,
-        "dailyTotalTonnage": 310,
-        "dailyTotalPallets": 70
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 192695,
-        "mtdPallets": 3888,
-        "shift1Tonnage": 4896,
-        "shift1Pallets": 89,
-        "shift2Tonnage": 4478,
-        "shift2Pallets": 81,
-        "shift3Tonnage": 5741,
-        "shift3Pallets": 140,
-        "dailyTotalTonnage": 15115,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 117646,
-        "mtdPallets": 10699,
-        "shift1Tonnage": 2842,
-        "shift1Pallets": 252,
-        "shift2Tonnage": 2202,
-        "shift2Pallets": 208,
-        "shift3Tonnage": 2163,
-        "shift3Pallets": 200,
-        "dailyTotalTonnage": 7207,
-        "dailyTotalPallets": 660
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 797924,
-        "mtdPallets": 56476,
-        "shift1Tonnage": 16296,
-        "shift1Pallets": 1150,
-        "shift2Tonnage": 18286,
-        "shift2Pallets": 1294,
-        "shift3Tonnage": 21164,
-        "shift3Pallets": 1520,
-        "dailyTotalTonnage": 55746,
-        "dailyTotalPallets": 3964
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
-      "mtdPallets": 74873,
-      "shift1Tonnage": 24936,
-      "shift1Pallets": 1549,
-      "shift2Tonnage": 25119,
-      "shift2Pallets": 1618,
-      "shift3Tonnage": 29120,
-      "shift3Pallets": 1871,
-      "dailyTotalTonnage": 79175,
-      "dailyTotalPallets": 5038
-    },
-    "fetchedAt": "2026-09-18T03:47:06.867Z"
-  },
-  "14/09/2026": {
-    "productionDay": "14/09/2026",
-    "productionDayValue": "20260914000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
-        "mtdPallets": 2498,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4992,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 2188,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12271,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7041,
-        "mtdPallets": 1601,
-        "shift1Tonnage": 33,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 202,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 157,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 392,
-        "dailyTotalPallets": 83
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 207241,
-        "mtdPallets": 4198,
-        "shift1Tonnage": 4524,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 4767,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5254,
-        "shift3Pallets": 119,
-        "dailyTotalTonnage": 14545,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 123786,
-        "mtdPallets": 11278,
-        "shift1Tonnage": -516,
-        "shift1Pallets": -41,
-        "shift2Tonnage": 4123,
-        "shift2Pallets": 380,
-        "shift3Tonnage": 2532,
-        "shift3Pallets": 240,
-        "dailyTotalTonnage": 6139,
-        "dailyTotalPallets": 579
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 848420,
-        "mtdPallets": 60028,
-        "shift1Tonnage": 9284,
-        "shift1Pallets": 652,
-        "shift2Tonnage": 22660,
-        "shift2Pallets": 1621,
-        "shift3Tonnage": 18551,
-        "shift3Pallets": 1279,
-        "dailyTotalTonnage": 50495,
-        "dailyTotalPallets": 3552
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
-      "mtdPallets": 79603,
-      "shift1Tonnage": 18416,
-      "shift1Pallets": 772,
-      "shift2Tonnage": 36744,
-      "shift2Pallets": 2221,
-      "shift3Tonnage": 28682,
-      "shift3Pallets": 1737,
-      "dailyTotalTonnage": 83842,
-      "dailyTotalPallets": 4730
-    },
-    "fetchedAt": "2026-09-18T03:47:07.281Z"
-  },
-  "2026-09-14": {
-    "productionDay": "14/09/2026",
-    "productionDayValue": "20260914000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
-        "mtdPallets": 2498,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4992,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 2188,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12271,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7041,
-        "mtdPallets": 1601,
-        "shift1Tonnage": 33,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 202,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 157,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 392,
-        "dailyTotalPallets": 83
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 207241,
-        "mtdPallets": 4198,
-        "shift1Tonnage": 4524,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 4767,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5254,
-        "shift3Pallets": 119,
-        "dailyTotalTonnage": 14545,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 123786,
-        "mtdPallets": 11278,
-        "shift1Tonnage": -516,
-        "shift1Pallets": -41,
-        "shift2Tonnage": 4123,
-        "shift2Pallets": 380,
-        "shift3Tonnage": 2532,
-        "shift3Pallets": 240,
-        "dailyTotalTonnage": 6139,
-        "dailyTotalPallets": 579
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 848420,
-        "mtdPallets": 60028,
-        "shift1Tonnage": 9284,
-        "shift1Pallets": 652,
-        "shift2Tonnage": 22660,
-        "shift2Pallets": 1621,
-        "shift3Tonnage": 18551,
-        "shift3Pallets": 1279,
-        "dailyTotalTonnage": 50495,
-        "dailyTotalPallets": 3552
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
-      "mtdPallets": 79603,
-      "shift1Tonnage": 18416,
-      "shift1Pallets": 772,
-      "shift2Tonnage": 36744,
-      "shift2Pallets": 2221,
-      "shift3Tonnage": 28682,
-      "shift3Pallets": 1737,
-      "dailyTotalTonnage": 83842,
-      "dailyTotalPallets": 4730
-    },
-    "fetchedAt": "2026-09-18T03:47:07.281Z"
-  },
-  "14/9/2026": {
-    "productionDay": "14/09/2026",
-    "productionDayValue": "20260914000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
-        "mtdPallets": 2498,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 4992,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 2188,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12271,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7041,
-        "mtdPallets": 1601,
-        "shift1Tonnage": 33,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 202,
-        "shift2Pallets": 43,
-        "shift3Tonnage": 157,
-        "shift3Pallets": 33,
-        "dailyTotalTonnage": 392,
-        "dailyTotalPallets": 83
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 207241,
-        "mtdPallets": 4198,
-        "shift1Tonnage": 4524,
-        "shift1Pallets": 84,
-        "shift2Tonnage": 4767,
-        "shift2Pallets": 107,
-        "shift3Tonnage": 5254,
-        "shift3Pallets": 119,
-        "dailyTotalTonnage": 14545,
-        "dailyTotalPallets": 310
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 123786,
-        "mtdPallets": 11278,
-        "shift1Tonnage": -516,
-        "shift1Pallets": -41,
-        "shift2Tonnage": 4123,
-        "shift2Pallets": 380,
-        "shift3Tonnage": 2532,
-        "shift3Pallets": 240,
-        "dailyTotalTonnage": 6139,
-        "dailyTotalPallets": 579
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 848420,
-        "mtdPallets": 60028,
-        "shift1Tonnage": 9284,
-        "shift1Pallets": 652,
-        "shift2Tonnage": 22660,
-        "shift2Pallets": 1621,
-        "shift3Tonnage": 18551,
-        "shift3Pallets": 1279,
-        "dailyTotalTonnage": 50495,
-        "dailyTotalPallets": 3552
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
-      "mtdPallets": 79603,
-      "shift1Tonnage": 18416,
-      "shift1Pallets": 772,
-      "shift2Tonnage": 36744,
-      "shift2Pallets": 2221,
-      "shift3Tonnage": 28682,
-      "shift3Pallets": 1737,
-      "dailyTotalTonnage": 83842,
-      "dailyTotalPallets": 4730
-    },
-    "fetchedAt": "2026-09-18T03:47:07.281Z"
-  },
-  "15/09/2026": {
-    "productionDay": "15/09/2026",
-    "productionDayValue": "20260915000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
-        "mtdPallets": 2704,
-        "shift1Tonnage": 5664,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4800,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 15555,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7475,
-        "mtdPallets": 1690,
-        "shift1Tonnage": 127,
-        "shift1Pallets": 26,
-        "shift2Tonnage": 151,
-        "shift2Pallets": 31,
-        "shift3Tonnage": 155,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 433,
-        "dailyTotalPallets": 89
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 228927,
-        "mtdPallets": 4541,
-        "shift1Tonnage": 8582,
-        "shift1Pallets": 114,
-        "shift2Tonnage": 6237,
-        "shift2Pallets": 104,
-        "shift3Tonnage": 6865,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 21684,
-        "dailyTotalPallets": 343
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 132680,
-        "mtdPallets": 12118,
-        "shift1Tonnage": 2357,
-        "shift1Pallets": 222,
-        "shift2Tonnage": 2808,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 3727,
-        "shift3Pallets": 353,
-        "dailyTotalTonnage": 8892,
-        "dailyTotalPallets": 840
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 908689,
-        "mtdPallets": 64251,
-        "shift1Tonnage": 18648,
-        "shift1Pallets": 1308,
-        "shift2Tonnage": 20921,
-        "shift2Pallets": 1459,
-        "shift3Tonnage": 20697,
-        "shift3Pallets": 1456,
-        "dailyTotalTonnage": 60266,
-        "dailyTotalPallets": 4223
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
-      "mtdPallets": 85304,
-      "shift1Tonnage": 35378,
-      "shift1Pallets": 1740,
-      "shift2Tonnage": 35208,
-      "shift2Pallets": 1929,
-      "shift3Tonnage": 36244,
-      "shift3Pallets": 2032,
-      "dailyTotalTonnage": 106830,
-      "dailyTotalPallets": 5701
-    },
-    "fetchedAt": "2026-09-18T03:47:07.686Z"
-  },
-  "2026-09-15": {
-    "productionDay": "15/09/2026",
-    "productionDayValue": "20260915000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
-        "mtdPallets": 2704,
-        "shift1Tonnage": 5664,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4800,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 15555,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7475,
-        "mtdPallets": 1690,
-        "shift1Tonnage": 127,
-        "shift1Pallets": 26,
-        "shift2Tonnage": 151,
-        "shift2Pallets": 31,
-        "shift3Tonnage": 155,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 433,
-        "dailyTotalPallets": 89
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 228927,
-        "mtdPallets": 4541,
-        "shift1Tonnage": 8582,
-        "shift1Pallets": 114,
-        "shift2Tonnage": 6237,
-        "shift2Pallets": 104,
-        "shift3Tonnage": 6865,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 21684,
-        "dailyTotalPallets": 343
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 132680,
-        "mtdPallets": 12118,
-        "shift1Tonnage": 2357,
-        "shift1Pallets": 222,
-        "shift2Tonnage": 2808,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 3727,
-        "shift3Pallets": 353,
-        "dailyTotalTonnage": 8892,
-        "dailyTotalPallets": 840
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 908689,
-        "mtdPallets": 64251,
-        "shift1Tonnage": 18648,
-        "shift1Pallets": 1308,
-        "shift2Tonnage": 20921,
-        "shift2Pallets": 1459,
-        "shift3Tonnage": 20697,
-        "shift3Pallets": 1456,
-        "dailyTotalTonnage": 60266,
-        "dailyTotalPallets": 4223
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
-      "mtdPallets": 85304,
-      "shift1Tonnage": 35378,
-      "shift1Pallets": 1740,
-      "shift2Tonnage": 35208,
-      "shift2Pallets": 1929,
-      "shift3Tonnage": 36244,
-      "shift3Pallets": 2032,
-      "dailyTotalTonnage": 106830,
-      "dailyTotalPallets": 5701
-    },
-    "fetchedAt": "2026-09-18T03:47:07.686Z"
-  },
-  "15/9/2026": {
-    "productionDay": "15/09/2026",
-    "productionDayValue": "20260915000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
-        "mtdPallets": 2704,
-        "shift1Tonnage": 5664,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4800,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 15555,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7475,
-        "mtdPallets": 1690,
-        "shift1Tonnage": 127,
-        "shift1Pallets": 26,
-        "shift2Tonnage": 151,
-        "shift2Pallets": 31,
-        "shift3Tonnage": 155,
-        "shift3Pallets": 32,
-        "dailyTotalTonnage": 433,
-        "dailyTotalPallets": 89
-      },
-      {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 228927,
-        "mtdPallets": 4541,
-        "shift1Tonnage": 8582,
-        "shift1Pallets": 114,
-        "shift2Tonnage": 6237,
-        "shift2Pallets": 104,
-        "shift3Tonnage": 6865,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 21684,
-        "dailyTotalPallets": 343
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 132680,
-        "mtdPallets": 12118,
-        "shift1Tonnage": 2357,
-        "shift1Pallets": 222,
-        "shift2Tonnage": 2808,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 3727,
-        "shift3Pallets": 353,
-        "dailyTotalTonnage": 8892,
-        "dailyTotalPallets": 840
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 908689,
-        "mtdPallets": 64251,
-        "shift1Tonnage": 18648,
-        "shift1Pallets": 1308,
-        "shift2Tonnage": 20921,
-        "shift2Pallets": 1459,
-        "shift3Tonnage": 20697,
-        "shift3Pallets": 1456,
-        "dailyTotalTonnage": 60266,
-        "dailyTotalPallets": 4223
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
-      "mtdPallets": 85304,
-      "shift1Tonnage": 35378,
-      "shift1Pallets": 1740,
-      "shift2Tonnage": 35208,
-      "shift2Pallets": 1929,
-      "shift3Tonnage": 36244,
-      "shift3Pallets": 2032,
-      "dailyTotalTonnage": 106830,
-      "dailyTotalPallets": 5701
-    },
-    "fetchedAt": "2026-09-18T03:47:07.686Z"
-  },
-  "16/09/2026": {
-    "productionDay": "16/09/2026",
-    "productionDayValue": "20260916000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
-        "mtdPallets": 2910,
-        "shift1Tonnage": 2725,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4693,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12509,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7581,
-        "mtdPallets": 1715,
-        "shift1Tonnage": 34,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 14,
-        "shift2Pallets": 3,
-        "shift3Tonnage": 56,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 104,
+        "dailyTotalTonnage": 259,
         "dailyTotalPallets": 25
       },
       {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 3863,
+        "shift1Pallets": 264,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 3863,
+        "dailyTotalPallets": 264
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 4122,
+      "shift1Pallets": 289,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 4122,
+      "dailyTotalPallets": 289
+    }
+  },
+  "25/09/2026": {
+    "productionDay": "25/09/2026",
+    "productionDayValue": "20260925000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 244642,
-        "mtdPallets": 4830,
-        "shift1Tonnage": 5837,
-        "shift1Pallets": 104,
-        "shift2Tonnage": 5833,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 4044,
-        "shift3Pallets": 69,
-        "dailyTotalTonnage": 15714,
-        "dailyTotalPallets": 289
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -6109,108 +1641,313 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 139904,
-        "mtdPallets": 12802,
-        "shift1Tonnage": 2280,
-        "shift1Pallets": 215,
-        "shift2Tonnage": 2796,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 2146,
-        "shift3Pallets": 204,
-        "dailyTotalTonnage": 7222,
-        "dailyTotalPallets": 684
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 259,
+        "shift1Pallets": 25,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 977806,
-        "mtdPallets": 69137,
-        "shift1Tonnage": 19448,
-        "shift1Pallets": 1389,
-        "shift2Tonnage": 24492,
-        "shift2Pallets": 1744,
-        "shift3Tonnage": 25175,
-        "shift3Pallets": 1753,
-        "dailyTotalTonnage": 69115,
-        "dailyTotalPallets": 4886
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
-      "mtdPallets": 91394,
-      "shift1Tonnage": 30324,
-      "shift1Pallets": 1785,
-      "shift2Tonnage": 38226,
-      "shift2Pallets": 2198,
-      "shift3Tonnage": 36114,
-      "shift3Pallets": 2107,
-      "dailyTotalTonnage": 104664,
-      "dailyTotalPallets": 6090
-    },
-    "fetchedAt": "2026-09-18T03:47:08.029Z"
-  },
-  "2026-09-16": {
-    "productionDay": "16/09/2026",
-    "productionDayValue": "20260916000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
-        "mtdPallets": 2910,
-        "shift1Tonnage": 2725,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4693,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12509,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7581,
-        "mtdPallets": 1715,
-        "shift1Tonnage": 34,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 14,
-        "shift2Pallets": 3,
-        "shift3Tonnage": 56,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 104,
+        "dailyTotalTonnage": 259,
         "dailyTotalPallets": 25
       },
       {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 3863,
+        "shift1Pallets": 264,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 3863,
+        "dailyTotalPallets": 264
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 4122,
+      "shift1Pallets": 289,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 4122,
+      "dailyTotalPallets": 289
+    }
+  },
+  "25/9/2026": {
+    "productionDay": "25/09/2026",
+    "productionDayValue": "20260925000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 244642,
-        "mtdPallets": 4830,
-        "shift1Tonnage": 5837,
-        "shift1Pallets": 104,
-        "shift2Tonnage": 5833,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 4044,
-        "shift3Pallets": 69,
-        "dailyTotalTonnage": 15714,
-        "dailyTotalPallets": 289
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
       },
       {
         "code": "D",
@@ -6243,152 +1980,18 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 139904,
-        "mtdPallets": 12802,
-        "shift1Tonnage": 2280,
-        "shift1Pallets": 215,
-        "shift2Tonnage": 2796,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 2146,
-        "shift3Pallets": 204,
-        "dailyTotalTonnage": 7222,
-        "dailyTotalPallets": 684
-      },
-      {
-        "code": "T",
-        "categoryName": "Bias Truck",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 199947,
+        "mtdPallets": 18485,
+        "shift1Tonnage": 259,
+        "shift1Pallets": 25,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "W",
-        "categoryName": "ULT",
-        "mtdTonnage": 977806,
-        "mtdPallets": 69137,
-        "shift1Tonnage": 19448,
-        "shift1Pallets": 1389,
-        "shift2Tonnage": 24492,
-        "shift2Pallets": 1744,
-        "shift3Tonnage": 25175,
-        "shift3Pallets": 1753,
-        "dailyTotalTonnage": 69115,
-        "dailyTotalPallets": 4886
-      }
-    ],
-    "total": {
-      "code": "TOTAL",
-      "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
-      "mtdPallets": 91394,
-      "shift1Tonnage": 30324,
-      "shift1Pallets": 1785,
-      "shift2Tonnage": 38226,
-      "shift2Pallets": 2198,
-      "shift3Tonnage": 36114,
-      "shift3Pallets": 2107,
-      "dailyTotalTonnage": 104664,
-      "dailyTotalPallets": 6090
-    },
-    "fetchedAt": "2026-09-18T03:47:08.029Z"
-  },
-  "16/9/2026": {
-    "productionDay": "16/09/2026",
-    "productionDayValue": "20260916000000",
-    "availableDates": [],
-    "rows": [
-      {
-        "code": "6",
-        "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
-        "mtdPallets": 2910,
-        "shift1Tonnage": 2725,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4693,
-        "shift3Pallets": 66,
-        "dailyTotalTonnage": 12509,
-        "dailyTotalPallets": 206
-      },
-      {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 7581,
-        "mtdPallets": 1715,
-        "shift1Tonnage": 34,
-        "shift1Pallets": 7,
-        "shift2Tonnage": 14,
-        "shift2Pallets": 3,
-        "shift3Tonnage": 56,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 104,
+        "dailyTotalTonnage": 259,
         "dailyTotalPallets": 25
       },
       {
-        "code": "B",
-        "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 244642,
-        "mtdPallets": 4830,
-        "shift1Tonnage": 5837,
-        "shift1Pallets": 104,
-        "shift2Tonnage": 5833,
-        "shift2Pallets": 116,
-        "shift3Tonnage": 4044,
-        "shift3Pallets": 69,
-        "dailyTotalTonnage": 15714,
-        "dailyTotalPallets": 289
-      },
-      {
-        "code": "D",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "P",
-        "categoryName": "Pass Conv Spare",
-        "mtdTonnage": 0,
-        "mtdPallets": 0,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
-      },
-      {
-        "code": "Q",
-        "categoryName": "Passenger Radial",
-        "mtdTonnage": 139904,
-        "mtdPallets": 12802,
-        "shift1Tonnage": 2280,
-        "shift1Pallets": 215,
-        "shift2Tonnage": 2796,
-        "shift2Pallets": 265,
-        "shift3Tonnage": 2146,
-        "shift3Pallets": 204,
-        "dailyTotalTonnage": 7222,
-        "dailyTotalPallets": 684
-      },
-      {
         "code": "T",
         "categoryName": "Bias Truck",
         "mtdTonnage": 0,
@@ -6405,80 +2008,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 977806,
-        "mtdPallets": 69137,
-        "shift1Tonnage": 19448,
-        "shift1Pallets": 1389,
-        "shift2Tonnage": 24492,
-        "shift2Pallets": 1744,
-        "shift3Tonnage": 25175,
-        "shift3Pallets": 1753,
-        "dailyTotalTonnage": 69115,
-        "dailyTotalPallets": 4886
+        "mtdTonnage": 1498870,
+        "mtdPallets": 105585,
+        "shift1Tonnage": 3863,
+        "shift1Pallets": 264,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 3863,
+        "dailyTotalPallets": 264
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
-      "mtdPallets": 91394,
-      "shift1Tonnage": 30324,
-      "shift1Pallets": 1785,
-      "shift2Tonnage": 38226,
-      "shift2Pallets": 2198,
-      "shift3Tonnage": 36114,
-      "shift3Pallets": 2107,
-      "dailyTotalTonnage": 104664,
-      "dailyTotalPallets": 6090
-    },
-    "fetchedAt": "2026-09-18T03:47:08.029Z"
+      "mtdTonnage": 2320949,
+      "mtdPallets": 137844,
+      "shift1Tonnage": 4122,
+      "shift1Pallets": 289,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 4122,
+      "dailyTotalPallets": 289
+    }
   },
-  "17/09/2026": {
-    "productionDay": "17/09/2026",
-    "productionDayValue": "20260917000000",
-    "availableDates": [],
+  "2026-09-24": {
+    "productionDay": "24/09/2026",
+    "productionDayValue": "20260924000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
-        "mtdPallets": 3115,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4727,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 14909,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 1218,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 1234,
+        "shift2Pallets": 78,
+        "shift3Tonnage": 1218,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 3670,
+        "dailyTotalPallets": 232
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 7978,
-        "mtdPallets": 1820,
-        "shift1Tonnage": 30,
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 41,
         "shift1Pallets": 8,
-        "shift2Tonnage": 150,
-        "shift2Pallets": 40,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 57,
-        "dailyTotalTonnage": 397,
-        "dailyTotalPallets": 105
+        "shift2Tonnage": 98,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 14,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 153,
+        "dailyTotalPallets": 24
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 260878,
-        "mtdPallets": 5139,
-        "shift1Tonnage": 5243,
-        "shift1Pallets": 93,
-        "shift2Tonnage": 5798,
-        "shift2Pallets": 122,
-        "shift3Tonnage": 5193,
-        "shift3Pallets": 94,
-        "dailyTotalTonnage": 16234,
-        "dailyTotalPallets": 309
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 3456,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4115,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 3716,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 11287,
+        "dailyTotalPallets": 180
       },
       {
         "code": "D",
@@ -6511,16 +2319,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 146296,
-        "mtdPallets": 13405,
-        "shift1Tonnage": 1856,
-        "shift1Pallets": 174,
-        "shift2Tonnage": 2226,
-        "shift2Pallets": 211,
-        "shift3Tonnage": 2308,
-        "shift3Pallets": 218,
-        "dailyTotalTonnage": 6390,
-        "dailyTotalPallets": 603
+        "mtdTonnage": 199687,
+        "mtdPallets": 18460,
+        "shift1Tonnage": 3286,
+        "shift1Pallets": 307,
+        "shift2Tonnage": 4770,
+        "shift2Pallets": 468,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 247,
+        "dailyTotalTonnage": 10684,
+        "dailyTotalPallets": 1022
       },
       {
         "code": "T",
@@ -6539,80 +2347,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1047617,
-        "mtdPallets": 74040,
-        "shift1Tonnage": 23702,
-        "shift1Pallets": 1670,
-        "shift2Tonnage": 23487,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22621,
-        "shift3Pallets": 1589,
-        "dailyTotalTonnage": 69810,
-        "dailyTotalPallets": 4903
+        "mtdTonnage": 1495007,
+        "mtdPallets": 105321,
+        "shift1Tonnage": 24052,
+        "shift1Pallets": 1697,
+        "shift2Tonnage": 21935,
+        "shift2Pallets": 1535,
+        "shift3Tonnage": 25244,
+        "shift3Pallets": 1762,
+        "dailyTotalTonnage": 71231,
+        "dailyTotalPallets": 4994
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
-      "mtdPallets": 97519,
-      "shift1Tonnage": 35922,
-      "shift1Pallets": 2015,
-      "shift2Tonnage": 36752,
-      "shift2Pallets": 2087,
-      "shift3Tonnage": 35066,
-      "shift3Pallets": 2023,
-      "dailyTotalTonnage": 107740,
-      "dailyTotalPallets": 6125
-    },
-    "fetchedAt": "2026-09-18T03:47:08.405Z"
+      "mtdTonnage": 2316826,
+      "mtdPallets": 137555,
+      "shift1Tonnage": 32053,
+      "shift1Pallets": 2164,
+      "shift2Tonnage": 32152,
+      "shift2Pallets": 2157,
+      "shift3Tonnage": 32820,
+      "shift3Pallets": 2131,
+      "dailyTotalTonnage": 97025,
+      "dailyTotalPallets": 6452
+    }
   },
-  "2026-09-17": {
-    "productionDay": "17/09/2026",
-    "productionDayValue": "20260917000000",
-    "availableDates": [],
+  "24/09/2026": {
+    "productionDay": "24/09/2026",
+    "productionDayValue": "20260924000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
-        "mtdPallets": 3115,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4727,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 14909,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 1218,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 1234,
+        "shift2Pallets": 78,
+        "shift3Tonnage": 1218,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 3670,
+        "dailyTotalPallets": 232
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 7978,
-        "mtdPallets": 1820,
-        "shift1Tonnage": 30,
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 41,
         "shift1Pallets": 8,
-        "shift2Tonnage": 150,
-        "shift2Pallets": 40,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 57,
-        "dailyTotalTonnage": 397,
-        "dailyTotalPallets": 105
+        "shift2Tonnage": 98,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 14,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 153,
+        "dailyTotalPallets": 24
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 260878,
-        "mtdPallets": 5139,
-        "shift1Tonnage": 5243,
-        "shift1Pallets": 93,
-        "shift2Tonnage": 5798,
-        "shift2Pallets": 122,
-        "shift3Tonnage": 5193,
-        "shift3Pallets": 94,
-        "dailyTotalTonnage": 16234,
-        "dailyTotalPallets": 309
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 3456,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4115,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 3716,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 11287,
+        "dailyTotalPallets": 180
       },
       {
         "code": "D",
@@ -6645,16 +2658,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 146296,
-        "mtdPallets": 13405,
-        "shift1Tonnage": 1856,
-        "shift1Pallets": 174,
-        "shift2Tonnage": 2226,
-        "shift2Pallets": 211,
-        "shift3Tonnage": 2308,
-        "shift3Pallets": 218,
-        "dailyTotalTonnage": 6390,
-        "dailyTotalPallets": 603
+        "mtdTonnage": 199687,
+        "mtdPallets": 18460,
+        "shift1Tonnage": 3286,
+        "shift1Pallets": 307,
+        "shift2Tonnage": 4770,
+        "shift2Pallets": 468,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 247,
+        "dailyTotalTonnage": 10684,
+        "dailyTotalPallets": 1022
       },
       {
         "code": "T",
@@ -6673,80 +2686,285 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1047617,
-        "mtdPallets": 74040,
-        "shift1Tonnage": 23702,
-        "shift1Pallets": 1670,
-        "shift2Tonnage": 23487,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22621,
-        "shift3Pallets": 1589,
-        "dailyTotalTonnage": 69810,
-        "dailyTotalPallets": 4903
+        "mtdTonnage": 1495007,
+        "mtdPallets": 105321,
+        "shift1Tonnage": 24052,
+        "shift1Pallets": 1697,
+        "shift2Tonnage": 21935,
+        "shift2Pallets": 1535,
+        "shift3Tonnage": 25244,
+        "shift3Pallets": 1762,
+        "dailyTotalTonnage": 71231,
+        "dailyTotalPallets": 4994
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
-      "mtdPallets": 97519,
-      "shift1Tonnage": 35922,
-      "shift1Pallets": 2015,
-      "shift2Tonnage": 36752,
-      "shift2Pallets": 2087,
-      "shift3Tonnage": 35066,
-      "shift3Pallets": 2023,
-      "dailyTotalTonnage": 107740,
-      "dailyTotalPallets": 6125
-    },
-    "fetchedAt": "2026-09-18T03:47:08.405Z"
+      "mtdTonnage": 2316826,
+      "mtdPallets": 137555,
+      "shift1Tonnage": 32053,
+      "shift1Pallets": 2164,
+      "shift2Tonnage": 32152,
+      "shift2Pallets": 2157,
+      "shift3Tonnage": 32820,
+      "shift3Pallets": 2131,
+      "dailyTotalTonnage": 97025,
+      "dailyTotalPallets": 6452
+    }
   },
-  "17/9/2026": {
-    "productionDay": "17/09/2026",
-    "productionDayValue": "20260917000000",
-    "availableDates": [],
+  "24/9/2026": {
+    "productionDay": "24/09/2026",
+    "productionDayValue": "20260924000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
-        "mtdPallets": 3115,
-        "shift1Tonnage": 5091,
-        "shift1Pallets": 70,
-        "shift2Tonnage": 5091,
-        "shift2Pallets": 70,
-        "shift3Tonnage": 4727,
-        "shift3Pallets": 65,
-        "dailyTotalTonnage": 14909,
-        "dailyTotalPallets": 205
+        "mtdTonnage": 255634,
+        "mtdPallets": 4444,
+        "shift1Tonnage": 1218,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 1234,
+        "shift2Pallets": 78,
+        "shift3Tonnage": 1218,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 3670,
+        "dailyTotalPallets": 232
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 7978,
-        "mtdPallets": 1820,
-        "shift1Tonnage": 30,
+        "mtdTonnage": 10508,
+        "mtdPallets": 2473,
+        "shift1Tonnage": 41,
         "shift1Pallets": 8,
-        "shift2Tonnage": 150,
-        "shift2Pallets": 40,
-        "shift3Tonnage": 217,
-        "shift3Pallets": 57,
-        "dailyTotalTonnage": 397,
-        "dailyTotalPallets": 105
+        "shift2Tonnage": 98,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 14,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 153,
+        "dailyTotalPallets": 24
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 260878,
-        "mtdPallets": 5139,
-        "shift1Tonnage": 5243,
-        "shift1Pallets": 93,
-        "shift2Tonnage": 5798,
-        "shift2Pallets": 122,
-        "shift3Tonnage": 5193,
-        "shift3Pallets": 94,
-        "dailyTotalTonnage": 16234,
-        "dailyTotalPallets": 309
+        "mtdTonnage": 355990,
+        "mtdPallets": 6857,
+        "shift1Tonnage": 3456,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4115,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 3716,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 11287,
+        "dailyTotalPallets": 180
       },
       {
         "code": "D",
@@ -6779,16 +2997,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 146296,
-        "mtdPallets": 13405,
-        "shift1Tonnage": 1856,
-        "shift1Pallets": 174,
-        "shift2Tonnage": 2226,
-        "shift2Pallets": 211,
-        "shift3Tonnage": 2308,
-        "shift3Pallets": 218,
-        "dailyTotalTonnage": 6390,
-        "dailyTotalPallets": 603
+        "mtdTonnage": 199687,
+        "mtdPallets": 18460,
+        "shift1Tonnage": 3286,
+        "shift1Pallets": 307,
+        "shift2Tonnage": 4770,
+        "shift2Pallets": 468,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 247,
+        "dailyTotalTonnage": 10684,
+        "dailyTotalPallets": 1022
       },
       {
         "code": "T",
@@ -6807,80 +3025,3336 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1047617,
-        "mtdPallets": 74040,
-        "shift1Tonnage": 23702,
-        "shift1Pallets": 1670,
-        "shift2Tonnage": 23487,
-        "shift2Pallets": 1644,
-        "shift3Tonnage": 22621,
-        "shift3Pallets": 1589,
-        "dailyTotalTonnage": 69810,
-        "dailyTotalPallets": 4903
+        "mtdTonnage": 1495007,
+        "mtdPallets": 105321,
+        "shift1Tonnage": 24052,
+        "shift1Pallets": 1697,
+        "shift2Tonnage": 21935,
+        "shift2Pallets": 1535,
+        "shift3Tonnage": 25244,
+        "shift3Pallets": 1762,
+        "dailyTotalTonnage": 71231,
+        "dailyTotalPallets": 4994
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
-      "mtdPallets": 97519,
-      "shift1Tonnage": 35922,
-      "shift1Pallets": 2015,
-      "shift2Tonnage": 36752,
-      "shift2Pallets": 2087,
-      "shift3Tonnage": 35066,
-      "shift3Pallets": 2023,
-      "dailyTotalTonnage": 107740,
-      "dailyTotalPallets": 6125
-    },
-    "fetchedAt": "2026-09-18T03:47:08.405Z"
+      "mtdTonnage": 2316826,
+      "mtdPallets": 137555,
+      "shift1Tonnage": 32053,
+      "shift1Pallets": 2164,
+      "shift2Tonnage": 32152,
+      "shift2Pallets": 2157,
+      "shift3Tonnage": 32820,
+      "shift3Pallets": 2131,
+      "dailyTotalTonnage": 97025,
+      "dailyTotalPallets": 6452
+    }
   },
-  "18/09/2026": {
-    "productionDay": "18/09/2026",
-    "productionDayValue": "20260918000000",
-    "availableDates": [],
+  "2026-09-23": {
+    "productionDay": "23/09/2026",
+    "productionDayValue": "20260923000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198358,
-        "mtdPallets": 3255,
-        "shift1Tonnage": 5246,
+        "mtdTonnage": 251963,
+        "mtdPallets": 4212,
+        "shift1Tonnage": 5091,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2400,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 2387,
+        "shift2Tonnage": 5891,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5863,
+        "shift3Pallets": 81,
+        "dailyTotalTonnage": 16845,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10353,
+        "mtdPallets": 2449,
+        "shift1Tonnage": 143,
+        "shift1Pallets": 38,
+        "shift2Tonnage": 30,
+        "shift2Pallets": 8,
+        "shift3Tonnage": 3,
+        "shift3Pallets": 1,
+        "dailyTotalTonnage": 176,
+        "dailyTotalPallets": 47
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 344702,
+        "mtdPallets": 6677,
+        "shift1Tonnage": 3307,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 3483,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 4771,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 11561,
+        "dailyTotalPallets": 193
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 189003,
+        "mtdPallets": 17438,
+        "shift1Tonnage": 3160,
+        "shift1Pallets": 299,
+        "shift2Tonnage": 1928,
+        "shift2Pallets": 182,
+        "shift3Tonnage": 2276,
+        "shift3Pallets": 215,
+        "dailyTotalTonnage": 7364,
+        "dailyTotalPallets": 696
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1423775,
+        "mtdPallets": 100327,
+        "shift1Tonnage": 17324,
+        "shift1Pallets": 1213,
+        "shift2Tonnage": 23660,
+        "shift2Pallets": 1661,
+        "shift3Tonnage": 28480,
+        "shift3Pallets": 1991,
+        "dailyTotalTonnage": 69464,
+        "dailyTotalPallets": 4865
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2219796,
+      "mtdPallets": 131103,
+      "shift1Tonnage": 29025,
+      "shift1Pallets": 1704,
+      "shift2Tonnage": 34992,
+      "shift2Pallets": 1970,
+      "shift3Tonnage": 41393,
+      "shift3Pallets": 2359,
+      "dailyTotalTonnage": 105410,
+      "dailyTotalPallets": 6033
+    }
+  },
+  "23/09/2026": {
+    "productionDay": "23/09/2026",
+    "productionDayValue": "20260923000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 251963,
+        "mtdPallets": 4212,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5891,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5863,
+        "shift3Pallets": 81,
+        "dailyTotalTonnage": 16845,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10353,
+        "mtdPallets": 2449,
+        "shift1Tonnage": 143,
+        "shift1Pallets": 38,
+        "shift2Tonnage": 30,
+        "shift2Pallets": 8,
+        "shift3Tonnage": 3,
+        "shift3Pallets": 1,
+        "dailyTotalTonnage": 176,
+        "dailyTotalPallets": 47
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 344702,
+        "mtdPallets": 6677,
+        "shift1Tonnage": 3307,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 3483,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 4771,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 11561,
+        "dailyTotalPallets": 193
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 189003,
+        "mtdPallets": 17438,
+        "shift1Tonnage": 3160,
+        "shift1Pallets": 299,
+        "shift2Tonnage": 1928,
+        "shift2Pallets": 182,
+        "shift3Tonnage": 2276,
+        "shift3Pallets": 215,
+        "dailyTotalTonnage": 7364,
+        "dailyTotalPallets": 696
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1423775,
+        "mtdPallets": 100327,
+        "shift1Tonnage": 17324,
+        "shift1Pallets": 1213,
+        "shift2Tonnage": 23660,
+        "shift2Pallets": 1661,
+        "shift3Tonnage": 28480,
+        "shift3Pallets": 1991,
+        "dailyTotalTonnage": 69464,
+        "dailyTotalPallets": 4865
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2219796,
+      "mtdPallets": 131103,
+      "shift1Tonnage": 29025,
+      "shift1Pallets": 1704,
+      "shift2Tonnage": 34992,
+      "shift2Pallets": 1970,
+      "shift3Tonnage": 41393,
+      "shift3Pallets": 2359,
+      "dailyTotalTonnage": 105410,
+      "dailyTotalPallets": 6033
+    }
+  },
+  "23/9/2026": {
+    "productionDay": "23/09/2026",
+    "productionDayValue": "20260923000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 251963,
+        "mtdPallets": 4212,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5891,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5863,
+        "shift3Pallets": 81,
+        "dailyTotalTonnage": 16845,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10353,
+        "mtdPallets": 2449,
+        "shift1Tonnage": 143,
+        "shift1Pallets": 38,
+        "shift2Tonnage": 30,
+        "shift2Pallets": 8,
+        "shift3Tonnage": 3,
+        "shift3Pallets": 1,
+        "dailyTotalTonnage": 176,
+        "dailyTotalPallets": 47
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 344702,
+        "mtdPallets": 6677,
+        "shift1Tonnage": 3307,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 3483,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 4771,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 11561,
+        "dailyTotalPallets": 193
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 189003,
+        "mtdPallets": 17438,
+        "shift1Tonnage": 3160,
+        "shift1Pallets": 299,
+        "shift2Tonnage": 1928,
+        "shift2Pallets": 182,
+        "shift3Tonnage": 2276,
+        "shift3Pallets": 215,
+        "dailyTotalTonnage": 7364,
+        "dailyTotalPallets": 696
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1423775,
+        "mtdPallets": 100327,
+        "shift1Tonnage": 17324,
+        "shift1Pallets": 1213,
+        "shift2Tonnage": 23660,
+        "shift2Pallets": 1661,
+        "shift3Tonnage": 28480,
+        "shift3Pallets": 1991,
+        "dailyTotalTonnage": 69464,
+        "dailyTotalPallets": 4865
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2219796,
+      "mtdPallets": 131103,
+      "shift1Tonnage": 29025,
+      "shift1Pallets": 1704,
+      "shift2Tonnage": 34992,
+      "shift2Pallets": 1970,
+      "shift3Tonnage": 41393,
+      "shift3Pallets": 2359,
+      "dailyTotalTonnage": 105410,
+      "dailyTotalPallets": 6033
+    }
+  },
+  "2026-09-22": {
+    "productionDay": "22/09/2026",
+    "productionDayValue": "20260922000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 235116,
+        "mtdPallets": 3980,
+        "shift1Tonnage": 4156,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 6581,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 5026,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 15763,
+        "dailyTotalPallets": 210
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10176,
+        "mtdPallets": 2402,
+        "shift1Tonnage": 142,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 176,
+        "shift2Pallets": 47,
+        "shift3Tonnage": 131,
         "shift3Pallets": 35,
-        "dailyTotalTonnage": 10033,
+        "dailyTotalTonnage": 449,
+        "dailyTotalPallets": 118
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 333139,
+        "mtdPallets": 6484,
+        "shift1Tonnage": 5171,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 5289,
+        "shift2Pallets": 114,
+        "shift3Tonnage": 3617,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14077,
+        "dailyTotalPallets": 270
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 181637,
+        "mtdPallets": 16742,
+        "shift1Tonnage": 3064,
+        "shift1Pallets": 290,
+        "shift2Tonnage": 2070,
+        "shift2Pallets": 195,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 249,
+        "dailyTotalTonnage": 7762,
+        "dailyTotalPallets": 734
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1354309,
+        "mtdPallets": 95462,
+        "shift1Tonnage": 22837,
+        "shift1Pallets": 1617,
+        "shift2Tonnage": 20725,
+        "shift2Pallets": 1461,
+        "shift3Tonnage": 18161,
+        "shift3Pallets": 1285,
+        "dailyTotalTonnage": 61723,
+        "dailyTotalPallets": 4363
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2114377,
+      "mtdPallets": 125070,
+      "shift1Tonnage": 35370,
+      "shift1Pallets": 2102,
+      "shift2Tonnage": 34841,
+      "shift2Pallets": 1887,
+      "shift3Tonnage": 29563,
+      "shift3Pallets": 1706,
+      "dailyTotalTonnage": 99774,
+      "dailyTotalPallets": 5695
+    }
+  },
+  "22/09/2026": {
+    "productionDay": "22/09/2026",
+    "productionDayValue": "20260922000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 235116,
+        "mtdPallets": 3980,
+        "shift1Tonnage": 4156,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 6581,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 5026,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 15763,
+        "dailyTotalPallets": 210
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10176,
+        "mtdPallets": 2402,
+        "shift1Tonnage": 142,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 176,
+        "shift2Pallets": 47,
+        "shift3Tonnage": 131,
+        "shift3Pallets": 35,
+        "dailyTotalTonnage": 449,
+        "dailyTotalPallets": 118
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 333139,
+        "mtdPallets": 6484,
+        "shift1Tonnage": 5171,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 5289,
+        "shift2Pallets": 114,
+        "shift3Tonnage": 3617,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14077,
+        "dailyTotalPallets": 270
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 181637,
+        "mtdPallets": 16742,
+        "shift1Tonnage": 3064,
+        "shift1Pallets": 290,
+        "shift2Tonnage": 2070,
+        "shift2Pallets": 195,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 249,
+        "dailyTotalTonnage": 7762,
+        "dailyTotalPallets": 734
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1354309,
+        "mtdPallets": 95462,
+        "shift1Tonnage": 22837,
+        "shift1Pallets": 1617,
+        "shift2Tonnage": 20725,
+        "shift2Pallets": 1461,
+        "shift3Tonnage": 18161,
+        "shift3Pallets": 1285,
+        "dailyTotalTonnage": 61723,
+        "dailyTotalPallets": 4363
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2114377,
+      "mtdPallets": 125070,
+      "shift1Tonnage": 35370,
+      "shift1Pallets": 2102,
+      "shift2Tonnage": 34841,
+      "shift2Pallets": 1887,
+      "shift3Tonnage": 29563,
+      "shift3Pallets": 1706,
+      "dailyTotalTonnage": 99774,
+      "dailyTotalPallets": 5695
+    }
+  },
+  "22/9/2026": {
+    "productionDay": "22/09/2026",
+    "productionDayValue": "20260922000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 235116,
+        "mtdPallets": 3980,
+        "shift1Tonnage": 4156,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 6581,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 5026,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 15763,
+        "dailyTotalPallets": 210
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 10176,
+        "mtdPallets": 2402,
+        "shift1Tonnage": 142,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 176,
+        "shift2Pallets": 47,
+        "shift3Tonnage": 131,
+        "shift3Pallets": 35,
+        "dailyTotalTonnage": 449,
+        "dailyTotalPallets": 118
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 333139,
+        "mtdPallets": 6484,
+        "shift1Tonnage": 5171,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 5289,
+        "shift2Pallets": 114,
+        "shift3Tonnage": 3617,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14077,
+        "dailyTotalPallets": 270
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 181637,
+        "mtdPallets": 16742,
+        "shift1Tonnage": 3064,
+        "shift1Pallets": 290,
+        "shift2Tonnage": 2070,
+        "shift2Pallets": 195,
+        "shift3Tonnage": 2628,
+        "shift3Pallets": 249,
+        "dailyTotalTonnage": 7762,
+        "dailyTotalPallets": 734
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1354309,
+        "mtdPallets": 95462,
+        "shift1Tonnage": 22837,
+        "shift1Pallets": 1617,
+        "shift2Tonnage": 20725,
+        "shift2Pallets": 1461,
+        "shift3Tonnage": 18161,
+        "shift3Pallets": 1285,
+        "dailyTotalTonnage": 61723,
+        "dailyTotalPallets": 4363
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2114377,
+      "mtdPallets": 125070,
+      "shift1Tonnage": 35370,
+      "shift1Pallets": 2102,
+      "shift2Tonnage": 34841,
+      "shift2Pallets": 1887,
+      "shift3Tonnage": 29563,
+      "shift3Pallets": 1706,
+      "dailyTotalTonnage": 99774,
+      "dailyTotalPallets": 5695
+    }
+  },
+  "2026-09-21": {
+    "productionDay": "21/09/2026",
+    "productionDayValue": "20260921000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 219352,
+        "mtdPallets": 3770,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4978,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14796,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9726,
+        "mtdPallets": 2284,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 281,
+        "shift2Pallets": 75,
+        "shift3Tonnage": 127,
+        "shift3Pallets": 34,
+        "dailyTotalTonnage": 531,
+        "dailyTotalPallets": 142
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 319061,
+        "mtdPallets": 6214,
+        "shift1Tonnage": 3501,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 3708,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 6022,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 13231,
+        "dailyTotalPallets": 264
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 173874,
+        "mtdPallets": 16008,
+        "shift1Tonnage": 2159,
+        "shift1Pallets": 202,
+        "shift2Tonnage": 2560,
+        "shift2Pallets": 242,
+        "shift3Tonnage": 2068,
+        "shift3Pallets": 194,
+        "dailyTotalTonnage": 6787,
+        "dailyTotalPallets": 638
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1292584,
+        "mtdPallets": 91099,
+        "shift1Tonnage": 20658,
+        "shift1Pallets": 1398,
+        "shift2Tonnage": 22197,
+        "shift2Pallets": 1571,
+        "shift3Tonnage": 21869,
+        "shift3Pallets": 1514,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4483
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2014597,
+      "mtdPallets": 119375,
+      "shift1Tonnage": 31532,
+      "shift1Pallets": 1778,
+      "shift2Tonnage": 33724,
+      "shift2Pallets": 2043,
+      "shift3Tonnage": 34813,
+      "shift3Pallets": 1911,
+      "dailyTotalTonnage": 100069,
+      "dailyTotalPallets": 5732
+    }
+  },
+  "21/09/2026": {
+    "productionDay": "21/09/2026",
+    "productionDayValue": "20260921000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 219352,
+        "mtdPallets": 3770,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4978,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14796,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9726,
+        "mtdPallets": 2284,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 281,
+        "shift2Pallets": 75,
+        "shift3Tonnage": 127,
+        "shift3Pallets": 34,
+        "dailyTotalTonnage": 531,
+        "dailyTotalPallets": 142
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 319061,
+        "mtdPallets": 6214,
+        "shift1Tonnage": 3501,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 3708,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 6022,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 13231,
+        "dailyTotalPallets": 264
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 173874,
+        "mtdPallets": 16008,
+        "shift1Tonnage": 2159,
+        "shift1Pallets": 202,
+        "shift2Tonnage": 2560,
+        "shift2Pallets": 242,
+        "shift3Tonnage": 2068,
+        "shift3Pallets": 194,
+        "dailyTotalTonnage": 6787,
+        "dailyTotalPallets": 638
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1292584,
+        "mtdPallets": 91099,
+        "shift1Tonnage": 20658,
+        "shift1Pallets": 1398,
+        "shift2Tonnage": 22197,
+        "shift2Pallets": 1571,
+        "shift3Tonnage": 21869,
+        "shift3Pallets": 1514,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4483
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2014597,
+      "mtdPallets": 119375,
+      "shift1Tonnage": 31532,
+      "shift1Pallets": 1778,
+      "shift2Tonnage": 33724,
+      "shift2Pallets": 2043,
+      "shift3Tonnage": 34813,
+      "shift3Pallets": 1911,
+      "dailyTotalTonnage": 100069,
+      "dailyTotalPallets": 5732
+    }
+  },
+  "21/9/2026": {
+    "productionDay": "21/09/2026",
+    "productionDayValue": "20260921000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 219352,
+        "mtdPallets": 3770,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4978,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14796,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9726,
+        "mtdPallets": 2284,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 281,
+        "shift2Pallets": 75,
+        "shift3Tonnage": 127,
+        "shift3Pallets": 34,
+        "dailyTotalTonnage": 531,
+        "dailyTotalPallets": 142
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 319061,
+        "mtdPallets": 6214,
+        "shift1Tonnage": 3501,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 3708,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 6022,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 13231,
+        "dailyTotalPallets": 264
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 173874,
+        "mtdPallets": 16008,
+        "shift1Tonnage": 2159,
+        "shift1Pallets": 202,
+        "shift2Tonnage": 2560,
+        "shift2Pallets": 242,
+        "shift3Tonnage": 2068,
+        "shift3Pallets": 194,
+        "dailyTotalTonnage": 6787,
+        "dailyTotalPallets": 638
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1292584,
+        "mtdPallets": 91099,
+        "shift1Tonnage": 20658,
+        "shift1Pallets": 1398,
+        "shift2Tonnage": 22197,
+        "shift2Pallets": 1571,
+        "shift3Tonnage": 21869,
+        "shift3Pallets": 1514,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4483
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2014597,
+      "mtdPallets": 119375,
+      "shift1Tonnage": 31532,
+      "shift1Pallets": 1778,
+      "shift2Tonnage": 33724,
+      "shift2Pallets": 2043,
+      "shift3Tonnage": 34813,
+      "shift3Pallets": 1911,
+      "dailyTotalTonnage": 100069,
+      "dailyTotalPallets": 5732
+    }
+  },
+  "2026-09-20": {
+    "productionDay": "20/09/2026",
+    "productionDayValue": "20260920000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 204555,
+        "mtdPallets": 3565,
+        "shift1Tonnage": 1066,
+        "shift1Pallets": 15,
+        "shift2Tonnage": 1778,
+        "shift2Pallets": 25,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 2844,
+        "dailyTotalPallets": 40
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9192,
+        "mtdPallets": 2142,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 269,
+        "shift2Pallets": 71,
+        "shift3Tonnage": 135,
+        "shift3Pallets": 36,
+        "dailyTotalTonnage": 527,
         "dailyTotalPallets": 140
       },
       {
-        "code": "A",
-        "categoryName": "Aircraft",
-        "mtdTonnage": 9002,
-        "mtdPallets": 1850,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 500,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 524,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 1024,
-        "dailyTotalPallets": 30
-      },
-      {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 278925,
-        "mtdPallets": 5389,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 9000,
-        "shift2Pallets": 125,
-        "shift3Tonnage": 9047,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 18047,
-        "dailyTotalPallets": 250
+        "mtdTonnage": 305829,
+        "mtdPallets": 5950,
+        "shift1Tonnage": 2620,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 4053,
+        "shift2Pallets": 92,
+        "shift3Tonnage": 5113,
+        "shift3Pallets": 93,
+        "dailyTotalTonnage": 11786,
+        "dailyTotalPallets": 233
       },
       {
         "code": "D",
@@ -6913,16 +6387,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 152537,
-        "mtdPallets": 13800,
-        "shift1Tonnage": 394,
-        "shift1Pallets": 38,
-        "shift2Tonnage": 2900,
-        "shift2Pallets": 260,
-        "shift3Tonnage": 2947,
-        "shift3Pallets": 260,
-        "dailyTotalTonnage": 6241,
-        "dailyTotalPallets": 558
+        "mtdTonnage": 167085,
+        "mtdPallets": 15370,
+        "shift1Tonnage": 2190,
+        "shift1Pallets": 208,
+        "shift2Tonnage": 2349,
+        "shift2Pallets": 221,
+        "shift3Tonnage": 2335,
+        "shift3Pallets": 221,
+        "dailyTotalTonnage": 6874,
+        "dailyTotalPallets": 650
       },
       {
         "code": "T",
@@ -6941,80 +6415,1980 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1112404,
-        "mtdPallets": 78600,
-        "shift1Tonnage": 7395,
-        "shift1Pallets": 529,
-        "shift2Tonnage": 28700,
-        "shift2Pallets": 1900,
-        "shift3Tonnage": 28692,
-        "shift3Pallets": 1900,
-        "dailyTotalTonnage": 64787,
-        "dailyTotalPallets": 4329
+        "mtdTonnage": 1227859,
+        "mtdPallets": 86616,
+        "shift1Tonnage": 15898,
+        "shift1Pallets": 1117,
+        "shift2Tonnage": 20507,
+        "shift2Pallets": 1421,
+        "shift3Tonnage": 18730,
+        "shift3Pallets": 1319,
+        "dailyTotalTonnage": 55135,
+        "dailyTotalPallets": 3857
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751226,
-      "mtdPallets": 103000,
-      "shift1Tonnage": 13035,
-      "shift1Pallets": 637,
-      "shift2Tonnage": 43500,
-      "shift2Pallets": 2335,
-      "shift3Tonnage": 43597,
-      "shift3Pallets": 2335,
-      "dailyTotalTonnage": 100132,
-      "dailyTotalPallets": 5307
-    },
-    "fetchedAt": "2026-09-18T23:59:00.000Z"
+      "mtdTonnage": 1914520,
+      "mtdPallets": 113643,
+      "shift1Tonnage": 21897,
+      "shift1Pallets": 1421,
+      "shift2Tonnage": 28956,
+      "shift2Pallets": 1830,
+      "shift3Tonnage": 26313,
+      "shift3Pallets": 1669,
+      "dailyTotalTonnage": 77166,
+      "dailyTotalPallets": 4920
+    }
+  },
+  "20/09/2026": {
+    "productionDay": "20/09/2026",
+    "productionDayValue": "20260920000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 204555,
+        "mtdPallets": 3565,
+        "shift1Tonnage": 1066,
+        "shift1Pallets": 15,
+        "shift2Tonnage": 1778,
+        "shift2Pallets": 25,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 2844,
+        "dailyTotalPallets": 40
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9192,
+        "mtdPallets": 2142,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 269,
+        "shift2Pallets": 71,
+        "shift3Tonnage": 135,
+        "shift3Pallets": 36,
+        "dailyTotalTonnage": 527,
+        "dailyTotalPallets": 140
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 305829,
+        "mtdPallets": 5950,
+        "shift1Tonnage": 2620,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 4053,
+        "shift2Pallets": 92,
+        "shift3Tonnage": 5113,
+        "shift3Pallets": 93,
+        "dailyTotalTonnage": 11786,
+        "dailyTotalPallets": 233
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 167085,
+        "mtdPallets": 15370,
+        "shift1Tonnage": 2190,
+        "shift1Pallets": 208,
+        "shift2Tonnage": 2349,
+        "shift2Pallets": 221,
+        "shift3Tonnage": 2335,
+        "shift3Pallets": 221,
+        "dailyTotalTonnage": 6874,
+        "dailyTotalPallets": 650
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1227859,
+        "mtdPallets": 86616,
+        "shift1Tonnage": 15898,
+        "shift1Pallets": 1117,
+        "shift2Tonnage": 20507,
+        "shift2Pallets": 1421,
+        "shift3Tonnage": 18730,
+        "shift3Pallets": 1319,
+        "dailyTotalTonnage": 55135,
+        "dailyTotalPallets": 3857
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1914520,
+      "mtdPallets": 113643,
+      "shift1Tonnage": 21897,
+      "shift1Pallets": 1421,
+      "shift2Tonnage": 28956,
+      "shift2Pallets": 1830,
+      "shift3Tonnage": 26313,
+      "shift3Pallets": 1669,
+      "dailyTotalTonnage": 77166,
+      "dailyTotalPallets": 4920
+    }
+  },
+  "20/9/2026": {
+    "productionDay": "20/09/2026",
+    "productionDayValue": "20260920000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 204555,
+        "mtdPallets": 3565,
+        "shift1Tonnage": 1066,
+        "shift1Pallets": 15,
+        "shift2Tonnage": 1778,
+        "shift2Pallets": 25,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 2844,
+        "dailyTotalPallets": 40
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 9192,
+        "mtdPallets": 2142,
+        "shift1Tonnage": 123,
+        "shift1Pallets": 33,
+        "shift2Tonnage": 269,
+        "shift2Pallets": 71,
+        "shift3Tonnage": 135,
+        "shift3Pallets": 36,
+        "dailyTotalTonnage": 527,
+        "dailyTotalPallets": 140
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 305829,
+        "mtdPallets": 5950,
+        "shift1Tonnage": 2620,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 4053,
+        "shift2Pallets": 92,
+        "shift3Tonnage": 5113,
+        "shift3Pallets": 93,
+        "dailyTotalTonnage": 11786,
+        "dailyTotalPallets": 233
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 167085,
+        "mtdPallets": 15370,
+        "shift1Tonnage": 2190,
+        "shift1Pallets": 208,
+        "shift2Tonnage": 2349,
+        "shift2Pallets": 221,
+        "shift3Tonnage": 2335,
+        "shift3Pallets": 221,
+        "dailyTotalTonnage": 6874,
+        "dailyTotalPallets": 650
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1227859,
+        "mtdPallets": 86616,
+        "shift1Tonnage": 15898,
+        "shift1Pallets": 1117,
+        "shift2Tonnage": 20507,
+        "shift2Pallets": 1421,
+        "shift3Tonnage": 18730,
+        "shift3Pallets": 1319,
+        "dailyTotalTonnage": 55135,
+        "dailyTotalPallets": 3857
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1914520,
+      "mtdPallets": 113643,
+      "shift1Tonnage": 21897,
+      "shift1Pallets": 1421,
+      "shift2Tonnage": 28956,
+      "shift2Pallets": 1830,
+      "shift3Tonnage": 26313,
+      "shift3Pallets": 1669,
+      "dailyTotalTonnage": 77166,
+      "dailyTotalPallets": 4920
+    }
+  },
+  "2026-09-19": {
+    "productionDay": "19/09/2026",
+    "productionDayValue": "20260919000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 201710,
+        "mtdPallets": 3525,
+        "shift1Tonnage": 1214,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1107,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1028,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 3349,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 8664,
+        "mtdPallets": 2002,
+        "shift1Tonnage": 101,
+        "shift1Pallets": 27,
+        "shift2Tonnage": 135,
+        "shift2Pallets": 36,
+        "shift3Tonnage": 78,
+        "shift3Pallets": 21,
+        "dailyTotalTonnage": 314,
+        "dailyTotalPallets": 84
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 294042,
+        "mtdPallets": 5717,
+        "shift1Tonnage": 3747,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4833,
+        "shift2Pallets": 91,
+        "shift3Tonnage": 5879,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 14459,
+        "dailyTotalPallets": 265
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 160209,
+        "mtdPallets": 14720,
+        "shift1Tonnage": 2713,
+        "shift1Pallets": 257,
+        "shift2Tonnage": 2042,
+        "shift2Pallets": 193,
+        "shift3Tonnage": 3094,
+        "shift3Pallets": 292,
+        "dailyTotalTonnage": 7849,
+        "dailyTotalPallets": 742
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1172722,
+        "mtdPallets": 82759,
+        "shift1Tonnage": 19193,
+        "shift1Pallets": 1343,
+        "shift2Tonnage": 20471,
+        "shift2Pallets": 1418,
+        "shift3Tonnage": 20473,
+        "shift3Pallets": 1424,
+        "dailyTotalTonnage": 60137,
+        "dailyTotalPallets": 4185
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1837347,
+      "mtdPallets": 108723,
+      "shift1Tonnage": 26968,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 28588,
+      "shift2Pallets": 1808,
+      "shift3Tonnage": 30552,
+      "shift3Pallets": 1901,
+      "dailyTotalTonnage": 86108,
+      "dailyTotalPallets": 5481
+    }
+  },
+  "19/09/2026": {
+    "productionDay": "19/09/2026",
+    "productionDayValue": "20260919000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 201710,
+        "mtdPallets": 3525,
+        "shift1Tonnage": 1214,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1107,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1028,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 3349,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 8664,
+        "mtdPallets": 2002,
+        "shift1Tonnage": 101,
+        "shift1Pallets": 27,
+        "shift2Tonnage": 135,
+        "shift2Pallets": 36,
+        "shift3Tonnage": 78,
+        "shift3Pallets": 21,
+        "dailyTotalTonnage": 314,
+        "dailyTotalPallets": 84
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 294042,
+        "mtdPallets": 5717,
+        "shift1Tonnage": 3747,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4833,
+        "shift2Pallets": 91,
+        "shift3Tonnage": 5879,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 14459,
+        "dailyTotalPallets": 265
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 160209,
+        "mtdPallets": 14720,
+        "shift1Tonnage": 2713,
+        "shift1Pallets": 257,
+        "shift2Tonnage": 2042,
+        "shift2Pallets": 193,
+        "shift3Tonnage": 3094,
+        "shift3Pallets": 292,
+        "dailyTotalTonnage": 7849,
+        "dailyTotalPallets": 742
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1172722,
+        "mtdPallets": 82759,
+        "shift1Tonnage": 19193,
+        "shift1Pallets": 1343,
+        "shift2Tonnage": 20471,
+        "shift2Pallets": 1418,
+        "shift3Tonnage": 20473,
+        "shift3Pallets": 1424,
+        "dailyTotalTonnage": 60137,
+        "dailyTotalPallets": 4185
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1837347,
+      "mtdPallets": 108723,
+      "shift1Tonnage": 26968,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 28588,
+      "shift2Pallets": 1808,
+      "shift3Tonnage": 30552,
+      "shift3Pallets": 1901,
+      "dailyTotalTonnage": 86108,
+      "dailyTotalPallets": 5481
+    }
+  },
+  "19/9/2026": {
+    "productionDay": "19/09/2026",
+    "productionDayValue": "20260919000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 201710,
+        "mtdPallets": 3525,
+        "shift1Tonnage": 1214,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1107,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1028,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 3349,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 8664,
+        "mtdPallets": 2002,
+        "shift1Tonnage": 101,
+        "shift1Pallets": 27,
+        "shift2Tonnage": 135,
+        "shift2Pallets": 36,
+        "shift3Tonnage": 78,
+        "shift3Pallets": 21,
+        "dailyTotalTonnage": 314,
+        "dailyTotalPallets": 84
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 294042,
+        "mtdPallets": 5717,
+        "shift1Tonnage": 3747,
+        "shift1Pallets": 75,
+        "shift2Tonnage": 4833,
+        "shift2Pallets": 91,
+        "shift3Tonnage": 5879,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 14459,
+        "dailyTotalPallets": 265
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 160209,
+        "mtdPallets": 14720,
+        "shift1Tonnage": 2713,
+        "shift1Pallets": 257,
+        "shift2Tonnage": 2042,
+        "shift2Pallets": 193,
+        "shift3Tonnage": 3094,
+        "shift3Pallets": 292,
+        "dailyTotalTonnage": 7849,
+        "dailyTotalPallets": 742
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1172722,
+        "mtdPallets": 82759,
+        "shift1Tonnage": 19193,
+        "shift1Pallets": 1343,
+        "shift2Tonnage": 20471,
+        "shift2Pallets": 1418,
+        "shift3Tonnage": 20473,
+        "shift3Pallets": 1424,
+        "dailyTotalTonnage": 60137,
+        "dailyTotalPallets": 4185
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1837347,
+      "mtdPallets": 108723,
+      "shift1Tonnage": 26968,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 28588,
+      "shift2Pallets": 1808,
+      "shift3Tonnage": 30552,
+      "shift3Pallets": 1901,
+      "dailyTotalTonnage": 86108,
+      "dailyTotalPallets": 5481
+    }
   },
   "2026-09-18": {
     "productionDay": "18/09/2026",
     "productionDayValue": "20260918000000",
-    "availableDates": [],
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198358,
-        "mtdPallets": 3255,
+        "mtdTonnage": 198359,
+        "mtdPallets": 3320,
         "shift1Tonnage": 5246,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2400,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 2387,
-        "shift3Pallets": 35,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3146,
+        "shift3Pallets": 65,
         "dailyTotalTonnage": 10033,
-        "dailyTotalPallets": 140
+        "dailyTotalPallets": 205
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 9002,
-        "mtdPallets": 1850,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 500,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 524,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 1024,
-        "dailyTotalPallets": 30
+        "mtdTonnage": 8348,
+        "mtdPallets": 1918,
+        "shift1Tonnage": 78,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 144,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 146,
+        "shift3Pallets": 39,
+        "dailyTotalTonnage": 368,
+        "dailyTotalPallets": 98
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 278925,
-        "mtdPallets": 5389,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 9000,
-        "shift2Pallets": 125,
-        "shift3Tonnage": 9047,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 18047,
-        "dailyTotalPallets": 250
+        "mtdTonnage": 279581,
+        "mtdPallets": 5452,
+        "shift1Tonnage": 7255,
+        "shift1Pallets": 121,
+        "shift2Tonnage": 5557,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 5891,
+        "shift3Pallets": 88,
+        "dailyTotalTonnage": 18703,
+        "dailyTotalPallets": 313
       },
       {
         "code": "D",
@@ -7047,16 +8421,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 152537,
-        "mtdPallets": 13800,
-        "shift1Tonnage": 394,
-        "shift1Pallets": 38,
-        "shift2Tonnage": 2900,
-        "shift2Pallets": 260,
-        "shift3Tonnage": 2947,
-        "shift3Pallets": 260,
-        "dailyTotalTonnage": 6241,
-        "dailyTotalPallets": 558
+        "mtdTonnage": 152360,
+        "mtdPallets": 13978,
+        "shift1Tonnage": 1896,
+        "shift1Pallets": 179,
+        "shift2Tonnage": 2533,
+        "shift2Pallets": 239,
+        "shift3Tonnage": 1634,
+        "shift3Pallets": 155,
+        "dailyTotalTonnage": 6063,
+        "dailyTotalPallets": 573
       },
       {
         "code": "T",
@@ -7075,80 +8449,624 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1112404,
-        "mtdPallets": 78600,
-        "shift1Tonnage": 7395,
-        "shift1Pallets": 529,
-        "shift2Tonnage": 28700,
-        "shift2Pallets": 1900,
-        "shift3Tonnage": 28692,
-        "shift3Pallets": 1900,
-        "dailyTotalTonnage": 64787,
-        "dailyTotalPallets": 4329
+        "mtdTonnage": 1112583,
+        "mtdPallets": 78574,
+        "shift1Tonnage": 20355,
+        "shift1Pallets": 1435,
+        "shift2Tonnage": 21700,
+        "shift2Pallets": 1498,
+        "shift3Tonnage": 22910,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 64965,
+        "dailyTotalPallets": 4534
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751226,
-      "mtdPallets": 103000,
-      "shift1Tonnage": 13035,
-      "shift1Pallets": 637,
-      "shift2Tonnage": 43500,
-      "shift2Pallets": 2335,
-      "shift3Tonnage": 43597,
-      "shift3Pallets": 2335,
+      "mtdTonnage": 1751231,
+      "mtdPallets": 103242,
+      "shift1Tonnage": 34830,
+      "shift1Pallets": 1826,
+      "shift2Tonnage": 31575,
+      "shift2Pallets": 1949,
+      "shift3Tonnage": 33727,
+      "shift3Pallets": 1948,
       "dailyTotalTonnage": 100132,
-      "dailyTotalPallets": 5307
-    },
-    "fetchedAt": "2026-09-18T23:59:00.000Z"
+      "dailyTotalPallets": 5723
+    }
+  },
+  "18/09/2026": {
+    "productionDay": "18/09/2026",
+    "productionDayValue": "20260918000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 198359,
+        "mtdPallets": 3320,
+        "shift1Tonnage": 5246,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3146,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 10033,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 8348,
+        "mtdPallets": 1918,
+        "shift1Tonnage": 78,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 144,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 146,
+        "shift3Pallets": 39,
+        "dailyTotalTonnage": 368,
+        "dailyTotalPallets": 98
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 279581,
+        "mtdPallets": 5452,
+        "shift1Tonnage": 7255,
+        "shift1Pallets": 121,
+        "shift2Tonnage": 5557,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 5891,
+        "shift3Pallets": 88,
+        "dailyTotalTonnage": 18703,
+        "dailyTotalPallets": 313
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 152360,
+        "mtdPallets": 13978,
+        "shift1Tonnage": 1896,
+        "shift1Pallets": 179,
+        "shift2Tonnage": 2533,
+        "shift2Pallets": 239,
+        "shift3Tonnage": 1634,
+        "shift3Pallets": 155,
+        "dailyTotalTonnage": 6063,
+        "dailyTotalPallets": 573
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1112583,
+        "mtdPallets": 78574,
+        "shift1Tonnage": 20355,
+        "shift1Pallets": 1435,
+        "shift2Tonnage": 21700,
+        "shift2Pallets": 1498,
+        "shift3Tonnage": 22910,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 64965,
+        "dailyTotalPallets": 4534
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1751231,
+      "mtdPallets": 103242,
+      "shift1Tonnage": 34830,
+      "shift1Pallets": 1826,
+      "shift2Tonnage": 31575,
+      "shift2Pallets": 1949,
+      "shift3Tonnage": 33727,
+      "shift3Pallets": 1948,
+      "dailyTotalTonnage": 100132,
+      "dailyTotalPallets": 5723
+    }
   },
   "18/9/2026": {
     "productionDay": "18/09/2026",
     "productionDayValue": "20260918000000",
-    "availableDates": [],
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198358,
-        "mtdPallets": 3255,
+        "mtdTonnage": 198359,
+        "mtdPallets": 3320,
         "shift1Tonnage": 5246,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2400,
-        "shift2Pallets": 35,
-        "shift3Tonnage": 2387,
-        "shift3Pallets": 35,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3146,
+        "shift3Pallets": 65,
         "dailyTotalTonnage": 10033,
-        "dailyTotalPallets": 140
+        "dailyTotalPallets": 205
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 9002,
-        "mtdPallets": 1850,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 500,
-        "shift2Pallets": 15,
-        "shift3Tonnage": 524,
-        "shift3Pallets": 15,
-        "dailyTotalTonnage": 1024,
-        "dailyTotalPallets": 30
+        "mtdTonnage": 8348,
+        "mtdPallets": 1918,
+        "shift1Tonnage": 78,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 144,
+        "shift2Pallets": 38,
+        "shift3Tonnage": 146,
+        "shift3Pallets": 39,
+        "dailyTotalTonnage": 368,
+        "dailyTotalPallets": 98
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 278925,
-        "mtdPallets": 5389,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 9000,
-        "shift2Pallets": 125,
-        "shift3Tonnage": 9047,
-        "shift3Pallets": 125,
-        "dailyTotalTonnage": 18047,
-        "dailyTotalPallets": 250
+        "mtdTonnage": 279581,
+        "mtdPallets": 5452,
+        "shift1Tonnage": 7255,
+        "shift1Pallets": 121,
+        "shift2Tonnage": 5557,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 5891,
+        "shift3Pallets": 88,
+        "dailyTotalTonnage": 18703,
+        "dailyTotalPallets": 313
       },
       {
         "code": "D",
@@ -7181,16 +9099,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 152537,
-        "mtdPallets": 13800,
-        "shift1Tonnage": 394,
-        "shift1Pallets": 38,
-        "shift2Tonnage": 2900,
-        "shift2Pallets": 260,
-        "shift3Tonnage": 2947,
-        "shift3Pallets": 260,
-        "dailyTotalTonnage": 6241,
-        "dailyTotalPallets": 558
+        "mtdTonnage": 152360,
+        "mtdPallets": 13978,
+        "shift1Tonnage": 1896,
+        "shift1Pallets": 179,
+        "shift2Tonnage": 2533,
+        "shift2Pallets": 239,
+        "shift3Tonnage": 1634,
+        "shift3Pallets": 155,
+        "dailyTotalTonnage": 6063,
+        "dailyTotalPallets": 573
       },
       {
         "code": "T",
@@ -7209,32 +9127,17320 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1112404,
-        "mtdPallets": 78600,
-        "shift1Tonnage": 7395,
-        "shift1Pallets": 529,
-        "shift2Tonnage": 28700,
-        "shift2Pallets": 1900,
-        "shift3Tonnage": 28692,
-        "shift3Pallets": 1900,
-        "dailyTotalTonnage": 64787,
-        "dailyTotalPallets": 4329
+        "mtdTonnage": 1112583,
+        "mtdPallets": 78574,
+        "shift1Tonnage": 20355,
+        "shift1Pallets": 1435,
+        "shift2Tonnage": 21700,
+        "shift2Pallets": 1498,
+        "shift3Tonnage": 22910,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 64965,
+        "dailyTotalPallets": 4534
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751226,
-      "mtdPallets": 103000,
-      "shift1Tonnage": 13035,
-      "shift1Pallets": 637,
-      "shift2Tonnage": 43500,
-      "shift2Pallets": 2335,
-      "shift3Tonnage": 43597,
-      "shift3Pallets": 2335,
+      "mtdTonnage": 1751231,
+      "mtdPallets": 103242,
+      "shift1Tonnage": 34830,
+      "shift1Pallets": 1826,
+      "shift2Tonnage": 31575,
+      "shift2Pallets": 1949,
+      "shift3Tonnage": 33727,
+      "shift3Pallets": 1948,
       "dailyTotalTonnage": 100132,
-      "dailyTotalPallets": 5307
-    },
-    "fetchedAt": "2026-09-18T23:59:00.000Z"
+      "dailyTotalPallets": 5723
+    }
+  },
+  "2026-09-17": {
+    "productionDay": "17/09/2026",
+    "productionDayValue": "20260917000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 188325,
+        "mtdPallets": 3115,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14909,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7978,
+        "mtdPallets": 1820,
+        "shift1Tonnage": 30,
+        "shift1Pallets": 8,
+        "shift2Tonnage": 150,
+        "shift2Pallets": 40,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 57,
+        "dailyTotalTonnage": 397,
+        "dailyTotalPallets": 105
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 260878,
+        "mtdPallets": 5139,
+        "shift1Tonnage": 5243,
+        "shift1Pallets": 93,
+        "shift2Tonnage": 5798,
+        "shift2Pallets": 122,
+        "shift3Tonnage": 5193,
+        "shift3Pallets": 94,
+        "dailyTotalTonnage": 16234,
+        "dailyTotalPallets": 309
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 146296,
+        "mtdPallets": 13405,
+        "shift1Tonnage": 1856,
+        "shift1Pallets": 174,
+        "shift2Tonnage": 2226,
+        "shift2Pallets": 211,
+        "shift3Tonnage": 2308,
+        "shift3Pallets": 218,
+        "dailyTotalTonnage": 6390,
+        "dailyTotalPallets": 603
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1047617,
+        "mtdPallets": 74040,
+        "shift1Tonnage": 23702,
+        "shift1Pallets": 1670,
+        "shift2Tonnage": 23487,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22621,
+        "shift3Pallets": 1589,
+        "dailyTotalTonnage": 69810,
+        "dailyTotalPallets": 4903
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1651094,
+      "mtdPallets": 97519,
+      "shift1Tonnage": 35922,
+      "shift1Pallets": 2015,
+      "shift2Tonnage": 36752,
+      "shift2Pallets": 2087,
+      "shift3Tonnage": 35066,
+      "shift3Pallets": 2023,
+      "dailyTotalTonnage": 107740,
+      "dailyTotalPallets": 6125
+    }
+  },
+  "17/09/2026": {
+    "productionDay": "17/09/2026",
+    "productionDayValue": "20260917000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 188325,
+        "mtdPallets": 3115,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14909,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7978,
+        "mtdPallets": 1820,
+        "shift1Tonnage": 30,
+        "shift1Pallets": 8,
+        "shift2Tonnage": 150,
+        "shift2Pallets": 40,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 57,
+        "dailyTotalTonnage": 397,
+        "dailyTotalPallets": 105
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 260878,
+        "mtdPallets": 5139,
+        "shift1Tonnage": 5243,
+        "shift1Pallets": 93,
+        "shift2Tonnage": 5798,
+        "shift2Pallets": 122,
+        "shift3Tonnage": 5193,
+        "shift3Pallets": 94,
+        "dailyTotalTonnage": 16234,
+        "dailyTotalPallets": 309
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 146296,
+        "mtdPallets": 13405,
+        "shift1Tonnage": 1856,
+        "shift1Pallets": 174,
+        "shift2Tonnage": 2226,
+        "shift2Pallets": 211,
+        "shift3Tonnage": 2308,
+        "shift3Pallets": 218,
+        "dailyTotalTonnage": 6390,
+        "dailyTotalPallets": 603
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1047617,
+        "mtdPallets": 74040,
+        "shift1Tonnage": 23702,
+        "shift1Pallets": 1670,
+        "shift2Tonnage": 23487,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22621,
+        "shift3Pallets": 1589,
+        "dailyTotalTonnage": 69810,
+        "dailyTotalPallets": 4903
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1651094,
+      "mtdPallets": 97519,
+      "shift1Tonnage": 35922,
+      "shift1Pallets": 2015,
+      "shift2Tonnage": 36752,
+      "shift2Pallets": 2087,
+      "shift3Tonnage": 35066,
+      "shift3Pallets": 2023,
+      "dailyTotalTonnage": 107740,
+      "dailyTotalPallets": 6125
+    }
+  },
+  "17/9/2026": {
+    "productionDay": "17/09/2026",
+    "productionDayValue": "20260917000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 188325,
+        "mtdPallets": 3115,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4727,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 14909,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7978,
+        "mtdPallets": 1820,
+        "shift1Tonnage": 30,
+        "shift1Pallets": 8,
+        "shift2Tonnage": 150,
+        "shift2Pallets": 40,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 57,
+        "dailyTotalTonnage": 397,
+        "dailyTotalPallets": 105
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 260878,
+        "mtdPallets": 5139,
+        "shift1Tonnage": 5243,
+        "shift1Pallets": 93,
+        "shift2Tonnage": 5798,
+        "shift2Pallets": 122,
+        "shift3Tonnage": 5193,
+        "shift3Pallets": 94,
+        "dailyTotalTonnage": 16234,
+        "dailyTotalPallets": 309
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 146296,
+        "mtdPallets": 13405,
+        "shift1Tonnage": 1856,
+        "shift1Pallets": 174,
+        "shift2Tonnage": 2226,
+        "shift2Pallets": 211,
+        "shift3Tonnage": 2308,
+        "shift3Pallets": 218,
+        "dailyTotalTonnage": 6390,
+        "dailyTotalPallets": 603
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1047617,
+        "mtdPallets": 74040,
+        "shift1Tonnage": 23702,
+        "shift1Pallets": 1670,
+        "shift2Tonnage": 23487,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22621,
+        "shift3Pallets": 1589,
+        "dailyTotalTonnage": 69810,
+        "dailyTotalPallets": 4903
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1651094,
+      "mtdPallets": 97519,
+      "shift1Tonnage": 35922,
+      "shift1Pallets": 2015,
+      "shift2Tonnage": 36752,
+      "shift2Pallets": 2087,
+      "shift3Tonnage": 35066,
+      "shift3Pallets": 2023,
+      "dailyTotalTonnage": 107740,
+      "dailyTotalPallets": 6125
+    }
+  },
+  "2026-09-16": {
+    "productionDay": "16/09/2026",
+    "productionDayValue": "20260916000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 173415,
+        "mtdPallets": 2910,
+        "shift1Tonnage": 2725,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4693,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12509,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7581,
+        "mtdPallets": 1715,
+        "shift1Tonnage": 34,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 14,
+        "shift2Pallets": 3,
+        "shift3Tonnage": 56,
+        "shift3Pallets": 15,
+        "dailyTotalTonnage": 104,
+        "dailyTotalPallets": 25
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 244642,
+        "mtdPallets": 4830,
+        "shift1Tonnage": 5837,
+        "shift1Pallets": 104,
+        "shift2Tonnage": 5833,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 4044,
+        "shift3Pallets": 69,
+        "dailyTotalTonnage": 15714,
+        "dailyTotalPallets": 289
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 139904,
+        "mtdPallets": 12802,
+        "shift1Tonnage": 2280,
+        "shift1Pallets": 215,
+        "shift2Tonnage": 2796,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 2146,
+        "shift3Pallets": 204,
+        "dailyTotalTonnage": 7222,
+        "dailyTotalPallets": 684
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 977806,
+        "mtdPallets": 69137,
+        "shift1Tonnage": 19448,
+        "shift1Pallets": 1389,
+        "shift2Tonnage": 24492,
+        "shift2Pallets": 1744,
+        "shift3Tonnage": 25175,
+        "shift3Pallets": 1753,
+        "dailyTotalTonnage": 69115,
+        "dailyTotalPallets": 4886
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1543348,
+      "mtdPallets": 91394,
+      "shift1Tonnage": 30324,
+      "shift1Pallets": 1785,
+      "shift2Tonnage": 38226,
+      "shift2Pallets": 2198,
+      "shift3Tonnage": 36114,
+      "shift3Pallets": 2107,
+      "dailyTotalTonnage": 104664,
+      "dailyTotalPallets": 6090
+    }
+  },
+  "16/09/2026": {
+    "productionDay": "16/09/2026",
+    "productionDayValue": "20260916000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 173415,
+        "mtdPallets": 2910,
+        "shift1Tonnage": 2725,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4693,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12509,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7581,
+        "mtdPallets": 1715,
+        "shift1Tonnage": 34,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 14,
+        "shift2Pallets": 3,
+        "shift3Tonnage": 56,
+        "shift3Pallets": 15,
+        "dailyTotalTonnage": 104,
+        "dailyTotalPallets": 25
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 244642,
+        "mtdPallets": 4830,
+        "shift1Tonnage": 5837,
+        "shift1Pallets": 104,
+        "shift2Tonnage": 5833,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 4044,
+        "shift3Pallets": 69,
+        "dailyTotalTonnage": 15714,
+        "dailyTotalPallets": 289
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 139904,
+        "mtdPallets": 12802,
+        "shift1Tonnage": 2280,
+        "shift1Pallets": 215,
+        "shift2Tonnage": 2796,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 2146,
+        "shift3Pallets": 204,
+        "dailyTotalTonnage": 7222,
+        "dailyTotalPallets": 684
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 977806,
+        "mtdPallets": 69137,
+        "shift1Tonnage": 19448,
+        "shift1Pallets": 1389,
+        "shift2Tonnage": 24492,
+        "shift2Pallets": 1744,
+        "shift3Tonnage": 25175,
+        "shift3Pallets": 1753,
+        "dailyTotalTonnage": 69115,
+        "dailyTotalPallets": 4886
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1543348,
+      "mtdPallets": 91394,
+      "shift1Tonnage": 30324,
+      "shift1Pallets": 1785,
+      "shift2Tonnage": 38226,
+      "shift2Pallets": 2198,
+      "shift3Tonnage": 36114,
+      "shift3Pallets": 2107,
+      "dailyTotalTonnage": 104664,
+      "dailyTotalPallets": 6090
+    }
+  },
+  "16/9/2026": {
+    "productionDay": "16/09/2026",
+    "productionDayValue": "20260916000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 173415,
+        "mtdPallets": 2910,
+        "shift1Tonnage": 2725,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4693,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12509,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7581,
+        "mtdPallets": 1715,
+        "shift1Tonnage": 34,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 14,
+        "shift2Pallets": 3,
+        "shift3Tonnage": 56,
+        "shift3Pallets": 15,
+        "dailyTotalTonnage": 104,
+        "dailyTotalPallets": 25
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 244642,
+        "mtdPallets": 4830,
+        "shift1Tonnage": 5837,
+        "shift1Pallets": 104,
+        "shift2Tonnage": 5833,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 4044,
+        "shift3Pallets": 69,
+        "dailyTotalTonnage": 15714,
+        "dailyTotalPallets": 289
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 139904,
+        "mtdPallets": 12802,
+        "shift1Tonnage": 2280,
+        "shift1Pallets": 215,
+        "shift2Tonnage": 2796,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 2146,
+        "shift3Pallets": 204,
+        "dailyTotalTonnage": 7222,
+        "dailyTotalPallets": 684
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 977806,
+        "mtdPallets": 69137,
+        "shift1Tonnage": 19448,
+        "shift1Pallets": 1389,
+        "shift2Tonnage": 24492,
+        "shift2Pallets": 1744,
+        "shift3Tonnage": 25175,
+        "shift3Pallets": 1753,
+        "dailyTotalTonnage": 69115,
+        "dailyTotalPallets": 4886
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1543348,
+      "mtdPallets": 91394,
+      "shift1Tonnage": 30324,
+      "shift1Pallets": 1785,
+      "shift2Tonnage": 38226,
+      "shift2Pallets": 2198,
+      "shift3Tonnage": 36114,
+      "shift3Pallets": 2107,
+      "dailyTotalTonnage": 104664,
+      "dailyTotalPallets": 6090
+    }
+  },
+  "2026-09-15": {
+    "productionDay": "15/09/2026",
+    "productionDayValue": "20260915000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 160904,
+        "mtdPallets": 2704,
+        "shift1Tonnage": 5664,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4800,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 15555,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7475,
+        "mtdPallets": 1690,
+        "shift1Tonnage": 127,
+        "shift1Pallets": 26,
+        "shift2Tonnage": 151,
+        "shift2Pallets": 31,
+        "shift3Tonnage": 155,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 433,
+        "dailyTotalPallets": 89
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 228927,
+        "mtdPallets": 4541,
+        "shift1Tonnage": 8582,
+        "shift1Pallets": 114,
+        "shift2Tonnage": 6237,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 6865,
+        "shift3Pallets": 125,
+        "dailyTotalTonnage": 21684,
+        "dailyTotalPallets": 343
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 132680,
+        "mtdPallets": 12118,
+        "shift1Tonnage": 2357,
+        "shift1Pallets": 222,
+        "shift2Tonnage": 2808,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 3727,
+        "shift3Pallets": 353,
+        "dailyTotalTonnage": 8892,
+        "dailyTotalPallets": 840
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 908689,
+        "mtdPallets": 64251,
+        "shift1Tonnage": 18648,
+        "shift1Pallets": 1308,
+        "shift2Tonnage": 20921,
+        "shift2Pallets": 1459,
+        "shift3Tonnage": 20697,
+        "shift3Pallets": 1456,
+        "dailyTotalTonnage": 60266,
+        "dailyTotalPallets": 4223
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1438675,
+      "mtdPallets": 85304,
+      "shift1Tonnage": 35378,
+      "shift1Pallets": 1740,
+      "shift2Tonnage": 35208,
+      "shift2Pallets": 1929,
+      "shift3Tonnage": 36244,
+      "shift3Pallets": 2032,
+      "dailyTotalTonnage": 106830,
+      "dailyTotalPallets": 5701
+    }
+  },
+  "15/09/2026": {
+    "productionDay": "15/09/2026",
+    "productionDayValue": "20260915000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 160904,
+        "mtdPallets": 2704,
+        "shift1Tonnage": 5664,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4800,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 15555,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7475,
+        "mtdPallets": 1690,
+        "shift1Tonnage": 127,
+        "shift1Pallets": 26,
+        "shift2Tonnage": 151,
+        "shift2Pallets": 31,
+        "shift3Tonnage": 155,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 433,
+        "dailyTotalPallets": 89
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 228927,
+        "mtdPallets": 4541,
+        "shift1Tonnage": 8582,
+        "shift1Pallets": 114,
+        "shift2Tonnage": 6237,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 6865,
+        "shift3Pallets": 125,
+        "dailyTotalTonnage": 21684,
+        "dailyTotalPallets": 343
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 132680,
+        "mtdPallets": 12118,
+        "shift1Tonnage": 2357,
+        "shift1Pallets": 222,
+        "shift2Tonnage": 2808,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 3727,
+        "shift3Pallets": 353,
+        "dailyTotalTonnage": 8892,
+        "dailyTotalPallets": 840
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 908689,
+        "mtdPallets": 64251,
+        "shift1Tonnage": 18648,
+        "shift1Pallets": 1308,
+        "shift2Tonnage": 20921,
+        "shift2Pallets": 1459,
+        "shift3Tonnage": 20697,
+        "shift3Pallets": 1456,
+        "dailyTotalTonnage": 60266,
+        "dailyTotalPallets": 4223
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1438675,
+      "mtdPallets": 85304,
+      "shift1Tonnage": 35378,
+      "shift1Pallets": 1740,
+      "shift2Tonnage": 35208,
+      "shift2Pallets": 1929,
+      "shift3Tonnage": 36244,
+      "shift3Pallets": 2032,
+      "dailyTotalTonnage": 106830,
+      "dailyTotalPallets": 5701
+    }
+  },
+  "15/9/2026": {
+    "productionDay": "15/09/2026",
+    "productionDayValue": "20260915000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 160904,
+        "mtdPallets": 2704,
+        "shift1Tonnage": 5664,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5091,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4800,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 15555,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7475,
+        "mtdPallets": 1690,
+        "shift1Tonnage": 127,
+        "shift1Pallets": 26,
+        "shift2Tonnage": 151,
+        "shift2Pallets": 31,
+        "shift3Tonnage": 155,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 433,
+        "dailyTotalPallets": 89
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 228927,
+        "mtdPallets": 4541,
+        "shift1Tonnage": 8582,
+        "shift1Pallets": 114,
+        "shift2Tonnage": 6237,
+        "shift2Pallets": 104,
+        "shift3Tonnage": 6865,
+        "shift3Pallets": 125,
+        "dailyTotalTonnage": 21684,
+        "dailyTotalPallets": 343
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 132680,
+        "mtdPallets": 12118,
+        "shift1Tonnage": 2357,
+        "shift1Pallets": 222,
+        "shift2Tonnage": 2808,
+        "shift2Pallets": 265,
+        "shift3Tonnage": 3727,
+        "shift3Pallets": 353,
+        "dailyTotalTonnage": 8892,
+        "dailyTotalPallets": 840
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 908689,
+        "mtdPallets": 64251,
+        "shift1Tonnage": 18648,
+        "shift1Pallets": 1308,
+        "shift2Tonnage": 20921,
+        "shift2Pallets": 1459,
+        "shift3Tonnage": 20697,
+        "shift3Pallets": 1456,
+        "dailyTotalTonnage": 60266,
+        "dailyTotalPallets": 4223
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1438675,
+      "mtdPallets": 85304,
+      "shift1Tonnage": 35378,
+      "shift1Pallets": 1740,
+      "shift2Tonnage": 35208,
+      "shift2Pallets": 1929,
+      "shift3Tonnage": 36244,
+      "shift3Pallets": 2032,
+      "dailyTotalTonnage": 106830,
+      "dailyTotalPallets": 5701
+    }
+  },
+  "2026-09-14": {
+    "productionDay": "14/09/2026",
+    "productionDayValue": "20260914000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 145348,
+        "mtdPallets": 2498,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4992,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 2188,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12271,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7041,
+        "mtdPallets": 1601,
+        "shift1Tonnage": 33,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 202,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 157,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 392,
+        "dailyTotalPallets": 83
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 207241,
+        "mtdPallets": 4198,
+        "shift1Tonnage": 4524,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 4767,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5254,
+        "shift3Pallets": 119,
+        "dailyTotalTonnage": 14545,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 123786,
+        "mtdPallets": 11278,
+        "shift1Tonnage": -516,
+        "shift1Pallets": -41,
+        "shift2Tonnage": 4123,
+        "shift2Pallets": 380,
+        "shift3Tonnage": 2532,
+        "shift3Pallets": 240,
+        "dailyTotalTonnage": 6139,
+        "dailyTotalPallets": 579
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 848420,
+        "mtdPallets": 60028,
+        "shift1Tonnage": 9284,
+        "shift1Pallets": 652,
+        "shift2Tonnage": 22660,
+        "shift2Pallets": 1621,
+        "shift3Tonnage": 18551,
+        "shift3Pallets": 1279,
+        "dailyTotalTonnage": 50495,
+        "dailyTotalPallets": 3552
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1331836,
+      "mtdPallets": 79603,
+      "shift1Tonnage": 18416,
+      "shift1Pallets": 772,
+      "shift2Tonnage": 36744,
+      "shift2Pallets": 2221,
+      "shift3Tonnage": 28682,
+      "shift3Pallets": 1737,
+      "dailyTotalTonnage": 83842,
+      "dailyTotalPallets": 4730
+    }
+  },
+  "14/09/2026": {
+    "productionDay": "14/09/2026",
+    "productionDayValue": "20260914000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 145348,
+        "mtdPallets": 2498,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4992,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 2188,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12271,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7041,
+        "mtdPallets": 1601,
+        "shift1Tonnage": 33,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 202,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 157,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 392,
+        "dailyTotalPallets": 83
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 207241,
+        "mtdPallets": 4198,
+        "shift1Tonnage": 4524,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 4767,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5254,
+        "shift3Pallets": 119,
+        "dailyTotalTonnage": 14545,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 123786,
+        "mtdPallets": 11278,
+        "shift1Tonnage": -516,
+        "shift1Pallets": -41,
+        "shift2Tonnage": 4123,
+        "shift2Pallets": 380,
+        "shift3Tonnage": 2532,
+        "shift3Pallets": 240,
+        "dailyTotalTonnage": 6139,
+        "dailyTotalPallets": 579
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 848420,
+        "mtdPallets": 60028,
+        "shift1Tonnage": 9284,
+        "shift1Pallets": 652,
+        "shift2Tonnage": 22660,
+        "shift2Pallets": 1621,
+        "shift3Tonnage": 18551,
+        "shift3Pallets": 1279,
+        "dailyTotalTonnage": 50495,
+        "dailyTotalPallets": 3552
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1331836,
+      "mtdPallets": 79603,
+      "shift1Tonnage": 18416,
+      "shift1Pallets": 772,
+      "shift2Tonnage": 36744,
+      "shift2Pallets": 2221,
+      "shift3Tonnage": 28682,
+      "shift3Pallets": 1737,
+      "dailyTotalTonnage": 83842,
+      "dailyTotalPallets": 4730
+    }
+  },
+  "14/9/2026": {
+    "productionDay": "14/09/2026",
+    "productionDayValue": "20260914000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 145348,
+        "mtdPallets": 2498,
+        "shift1Tonnage": 5091,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4992,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 2188,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 12271,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 7041,
+        "mtdPallets": 1601,
+        "shift1Tonnage": 33,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 202,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 157,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 392,
+        "dailyTotalPallets": 83
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 207241,
+        "mtdPallets": 4198,
+        "shift1Tonnage": 4524,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 4767,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5254,
+        "shift3Pallets": 119,
+        "dailyTotalTonnage": 14545,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 123786,
+        "mtdPallets": 11278,
+        "shift1Tonnage": -516,
+        "shift1Pallets": -41,
+        "shift2Tonnage": 4123,
+        "shift2Pallets": 380,
+        "shift3Tonnage": 2532,
+        "shift3Pallets": 240,
+        "dailyTotalTonnage": 6139,
+        "dailyTotalPallets": 579
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 848420,
+        "mtdPallets": 60028,
+        "shift1Tonnage": 9284,
+        "shift1Pallets": 652,
+        "shift2Tonnage": 22660,
+        "shift2Pallets": 1621,
+        "shift3Tonnage": 18551,
+        "shift3Pallets": 1279,
+        "dailyTotalTonnage": 50495,
+        "dailyTotalPallets": 3552
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1331836,
+      "mtdPallets": 79603,
+      "shift1Tonnage": 18416,
+      "shift1Pallets": 772,
+      "shift2Tonnage": 36744,
+      "shift2Pallets": 2221,
+      "shift3Tonnage": 28682,
+      "shift3Pallets": 1737,
+      "dailyTotalTonnage": 83842,
+      "dailyTotalPallets": 4730
+    }
+  },
+  "2026-09-13": {
+    "productionDay": "13/09/2026",
+    "productionDayValue": "20260913000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 133075,
+        "mtdPallets": 2292,
+        "shift1Tonnage": 797,
+        "shift1Pallets": 34,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 797,
+        "dailyTotalPallets": 34
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6648,
+        "mtdPallets": 1518,
+        "shift1Tonnage": 105,
+        "shift1Pallets": 24,
+        "shift2Tonnage": 153,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 52,
+        "shift3Pallets": 11,
+        "dailyTotalTonnage": 310,
+        "dailyTotalPallets": 70
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 192695,
+        "mtdPallets": 3888,
+        "shift1Tonnage": 4896,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 4478,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5741,
+        "shift3Pallets": 140,
+        "dailyTotalTonnage": 15115,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 117646,
+        "mtdPallets": 10699,
+        "shift1Tonnage": 2842,
+        "shift1Pallets": 252,
+        "shift2Tonnage": 2202,
+        "shift2Pallets": 208,
+        "shift3Tonnage": 2163,
+        "shift3Pallets": 200,
+        "dailyTotalTonnage": 7207,
+        "dailyTotalPallets": 660
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 797924,
+        "mtdPallets": 56476,
+        "shift1Tonnage": 16296,
+        "shift1Pallets": 1150,
+        "shift2Tonnage": 18286,
+        "shift2Pallets": 1294,
+        "shift3Tonnage": 21164,
+        "shift3Pallets": 1520,
+        "dailyTotalTonnage": 55746,
+        "dailyTotalPallets": 3964
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1247988,
+      "mtdPallets": 74873,
+      "shift1Tonnage": 24936,
+      "shift1Pallets": 1549,
+      "shift2Tonnage": 25119,
+      "shift2Pallets": 1618,
+      "shift3Tonnage": 29120,
+      "shift3Pallets": 1871,
+      "dailyTotalTonnage": 79175,
+      "dailyTotalPallets": 5038
+    }
+  },
+  "13/09/2026": {
+    "productionDay": "13/09/2026",
+    "productionDayValue": "20260913000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 133075,
+        "mtdPallets": 2292,
+        "shift1Tonnage": 797,
+        "shift1Pallets": 34,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 797,
+        "dailyTotalPallets": 34
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6648,
+        "mtdPallets": 1518,
+        "shift1Tonnage": 105,
+        "shift1Pallets": 24,
+        "shift2Tonnage": 153,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 52,
+        "shift3Pallets": 11,
+        "dailyTotalTonnage": 310,
+        "dailyTotalPallets": 70
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 192695,
+        "mtdPallets": 3888,
+        "shift1Tonnage": 4896,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 4478,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5741,
+        "shift3Pallets": 140,
+        "dailyTotalTonnage": 15115,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 117646,
+        "mtdPallets": 10699,
+        "shift1Tonnage": 2842,
+        "shift1Pallets": 252,
+        "shift2Tonnage": 2202,
+        "shift2Pallets": 208,
+        "shift3Tonnage": 2163,
+        "shift3Pallets": 200,
+        "dailyTotalTonnage": 7207,
+        "dailyTotalPallets": 660
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 797924,
+        "mtdPallets": 56476,
+        "shift1Tonnage": 16296,
+        "shift1Pallets": 1150,
+        "shift2Tonnage": 18286,
+        "shift2Pallets": 1294,
+        "shift3Tonnage": 21164,
+        "shift3Pallets": 1520,
+        "dailyTotalTonnage": 55746,
+        "dailyTotalPallets": 3964
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1247988,
+      "mtdPallets": 74873,
+      "shift1Tonnage": 24936,
+      "shift1Pallets": 1549,
+      "shift2Tonnage": 25119,
+      "shift2Pallets": 1618,
+      "shift3Tonnage": 29120,
+      "shift3Pallets": 1871,
+      "dailyTotalTonnage": 79175,
+      "dailyTotalPallets": 5038
+    }
+  },
+  "13/9/2026": {
+    "productionDay": "13/09/2026",
+    "productionDayValue": "20260913000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 133075,
+        "mtdPallets": 2292,
+        "shift1Tonnage": 797,
+        "shift1Pallets": 34,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 797,
+        "dailyTotalPallets": 34
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6648,
+        "mtdPallets": 1518,
+        "shift1Tonnage": 105,
+        "shift1Pallets": 24,
+        "shift2Tonnage": 153,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 52,
+        "shift3Pallets": 11,
+        "dailyTotalTonnage": 310,
+        "dailyTotalPallets": 70
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 192695,
+        "mtdPallets": 3888,
+        "shift1Tonnage": 4896,
+        "shift1Pallets": 89,
+        "shift2Tonnage": 4478,
+        "shift2Pallets": 81,
+        "shift3Tonnage": 5741,
+        "shift3Pallets": 140,
+        "dailyTotalTonnage": 15115,
+        "dailyTotalPallets": 310
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 117646,
+        "mtdPallets": 10699,
+        "shift1Tonnage": 2842,
+        "shift1Pallets": 252,
+        "shift2Tonnage": 2202,
+        "shift2Pallets": 208,
+        "shift3Tonnage": 2163,
+        "shift3Pallets": 200,
+        "dailyTotalTonnage": 7207,
+        "dailyTotalPallets": 660
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 797924,
+        "mtdPallets": 56476,
+        "shift1Tonnage": 16296,
+        "shift1Pallets": 1150,
+        "shift2Tonnage": 18286,
+        "shift2Pallets": 1294,
+        "shift3Tonnage": 21164,
+        "shift3Pallets": 1520,
+        "dailyTotalTonnage": 55746,
+        "dailyTotalPallets": 3964
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1247988,
+      "mtdPallets": 74873,
+      "shift1Tonnage": 24936,
+      "shift1Pallets": 1549,
+      "shift2Tonnage": 25119,
+      "shift2Pallets": 1618,
+      "shift3Tonnage": 29120,
+      "shift3Pallets": 1871,
+      "dailyTotalTonnage": 79175,
+      "dailyTotalPallets": 5038
+    }
+  },
+  "2026-09-12": {
+    "productionDay": "12/09/2026",
+    "productionDayValue": "20260912000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 132278,
+        "mtdPallets": 2258,
+        "shift1Tonnage": 4529,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5059,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3405,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 12993,
+        "dailyTotalPallets": 207
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6336,
+        "mtdPallets": 1448,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 42,
+        "shift3Tonnage": 188,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 525,
+        "dailyTotalPallets": 120
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 177577,
+        "mtdPallets": 3578,
+        "shift1Tonnage": 4411,
+        "shift1Pallets": 87,
+        "shift2Tonnage": 3837,
+        "shift2Pallets": 108,
+        "shift3Tonnage": 6526,
+        "shift3Pallets": 98,
+        "dailyTotalTonnage": 14774,
+        "dailyTotalPallets": 293
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 110437,
+        "mtdPallets": 10039,
+        "shift1Tonnage": 3157,
+        "shift1Pallets": 284,
+        "shift2Tonnage": 2878,
+        "shift2Pallets": 251,
+        "shift3Tonnage": 1984,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 8019,
+        "dailyTotalPallets": 712
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 742176,
+        "mtdPallets": 52512,
+        "shift1Tonnage": 24291,
+        "shift1Pallets": 1718,
+        "shift2Tonnage": 24789,
+        "shift2Pallets": 1751,
+        "shift3Tonnage": 15828,
+        "shift3Pallets": 1130,
+        "dailyTotalTonnage": 64908,
+        "dailyTotalPallets": 4599
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1168804,
+      "mtdPallets": 69835,
+      "shift1Tonnage": 36541,
+      "shift1Pallets": 2194,
+      "shift2Tonnage": 36747,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 27931,
+      "shift3Pallets": 1515,
+      "dailyTotalTonnage": 101219,
+      "dailyTotalPallets": 5931
+    }
+  },
+  "12/09/2026": {
+    "productionDay": "12/09/2026",
+    "productionDayValue": "20260912000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 132278,
+        "mtdPallets": 2258,
+        "shift1Tonnage": 4529,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5059,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3405,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 12993,
+        "dailyTotalPallets": 207
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6336,
+        "mtdPallets": 1448,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 42,
+        "shift3Tonnage": 188,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 525,
+        "dailyTotalPallets": 120
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 177577,
+        "mtdPallets": 3578,
+        "shift1Tonnage": 4411,
+        "shift1Pallets": 87,
+        "shift2Tonnage": 3837,
+        "shift2Pallets": 108,
+        "shift3Tonnage": 6526,
+        "shift3Pallets": 98,
+        "dailyTotalTonnage": 14774,
+        "dailyTotalPallets": 293
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 110437,
+        "mtdPallets": 10039,
+        "shift1Tonnage": 3157,
+        "shift1Pallets": 284,
+        "shift2Tonnage": 2878,
+        "shift2Pallets": 251,
+        "shift3Tonnage": 1984,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 8019,
+        "dailyTotalPallets": 712
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 742176,
+        "mtdPallets": 52512,
+        "shift1Tonnage": 24291,
+        "shift1Pallets": 1718,
+        "shift2Tonnage": 24789,
+        "shift2Pallets": 1751,
+        "shift3Tonnage": 15828,
+        "shift3Pallets": 1130,
+        "dailyTotalTonnage": 64908,
+        "dailyTotalPallets": 4599
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1168804,
+      "mtdPallets": 69835,
+      "shift1Tonnage": 36541,
+      "shift1Pallets": 2194,
+      "shift2Tonnage": 36747,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 27931,
+      "shift3Pallets": 1515,
+      "dailyTotalTonnage": 101219,
+      "dailyTotalPallets": 5931
+    }
+  },
+  "12/9/2026": {
+    "productionDay": "12/09/2026",
+    "productionDayValue": "20260912000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 132278,
+        "mtdPallets": 2258,
+        "shift1Tonnage": 4529,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 5059,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3405,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 12993,
+        "dailyTotalPallets": 207
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 6336,
+        "mtdPallets": 1448,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 42,
+        "shift3Tonnage": 188,
+        "shift3Pallets": 43,
+        "dailyTotalTonnage": 525,
+        "dailyTotalPallets": 120
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 177577,
+        "mtdPallets": 3578,
+        "shift1Tonnage": 4411,
+        "shift1Pallets": 87,
+        "shift2Tonnage": 3837,
+        "shift2Pallets": 108,
+        "shift3Tonnage": 6526,
+        "shift3Pallets": 98,
+        "dailyTotalTonnage": 14774,
+        "dailyTotalPallets": 293
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 110437,
+        "mtdPallets": 10039,
+        "shift1Tonnage": 3157,
+        "shift1Pallets": 284,
+        "shift2Tonnage": 2878,
+        "shift2Pallets": 251,
+        "shift3Tonnage": 1984,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 8019,
+        "dailyTotalPallets": 712
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 742176,
+        "mtdPallets": 52512,
+        "shift1Tonnage": 24291,
+        "shift1Pallets": 1718,
+        "shift2Tonnage": 24789,
+        "shift2Pallets": 1751,
+        "shift3Tonnage": 15828,
+        "shift3Pallets": 1130,
+        "dailyTotalTonnage": 64908,
+        "dailyTotalPallets": 4599
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1168804,
+      "mtdPallets": 69835,
+      "shift1Tonnage": 36541,
+      "shift1Pallets": 2194,
+      "shift2Tonnage": 36747,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 27931,
+      "shift3Pallets": 1515,
+      "dailyTotalTonnage": 101219,
+      "dailyTotalPallets": 5931
+    }
+  },
+  "2026-09-11": {
+    "productionDay": "11/09/2026",
+    "productionDayValue": "20260911000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 119284,
+        "mtdPallets": 2051,
+        "shift1Tonnage": 5042,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3469,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 10152,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5809,
+        "mtdPallets": 1328,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 180,
+        "shift2Pallets": 41,
+        "shift3Tonnage": 145,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 478,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 162802,
+        "mtdPallets": 3285,
+        "shift1Tonnage": 5583,
+        "shift1Pallets": 115,
+        "shift2Tonnage": 5876,
+        "shift2Pallets": 109,
+        "shift3Tonnage": 4937,
+        "shift3Pallets": 123,
+        "dailyTotalTonnage": 16396,
+        "dailyTotalPallets": 347
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 102416,
+        "mtdPallets": 9327,
+        "shift1Tonnage": 4018,
+        "shift1Pallets": 357,
+        "shift2Tonnage": 4507,
+        "shift2Pallets": 384,
+        "shift3Tonnage": 3349,
+        "shift3Pallets": 305,
+        "dailyTotalTonnage": 11874,
+        "dailyTotalPallets": 1046
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 677266,
+        "mtdPallets": 47913,
+        "shift1Tonnage": 20409,
+        "shift1Pallets": 1449,
+        "shift2Tonnage": 22913,
+        "shift2Pallets": 1618,
+        "shift3Tonnage": 21402,
+        "shift3Pallets": 1515,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4582
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1067577,
+      "mtdPallets": 63904,
+      "shift1Tonnage": 35205,
+      "shift1Pallets": 2026,
+      "shift2Tonnage": 35117,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 33302,
+      "shift3Pallets": 2042,
+      "dailyTotalTonnage": 103624,
+      "dailyTotalPallets": 6290
+    }
+  },
+  "11/09/2026": {
+    "productionDay": "11/09/2026",
+    "productionDayValue": "20260911000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 119284,
+        "mtdPallets": 2051,
+        "shift1Tonnage": 5042,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3469,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 10152,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5809,
+        "mtdPallets": 1328,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 180,
+        "shift2Pallets": 41,
+        "shift3Tonnage": 145,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 478,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 162802,
+        "mtdPallets": 3285,
+        "shift1Tonnage": 5583,
+        "shift1Pallets": 115,
+        "shift2Tonnage": 5876,
+        "shift2Pallets": 109,
+        "shift3Tonnage": 4937,
+        "shift3Pallets": 123,
+        "dailyTotalTonnage": 16396,
+        "dailyTotalPallets": 347
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 102416,
+        "mtdPallets": 9327,
+        "shift1Tonnage": 4018,
+        "shift1Pallets": 357,
+        "shift2Tonnage": 4507,
+        "shift2Pallets": 384,
+        "shift3Tonnage": 3349,
+        "shift3Pallets": 305,
+        "dailyTotalTonnage": 11874,
+        "dailyTotalPallets": 1046
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 677266,
+        "mtdPallets": 47913,
+        "shift1Tonnage": 20409,
+        "shift1Pallets": 1449,
+        "shift2Tonnage": 22913,
+        "shift2Pallets": 1618,
+        "shift3Tonnage": 21402,
+        "shift3Pallets": 1515,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4582
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1067577,
+      "mtdPallets": 63904,
+      "shift1Tonnage": 35205,
+      "shift1Pallets": 2026,
+      "shift2Tonnage": 35117,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 33302,
+      "shift3Pallets": 2042,
+      "dailyTotalTonnage": 103624,
+      "dailyTotalPallets": 6290
+    }
+  },
+  "11/9/2026": {
+    "productionDay": "11/09/2026",
+    "productionDayValue": "20260911000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 119284,
+        "mtdPallets": 2051,
+        "shift1Tonnage": 5042,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3469,
+        "shift3Pallets": 66,
+        "dailyTotalTonnage": 10152,
+        "dailyTotalPallets": 206
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5809,
+        "mtdPallets": 1328,
+        "shift1Tonnage": 153,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 180,
+        "shift2Pallets": 41,
+        "shift3Tonnage": 145,
+        "shift3Pallets": 33,
+        "dailyTotalTonnage": 478,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 162802,
+        "mtdPallets": 3285,
+        "shift1Tonnage": 5583,
+        "shift1Pallets": 115,
+        "shift2Tonnage": 5876,
+        "shift2Pallets": 109,
+        "shift3Tonnage": 4937,
+        "shift3Pallets": 123,
+        "dailyTotalTonnage": 16396,
+        "dailyTotalPallets": 347
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 102416,
+        "mtdPallets": 9327,
+        "shift1Tonnage": 4018,
+        "shift1Pallets": 357,
+        "shift2Tonnage": 4507,
+        "shift2Pallets": 384,
+        "shift3Tonnage": 3349,
+        "shift3Pallets": 305,
+        "dailyTotalTonnage": 11874,
+        "dailyTotalPallets": 1046
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 677266,
+        "mtdPallets": 47913,
+        "shift1Tonnage": 20409,
+        "shift1Pallets": 1449,
+        "shift2Tonnage": 22913,
+        "shift2Pallets": 1618,
+        "shift3Tonnage": 21402,
+        "shift3Pallets": 1515,
+        "dailyTotalTonnage": 64724,
+        "dailyTotalPallets": 4582
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 1067577,
+      "mtdPallets": 63904,
+      "shift1Tonnage": 35205,
+      "shift1Pallets": 2026,
+      "shift2Tonnage": 35117,
+      "shift2Pallets": 2222,
+      "shift3Tonnage": 33302,
+      "shift3Pallets": 2042,
+      "dailyTotalTonnage": 103624,
+      "dailyTotalPallets": 6290
+    }
+  },
+  "2026-09-10": {
+    "productionDay": "10/09/2026",
+    "productionDayValue": "20260910000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 109130,
+        "mtdPallets": 1845,
+        "shift1Tonnage": 3262,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4684,
+        "shift2Pallets": 65,
+        "shift3Tonnage": 5050,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 12996,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5330,
+        "mtdPallets": 1219,
+        "shift1Tonnage": 210,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 61,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 206,
+        "shift3Pallets": 47,
+        "dailyTotalTonnage": 477,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 146405,
+        "mtdPallets": 2938,
+        "shift1Tonnage": 5007,
+        "shift1Pallets": 102,
+        "shift2Tonnage": 6596,
+        "shift2Pallets": 136,
+        "shift3Tonnage": 5089,
+        "shift3Pallets": 107,
+        "dailyTotalTonnage": 16692,
+        "dailyTotalPallets": 345
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 90541,
+        "mtdPallets": 8281,
+        "shift1Tonnage": 2387,
+        "shift1Pallets": 221,
+        "shift2Tonnage": 4296,
+        "shift2Pallets": 374,
+        "shift3Tonnage": 3473,
+        "shift3Pallets": 309,
+        "dailyTotalTonnage": 10156,
+        "dailyTotalPallets": 904
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 612540,
+        "mtdPallets": 43331,
+        "shift1Tonnage": 18021,
+        "shift1Pallets": 1290,
+        "shift2Tonnage": 21473,
+        "shift2Pallets": 1527,
+        "shift3Tonnage": 22710,
+        "shift3Pallets": 1608,
+        "dailyTotalTonnage": 62204,
+        "dailyTotalPallets": 4425
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 963946,
+      "mtdPallets": 57614,
+      "shift1Tonnage": 28887,
+      "shift1Pallets": 1731,
+      "shift2Tonnage": 37110,
+      "shift2Pallets": 2116,
+      "shift3Tonnage": 36528,
+      "shift3Pallets": 2141,
+      "dailyTotalTonnage": 102525,
+      "dailyTotalPallets": 5988
+    }
+  },
+  "10/09/2026": {
+    "productionDay": "10/09/2026",
+    "productionDayValue": "20260910000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 109130,
+        "mtdPallets": 1845,
+        "shift1Tonnage": 3262,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4684,
+        "shift2Pallets": 65,
+        "shift3Tonnage": 5050,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 12996,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5330,
+        "mtdPallets": 1219,
+        "shift1Tonnage": 210,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 61,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 206,
+        "shift3Pallets": 47,
+        "dailyTotalTonnage": 477,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 146405,
+        "mtdPallets": 2938,
+        "shift1Tonnage": 5007,
+        "shift1Pallets": 102,
+        "shift2Tonnage": 6596,
+        "shift2Pallets": 136,
+        "shift3Tonnage": 5089,
+        "shift3Pallets": 107,
+        "dailyTotalTonnage": 16692,
+        "dailyTotalPallets": 345
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 90541,
+        "mtdPallets": 8281,
+        "shift1Tonnage": 2387,
+        "shift1Pallets": 221,
+        "shift2Tonnage": 4296,
+        "shift2Pallets": 374,
+        "shift3Tonnage": 3473,
+        "shift3Pallets": 309,
+        "dailyTotalTonnage": 10156,
+        "dailyTotalPallets": 904
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 612540,
+        "mtdPallets": 43331,
+        "shift1Tonnage": 18021,
+        "shift1Pallets": 1290,
+        "shift2Tonnage": 21473,
+        "shift2Pallets": 1527,
+        "shift3Tonnage": 22710,
+        "shift3Pallets": 1608,
+        "dailyTotalTonnage": 62204,
+        "dailyTotalPallets": 4425
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 963946,
+      "mtdPallets": 57614,
+      "shift1Tonnage": 28887,
+      "shift1Pallets": 1731,
+      "shift2Tonnage": 37110,
+      "shift2Pallets": 2116,
+      "shift3Tonnage": 36528,
+      "shift3Pallets": 2141,
+      "dailyTotalTonnage": 102525,
+      "dailyTotalPallets": 5988
+    }
+  },
+  "10/9/2026": {
+    "productionDay": "10/09/2026",
+    "productionDayValue": "20260910000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 109130,
+        "mtdPallets": 1845,
+        "shift1Tonnage": 3262,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 4684,
+        "shift2Pallets": 65,
+        "shift3Tonnage": 5050,
+        "shift3Pallets": 70,
+        "dailyTotalTonnage": 12996,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 5330,
+        "mtdPallets": 1219,
+        "shift1Tonnage": 210,
+        "shift1Pallets": 48,
+        "shift2Tonnage": 61,
+        "shift2Pallets": 14,
+        "shift3Tonnage": 206,
+        "shift3Pallets": 47,
+        "dailyTotalTonnage": 477,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 146405,
+        "mtdPallets": 2938,
+        "shift1Tonnage": 5007,
+        "shift1Pallets": 102,
+        "shift2Tonnage": 6596,
+        "shift2Pallets": 136,
+        "shift3Tonnage": 5089,
+        "shift3Pallets": 107,
+        "dailyTotalTonnage": 16692,
+        "dailyTotalPallets": 345
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 90541,
+        "mtdPallets": 8281,
+        "shift1Tonnage": 2387,
+        "shift1Pallets": 221,
+        "shift2Tonnage": 4296,
+        "shift2Pallets": 374,
+        "shift3Tonnage": 3473,
+        "shift3Pallets": 309,
+        "dailyTotalTonnage": 10156,
+        "dailyTotalPallets": 904
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 612540,
+        "mtdPallets": 43331,
+        "shift1Tonnage": 18021,
+        "shift1Pallets": 1290,
+        "shift2Tonnage": 21473,
+        "shift2Pallets": 1527,
+        "shift3Tonnage": 22710,
+        "shift3Pallets": 1608,
+        "dailyTotalTonnage": 62204,
+        "dailyTotalPallets": 4425
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 963946,
+      "mtdPallets": 57614,
+      "shift1Tonnage": 28887,
+      "shift1Pallets": 1731,
+      "shift2Tonnage": 37110,
+      "shift2Pallets": 2116,
+      "shift3Tonnage": 36528,
+      "shift3Pallets": 2141,
+      "dailyTotalTonnage": 102525,
+      "dailyTotalPallets": 5988
+    }
+  },
+  "2026-09-09": {
+    "productionDay": "09/09/2026",
+    "productionDayValue": "20260909000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 96132,
+        "mtdPallets": 1640,
+        "shift1Tonnage": 3589,
+        "shift1Pallets": 69,
+        "shift2Tonnage": 3150,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 3542,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 10281,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4851,
+        "mtdPallets": 1110,
+        "shift1Tonnage": 100,
+        "shift1Pallets": 23,
+        "shift2Tonnage": 65,
+        "shift2Pallets": 15,
+        "shift3Tonnage": 311,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 476,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 129712,
+        "mtdPallets": 2593,
+        "shift1Tonnage": 4094,
+        "shift1Pallets": 127,
+        "shift2Tonnage": 5960,
+        "shift2Pallets": 135,
+        "shift3Tonnage": 3461,
+        "shift3Pallets": 84,
+        "dailyTotalTonnage": 13515,
+        "dailyTotalPallets": 346
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 80384,
+        "mtdPallets": 7377,
+        "shift1Tonnage": 1852,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 2767,
+        "shift2Pallets": 254,
+        "shift3Tonnage": 2561,
+        "shift3Pallets": 237,
+        "dailyTotalTonnage": 7180,
+        "dailyTotalPallets": 667
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 550334,
+        "mtdPallets": 38906,
+        "shift1Tonnage": 19768,
+        "shift1Pallets": 1378,
+        "shift2Tonnage": 21713,
+        "shift2Pallets": 1547,
+        "shift3Tonnage": 19576,
+        "shift3Pallets": 1382,
+        "dailyTotalTonnage": 61057,
+        "dailyTotalPallets": 4307
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 861413,
+      "mtdPallets": 51626,
+      "shift1Tonnage": 29403,
+      "shift1Pallets": 1773,
+      "shift2Tonnage": 33655,
+      "shift2Pallets": 2020,
+      "shift3Tonnage": 29451,
+      "shift3Pallets": 1841,
+      "dailyTotalTonnage": 92509,
+      "dailyTotalPallets": 5634
+    }
+  },
+  "09/09/2026": {
+    "productionDay": "09/09/2026",
+    "productionDayValue": "20260909000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 96132,
+        "mtdPallets": 1640,
+        "shift1Tonnage": 3589,
+        "shift1Pallets": 69,
+        "shift2Tonnage": 3150,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 3542,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 10281,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4851,
+        "mtdPallets": 1110,
+        "shift1Tonnage": 100,
+        "shift1Pallets": 23,
+        "shift2Tonnage": 65,
+        "shift2Pallets": 15,
+        "shift3Tonnage": 311,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 476,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 129712,
+        "mtdPallets": 2593,
+        "shift1Tonnage": 4094,
+        "shift1Pallets": 127,
+        "shift2Tonnage": 5960,
+        "shift2Pallets": 135,
+        "shift3Tonnage": 3461,
+        "shift3Pallets": 84,
+        "dailyTotalTonnage": 13515,
+        "dailyTotalPallets": 346
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 80384,
+        "mtdPallets": 7377,
+        "shift1Tonnage": 1852,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 2767,
+        "shift2Pallets": 254,
+        "shift3Tonnage": 2561,
+        "shift3Pallets": 237,
+        "dailyTotalTonnage": 7180,
+        "dailyTotalPallets": 667
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 550334,
+        "mtdPallets": 38906,
+        "shift1Tonnage": 19768,
+        "shift1Pallets": 1378,
+        "shift2Tonnage": 21713,
+        "shift2Pallets": 1547,
+        "shift3Tonnage": 19576,
+        "shift3Pallets": 1382,
+        "dailyTotalTonnage": 61057,
+        "dailyTotalPallets": 4307
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 861413,
+      "mtdPallets": 51626,
+      "shift1Tonnage": 29403,
+      "shift1Pallets": 1773,
+      "shift2Tonnage": 33655,
+      "shift2Pallets": 2020,
+      "shift3Tonnage": 29451,
+      "shift3Pallets": 1841,
+      "dailyTotalTonnage": 92509,
+      "dailyTotalPallets": 5634
+    }
+  },
+  "9/9/2026": {
+    "productionDay": "09/09/2026",
+    "productionDayValue": "20260909000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 96132,
+        "mtdPallets": 1640,
+        "shift1Tonnage": 3589,
+        "shift1Pallets": 69,
+        "shift2Tonnage": 3150,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 3542,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 10281,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4851,
+        "mtdPallets": 1110,
+        "shift1Tonnage": 100,
+        "shift1Pallets": 23,
+        "shift2Tonnage": 65,
+        "shift2Pallets": 15,
+        "shift3Tonnage": 311,
+        "shift3Pallets": 71,
+        "dailyTotalTonnage": 476,
+        "dailyTotalPallets": 109
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 129712,
+        "mtdPallets": 2593,
+        "shift1Tonnage": 4094,
+        "shift1Pallets": 127,
+        "shift2Tonnage": 5960,
+        "shift2Pallets": 135,
+        "shift3Tonnage": 3461,
+        "shift3Pallets": 84,
+        "dailyTotalTonnage": 13515,
+        "dailyTotalPallets": 346
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 80384,
+        "mtdPallets": 7377,
+        "shift1Tonnage": 1852,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 2767,
+        "shift2Pallets": 254,
+        "shift3Tonnage": 2561,
+        "shift3Pallets": 237,
+        "dailyTotalTonnage": 7180,
+        "dailyTotalPallets": 667
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 550334,
+        "mtdPallets": 38906,
+        "shift1Tonnage": 19768,
+        "shift1Pallets": 1378,
+        "shift2Tonnage": 21713,
+        "shift2Pallets": 1547,
+        "shift3Tonnage": 19576,
+        "shift3Pallets": 1382,
+        "dailyTotalTonnage": 61057,
+        "dailyTotalPallets": 4307
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 861413,
+      "mtdPallets": 51626,
+      "shift1Tonnage": 29403,
+      "shift1Pallets": 1773,
+      "shift2Tonnage": 33655,
+      "shift2Pallets": 2020,
+      "shift3Tonnage": 29451,
+      "shift3Pallets": 1841,
+      "dailyTotalTonnage": 92509,
+      "dailyTotalPallets": 5634
+    }
+  },
+  "2026-09-08": {
+    "productionDay": "08/09/2026",
+    "productionDayValue": "20260908000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 85850,
+        "mtdPallets": 1435,
+        "shift1Tonnage": 4302,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 3042,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4663,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12007,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4373,
+        "mtdPallets": 1001,
+        "shift1Tonnage": 335,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 142,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 661,
+        "dailyTotalPallets": 152
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 116195,
+        "mtdPallets": 2247,
+        "shift1Tonnage": 2895,
+        "shift1Pallets": 73,
+        "shift2Tonnage": 7076,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5340,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 15311,
+        "dailyTotalPallets": 279
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 73203,
+        "mtdPallets": 6710,
+        "shift1Tonnage": 2224,
+        "shift1Pallets": 201,
+        "shift2Tonnage": 2233,
+        "shift2Pallets": 201,
+        "shift3Tonnage": 3254,
+        "shift3Pallets": 299,
+        "dailyTotalTonnage": 7711,
+        "dailyTotalPallets": 701
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 489276,
+        "mtdPallets": 34599,
+        "shift1Tonnage": 18507,
+        "shift1Pallets": 1321,
+        "shift2Tonnage": 24472,
+        "shift2Pallets": 1708,
+        "shift3Tonnage": 22634,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 65613,
+        "dailyTotalPallets": 4630
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 768897,
+      "mtdPallets": 45992,
+      "shift1Tonnage": 28263,
+      "shift1Pallets": 1742,
+      "shift2Tonnage": 37007,
+      "shift2Pallets": 2129,
+      "shift3Tonnage": 36033,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 101303,
+      "dailyTotalPallets": 5967
+    }
+  },
+  "08/09/2026": {
+    "productionDay": "08/09/2026",
+    "productionDayValue": "20260908000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 85850,
+        "mtdPallets": 1435,
+        "shift1Tonnage": 4302,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 3042,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4663,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12007,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4373,
+        "mtdPallets": 1001,
+        "shift1Tonnage": 335,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 142,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 661,
+        "dailyTotalPallets": 152
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 116195,
+        "mtdPallets": 2247,
+        "shift1Tonnage": 2895,
+        "shift1Pallets": 73,
+        "shift2Tonnage": 7076,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5340,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 15311,
+        "dailyTotalPallets": 279
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 73203,
+        "mtdPallets": 6710,
+        "shift1Tonnage": 2224,
+        "shift1Pallets": 201,
+        "shift2Tonnage": 2233,
+        "shift2Pallets": 201,
+        "shift3Tonnage": 3254,
+        "shift3Pallets": 299,
+        "dailyTotalTonnage": 7711,
+        "dailyTotalPallets": 701
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 489276,
+        "mtdPallets": 34599,
+        "shift1Tonnage": 18507,
+        "shift1Pallets": 1321,
+        "shift2Tonnage": 24472,
+        "shift2Pallets": 1708,
+        "shift3Tonnage": 22634,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 65613,
+        "dailyTotalPallets": 4630
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 768897,
+      "mtdPallets": 45992,
+      "shift1Tonnage": 28263,
+      "shift1Pallets": 1742,
+      "shift2Tonnage": 37007,
+      "shift2Pallets": 2129,
+      "shift3Tonnage": 36033,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 101303,
+      "dailyTotalPallets": 5967
+    }
+  },
+  "8/9/2026": {
+    "productionDay": "08/09/2026",
+    "productionDayValue": "20260908000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 85850,
+        "mtdPallets": 1435,
+        "shift1Tonnage": 4302,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 3042,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4663,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12007,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 4373,
+        "mtdPallets": 1001,
+        "shift1Tonnage": 335,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 184,
+        "shift2Pallets": 43,
+        "shift3Tonnage": 142,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 661,
+        "dailyTotalPallets": 152
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 116195,
+        "mtdPallets": 2247,
+        "shift1Tonnage": 2895,
+        "shift1Pallets": 73,
+        "shift2Tonnage": 7076,
+        "shift2Pallets": 107,
+        "shift3Tonnage": 5340,
+        "shift3Pallets": 99,
+        "dailyTotalTonnage": 15311,
+        "dailyTotalPallets": 279
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 73203,
+        "mtdPallets": 6710,
+        "shift1Tonnage": 2224,
+        "shift1Pallets": 201,
+        "shift2Tonnage": 2233,
+        "shift2Pallets": 201,
+        "shift3Tonnage": 3254,
+        "shift3Pallets": 299,
+        "dailyTotalTonnage": 7711,
+        "dailyTotalPallets": 701
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 489276,
+        "mtdPallets": 34599,
+        "shift1Tonnage": 18507,
+        "shift1Pallets": 1321,
+        "shift2Tonnage": 24472,
+        "shift2Pallets": 1708,
+        "shift3Tonnage": 22634,
+        "shift3Pallets": 1601,
+        "dailyTotalTonnage": 65613,
+        "dailyTotalPallets": 4630
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 768897,
+      "mtdPallets": 45992,
+      "shift1Tonnage": 28263,
+      "shift1Pallets": 1742,
+      "shift2Tonnage": 37007,
+      "shift2Pallets": 2129,
+      "shift3Tonnage": 36033,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 101303,
+      "dailyTotalPallets": 5967
+    }
+  },
+  "2026-09-07": {
+    "productionDay": "07/09/2026",
+    "productionDayValue": "20260907000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 73842,
+        "mtdPallets": 1230,
+        "shift1Tonnage": 6450,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4372,
+        "shift3Pallets": 61,
+        "dailyTotalTonnage": 12463,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3709,
+        "mtdPallets": 849,
+        "shift1Tonnage": 152,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 248,
+        "shift2Pallets": 57,
+        "shift3Tonnage": 82,
+        "shift3Pallets": 19,
+        "dailyTotalTonnage": 482,
+        "dailyTotalPallets": 111
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 100882,
+        "mtdPallets": 1968,
+        "shift1Tonnage": 6420,
+        "shift1Pallets": 120,
+        "shift2Tonnage": 2816,
+        "shift2Pallets": 100,
+        "shift3Tonnage": 8361,
+        "shift3Pallets": 135,
+        "dailyTotalTonnage": 17597,
+        "dailyTotalPallets": 355
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 65490,
+        "mtdPallets": 6009,
+        "shift1Tonnage": 2306,
+        "shift1Pallets": 207,
+        "shift2Tonnage": 2033,
+        "shift2Pallets": 185,
+        "shift3Tonnage": 3122,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 7461,
+        "dailyTotalPallets": 670
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 423661,
+        "mtdPallets": 29969,
+        "shift1Tonnage": 14076,
+        "shift1Pallets": 993,
+        "shift2Tonnage": 24524,
+        "shift2Pallets": 1730,
+        "shift3Tonnage": 23193,
+        "shift3Pallets": 1627,
+        "dailyTotalTonnage": 61793,
+        "dailyTotalPallets": 4350
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 667584,
+      "mtdPallets": 40025,
+      "shift1Tonnage": 29404,
+      "shift1Pallets": 1429,
+      "shift2Tonnage": 31262,
+      "shift2Pallets": 2142,
+      "shift3Tonnage": 39130,
+      "shift3Pallets": 2120,
+      "dailyTotalTonnage": 99796,
+      "dailyTotalPallets": 5691
+    }
+  },
+  "07/09/2026": {
+    "productionDay": "07/09/2026",
+    "productionDayValue": "20260907000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 73842,
+        "mtdPallets": 1230,
+        "shift1Tonnage": 6450,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4372,
+        "shift3Pallets": 61,
+        "dailyTotalTonnage": 12463,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3709,
+        "mtdPallets": 849,
+        "shift1Tonnage": 152,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 248,
+        "shift2Pallets": 57,
+        "shift3Tonnage": 82,
+        "shift3Pallets": 19,
+        "dailyTotalTonnage": 482,
+        "dailyTotalPallets": 111
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 100882,
+        "mtdPallets": 1968,
+        "shift1Tonnage": 6420,
+        "shift1Pallets": 120,
+        "shift2Tonnage": 2816,
+        "shift2Pallets": 100,
+        "shift3Tonnage": 8361,
+        "shift3Pallets": 135,
+        "dailyTotalTonnage": 17597,
+        "dailyTotalPallets": 355
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 65490,
+        "mtdPallets": 6009,
+        "shift1Tonnage": 2306,
+        "shift1Pallets": 207,
+        "shift2Tonnage": 2033,
+        "shift2Pallets": 185,
+        "shift3Tonnage": 3122,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 7461,
+        "dailyTotalPallets": 670
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 423661,
+        "mtdPallets": 29969,
+        "shift1Tonnage": 14076,
+        "shift1Pallets": 993,
+        "shift2Tonnage": 24524,
+        "shift2Pallets": 1730,
+        "shift3Tonnage": 23193,
+        "shift3Pallets": 1627,
+        "dailyTotalTonnage": 61793,
+        "dailyTotalPallets": 4350
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 667584,
+      "mtdPallets": 40025,
+      "shift1Tonnage": 29404,
+      "shift1Pallets": 1429,
+      "shift2Tonnage": 31262,
+      "shift2Pallets": 2142,
+      "shift3Tonnage": 39130,
+      "shift3Pallets": 2120,
+      "dailyTotalTonnage": 99796,
+      "dailyTotalPallets": 5691
+    }
+  },
+  "7/9/2026": {
+    "productionDay": "07/09/2026",
+    "productionDayValue": "20260907000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 73842,
+        "mtdPallets": 1230,
+        "shift1Tonnage": 6450,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1641,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4372,
+        "shift3Pallets": 61,
+        "dailyTotalTonnage": 12463,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3709,
+        "mtdPallets": 849,
+        "shift1Tonnage": 152,
+        "shift1Pallets": 35,
+        "shift2Tonnage": 248,
+        "shift2Pallets": 57,
+        "shift3Tonnage": 82,
+        "shift3Pallets": 19,
+        "dailyTotalTonnage": 482,
+        "dailyTotalPallets": 111
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 100882,
+        "mtdPallets": 1968,
+        "shift1Tonnage": 6420,
+        "shift1Pallets": 120,
+        "shift2Tonnage": 2816,
+        "shift2Pallets": 100,
+        "shift3Tonnage": 8361,
+        "shift3Pallets": 135,
+        "dailyTotalTonnage": 17597,
+        "dailyTotalPallets": 355
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 65490,
+        "mtdPallets": 6009,
+        "shift1Tonnage": 2306,
+        "shift1Pallets": 207,
+        "shift2Tonnage": 2033,
+        "shift2Pallets": 185,
+        "shift3Tonnage": 3122,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 7461,
+        "dailyTotalPallets": 670
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 423661,
+        "mtdPallets": 29969,
+        "shift1Tonnage": 14076,
+        "shift1Pallets": 993,
+        "shift2Tonnage": 24524,
+        "shift2Pallets": 1730,
+        "shift3Tonnage": 23193,
+        "shift3Pallets": 1627,
+        "dailyTotalTonnage": 61793,
+        "dailyTotalPallets": 4350
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 667584,
+      "mtdPallets": 40025,
+      "shift1Tonnage": 29404,
+      "shift1Pallets": 1429,
+      "shift2Tonnage": 31262,
+      "shift2Pallets": 2142,
+      "shift3Tonnage": 39130,
+      "shift3Pallets": 2120,
+      "dailyTotalTonnage": 99796,
+      "dailyTotalPallets": 5691
+    }
+  },
+  "2026-09-06": {
+    "productionDay": "06/09/2026",
+    "productionDayValue": "20260906000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3226,
+        "mtdPallets": 738,
+        "shift1Tonnage": 135,
+        "shift1Pallets": 31,
+        "shift2Tonnage": 270,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 200,
+        "shift3Pallets": 46,
+        "dailyTotalTonnage": 605,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 83284,
+        "mtdPallets": 1613,
+        "shift1Tonnage": 4826,
+        "shift1Pallets": 122,
+        "shift2Tonnage": 4084,
+        "shift2Pallets": 76,
+        "shift3Tonnage": 2174,
+        "shift3Pallets": 60,
+        "dailyTotalTonnage": 11084,
+        "dailyTotalPallets": 258
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 58028,
+        "mtdPallets": 5339,
+        "shift1Tonnage": 4179,
+        "shift1Pallets": 378,
+        "shift2Tonnage": 2628,
+        "shift2Pallets": 233,
+        "shift3Tonnage": 3004,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 9811,
+        "dailyTotalPallets": 889
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 361867,
+        "mtdPallets": 25619,
+        "shift1Tonnage": 18700,
+        "shift1Pallets": 1335,
+        "shift2Tonnage": 23189,
+        "shift2Pallets": 1640,
+        "shift3Tonnage": 16248,
+        "shift3Pallets": 1150,
+        "dailyTotalTonnage": 58137,
+        "dailyTotalPallets": 4125
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 567783,
+      "mtdPallets": 34334,
+      "shift1Tonnage": 27840,
+      "shift1Pallets": 1866,
+      "shift2Tonnage": 30171,
+      "shift2Pallets": 2011,
+      "shift3Tonnage": 21626,
+      "shift3Pallets": 1534,
+      "dailyTotalTonnage": 79637,
+      "dailyTotalPallets": 5411
+    }
+  },
+  "06/09/2026": {
+    "productionDay": "06/09/2026",
+    "productionDayValue": "20260906000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3226,
+        "mtdPallets": 738,
+        "shift1Tonnage": 135,
+        "shift1Pallets": 31,
+        "shift2Tonnage": 270,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 200,
+        "shift3Pallets": 46,
+        "dailyTotalTonnage": 605,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 83284,
+        "mtdPallets": 1613,
+        "shift1Tonnage": 4826,
+        "shift1Pallets": 122,
+        "shift2Tonnage": 4084,
+        "shift2Pallets": 76,
+        "shift3Tonnage": 2174,
+        "shift3Pallets": 60,
+        "dailyTotalTonnage": 11084,
+        "dailyTotalPallets": 258
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 58028,
+        "mtdPallets": 5339,
+        "shift1Tonnage": 4179,
+        "shift1Pallets": 378,
+        "shift2Tonnage": 2628,
+        "shift2Pallets": 233,
+        "shift3Tonnage": 3004,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 9811,
+        "dailyTotalPallets": 889
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 361867,
+        "mtdPallets": 25619,
+        "shift1Tonnage": 18700,
+        "shift1Pallets": 1335,
+        "shift2Tonnage": 23189,
+        "shift2Pallets": 1640,
+        "shift3Tonnage": 16248,
+        "shift3Pallets": 1150,
+        "dailyTotalTonnage": 58137,
+        "dailyTotalPallets": 4125
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 567783,
+      "mtdPallets": 34334,
+      "shift1Tonnage": 27840,
+      "shift1Pallets": 1866,
+      "shift2Tonnage": 30171,
+      "shift2Pallets": 2011,
+      "shift3Tonnage": 21626,
+      "shift3Pallets": 1534,
+      "dailyTotalTonnage": 79637,
+      "dailyTotalPallets": 5411
+    }
+  },
+  "6/9/2026": {
+    "productionDay": "06/09/2026",
+    "productionDayValue": "20260906000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 3226,
+        "mtdPallets": 738,
+        "shift1Tonnage": 135,
+        "shift1Pallets": 31,
+        "shift2Tonnage": 270,
+        "shift2Pallets": 62,
+        "shift3Tonnage": 200,
+        "shift3Pallets": 46,
+        "dailyTotalTonnage": 605,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 83284,
+        "mtdPallets": 1613,
+        "shift1Tonnage": 4826,
+        "shift1Pallets": 122,
+        "shift2Tonnage": 4084,
+        "shift2Pallets": 76,
+        "shift3Tonnage": 2174,
+        "shift3Pallets": 60,
+        "dailyTotalTonnage": 11084,
+        "dailyTotalPallets": 258
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 58028,
+        "mtdPallets": 5339,
+        "shift1Tonnage": 4179,
+        "shift1Pallets": 378,
+        "shift2Tonnage": 2628,
+        "shift2Pallets": 233,
+        "shift3Tonnage": 3004,
+        "shift3Pallets": 278,
+        "dailyTotalTonnage": 9811,
+        "dailyTotalPallets": 889
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 361867,
+        "mtdPallets": 25619,
+        "shift1Tonnage": 18700,
+        "shift1Pallets": 1335,
+        "shift2Tonnage": 23189,
+        "shift2Pallets": 1640,
+        "shift3Tonnage": 16248,
+        "shift3Pallets": 1150,
+        "dailyTotalTonnage": 58137,
+        "dailyTotalPallets": 4125
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 567783,
+      "mtdPallets": 34334,
+      "shift1Tonnage": 27840,
+      "shift1Pallets": 1866,
+      "shift2Tonnage": 30171,
+      "shift2Pallets": 2011,
+      "shift3Tonnage": 21626,
+      "shift3Pallets": 1534,
+      "dailyTotalTonnage": 79637,
+      "dailyTotalPallets": 5411
+    }
+  },
+  "2026-09-05": {
+    "productionDay": "05/09/2026",
+    "productionDayValue": "20260905000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 5071,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1489,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1364,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 7924,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2619,
+        "mtdPallets": 599,
+        "shift1Tonnage": 239,
+        "shift1Pallets": 55,
+        "shift2Tonnage": 222,
+        "shift2Pallets": 51,
+        "shift3Tonnage": 126,
+        "shift3Pallets": 29,
+        "dailyTotalTonnage": 587,
+        "dailyTotalPallets": 135
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 72199,
+        "mtdPallets": 1355,
+        "shift1Tonnage": 4807,
+        "shift1Pallets": 98,
+        "shift2Tonnage": 5827,
+        "shift2Pallets": 102,
+        "shift3Tonnage": 4766,
+        "shift3Pallets": 101,
+        "dailyTotalTonnage": 15400,
+        "dailyTotalPallets": 301
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 48215,
+        "mtdPallets": 4450,
+        "shift1Tonnage": 1655,
+        "shift1Pallets": 150,
+        "shift2Tonnage": 4814,
+        "shift2Pallets": 428,
+        "shift3Tonnage": 3799,
+        "shift3Pallets": 342,
+        "dailyTotalTonnage": 10268,
+        "dailyTotalPallets": 920
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 303728,
+        "mtdPallets": 21494,
+        "shift1Tonnage": 22067,
+        "shift1Pallets": 1566,
+        "shift2Tonnage": 21291,
+        "shift2Pallets": 1486,
+        "shift3Tonnage": 23435,
+        "shift3Pallets": 1678,
+        "dailyTotalTonnage": 66793,
+        "dailyTotalPallets": 4730
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 488139,
+      "mtdPallets": 28923,
+      "shift1Tonnage": 33839,
+      "shift1Pallets": 1939,
+      "shift2Tonnage": 33643,
+      "shift2Pallets": 2137,
+      "shift3Tonnage": 33490,
+      "shift3Pallets": 2215,
+      "dailyTotalTonnage": 100972,
+      "dailyTotalPallets": 6291
+    }
+  },
+  "05/09/2026": {
+    "productionDay": "05/09/2026",
+    "productionDayValue": "20260905000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 5071,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1489,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1364,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 7924,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2619,
+        "mtdPallets": 599,
+        "shift1Tonnage": 239,
+        "shift1Pallets": 55,
+        "shift2Tonnage": 222,
+        "shift2Pallets": 51,
+        "shift3Tonnage": 126,
+        "shift3Pallets": 29,
+        "dailyTotalTonnage": 587,
+        "dailyTotalPallets": 135
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 72199,
+        "mtdPallets": 1355,
+        "shift1Tonnage": 4807,
+        "shift1Pallets": 98,
+        "shift2Tonnage": 5827,
+        "shift2Pallets": 102,
+        "shift3Tonnage": 4766,
+        "shift3Pallets": 101,
+        "dailyTotalTonnage": 15400,
+        "dailyTotalPallets": 301
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 48215,
+        "mtdPallets": 4450,
+        "shift1Tonnage": 1655,
+        "shift1Pallets": 150,
+        "shift2Tonnage": 4814,
+        "shift2Pallets": 428,
+        "shift3Tonnage": 3799,
+        "shift3Pallets": 342,
+        "dailyTotalTonnage": 10268,
+        "dailyTotalPallets": 920
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 303728,
+        "mtdPallets": 21494,
+        "shift1Tonnage": 22067,
+        "shift1Pallets": 1566,
+        "shift2Tonnage": 21291,
+        "shift2Pallets": 1486,
+        "shift3Tonnage": 23435,
+        "shift3Pallets": 1678,
+        "dailyTotalTonnage": 66793,
+        "dailyTotalPallets": 4730
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 488139,
+      "mtdPallets": 28923,
+      "shift1Tonnage": 33839,
+      "shift1Pallets": 1939,
+      "shift2Tonnage": 33643,
+      "shift2Pallets": 2137,
+      "shift3Tonnage": 33490,
+      "shift3Pallets": 2215,
+      "dailyTotalTonnage": 100972,
+      "dailyTotalPallets": 6291
+    }
+  },
+  "5/9/2026": {
+    "productionDay": "05/09/2026",
+    "productionDayValue": "20260905000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 61378,
+        "mtdPallets": 1025,
+        "shift1Tonnage": 5071,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 1489,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 1364,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 7924,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2619,
+        "mtdPallets": 599,
+        "shift1Tonnage": 239,
+        "shift1Pallets": 55,
+        "shift2Tonnage": 222,
+        "shift2Pallets": 51,
+        "shift3Tonnage": 126,
+        "shift3Pallets": 29,
+        "dailyTotalTonnage": 587,
+        "dailyTotalPallets": 135
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 72199,
+        "mtdPallets": 1355,
+        "shift1Tonnage": 4807,
+        "shift1Pallets": 98,
+        "shift2Tonnage": 5827,
+        "shift2Pallets": 102,
+        "shift3Tonnage": 4766,
+        "shift3Pallets": 101,
+        "dailyTotalTonnage": 15400,
+        "dailyTotalPallets": 301
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 48215,
+        "mtdPallets": 4450,
+        "shift1Tonnage": 1655,
+        "shift1Pallets": 150,
+        "shift2Tonnage": 4814,
+        "shift2Pallets": 428,
+        "shift3Tonnage": 3799,
+        "shift3Pallets": 342,
+        "dailyTotalTonnage": 10268,
+        "dailyTotalPallets": 920
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 303728,
+        "mtdPallets": 21494,
+        "shift1Tonnage": 22067,
+        "shift1Pallets": 1566,
+        "shift2Tonnage": 21291,
+        "shift2Pallets": 1486,
+        "shift3Tonnage": 23435,
+        "shift3Pallets": 1678,
+        "dailyTotalTonnage": 66793,
+        "dailyTotalPallets": 4730
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 488139,
+      "mtdPallets": 28923,
+      "shift1Tonnage": 33839,
+      "shift1Pallets": 1939,
+      "shift2Tonnage": 33643,
+      "shift2Pallets": 2137,
+      "shift3Tonnage": 33490,
+      "shift3Pallets": 2215,
+      "dailyTotalTonnage": 100972,
+      "dailyTotalPallets": 6291
+    }
+  },
+  "2026-09-04": {
+    "productionDay": "04/09/2026",
+    "productionDayValue": "20260904000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 53453,
+        "mtdPallets": 820,
+        "shift1Tonnage": 4945,
+        "shift1Pallets": 68,
+        "shift2Tonnage": 5034,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4802,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14781,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2030,
+        "mtdPallets": 464,
+        "shift1Tonnage": 226,
+        "shift1Pallets": 52,
+        "shift2Tonnage": 161,
+        "shift2Pallets": 37,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 50,
+        "dailyTotalTonnage": 604,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 56797,
+        "mtdPallets": 1054,
+        "shift1Tonnage": 4623,
+        "shift1Pallets": 100,
+        "shift2Tonnage": 3518,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 7264,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 15405,
+        "dailyTotalPallets": 320
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 37945,
+        "mtdPallets": 3530,
+        "shift1Tonnage": 2684,
+        "shift1Pallets": 246,
+        "shift2Tonnage": 3037,
+        "shift2Pallets": 269,
+        "shift3Tonnage": 3337,
+        "shift3Pallets": 304,
+        "dailyTotalTonnage": 9058,
+        "dailyTotalPallets": 819
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 236934,
+        "mtdPallets": 16764,
+        "shift1Tonnage": 20715,
+        "shift1Pallets": 1461,
+        "shift2Tonnage": 23174,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22815,
+        "shift3Pallets": 1611,
+        "dailyTotalTonnage": 66704,
+        "dailyTotalPallets": 4716
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 387159,
+      "mtdPallets": 22632,
+      "shift1Tonnage": 33193,
+      "shift1Pallets": 1927,
+      "shift2Tonnage": 34924,
+      "shift2Pallets": 2136,
+      "shift3Tonnage": 38435,
+      "shift3Pallets": 2136,
+      "dailyTotalTonnage": 106552,
+      "dailyTotalPallets": 6199
+    }
+  },
+  "04/09/2026": {
+    "productionDay": "04/09/2026",
+    "productionDayValue": "20260904000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 53453,
+        "mtdPallets": 820,
+        "shift1Tonnage": 4945,
+        "shift1Pallets": 68,
+        "shift2Tonnage": 5034,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4802,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14781,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2030,
+        "mtdPallets": 464,
+        "shift1Tonnage": 226,
+        "shift1Pallets": 52,
+        "shift2Tonnage": 161,
+        "shift2Pallets": 37,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 50,
+        "dailyTotalTonnage": 604,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 56797,
+        "mtdPallets": 1054,
+        "shift1Tonnage": 4623,
+        "shift1Pallets": 100,
+        "shift2Tonnage": 3518,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 7264,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 15405,
+        "dailyTotalPallets": 320
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 37945,
+        "mtdPallets": 3530,
+        "shift1Tonnage": 2684,
+        "shift1Pallets": 246,
+        "shift2Tonnage": 3037,
+        "shift2Pallets": 269,
+        "shift3Tonnage": 3337,
+        "shift3Pallets": 304,
+        "dailyTotalTonnage": 9058,
+        "dailyTotalPallets": 819
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 236934,
+        "mtdPallets": 16764,
+        "shift1Tonnage": 20715,
+        "shift1Pallets": 1461,
+        "shift2Tonnage": 23174,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22815,
+        "shift3Pallets": 1611,
+        "dailyTotalTonnage": 66704,
+        "dailyTotalPallets": 4716
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 387159,
+      "mtdPallets": 22632,
+      "shift1Tonnage": 33193,
+      "shift1Pallets": 1927,
+      "shift2Tonnage": 34924,
+      "shift2Pallets": 2136,
+      "shift3Tonnage": 38435,
+      "shift3Pallets": 2136,
+      "dailyTotalTonnage": 106552,
+      "dailyTotalPallets": 6199
+    }
+  },
+  "4/9/2026": {
+    "productionDay": "04/09/2026",
+    "productionDayValue": "20260904000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 53453,
+        "mtdPallets": 820,
+        "shift1Tonnage": 4945,
+        "shift1Pallets": 68,
+        "shift2Tonnage": 5034,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4802,
+        "shift3Pallets": 67,
+        "dailyTotalTonnage": 14781,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 2030,
+        "mtdPallets": 464,
+        "shift1Tonnage": 226,
+        "shift1Pallets": 52,
+        "shift2Tonnage": 161,
+        "shift2Pallets": 37,
+        "shift3Tonnage": 217,
+        "shift3Pallets": 50,
+        "dailyTotalTonnage": 604,
+        "dailyTotalPallets": 139
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 56797,
+        "mtdPallets": 1054,
+        "shift1Tonnage": 4623,
+        "shift1Pallets": 100,
+        "shift2Tonnage": 3518,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 7264,
+        "shift3Pallets": 104,
+        "dailyTotalTonnage": 15405,
+        "dailyTotalPallets": 320
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 37945,
+        "mtdPallets": 3530,
+        "shift1Tonnage": 2684,
+        "shift1Pallets": 246,
+        "shift2Tonnage": 3037,
+        "shift2Pallets": 269,
+        "shift3Tonnage": 3337,
+        "shift3Pallets": 304,
+        "dailyTotalTonnage": 9058,
+        "dailyTotalPallets": 819
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 236934,
+        "mtdPallets": 16764,
+        "shift1Tonnage": 20715,
+        "shift1Pallets": 1461,
+        "shift2Tonnage": 23174,
+        "shift2Pallets": 1644,
+        "shift3Tonnage": 22815,
+        "shift3Pallets": 1611,
+        "dailyTotalTonnage": 66704,
+        "dailyTotalPallets": 4716
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 387159,
+      "mtdPallets": 22632,
+      "shift1Tonnage": 33193,
+      "shift1Pallets": 1927,
+      "shift2Tonnage": 34924,
+      "shift2Pallets": 2136,
+      "shift3Tonnage": 38435,
+      "shift3Pallets": 2136,
+      "dailyTotalTonnage": 106552,
+      "dailyTotalPallets": 6199
+    }
+  },
+  "2026-09-03": {
+    "productionDay": "03/09/2026",
+    "productionDayValue": "20260903000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 38670,
+        "mtdPallets": 615,
+        "shift1Tonnage": 5152,
+        "shift1Pallets": 72,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3596,
+        "shift3Pallets": 63,
+        "dailyTotalTonnage": 11418,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 1425,
+        "mtdPallets": 325,
+        "shift1Tonnage": 287,
+        "shift1Pallets": 66,
+        "shift2Tonnage": 191,
+        "shift2Pallets": 44,
+        "shift3Tonnage": 196,
+        "shift3Pallets": 45,
+        "dailyTotalTonnage": 674,
+        "dailyTotalPallets": 155
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 41390,
+        "mtdPallets": 734,
+        "shift1Tonnage": 4026,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 6858,
+        "shift2Pallets": 106,
+        "shift3Tonnage": 5528,
+        "shift3Pallets": 105,
+        "dailyTotalTonnage": 16412,
+        "dailyTotalPallets": 295
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 28885,
+        "mtdPallets": 2711,
+        "shift1Tonnage": 2992,
+        "shift1Pallets": 277,
+        "shift2Tonnage": 4002,
+        "shift2Pallets": 368,
+        "shift3Tonnage": 2821,
+        "shift3Pallets": 266,
+        "dailyTotalTonnage": 9815,
+        "dailyTotalPallets": 911
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 170229,
+        "mtdPallets": 12048,
+        "shift1Tonnage": 18706,
+        "shift1Pallets": 1338,
+        "shift2Tonnage": 21856,
+        "shift2Pallets": 1544,
+        "shift3Tonnage": 25036,
+        "shift3Pallets": 1763,
+        "dailyTotalTonnage": 65598,
+        "dailyTotalPallets": 4645
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 280599,
+      "mtdPallets": 16433,
+      "shift1Tonnage": 31163,
+      "shift1Pallets": 1837,
+      "shift2Tonnage": 35577,
+      "shift2Pallets": 2132,
+      "shift3Tonnage": 37177,
+      "shift3Pallets": 2242,
+      "dailyTotalTonnage": 103917,
+      "dailyTotalPallets": 6211
+    }
+  },
+  "03/09/2026": {
+    "productionDay": "03/09/2026",
+    "productionDayValue": "20260903000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 38670,
+        "mtdPallets": 615,
+        "shift1Tonnage": 5152,
+        "shift1Pallets": 72,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3596,
+        "shift3Pallets": 63,
+        "dailyTotalTonnage": 11418,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 1425,
+        "mtdPallets": 325,
+        "shift1Tonnage": 287,
+        "shift1Pallets": 66,
+        "shift2Tonnage": 191,
+        "shift2Pallets": 44,
+        "shift3Tonnage": 196,
+        "shift3Pallets": 45,
+        "dailyTotalTonnage": 674,
+        "dailyTotalPallets": 155
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 41390,
+        "mtdPallets": 734,
+        "shift1Tonnage": 4026,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 6858,
+        "shift2Pallets": 106,
+        "shift3Tonnage": 5528,
+        "shift3Pallets": 105,
+        "dailyTotalTonnage": 16412,
+        "dailyTotalPallets": 295
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 28885,
+        "mtdPallets": 2711,
+        "shift1Tonnage": 2992,
+        "shift1Pallets": 277,
+        "shift2Tonnage": 4002,
+        "shift2Pallets": 368,
+        "shift3Tonnage": 2821,
+        "shift3Pallets": 266,
+        "dailyTotalTonnage": 9815,
+        "dailyTotalPallets": 911
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 170229,
+        "mtdPallets": 12048,
+        "shift1Tonnage": 18706,
+        "shift1Pallets": 1338,
+        "shift2Tonnage": 21856,
+        "shift2Pallets": 1544,
+        "shift3Tonnage": 25036,
+        "shift3Pallets": 1763,
+        "dailyTotalTonnage": 65598,
+        "dailyTotalPallets": 4645
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 280599,
+      "mtdPallets": 16433,
+      "shift1Tonnage": 31163,
+      "shift1Pallets": 1837,
+      "shift2Tonnage": 35577,
+      "shift2Pallets": 2132,
+      "shift3Tonnage": 37177,
+      "shift3Pallets": 2242,
+      "dailyTotalTonnage": 103917,
+      "dailyTotalPallets": 6211
+    }
+  },
+  "3/9/2026": {
+    "productionDay": "03/09/2026",
+    "productionDayValue": "20260903000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 38670,
+        "mtdPallets": 615,
+        "shift1Tonnage": 5152,
+        "shift1Pallets": 72,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 3596,
+        "shift3Pallets": 63,
+        "dailyTotalTonnage": 11418,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 1425,
+        "mtdPallets": 325,
+        "shift1Tonnage": 287,
+        "shift1Pallets": 66,
+        "shift2Tonnage": 191,
+        "shift2Pallets": 44,
+        "shift3Tonnage": 196,
+        "shift3Pallets": 45,
+        "dailyTotalTonnage": 674,
+        "dailyTotalPallets": 155
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 41390,
+        "mtdPallets": 734,
+        "shift1Tonnage": 4026,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 6858,
+        "shift2Pallets": 106,
+        "shift3Tonnage": 5528,
+        "shift3Pallets": 105,
+        "dailyTotalTonnage": 16412,
+        "dailyTotalPallets": 295
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 28885,
+        "mtdPallets": 2711,
+        "shift1Tonnage": 2992,
+        "shift1Pallets": 277,
+        "shift2Tonnage": 4002,
+        "shift2Pallets": 368,
+        "shift3Tonnage": 2821,
+        "shift3Pallets": 266,
+        "dailyTotalTonnage": 9815,
+        "dailyTotalPallets": 911
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 170229,
+        "mtdPallets": 12048,
+        "shift1Tonnage": 18706,
+        "shift1Pallets": 1338,
+        "shift2Tonnage": 21856,
+        "shift2Pallets": 1544,
+        "shift3Tonnage": 25036,
+        "shift3Pallets": 1763,
+        "dailyTotalTonnage": 65598,
+        "dailyTotalPallets": 4645
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 280599,
+      "mtdPallets": 16433,
+      "shift1Tonnage": 31163,
+      "shift1Pallets": 1837,
+      "shift2Tonnage": 35577,
+      "shift2Pallets": 2132,
+      "shift3Tonnage": 37177,
+      "shift3Pallets": 2242,
+      "dailyTotalTonnage": 103917,
+      "dailyTotalPallets": 6211
+    }
+  },
+  "2026-09-02": {
+    "productionDay": "02/09/2026",
+    "productionDayValue": "20260902000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 27249,
+        "mtdPallets": 410,
+        "shift1Tonnage": 5010,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4695,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12375,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 749,
+        "mtdPallets": 170,
+        "shift1Tonnage": 91,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 252,
+        "shift2Pallets": 58,
+        "shift3Tonnage": 209,
+        "shift3Pallets": 48,
+        "dailyTotalTonnage": 552,
+        "dailyTotalPallets": 127
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 24977,
+        "mtdPallets": 439,
+        "shift1Tonnage": 3612,
+        "shift1Pallets": 79,
+        "shift2Tonnage": 4725,
+        "shift2Pallets": 93,
+        "shift3Tonnage": 4539,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 12876,
+        "dailyTotalPallets": 249
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 19069,
+        "mtdPallets": 1800,
+        "shift1Tonnage": 1362,
+        "shift1Pallets": 133,
+        "shift2Tonnage": 2440,
+        "shift2Pallets": 232,
+        "shift3Tonnage": 3797,
+        "shift3Pallets": 349,
+        "dailyTotalTonnage": 7599,
+        "dailyTotalPallets": 714
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 104628,
+        "mtdPallets": 7403,
+        "shift1Tonnage": 15790,
+        "shift1Pallets": 1092,
+        "shift2Tonnage": 20663,
+        "shift2Pallets": 1475,
+        "shift3Tonnage": 21914,
+        "shift3Pallets": 1557,
+        "dailyTotalTonnage": 58367,
+        "dailyTotalPallets": 4124
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 176672,
+      "mtdPallets": 10222,
+      "shift1Tonnage": 25865,
+      "shift1Pallets": 1395,
+      "shift2Tonnage": 30750,
+      "shift2Pallets": 1928,
+      "shift3Tonnage": 35154,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 91769,
+      "dailyTotalPallets": 5419
+    }
+  },
+  "02/09/2026": {
+    "productionDay": "02/09/2026",
+    "productionDayValue": "20260902000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 27249,
+        "mtdPallets": 410,
+        "shift1Tonnage": 5010,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4695,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12375,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 749,
+        "mtdPallets": 170,
+        "shift1Tonnage": 91,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 252,
+        "shift2Pallets": 58,
+        "shift3Tonnage": 209,
+        "shift3Pallets": 48,
+        "dailyTotalTonnage": 552,
+        "dailyTotalPallets": 127
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 24977,
+        "mtdPallets": 439,
+        "shift1Tonnage": 3612,
+        "shift1Pallets": 79,
+        "shift2Tonnage": 4725,
+        "shift2Pallets": 93,
+        "shift3Tonnage": 4539,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 12876,
+        "dailyTotalPallets": 249
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 19069,
+        "mtdPallets": 1800,
+        "shift1Tonnage": 1362,
+        "shift1Pallets": 133,
+        "shift2Tonnage": 2440,
+        "shift2Pallets": 232,
+        "shift3Tonnage": 3797,
+        "shift3Pallets": 349,
+        "dailyTotalTonnage": 7599,
+        "dailyTotalPallets": 714
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 104628,
+        "mtdPallets": 7403,
+        "shift1Tonnage": 15790,
+        "shift1Pallets": 1092,
+        "shift2Tonnage": 20663,
+        "shift2Pallets": 1475,
+        "shift3Tonnage": 21914,
+        "shift3Pallets": 1557,
+        "dailyTotalTonnage": 58367,
+        "dailyTotalPallets": 4124
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 176672,
+      "mtdPallets": 10222,
+      "shift1Tonnage": 25865,
+      "shift1Pallets": 1395,
+      "shift2Tonnage": 30750,
+      "shift2Pallets": 1928,
+      "shift3Tonnage": 35154,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 91769,
+      "dailyTotalPallets": 5419
+    }
+  },
+  "2/9/2026": {
+    "productionDay": "02/09/2026",
+    "productionDayValue": "20260902000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 27249,
+        "mtdPallets": 410,
+        "shift1Tonnage": 5010,
+        "shift1Pallets": 70,
+        "shift2Tonnage": 2670,
+        "shift2Pallets": 70,
+        "shift3Tonnage": 4695,
+        "shift3Pallets": 65,
+        "dailyTotalTonnage": 12375,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 749,
+        "mtdPallets": 170,
+        "shift1Tonnage": 91,
+        "shift1Pallets": 21,
+        "shift2Tonnage": 252,
+        "shift2Pallets": 58,
+        "shift3Tonnage": 209,
+        "shift3Pallets": 48,
+        "dailyTotalTonnage": 552,
+        "dailyTotalPallets": 127
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 24977,
+        "mtdPallets": 439,
+        "shift1Tonnage": 3612,
+        "shift1Pallets": 79,
+        "shift2Tonnage": 4725,
+        "shift2Pallets": 93,
+        "shift3Tonnage": 4539,
+        "shift3Pallets": 77,
+        "dailyTotalTonnage": 12876,
+        "dailyTotalPallets": 249
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 19069,
+        "mtdPallets": 1800,
+        "shift1Tonnage": 1362,
+        "shift1Pallets": 133,
+        "shift2Tonnage": 2440,
+        "shift2Pallets": 232,
+        "shift3Tonnage": 3797,
+        "shift3Pallets": 349,
+        "dailyTotalTonnage": 7599,
+        "dailyTotalPallets": 714
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 104628,
+        "mtdPallets": 7403,
+        "shift1Tonnage": 15790,
+        "shift1Pallets": 1092,
+        "shift2Tonnage": 20663,
+        "shift2Pallets": 1475,
+        "shift3Tonnage": 21914,
+        "shift3Pallets": 1557,
+        "dailyTotalTonnage": 58367,
+        "dailyTotalPallets": 4124
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 176672,
+      "mtdPallets": 10222,
+      "shift1Tonnage": 25865,
+      "shift1Pallets": 1395,
+      "shift2Tonnage": 30750,
+      "shift2Pallets": 1928,
+      "shift3Tonnage": 35154,
+      "shift3Pallets": 2096,
+      "dailyTotalTonnage": 91769,
+      "dailyTotalPallets": 5419
+    }
+  },
+  "2026-09-01": {
+    "productionDay": "01/09/2026",
+    "productionDayValue": "20260901000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 14873,
+        "mtdPallets": 205,
+        "shift1Tonnage": 4545,
+        "shift1Pallets": 63,
+        "shift2Tonnage": 5018,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 5309,
+        "shift3Pallets": 73,
+        "dailyTotalTonnage": 14872,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 195,
+        "mtdPallets": 43,
+        "shift1Tonnage": 21,
+        "shift1Pallets": 5,
+        "shift2Tonnage": 34,
+        "shift2Pallets": 6,
+        "shift3Tonnage": 139,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 194,
+        "dailyTotalPallets": 43
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 12101,
+        "mtdPallets": 190,
+        "shift1Tonnage": 2047,
+        "shift1Pallets": 30,
+        "shift2Tonnage": 5405,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 4647,
+        "shift3Pallets": 75,
+        "dailyTotalTonnage": 12099,
+        "dailyTotalPallets": 190
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 11469,
+        "mtdPallets": 1086,
+        "shift1Tonnage": 3016,
+        "shift1Pallets": 287,
+        "shift2Tonnage": 4879,
+        "shift2Pallets": 462,
+        "shift3Tonnage": 3573,
+        "shift3Pallets": 337,
+        "dailyTotalTonnage": 11468,
+        "dailyTotalPallets": 1086
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 46260,
+        "mtdPallets": 3279,
+        "shift1Tonnage": 4218,
+        "shift1Pallets": 231,
+        "shift2Tonnage": 21583,
+        "shift2Pallets": 1582,
+        "shift3Tonnage": 20458,
+        "shift3Pallets": 1466,
+        "dailyTotalTonnage": 46259,
+        "dailyTotalPallets": 3279
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 84898,
+      "mtdPallets": 4803,
+      "shift1Tonnage": 13847,
+      "shift1Pallets": 616,
+      "shift2Tonnage": 36919,
+      "shift2Pallets": 2204,
+      "shift3Tonnage": 34126,
+      "shift3Pallets": 1983,
+      "dailyTotalTonnage": 84892,
+      "dailyTotalPallets": 4803
+    }
+  },
+  "01/09/2026": {
+    "productionDay": "01/09/2026",
+    "productionDayValue": "20260901000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 14873,
+        "mtdPallets": 205,
+        "shift1Tonnage": 4545,
+        "shift1Pallets": 63,
+        "shift2Tonnage": 5018,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 5309,
+        "shift3Pallets": 73,
+        "dailyTotalTonnage": 14872,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 195,
+        "mtdPallets": 43,
+        "shift1Tonnage": 21,
+        "shift1Pallets": 5,
+        "shift2Tonnage": 34,
+        "shift2Pallets": 6,
+        "shift3Tonnage": 139,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 194,
+        "dailyTotalPallets": 43
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 12101,
+        "mtdPallets": 190,
+        "shift1Tonnage": 2047,
+        "shift1Pallets": 30,
+        "shift2Tonnage": 5405,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 4647,
+        "shift3Pallets": 75,
+        "dailyTotalTonnage": 12099,
+        "dailyTotalPallets": 190
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 11469,
+        "mtdPallets": 1086,
+        "shift1Tonnage": 3016,
+        "shift1Pallets": 287,
+        "shift2Tonnage": 4879,
+        "shift2Pallets": 462,
+        "shift3Tonnage": 3573,
+        "shift3Pallets": 337,
+        "dailyTotalTonnage": 11468,
+        "dailyTotalPallets": 1086
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 46260,
+        "mtdPallets": 3279,
+        "shift1Tonnage": 4218,
+        "shift1Pallets": 231,
+        "shift2Tonnage": 21583,
+        "shift2Pallets": 1582,
+        "shift3Tonnage": 20458,
+        "shift3Pallets": 1466,
+        "dailyTotalTonnage": 46259,
+        "dailyTotalPallets": 3279
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 84898,
+      "mtdPallets": 4803,
+      "shift1Tonnage": 13847,
+      "shift1Pallets": 616,
+      "shift2Tonnage": 36919,
+      "shift2Pallets": 2204,
+      "shift3Tonnage": 34126,
+      "shift3Pallets": 1983,
+      "dailyTotalTonnage": 84892,
+      "dailyTotalPallets": 4803
+    }
+  },
+  "1/9/2026": {
+    "productionDay": "01/09/2026",
+    "productionDayValue": "20260901000000",
+    "availableDates": [
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260820000000",
+        "label": "20/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260819000000",
+        "label": "19/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260818000000",
+        "label": "18/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260817000000",
+        "label": "17/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 14873,
+        "mtdPallets": 205,
+        "shift1Tonnage": 4545,
+        "shift1Pallets": 63,
+        "shift2Tonnage": 5018,
+        "shift2Pallets": 69,
+        "shift3Tonnage": 5309,
+        "shift3Pallets": 73,
+        "dailyTotalTonnage": 14872,
+        "dailyTotalPallets": 205
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 195,
+        "mtdPallets": 43,
+        "shift1Tonnage": 21,
+        "shift1Pallets": 5,
+        "shift2Tonnage": 34,
+        "shift2Pallets": 6,
+        "shift3Tonnage": 139,
+        "shift3Pallets": 32,
+        "dailyTotalTonnage": 194,
+        "dailyTotalPallets": 43
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 12101,
+        "mtdPallets": 190,
+        "shift1Tonnage": 2047,
+        "shift1Pallets": 30,
+        "shift2Tonnage": 5405,
+        "shift2Pallets": 85,
+        "shift3Tonnage": 4647,
+        "shift3Pallets": 75,
+        "dailyTotalTonnage": 12099,
+        "dailyTotalPallets": 190
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 11469,
+        "mtdPallets": 1086,
+        "shift1Tonnage": 3016,
+        "shift1Pallets": 287,
+        "shift2Tonnage": 4879,
+        "shift2Pallets": 462,
+        "shift3Tonnage": 3573,
+        "shift3Pallets": 337,
+        "dailyTotalTonnage": 11468,
+        "dailyTotalPallets": 1086
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 46260,
+        "mtdPallets": 3279,
+        "shift1Tonnage": 4218,
+        "shift1Pallets": 231,
+        "shift2Tonnage": 21583,
+        "shift2Pallets": 1582,
+        "shift3Tonnage": 20458,
+        "shift3Pallets": 1466,
+        "dailyTotalTonnage": 46259,
+        "dailyTotalPallets": 3279
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 84898,
+      "mtdPallets": 4803,
+      "shift1Tonnage": 13847,
+      "shift1Pallets": 616,
+      "shift2Tonnage": 36919,
+      "shift2Pallets": 2204,
+      "shift3Tonnage": 34126,
+      "shift3Pallets": 1983,
+      "dailyTotalTonnage": 84892,
+      "dailyTotalPallets": 4803
+    }
   }
 };

@@ -3,7 +3,13 @@ import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types
 import { ContractorScanRecord } from '../types/contractor';
 import { ScanPreset } from '../data/default_scan_record';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
-import { calculateOhpaSummary, getMonthlyStaffMetrics } from '../utils/ohpaCalculator';
+import {
+  HierarchyNode,
+  HierarchyWorker,
+  FunctionType,
+  EmploymentType,
+  buildPlantHierarchyTree
+} from '../utils/plantHierarchyEngine';
 import {
   BarChart,
   Bar,
@@ -18,30 +24,25 @@ import {
   Cell
 } from 'recharts';
 import {
-  BarChart3,
-  PieChart as PieIcon,
+  Building2,
+  Layers,
+  Cpu,
   Users,
   Clock,
   Flame,
-  ChevronDown,
-  ChevronRight,
   Search,
   Download,
   Filter,
-  Layers,
-  Briefcase,
-  HardHat,
-  UserCheck,
-  Calendar,
+  ChevronRight,
   Sparkles,
-  Building2,
-  ChevronUp,
-  SlidersHorizontal,
-  CheckCircle2,
-  TrendingUp,
-  LayoutDashboard,
+  ArrowLeft,
+  Briefcase,
   ShieldCheck,
-  Award
+  HardHat,
+  Award,
+  CheckCircle2,
+  Calendar,
+  SlidersHorizontal
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -57,92 +58,6 @@ interface DashboardViewProps {
   pdiBeadReport?: PdiBeadReport;
 }
 
-export type EmployeeGroupType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'WAS_MONTHLY' | 'GY_MONTHLY';
-
-export interface UnifiedWorkerRecord {
-  empId: string;
-  name: string;
-  group: EmployeeGroupType;
-  groupLabel: string;
-  dept: string;
-  costCenter: string;
-  manager: string;
-  machine: string;
-  position: string;
-  shift: number;
-  shiftLabel: string;
-  normalHours: number;
-  otHours: number;
-  totalHours: number;
-  isLate?: boolean;
-}
-
-export interface MachineAggregatedStats {
-  machine: string;
-  dept: string;
-  manager: string;
-  gyCount: number;
-  gyNormalHours: number;
-  gyOtHours: number;
-  gyTotalHours: number;
-  contractorCount: number;
-  contractorNormalHours: number;
-  contractorOtHours: number;
-  contractorTotalHours: number;
-  monthlyCount: number;
-  monthlyNormalHours: number;
-  monthlyTotalHours: number;
-  totalCount: number;
-  totalNormalHours: number;
-  totalOtHours: number;
-  grandTotalHours: number;
-  workers: UnifiedWorkerRecord[];
-}
-
-export interface DeptAggregatedStats {
-  dept: string;
-  costCenter: string;
-  manager: string;
-  gyCount: number;
-  gyNormalHours: number;
-  gyOtHours: number;
-  gyTotalHours: number;
-  contractorCount: number;
-  contractorNormalHours: number;
-  contractorOtHours: number;
-  contractorTotalHours: number;
-  monthlyCount: number;
-  monthlyNormalHours: number;
-  monthlyTotalHours: number;
-  totalCount: number;
-  totalNormalHours: number;
-  totalOtHours: number;
-  grandTotalHours: number;
-  machines: Record<string, MachineAggregatedStats>;
-  workers: UnifiedWorkerRecord[];
-}
-
-export interface ManagerAggregatedStats {
-  manager: string;
-  gyCount: number;
-  gyNormalHours: number;
-  gyOtHours: number;
-  gyTotalHours: number;
-  contractorCount: number;
-  contractorNormalHours: number;
-  contractorOtHours: number;
-  contractorTotalHours: number;
-  monthlyCount: number;
-  monthlyNormalHours: number;
-  monthlyTotalHours: number;
-  totalCount: number;
-  totalNormalHours: number;
-  totalOtHours: number;
-  grandTotalHours: number;
-  departments: Record<string, DeptAggregatedStats>;
-  workers: UnifiedWorkerRecord[];
-}
-
 export const DashboardView: React.FC<DashboardViewProps> = ({
   gyRecords,
   contractorRecords,
@@ -154,1538 +69,1531 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   dailyAdjustments = [],
   pdiBeadReport = DEFAULT_PDI_BEAD_REPORT
 }) => {
-  const [filterGroup, setFilterGroup] = useState<'ALL' | 'GY' | 'CONTRACTOR' | 'MONTHLY_ALL' | 'WAS_MONTHLY' | 'GY_MONTHLY'>('ALL');
-  const [selectedManagerFilter, setSelectedManagerFilter] = useState<string>('ALL');
-  const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('ALL');
-  const [selectedMachineFilter, setSelectedMachineFilter] = useState<string>('ALL');
+  // Navigation & Drilldown State
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('PLANT');
+  const [shiftFilter, setShiftFilter] = useState<number | 'ALL'>('ALL');
+  const [categoryFilter, setCategoryFilter] = useState<'ALL' | 'PRODUCTION' | 'ENG' | 'QTECH' | 'WAS'>('ALL');
+  const [functionFilter, setFunctionFilter] = useState<FunctionType | 'ALL'>('ALL');
+  const [employmentFilter, setEmploymentFilter] = useState<EmploymentType | 'ALL'>('ALL');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
-  // Expanded rows state for accordion/drilldown
-  const [expandedManagers, setExpandedManagers] = useState<Record<string, boolean>>({});
-  const [expandedDepts, setExpandedDepts] = useState<Record<string, boolean>>({});
-  const [expandedMachines, setExpandedMachines] = useState<Record<string, boolean>>({});
 
-  // 1. Calculate Page 4 OPAH Summary for complete synchronization
-  const ohpaSummary = useMemo(() => {
-    return calculateOhpaSummary(
+  // 1. Build Full Tree from Scan Records
+  const { root, allWorkers } = useMemo(() => {
+    return buildPlantHierarchyTree(
       gyRecords,
       contractorRecords,
-      null,
+      employeeMapping,
       currentScanDateFormatted,
+      shiftFilter,
       allScanPresets,
       contractorRecordsByDate,
-      employeeMapping,
       dailyAdjustments,
-      pdiBeadReport
+      categoryFilter
     );
   }, [
     gyRecords,
     contractorRecords,
+    employeeMapping,
     currentScanDateFormatted,
+    shiftFilter,
     allScanPresets,
     contractorRecordsByDate,
-    employeeMapping,
     dailyAdjustments,
-    pdiBeadReport
+    categoryFilter
   ]);
 
-  // Extract Page 4 Reconciled Area Metrics
-  const page4Metrics = useMemo(() => {
-    const activeAreas = ohpaSummary.areaBreakdown.filter(a => !a.isExcluded6320);
-    const retreadArea = ohpaSummary.areaBreakdown.find(a => a.isExcluded6320);
+  // 2. Find Currently Selected Node & Breadcrumbs path
+  const { currentNode, breadcrumbs } = useMemo(() => {
+    const path: HierarchyNode[] = [];
 
-    const activeNorm = Math.round(activeAreas.reduce((s, a) => s + a.normalHours, 0) * 10) / 10;
-    const activeOt = Math.round(activeAreas.reduce((s, a) => s + a.otHours, 0) * 10) / 10;
-    const activeGrossTot = Math.round(activeAreas.reduce((s, a) => s + a.totalHours, 0) * 10) / 10;
-    const activeHc = Math.round(activeAreas.reduce((s, a) => s + a.totalHeadcount, 0) * 10) / 10;
-    const activePdi = Math.round(activeAreas.reduce((s, a) => s + (a.pdiDeductHours || 0), 0) * 10) / 10;
-    const activeBead = Math.round(activeAreas.reduce((s, a) => s + (a.beadAddHours || 0), 0) * 10) / 10;
-    const activeNetTot = Math.round(activeAreas.reduce((s, a) => s + (a.finalOpahHours ?? a.totalHours), 0) * 10) / 10;
+    function findNodeAndPath(node: HierarchyNode, targetId: string, currentPath: HierarchyNode[]): HierarchyNode | null {
+      const newPath = [...currentPath, node];
+      if (node.id === targetId) {
+        path.push(...newPath);
+        return node;
+      }
+      if (node.children) {
+        for (const child of node.children) {
+          const res = findNodeAndPath(child, targetId, newPath);
+          if (res) return res;
+        }
+      }
+      return null;
+    }
 
-    const retreadNorm = Math.round((retreadArea?.normalHours || 0) * 10) / 10;
-    const retreadOt = Math.round((retreadArea?.otHours || 0) * 10) / 10;
-    const retreadTot = Math.round((retreadArea?.totalHours || 0) * 10) / 10;
-    const retreadHc = Math.round((retreadArea?.totalHeadcount || 0) * 10) / 10;
-
-    const grandNorm = Math.round((activeNorm + retreadNorm) * 10) / 10;
-    const grandOt = Math.round((activeOt + retreadOt) * 10) / 10;
-    const grandGrossTot = Math.round((activeGrossTot + retreadTot) * 10) / 10;
-    const grandHc = Math.round((activeHc + retreadHc) * 10) / 10;
-
+    const found = findNodeAndPath(root, selectedNodeId, []);
     return {
-      activeNorm,
-      activeOt,
-      activeGrossTot,
-      activeHc,
-      activePdi,
-      activeBead,
-      activeNetTot,
-      retreadNorm,
-      retreadOt,
-      retreadTot,
-      retreadHc,
-      grandNorm,
-      grandOt,
-      grandGrossTot,
-      grandHc,
-      gyTotal: ohpaSummary.gyTotalHours + (retreadArea?.gyTotalHours || 0),
-      contractorTotal: ohpaSummary.contractorTotalHours + (retreadArea?.contractorTotalHours || 0),
-      wasMonthlyTotal: ohpaSummary.monthlyStaff.wasTotalHours || (9 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8)),
-      gyMonthlyTotal: 59 * (ohpaSummary.monthlyStaff.hoursPerPerson || 8)
+      currentNode: found || root,
+      breadcrumbs: path.length > 0 ? path : [root]
     };
-  }, [ohpaSummary]);
+  }, [root, selectedNodeId]);
 
-  // 2. Resolve Monthly Staff Metrics for the selected date
-  const monthlyMetrics = useMemo(() => {
-    return getMonthlyStaffMetrics(currentScanDateFormatted);
-  }, [currentScanDateFormatted]);
+  // 3. Filtered Workers in Selected Node
+  const displayedWorkers = useMemo(() => {
+    if (!currentNode) return [];
+    let list = currentNode.workers;
 
-  // 3. Build Unified Worker Records across GY Hourly, Contractor Hourly, WAS Monthly, and GY Monthly
-  const unifiedWorkers = useMemo<UnifiedWorkerRecord[]>(() => {
-    const list: UnifiedWorkerRecord[] = [];
-
-    // Group 1: GY Hourly Employees (Shift / Daily)
-    gyRecords.forEach((r) => {
-      const normalH = r.normalWorkHours || 0;
-      const otH = r.otHours || 0;
-      const totalH = normalH + otH;
-      if (totalH <= 0 && !r.inTime) return; // Skip non-working records
-
-      const empInfo = employeeMapping[r.empId];
-      const dept = (empInfo?.dept || r.dept || 'ไม่ระบุแผนก').trim();
-      const costCenter = (empInfo?.costCenter || r.costCenter || '').trim();
-      
-      let manager = (empInfo?.manager || '').trim();
-      if (!manager) {
-        if (dept.startsWith('3200') || dept.startsWith('4110') || dept.startsWith('4200') || dept.startsWith('4300') || dept.startsWith('4400')) {
-          manager = 'Akkarawat Tanapatjiranon (BCA)';
-        } else if (dept.startsWith('5110') || dept.startsWith('5130')) {
-          manager = 'Thirachai Sornvichai (Consumer)';
-        } else if (dept.startsWith('A5110') || dept.startsWith('A5130') || dept.startsWith('A5210') || dept.startsWith('A5230')) {
-          manager = 'Kawee Tantisattayarak (Aviation)';
-        } else if (dept.startsWith('6320')) {
-          manager = 'Retread Operations (6320)';
-        } else if (dept.startsWith('1110')) {
-          manager = 'Tanu Itthirattanakomon (Engineering)';
-        } else if (dept.startsWith('1040')) {
-          manager = 'Vattana Waewmanee (Quality)';
-        } else {
-          manager = 'Goodyear Operations (Unassigned)';
-        }
-      }
-
-      const machine = (
-        r.regularMachineOverride ||
-        r.otMachineOverride ||
-        empInfo?.machine ||
-        r.machine ||
-        r.position ||
-        'General / งานทั่วไป'
-      ).trim();
-
-      list.push({
-        empId: r.empId,
-        name: r.nameTH || r.nameEN || empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${r.empId}`,
-        group: 'GY_HOURLY',
-        groupLabel: 'พนักงาน GY (รายกะ)',
-        dept,
-        costCenter,
-        manager,
-        machine: machine || 'General / งานทั่วไป',
-        position: empInfo?.position || r.position || '-',
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normalH,
-        otHours: otH,
-        totalHours: totalH,
-        isLate: r.isLate
-      });
-    });
-
-    // Group 2: Contractor Hourly (WAS Shift Workers)
-    contractorRecords.forEach((c) => {
-      const normalH = c.normalHours || 0;
-      const otH = c.otHours || 0;
-      const totalH = normalH + otH;
-      if (totalH <= 0) return; // Skip 0-hour records completely
-
-      const empInfo = employeeMapping[c.empCode];
-      const dept = (c.department || empInfo?.dept || c.closing || 'Contractor WAS').trim();
-      const costCenter = (c.closing || empInfo?.costCenter || '').trim();
-      
-      let manager = (empInfo?.manager || '').trim();
-      if (!manager) {
-        if (c.closing === '6320' || dept.includes('6320') || (c.location || '').toLowerCase().includes('retread')) {
-          manager = 'Retread Operations (6320)';
-        } else if (c.closing === '3200' || c.closing === '4110' || c.closing === '4200' || c.closing === '4300' || c.closing === '4400' || dept.includes('3200') || dept.includes('Banbury') || dept.includes('BCA')) {
-          manager = 'Akkarawat Tanapatjiranon (BCA)';
-        } else if (c.closing === '5110' || c.closing === '5130' || dept.includes('5110') || dept.includes('Consumer') || (c.location || '').toLowerCase().includes('consumer')) {
-          manager = 'Thirachai Sornvichai (Consumer)';
-        } else if (c.closing?.startsWith('A51') || c.closing?.startsWith('A52') || dept.includes('Aero') || (c.location || '').toLowerCase().includes('aero')) {
-          manager = 'Kawee Tantisattayarak (Aviation)';
-        } else if (c.closing === '1110' || dept.includes('1110') || dept.includes('Engineering')) {
-          manager = 'Tanu Itthirattanakomon (Engineering)';
-        } else if (c.closing === '1040' || dept.includes('1040') || dept.includes('Quality')) {
-          manager = 'Vattana Waewmanee (Quality)';
-        } else {
-          manager = 'Goodyear Operations (Unassigned)';
-        }
-      }
-
-      const machine = (
-        c.position ||
-        empInfo?.machine ||
-        c.location ||
-        'WAS Contractor General'
-      ).trim();
-
-      list.push({
-        empId: c.empCode,
-        name: c.nameTh || c.nameEn || empInfo?.nameTH || empInfo?.nameEN || `Contractor ${c.empCode}`,
-        group: 'CONTRACTOR_HOURLY',
-        groupLabel: 'Contractor รายชั่วโมง (WAS)',
-        dept,
-        costCenter,
-        manager,
-        machine: machine || 'WAS Contractor General',
-        position: c.position || empInfo?.position || '-',
-        shift: c.shiftNumber || 1,
-        shiftLabel: c.shiftLabel || `กะ ${c.shiftNumber}`,
-        normalHours: normalH,
-        otHours: otH,
-        totalHours: totalH
-      });
-    });
-
-    // Group 3: WAS Monthly Staff (9 persons)
-    const wasMonthlyCount = monthlyMetrics.wasCount || 9;
-    const wasMonthlyHoursPerPerson = monthlyMetrics.hoursPerPerson || 8;
-    const wasMonthlyTotalHours = wasMonthlyCount * wasMonthlyHoursPerPerson;
-
-    if (wasMonthlyTotalHours > 0) {
-      for (let i = 1; i <= wasMonthlyCount; i++) {
-        list.push({
-          empId: `WAS-M${String(i).padStart(2, '0')}`,
-          name: `เจ้าหน้าที่รายเดือน WAS ทีมที่ ${i}`,
-          group: 'WAS_MONTHLY',
-          groupLabel: 'รายเดือน (WAS)',
-          dept: 'WAS Management & Supervisory',
-          costCenter: 'WAS-MGMT',
-          manager: 'World Asia Solution Management',
-          machine: 'Supervisory & Administration',
-          position: 'WAS Site Supervisor / Coordinator',
-          shift: 1,
-          shiftLabel: 'กะเช้า / Day Shift',
-          normalHours: wasMonthlyHoursPerPerson,
-          otHours: 0,
-          totalHours: wasMonthlyHoursPerPerson
-        });
-      }
+    if (functionFilter !== 'ALL') {
+      list = list.filter(w => w.functionType === functionFilter);
     }
-
-    // Group 4: Goodyear Monthly Salaries Staff (from Master DB: 59 persons)
-    const gyMonthlyList = Object.values(employeeMapping).filter(e => e.sourceSheet === 'Salaries' || e.mor === 'Salaried' || e.mor === 'Salaried Staff');
-    const gyMonthlyHoursPerPerson = monthlyMetrics.hoursPerPerson || 8;
-
-    if (gyMonthlyHoursPerPerson > 0 && gyMonthlyList.length > 0) {
-      gyMonthlyList.forEach((e) => {
-        const dept = (e.dept || 'Salaries Monthly Staff').trim();
-        const costCenter = (e.costCenter || '').trim();
-        let manager = (e.manager || '').trim();
-        if (!manager) {
-          if (dept.includes('3200') || dept.includes('Banbury') || dept.includes('BCA')) {
-            manager = 'Akkarawat Tanapatjiranon (BCA)';
-          } else if (dept.includes('5110') || dept.includes('5130') || dept.includes('Consumer')) {
-            manager = 'Thirachai Sornvichai (Consumer)';
-          } else if (dept.includes('A51') || dept.includes('A52') || dept.includes('Aero')) {
-            manager = 'Kawee Tantisattayarak (Aviation)';
-          } else if (dept.includes('6320') || dept.includes('Retread')) {
-            manager = 'Retread Operations (6320)';
-          } else if (dept.includes('1110') || dept.includes('Engineering')) {
-            manager = 'Tanu Itthirattanakomon (Engineering)';
-          } else if (dept.includes('1040') || dept.includes('Quality')) {
-            manager = 'Vattana Waewmanee (Quality)';
-          } else {
-            manager = 'Goodyear Management & Staff';
-          }
-        }
-
-        list.push({
-          empId: e.empId,
-          name: e.nameTH || e.nameEN || `พนักงานรายเดือน ${e.empId}`,
-          group: 'GY_MONTHLY',
-          groupLabel: 'รายเดือน GY (Salaries)',
-          dept,
-          costCenter,
-          manager,
-          machine: e.position || e.machine || 'Engineering & Operations Support',
-          position: e.position || 'Staff',
-          shift: 1,
-          shiftLabel: 'กะเช้า / Day Shift',
-          normalHours: gyMonthlyHoursPerPerson,
-          otHours: 0,
-          totalHours: gyMonthlyHoursPerPerson
-        });
-      });
+    if (employmentFilter !== 'ALL') {
+      list = list.filter(w => w.employmentType === employmentFilter);
     }
-
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
+      list = list.filter(
+        w =>
+          w.empId.toLowerCase().includes(q) ||
+          w.name.toLowerCase().includes(q) ||
+          w.machineName.toLowerCase().includes(q) ||
+          w.position.toLowerCase().includes(q) ||
+          w.dept.toLowerCase().includes(q) ||
+          w.costCenter.toLowerCase().includes(q)
+      );
+    }
     return list;
-  }, [gyRecords, contractorRecords, employeeMapping, monthlyMetrics]);
+  }, [currentNode, functionFilter, employmentFilter, searchTerm]);
 
-  // 4. Extract unique list of Managers, Depts, Machines for filter dropdowns
-  const availableManagers = useMemo(() => {
-    return Array.from(new Set(unifiedWorkers.map(w => w.manager))).filter(Boolean).sort();
-  }, [unifiedWorkers]);
-
-  const availableDepts = useMemo(() => {
-    return Array.from(new Set(unifiedWorkers.map(w => w.dept))).filter(Boolean).sort();
-  }, [unifiedWorkers]);
-
-  const availableMachines = useMemo(() => {
-    return Array.from(new Set(unifiedWorkers.map(w => w.machine))).filter(Boolean).sort();
-  }, [unifiedWorkers]);
-
-  // 5. Apply Filters & Search to Unified Workers
-  const filteredWorkers = useMemo(() => {
-    return unifiedWorkers.filter(w => {
-      // Group Filter
-      if (filterGroup === 'GY' && w.group !== 'GY_HOURLY') return false;
-      if (filterGroup === 'CONTRACTOR' && w.group !== 'CONTRACTOR_HOURLY') return false;
-      if (filterGroup === 'MONTHLY_ALL' && w.group !== 'WAS_MONTHLY' && w.group !== 'GY_MONTHLY') return false;
-      if (filterGroup === 'WAS_MONTHLY' && w.group !== 'WAS_MONTHLY') return false;
-      if (filterGroup === 'GY_MONTHLY' && w.group !== 'GY_MONTHLY') return false;
-
-      // Manager Filter
-      if (selectedManagerFilter !== 'ALL' && w.manager !== selectedManagerFilter) return false;
-
-      // Dept Filter
-      if (selectedDeptFilter !== 'ALL' && w.dept !== selectedDeptFilter) return false;
-
-      // Machine Filter
-      if (selectedMachineFilter !== 'ALL' && w.machine !== selectedMachineFilter) return false;
-
-      // Search Term
-      if (searchTerm.trim()) {
-        const term = searchTerm.toLowerCase();
-        const matchEmpId = w.empId.toLowerCase().includes(term);
-        const matchName = w.name.toLowerCase().includes(term);
-        const matchManager = w.manager.toLowerCase().includes(term);
-        const matchDept = w.dept.toLowerCase().includes(term);
-        const matchMachine = w.machine.toLowerCase().includes(term);
-        const matchPos = w.position.toLowerCase().includes(term);
-        if (!matchEmpId && !matchName && !matchManager && !matchDept && !matchMachine && !matchPos) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [unifiedWorkers, filterGroup, selectedManagerFilter, selectedDeptFilter, selectedMachineFilter, searchTerm]);
-
-  // 6. Build Aggregated Hierarchy by Manager -> Dept -> Machine
-  const aggregatedByManager = useMemo<Record<string, ManagerAggregatedStats>>(() => {
-    const managers: Record<string, ManagerAggregatedStats> = {};
-
-    filteredWorkers.forEach(w => {
-      if (!managers[w.manager]) {
-        managers[w.manager] = {
-          manager: w.manager,
-          gyCount: 0,
-          gyNormalHours: 0,
-          gyOtHours: 0,
-          gyTotalHours: 0,
-          contractorCount: 0,
-          contractorNormalHours: 0,
-          contractorOtHours: 0,
-          contractorTotalHours: 0,
-          monthlyCount: 0,
-          monthlyNormalHours: 0,
-          monthlyTotalHours: 0,
-          totalCount: 0,
-          totalNormalHours: 0,
-          totalOtHours: 0,
-          grandTotalHours: 0,
-          departments: {},
-          workers: []
-        };
-      }
-
-      const m = managers[w.manager];
-      m.totalCount += 1;
-      m.totalNormalHours += w.normalHours;
-      m.totalOtHours += w.otHours;
-      m.grandTotalHours += w.totalHours;
-      m.workers.push(w);
-
-      if (w.group === 'GY_HOURLY') {
-        m.gyCount += 1;
-        m.gyNormalHours += w.normalHours;
-        m.gyOtHours += w.otHours;
-        m.gyTotalHours += w.totalHours;
-      } else if (w.group === 'CONTRACTOR_HOURLY') {
-        m.contractorCount += 1;
-        m.contractorNormalHours += w.normalHours;
-        m.contractorOtHours += w.otHours;
-        m.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
-        m.monthlyCount += 1;
-        m.monthlyNormalHours += w.normalHours;
-        m.monthlyTotalHours += w.totalHours;
-      }
-
-      // Department level
-      if (!m.departments[w.dept]) {
-        m.departments[w.dept] = {
-          dept: w.dept,
-          costCenter: w.costCenter,
-          manager: w.manager,
-          gyCount: 0,
-          gyNormalHours: 0,
-          gyOtHours: 0,
-          gyTotalHours: 0,
-          contractorCount: 0,
-          contractorNormalHours: 0,
-          contractorOtHours: 0,
-          contractorTotalHours: 0,
-          monthlyCount: 0,
-          monthlyNormalHours: 0,
-          monthlyTotalHours: 0,
-          totalCount: 0,
-          totalNormalHours: 0,
-          totalOtHours: 0,
-          grandTotalHours: 0,
-          machines: {},
-          workers: []
-        };
-      }
-
-      const d = m.departments[w.dept];
-      d.totalCount += 1;
-      d.totalNormalHours += w.normalHours;
-      d.totalOtHours += w.otHours;
-      d.grandTotalHours += w.totalHours;
-      d.workers.push(w);
-
-      if (w.group === 'GY_HOURLY') {
-        d.gyCount += 1;
-        d.gyNormalHours += w.normalHours;
-        d.gyOtHours += w.otHours;
-        d.gyTotalHours += w.totalHours;
-      } else if (w.group === 'CONTRACTOR_HOURLY') {
-        d.contractorCount += 1;
-        d.contractorNormalHours += w.normalHours;
-        d.contractorOtHours += w.otHours;
-        d.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
-        d.monthlyCount += 1;
-        d.monthlyNormalHours += w.normalHours;
-        d.monthlyTotalHours += w.totalHours;
-      }
-
-      // Machine level
-      if (!d.machines[w.machine]) {
-        d.machines[w.machine] = {
-          machine: w.machine,
-          dept: w.dept,
-          manager: w.manager,
-          gyCount: 0,
-          gyNormalHours: 0,
-          gyOtHours: 0,
-          gyTotalHours: 0,
-          contractorCount: 0,
-          contractorNormalHours: 0,
-          contractorOtHours: 0,
-          contractorTotalHours: 0,
-          monthlyCount: 0,
-          monthlyNormalHours: 0,
-          monthlyTotalHours: 0,
-          totalCount: 0,
-          totalNormalHours: 0,
-          totalOtHours: 0,
-          grandTotalHours: 0,
-          workers: []
-        };
-      }
-
-      const mc = d.machines[w.machine];
-      mc.totalCount += 1;
-      mc.totalNormalHours += w.normalHours;
-      mc.totalOtHours += w.otHours;
-      mc.grandTotalHours += w.totalHours;
-      mc.workers.push(w);
-
-      if (w.group === 'GY_HOURLY') {
-        mc.gyCount += 1;
-        mc.gyNormalHours += w.normalHours;
-        mc.gyOtHours += w.otHours;
-        mc.gyTotalHours += w.totalHours;
-      } else if (w.group === 'CONTRACTOR_HOURLY') {
-        mc.contractorCount += 1;
-        mc.contractorNormalHours += w.normalHours;
-        mc.contractorOtHours += w.otHours;
-        mc.contractorTotalHours += w.totalHours;
-      } else if (w.group === 'WAS_MONTHLY' || w.group === 'GY_MONTHLY') {
-        mc.monthlyCount += 1;
-        mc.monthlyNormalHours += w.normalHours;
-        mc.monthlyTotalHours += w.totalHours;
-      }
-    });
-
-    return managers;
-  }, [filteredWorkers]);
-
-  // 7. Overall Grand Summary Totals
-  const overallTotals = useMemo(() => {
-    let gyCount = 0, gyNormal = 0, gyOt = 0, gyTotal = 0;
-    let contCount = 0, contNormal = 0, contOt = 0, contTotal = 0;
-    let monthlyCount = 0, monthlyNormal = 0, monthlyTotal = 0;
-
-    Object.values(aggregatedByManager).forEach(m => {
-      gyCount += m.gyCount;
-      gyNormal += m.gyNormalHours;
-      gyOt += m.gyOtHours;
-      gyTotal += m.gyTotalHours;
-
-      contCount += m.contractorCount;
-      contNormal += m.contractorNormalHours;
-      contOt += m.contractorOtHours;
-      contTotal += m.contractorTotalHours;
-
-      monthlyCount += m.monthlyCount;
-      monthlyNormal += m.monthlyNormalHours;
-      monthlyTotal += m.monthlyTotalHours;
-    });
-
-    const grandCount = gyCount + contCount + monthlyCount;
-    const grandNormal = Math.round((gyNormal + contNormal + monthlyNormal) * 10) / 10;
-    const grandOt = Math.round((gyOt + contOt) * 10) / 10;
-    const grandTotal = Math.round((grandNormal + grandOt) * 10) / 10;
-
-    return {
-      gyCount, gyNormal: Math.round(gyNormal * 10) / 10, gyOt: Math.round(gyOt * 10) / 10, gyTotal: Math.round(gyTotal * 10) / 10,
-      contCount, contNormal: Math.round(contNormal * 10) / 10, contOt: Math.round(contOt * 10) / 10, contTotal: Math.round(contTotal * 10) / 10,
-      monthlyCount, monthlyNormal: Math.round(monthlyNormal * 10) / 10, monthlyTotal: Math.round(monthlyTotal * 10) / 10,
-      grandCount, grandNormal, grandOt, grandTotal
-    };
-  }, [aggregatedByManager]);
-
-  // 8. Chart Datasets
-  const managerChartData = useMemo(() => {
-    return Object.values(aggregatedByManager)
-      .map(m => {
-        const shortName = m.manager.split(' ')[0] + (m.manager.includes('(') ? ' ' + m.manager.substring(m.manager.indexOf('(')) : '');
-        return {
-          name: shortName,
-          fullName: m.manager,
-          'ชม. ทำงานปกติ': m.totalNormalHours,
-          'ชม. OT': m.totalOtHours,
-          'ชม. รวมทั้งหมด': m.grandTotalHours,
-          'จำนวนพนักงาน (คน)': m.totalCount
-        };
-      })
-      .sort((a, b) => b['ชม. รวมทั้งหมด'] - a['ชม. รวมทั้งหมด']);
-  }, [aggregatedByManager]);
-
-  const topOtMachinesChartData = useMemo(() => {
-    const allMachines: { name: string; dept: string; manager: string; otHours: number; normalHours: number; workers: number }[] = [];
-    
-    Object.values(aggregatedByManager).forEach(m => {
-      Object.values(m.departments).forEach(d => {
-        Object.values(d.machines).forEach(mc => {
-          allMachines.push({
-            name: mc.machine.length > 20 ? mc.machine.substring(0, 18) + '...' : mc.machine,
-            dept: d.dept,
-            manager: m.manager,
-            otHours: mc.totalOtHours,
-            normalHours: mc.totalNormalHours,
-            workers: mc.totalCount
-          });
-        });
-      });
-    });
-
-    return allMachines
-      .filter(m => m.otHours > 0)
-      .sort((a, b) => b.otHours - a.otHours)
-      .slice(0, 6);
-  }, [aggregatedByManager]);
-
-  const groupPieData = useMemo(() => {
-    return [
-      { name: 'พนักงาน GY (รายกะ)', value: overallTotals.gyTotal, color: '#3b82f6' },
-      { name: 'Contractor รายชม. (WAS)', value: overallTotals.contTotal, color: '#14b8a6' },
-      { name: 'รายเดือนรวม (WAS + GY)', value: overallTotals.monthlyTotal, color: '#8b5cf6' }
-    ].filter(d => d.value > 0);
-  }, [overallTotals]);
-
-  // Toggle expand / collapse helpers
-  const toggleManager = (mgrName: string) => {
-    setExpandedManagers(prev => ({ ...prev, [mgrName]: !prev[mgrName] }));
-  };
-
-  const toggleDept = (deptKey: string) => {
-    setExpandedDepts(prev => ({ ...prev, [deptKey]: !prev[deptKey] }));
-  };
-
-  const toggleMachine = (machineKey: string) => {
-    setExpandedMachines(prev => ({ ...prev, [machineKey]: !prev[machineKey] }));
-  };
-
-  const expandAll = () => {
-    const mgrs: Record<string, boolean> = {};
-    const depts: Record<string, boolean> = {};
-    const machs: Record<string, boolean> = {};
-
-    Object.values(aggregatedByManager).forEach(m => {
-      mgrs[m.manager] = true;
-      Object.values(m.departments).forEach(d => {
-        depts[`${m.manager}_${d.dept}`] = true;
-        Object.values(d.machines).forEach(mc => {
-          machs[`${m.manager}_${d.dept}_${mc.machine}`] = true;
-        });
-      });
-    });
-
-    setExpandedManagers(mgrs);
-    setExpandedDepts(depts);
-    setExpandedMachines(machs);
-  };
-
-  const collapseAll = () => {
-    setExpandedManagers({});
-    setExpandedDepts({});
-    setExpandedMachines({});
-  };
-
-  // Export Dashboard to Excel
+  // 4. Export Hierarchy to Excel
   const handleExportExcel = () => {
     const wb = XLSX.utils.book_new();
 
-    // 1. Reconciliation Sheet with Page 4 OPAH
-    const reconRows = [
-      { 'หมวดหมู่': 'รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)', 'เป้าหมาย (Standard HC)': '903 คน', 'จำนวนคนจริง (HC)': page4Metrics.grandHc, 'ชม. ปกติ': page4Metrics.grandNorm, 'ชม. OT': page4Metrics.grandOt, 'ชม. รวมสุทธิ': page4Metrics.grandGrossTot },
-      { 'หมวดหมู่': '1. พนักงานประจำ GY (รายกะ)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 667, 'ชม. ปกติ': 5227.9, 'ชม. OT': 811.0, 'ชม. รวมสุทธิ': 6038.9 },
-      { 'หมวดหมู่': '2. พนักงาน Contractor WAS รายชม.', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 73, 'ชม. ปกติ': 584.0, 'ชม. OT': 251.0, 'ชม. รวมสุทธิ': 835.0 },
-      { 'หมวดหมู่': '3. พนักงานรายเดือนรวม (WAS 9 + GY 59)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 68, 'ชม. ปกติ': 544.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 544.0 },
-      { 'หมวดหมู่': '   - รายเดือน WAS (9 คน @ 8 ชม.)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 9, 'ชม. ปกติ': 72.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 72.0 },
-      { 'หมวดหมู่': '   - รายเดือน GY Salaries (59 คน @ 8 ชม.)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': 59, 'ชม. ปกติ': 472.0, 'ชม. OT': 0, 'ชม. รวมสุทธิ': 472.0 },
-      { 'หมวดหมู่': '----------------------------------------', 'เป้าหมาย (Standard HC)': '', 'จำนวนคนจริง (HC)': '', 'ชม. ปกติ': '', 'ชม. OT': '', 'ชม. รวมสุทธิ': '' },
-      { 'หมวดหมู่': '4 พื้นที่หลัก (Plant OPAH Scope)', 'เป้าหมาย (Standard HC)': '795 คน', 'จำนวนคนจริง (HC)': page4Metrics.activeHc, 'ชม. ปกติ': page4Metrics.activeNorm, 'ชม. OT': page4Metrics.activeOt, 'ชม. รวมสุทธิ': page4Metrics.activeGrossTot },
-      { 'หมวดหมู่': 'แผนก 6320 (Retread Scope)', 'เป้าหมาย (Standard HC)': '108 คน', 'จำนวนคนจริง (HC)': page4Metrics.retreadHc, 'ชม. ปกติ': page4Metrics.retreadNorm, 'ชม. OT': page4Metrics.retreadOt, 'ชม. รวมสุทธิ': page4Metrics.retreadTot },
-      { 'หมวดหมู่': 'ปรับปรุง PDI Deduct (-)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': -page4Metrics.activePdi },
-      { 'หมวดหมู่': 'ปรับปรุง Bead Add (+)', 'เป้าหมาย (Standard HC)': '-', 'จำนวนคนจริง (HC)': '-', 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeBead },
-      { 'หมวดหมู่': 'ชั่วโมงทำงานสุทธิ OPAH (Net OPAH)', 'เป้าหมาย (Standard HC)': '795 คน', 'จำนวนคนจริง (HC)': page4Metrics.activeHc, 'ชม. ปกติ': '-', 'ชม. OT': '-', 'ชม. รวมสุทธิ': page4Metrics.activeNetTot }
-    ];
-    const wsRecon = XLSX.utils.json_to_sheet(reconRows);
-    XLSX.utils.book_append_sheet(wb, wsRecon, 'ความสอดคล้อง OPAH หน้า 4');
-
-    // 2. Manager Summary Sheet
-    const managerRows: any[] = [];
-    Object.values(aggregatedByManager).forEach(m => {
-      managerRows.push({
-        'Manager (ผู้จัดการ)': m.manager,
-        'GY - จำนวนคน': m.gyCount,
-        'GY - ชม. ปกติ': m.gyNormalHours,
-        'GY - ชม. OT': m.gyOtHours,
-        'GY - รวม ชม.': m.gyTotalHours,
-        'Contractor - จำนวนคน': m.contractorCount,
-        'Contractor - ชม. ปกติ': m.contractorNormalHours,
-        'Contractor - ชม. OT': m.contractorOtHours,
-        'Contractor - รวม ชม.': m.contractorTotalHours,
-        'รายเดือน (WAS+GY) - จำนวนคน': m.monthlyCount,
-        'รายเดือน (WAS+GY) - ชม. ปกติ': m.monthlyNormalHours,
-        'รวมพนักงานทั้งหมด (คน)': m.totalCount,
-        'รวม ชม. ปกติทั้งหมด': m.totalNormalHours,
-        'รวม ชม. OT ทั้งหมด': m.totalOtHours,
-        'รวมชั่วโมงทำงานสุทธิ (Grand Total)': m.grandTotalHours
+    // Sheet 1: Plant Hierarchy Summary
+    const summaryRows: any[] = [];
+    function flattenNode(node: HierarchyNode, depth = 0) {
+      const indent = '  '.repeat(depth);
+      summaryRows.push({
+        'ระดับโครงสร้าง': indent + node.title,
+        'Level': node.level,
+        'จำนวนคนรวม (คน)': node.metrics.headcount,
+        'ชม. ปกติ (ชม.)': node.metrics.normalHours,
+        'ชม. OT (ชม.)': node.metrics.otHours,
+        'ชม. รวมทั้งหมด (ชม.)': node.metrics.totalHours,
+        'อัตรา OT (%)': `${node.metrics.otPercentage}%`,
+        '🏭 Production (ชม.)': node.functions.production.totalHours,
+        '🔬 Qtech (ชม.)': node.functions.qtech.totalHours,
+        '⚙️ Eng (ชม.)': node.functions.eng.totalHours,
+        '🤝 Share (ชม.)': node.functions.share.totalHours,
+        '👔 Monthly (ชม.)': node.employment.monthly.totalHours,
+        '👷 GY Hourly (ชม.)': node.employment.gyHourly.totalHours,
+        '🦺 Contractor (ชม.)': node.employment.contractor.totalHours
       });
-    });
-    managerRows.push({
-      'Manager (ผู้จัดการ)': 'รวมทั้งโรงงาน (Grand Total)',
-      'GY - จำนวนคน': overallTotals.gyCount,
-      'GY - ชม. ปกติ': overallTotals.gyNormal,
-      'GY - ชม. OT': overallTotals.gyOt,
-      'GY - รวม ชม.': overallTotals.gyTotal,
-      'Contractor - จำนวนคน': overallTotals.contCount,
-      'Contractor - ชม. ปกติ': overallTotals.contNormal,
-      'Contractor - ชม. OT': overallTotals.contOt,
-      'Contractor - รวม ชม.': overallTotals.contTotal,
-      'รายเดือน (WAS+GY) - จำนวนคน': overallTotals.monthlyCount,
-      'รายเดือน (WAS+GY) - ชม. ปกติ': overallTotals.monthlyNormal,
-      'รวมพนักงานทั้งหมด (คน)': overallTotals.grandCount,
-      'รวม ชม. ปกติทั้งหมด': overallTotals.grandNormal,
-      'รวม ชม. OT ทั้งหมด': overallTotals.grandOt,
-      'รวมชั่วโมงทำงานสุทธิ (Grand Total)': overallTotals.grandTotal
-    });
-    const wsManager = XLSX.utils.json_to_sheet(managerRows);
-    XLSX.utils.book_append_sheet(wb, wsManager, 'สรุปแยก Manager');
+      if (node.children) {
+        node.children.forEach(child => flattenNode(child, depth + 1));
+      }
+    }
+    flattenNode(root, 0);
 
-    // 3. Department Breakdown Sheet
-    const deptRows: any[] = [];
-    Object.values(aggregatedByManager).forEach(m => {
-      Object.values(m.departments).forEach(d => {
-        deptRows.push({
-          'Manager (ผู้จัดการ)': m.manager,
-          'แผนก (Department)': d.dept,
-          'รหัส Cost Center': d.costCenter,
-          'GY - จำนวนคน': d.gyCount,
-          'GY - ชม. ปกติ': d.gyNormalHours,
-          'GY - ชม. OT': d.gyOtHours,
-          'GY - รวม ชม.': d.gyTotalHours,
-          'Contractor - จำนวนคน': d.contractorCount,
-          'Contractor - ชม. ปกติ': d.contractorNormalHours,
-          'Contractor - ชม. OT': d.contractorOtHours,
-          'Contractor - รวม ชม.': d.contractorTotalHours,
-          'รายเดือน - จำนวนคน': d.monthlyCount,
-          'รายเดือน - ชม. ปกติ': d.monthlyNormalHours,
-          'รวมพนักงานทั้งหมด (คน)': d.totalCount,
-          'รวม ชม. ปกติทั้งหมด': d.totalNormalHours,
-          'รวม ชม. OT ทั้งหมด': d.totalOtHours,
-          'รวมชั่วโมงทำงานสุทธิ': d.grandTotalHours
-        });
-      });
-    });
-    const wsDept = XLSX.utils.json_to_sheet(deptRows);
-    XLSX.utils.book_append_sheet(wb, wsDept, 'สรุปแยก แผนก');
+    const wsSummary = XLSX.utils.json_to_sheet(summaryRows);
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Plant_Hierarchy_Summary');
 
-    // 4. Machine / Position Breakdown Sheet
-    const machineRows: any[] = [];
-    Object.values(aggregatedByManager).forEach(m => {
-      Object.values(m.departments).forEach(d => {
-        Object.values(d.machines).forEach(mc => {
-          machineRows.push({
-            'Manager (ผู้จัดการ)': m.manager,
-            'แผนก (Department)': d.dept,
-            'เครื่องจักร / ตำแหน่ง (Machine)': mc.machine,
-            'GY - จำนวนคน': mc.gyCount,
-            'GY - ชม. ปกติ': mc.gyNormalHours,
-            'GY - ชม. OT': mc.gyOtHours,
-            'GY - รวม ชม.': mc.gyTotalHours,
-            'Contractor - จำนวนคน': mc.contractorCount,
-            'Contractor - ชม. ปกติ': mc.contractorNormalHours,
-            'Contractor - ชม. OT': mc.contractorOtHours,
-            'Contractor - รวม ชม.': mc.contractorTotalHours,
-            'รายเดือน - จำนวนคน': mc.monthlyCount,
-            'รายเดือน - ชม. ปกติ': mc.monthlyNormalHours,
-            'รวมคนทั้งหมด': mc.totalCount,
-            'รวม ชม. ปกติ': mc.totalNormalHours,
-            'รวม ชม. OT': mc.totalOtHours,
-            'รวมชั่วโมงทำงานสุทธิ': mc.grandTotalHours
-          });
-        });
-      });
-    });
-    const wsMachine = XLSX.utils.json_to_sheet(machineRows);
-    XLSX.utils.book_append_sheet(wb, wsMachine, 'สรุปแยก เครื่องจักร (Machine)');
-
-    // 5. Raw Detail Workers Sheet
-    const rawWorkerRows = filteredWorkers.map((w, idx) => ({
-      'ลำดับ': idx + 1,
+    // Sheet 2: All Workers Drill-Down Detail
+    const workerRows = allWorkers.map(w => ({
       'รหัสพนักงาน': w.empId,
       'ชื่อ-นามสกุล': w.name,
-      'กลุ่มพนักงาน': w.groupLabel,
-      'Manager (ผู้จัดการ)': w.manager,
-      'แผนก (Department)': w.dept,
+      'ประเภทพนักงาน': w.employmentLabel,
+      'สายงาน (Function)': w.functionLabel,
+      'ทีมหลัก (Team)': w.teamName,
+      'กระบวนการ (Process)': w.processName,
+      'เครื่องจักร / ประจำจุด (M/C)': w.machineName,
       'Cost Center': w.costCenter,
-      'เครื่องจักร (Machine)': w.machine,
-      'ตำแหน่ง (Position)': w.position,
+      'แผนก': w.dept,
+      'ตำแหน่ง': w.position,
       'กะการทำงาน': w.shiftLabel,
-      'ชม. ทำงานปกติ': w.normalHours,
+      'ชม. ปกติ': w.normalHours,
       'ชม. OT': w.otHours,
-      'รวม ชม. ทำงาน': w.totalHours
+      'ชม. รวม': w.totalHours
     }));
-    const wsRaw = XLSX.utils.json_to_sheet(rawWorkerRows);
-    XLSX.utils.book_append_sheet(wb, wsRaw, 'รายชื่อพนักงานรายบุคคล');
+    const wsWorkers = XLSX.utils.json_to_sheet(workerRows);
+    XLSX.utils.book_append_sheet(wb, wsWorkers, 'Worker_Details');
 
-    const cleanDate = currentScanDateFormatted.replace(/[/.-]/g, '');
-    XLSX.writeFile(wb, `Dashboard_Working_OT_Hours_${cleanDate}.xlsx`);
+    XLSX.writeFile(wb, `Plant_TotalHours_OT_Hierarchy_${(currentScanDateFormatted || 'Date').replace(/\//g, '')}.xlsx`);
   };
+
+  // Preset Dates for Quick Selection
+  const availablePresetDates = useMemo(() => {
+    const set = new Set<string>();
+    allScanPresets.forEach(p => {
+      if (p.dateFormatted) set.add(p.dateFormatted);
+    });
+    return Array.from(set).sort((a, b) => {
+      const pA = a.split('/').map(Number);
+      const pB = b.split('/').map(Number);
+      return (pB[2] || 0) - (pA[2] || 0) || (pB[1] || 0) - (pA[1] || 0) || (pB[0] || 0) - (pA[0] || 0);
+    });
+  }, [allScanPresets]);
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
-      {/* 1. Header Banner & Top Controls */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-900/40 space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-300 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>หน้า 5 • แดชบอร์ดสรุปชั่วโมงทำงาน & OT (เทียบตรงกับหน้า 4 OPAH CAL 100%)</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              แดชบอร์ดสรุปชั่วโมงทำงานและ OT ประจำวัน
+      {/* 1. Top Control Bar */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+              <Building2 className="w-5 h-5" />
+            </span>
+            <h2 className="text-xl font-black text-slate-900 tracking-tight">
+              Plant Total Hours & OT Hierarchy Dashboard
             </h2>
-            <p className="text-sm text-indigo-200/80">
-              จำแนกข้อมูลตาม <strong>3 กลุ่มพนักงาน</strong> (พนักงาน GY, Contractor รายชม., รายเดือน WAS & GY) • สรุปและเจาะลึก <strong>แยกตาม Manager, แผนก และเครื่องจักร (Machine)</strong>
-            </p>
-          </div>
-
-          {/* Right Action: Excel Export */}
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleExportExcel}
-              className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-2xl flex items-center gap-2 shadow-lg shadow-emerald-900/30 transition-all cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              <span>ส่งออก Excel แดชบอร์ด</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Monthly Shift Cycle Indicator */}
-        {ohpaSummary.shiftCycleInfo && (
-          <div className={`p-3.5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs border backdrop-blur-md ${
-            ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
-              ? 'bg-amber-500/20 border-amber-400/40 text-amber-200'
-              : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
-              ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
-              : 'bg-white/10 border-white/10 text-indigo-200'
-          }`}>
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">
-                {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth ? '🌅' : ohpaSummary.shiftCycleInfo.isLastDayOfMonth ? '🌙' : '📅'}
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <strong className="text-white font-bold">
-                    {ohpaSummary.shiftCycleInfo.isFirstDayOfMonth
-                      ? 'รอบต้นเดือน (นับ 4 กะ รวมกะ 3 เดือนก่อน)'
-                      : ohpaSummary.shiftCycleInfo.isLastDayOfMonth
-                      ? 'รอบสิ้นเดือน (นับ 2 กะ 07:00-23:00 น.)'
-                      : 'รอบปกติประจำวัน (3 กะ)'}
-                  </strong>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">
-                    {ohpaSummary.shiftCycleInfo.shiftCount} กะ
-                  </span>
-                </div>
-                <p className="text-[11px] text-indigo-200/90 mt-0.5">
-                  {ohpaSummary.shiftCycleInfo.cycleDescription}
-                </p>
-              </div>
-            </div>
-            <div className="text-right text-[11px] font-mono text-indigo-300">
-              รอบเดือน: กะ 3 ({ohpaSummary.shiftCycleInfo.prevMonthLastDayDateStr}) ➡️ กะ 2 ({ohpaSummary.shiftCycleInfo.daysInMonth}/{String(ohpaSummary.shiftCycleInfo.targetMonth).padStart(2, '0')}/{ohpaSummary.shiftCycleInfo.targetYear})
-            </div>
-          </div>
-        )}
-
-        {/* 4 Primary KPI Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-          {/* KPI 1: Grand Total Factory */}
-          <div className="bg-gradient-to-br from-indigo-900/60 to-purple-900/40 backdrop-blur-md p-4 rounded-2xl border border-indigo-400/40 flex flex-col justify-between shadow-lg">
-            <div className="flex items-center justify-between text-indigo-200">
-              <span className="text-xs font-bold flex items-center gap-1.5 text-amber-300">
-                <Award className="w-4 h-4 text-amber-400" />
-                รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)
-              </span>
-              <span className="text-[11px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">
-                {overallTotals.grandCount} คน
-              </span>
-            </div>
-            <div className="mt-2 flex items-baseline justify-between">
-              <span className="text-2xl sm:text-3xl font-black text-amber-300">
-                {overallTotals.grandTotal.toLocaleString()}
-              </span>
-              <span className="text-xs text-indigo-200">ชม. รวมสุทธิ</span>
-            </div>
-            <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200">
-              <span>ปกติ: <strong className="text-white">{overallTotals.grandNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">+{overallTotals.grandOt.toLocaleString()}</strong> ชม.</span>
-            </div>
-          </div>
-
-          {/* KPI 2: GY Hourly */}
-          <div className="bg-blue-900/40 backdrop-blur-md p-4 rounded-2xl border border-blue-500/30 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-blue-200">
-              <span className="text-xs font-bold flex items-center gap-1.5">
-                <UserCheck className="w-4 h-4 text-blue-400" />
-                1. พนักงาน GY (รายกะ)
-              </span>
-              <span className="text-[11px] bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded-full font-bold">
-                {overallTotals.gyCount} คน
-              </span>
-            </div>
-            <div className="mt-2 flex items-baseline justify-between">
-              <span className="text-2xl font-black text-blue-300">
-                {overallTotals.gyTotal.toLocaleString()}
-              </span>
-              <span className="text-xs text-blue-200">ชม. GY</span>
-            </div>
-            <div className="mt-2 pt-2 border-t border-blue-500/20 flex items-center justify-between text-xs text-blue-200">
-              <span>ปกติ: <strong className="text-white">{overallTotals.gyNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">+{overallTotals.gyOt.toLocaleString()}</strong> ชม.</span>
-            </div>
-          </div>
-
-          {/* KPI 3: Contractor Hourly (WAS) */}
-          <div className="bg-teal-900/40 backdrop-blur-md p-4 rounded-2xl border border-teal-500/30 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-teal-200">
-              <span className="text-xs font-bold flex items-center gap-1.5">
-                <HardHat className="w-4 h-4 text-teal-400" />
-                2. Contractor รายชม. (WAS)
-              </span>
-              <span className="text-[11px] bg-teal-500/30 text-teal-200 px-2 py-0.5 rounded-full font-bold">
-                {overallTotals.contCount} คน
-              </span>
-            </div>
-            <div className="mt-2 flex items-baseline justify-between">
-              <span className="text-2xl font-black text-teal-300">
-                {overallTotals.contTotal.toLocaleString()}
-              </span>
-              <span className="text-xs text-teal-200">ชม. Cont</span>
-            </div>
-            <div className="mt-2 pt-2 border-t border-teal-500/20 flex items-center justify-between text-xs text-teal-200">
-              <span>ปกติ: <strong className="text-white">{overallTotals.contNormal.toLocaleString()}</strong> ชม.</span>
-              <span>OT: <strong className="text-amber-300">+{overallTotals.contOt.toLocaleString()}</strong> ชม.</span>
-            </div>
-          </div>
-
-          {/* KPI 4: Monthly Staff (WAS 9 + GY 59 = 68 persons) */}
-          <div className="bg-purple-900/40 backdrop-blur-md p-4 rounded-2xl border border-purple-500/30 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-purple-200">
-              <span className="text-xs font-bold flex items-center gap-1.5">
-                <Briefcase className="w-4 h-4 text-purple-400" />
-                3. พนักงานรายเดือน (WAS + GY)
-              </span>
-              <span className="text-[11px] bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded-full font-bold">
-                {overallTotals.monthlyCount} คน
-              </span>
-            </div>
-            <div className="mt-2 flex items-baseline justify-between">
-              <span className="text-2xl font-black text-purple-300">
-                {overallTotals.monthlyTotal.toLocaleString()}
-              </span>
-              <span className="text-xs text-purple-200">ชม. รายเดือน</span>
-            </div>
-            <div className="mt-2 pt-2 border-t border-purple-500/20 flex items-center justify-between text-xs text-purple-200">
-              <span>WAS: <strong className="text-white">{page4Metrics.wasMonthlyTotal}</strong> ชม. (9 คน)</span>
-              <span>GY: <strong className="text-white">{page4Metrics.gyMonthlyTotal}</strong> ชม. (59 คน)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Reconciliation Strip with Page 4 OPAH */}
-        <div className="bg-indigo-950/80 rounded-2xl p-3.5 border border-indigo-500/30 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2 text-indigo-200">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>
-              <strong>เทียบยอดตรงกับหน้า 4 OPAH CAL:</strong> ยอดรวม 5 พื้นที่ 100% = <strong>{page4Metrics.grandGrossTot.toLocaleString()} ชม.</strong> (ปกติ {page4Metrics.grandNorm.toLocaleString()} + OT {page4Metrics.grandOt.toLocaleString()} | รวม {page4Metrics.grandHc} คน) ➔ 4 พื้นที่หลัก <strong>{page4Metrics.activeGrossTot.toLocaleString()} ชม.</strong> + Retread 6320 <strong>{page4Metrics.retreadTot.toLocaleString()} ชม.</strong>
+            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-xs">
+              From Plant ➔ by Team ➔ by M/C
+            </span>
+            <span className="bg-indigo-100 text-indigo-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+              Production • Qtech • Eng • Share
             </span>
           </div>
-          <div className="flex items-center gap-2 text-indigo-300 font-mono text-[11px]">
-            <span>สุทธิ OPAH: <strong className="text-emerald-400">{page4Metrics.activeNetTot.toLocaleString()}</strong> ชม.</span>
+          <p className="text-xs text-slate-500 mt-1">
+            แดชบอร์ดโครงสร้างโรงงานระดับลึก: ตรวจสอบกำลังพล ชั่วโมงทำงาน และ OT ทีละขั้นจากระดับโรงงาน สู่ทีม กระบวนการ และเครื่องจักร
+          </p>
+        </div>
+
+        {/* Date, Shift, and Export Action Bar */}
+        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          {/* Date Selector */}
+          {availablePresetDates.length > 0 && onSelectDate && (
+            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 shadow-xs">
+              <Calendar className="w-4 h-4 text-slate-500 mr-2" />
+              <span className="text-xs font-semibold text-slate-600 mr-2">วันที่:</span>
+              <select
+                value={currentScanDateFormatted}
+                onChange={(e) => onSelectDate(e.target.value)}
+                className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+              >
+                {availablePresetDates.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Shift Filter Pill Group */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <button
+              onClick={() => setShiftFilter('ALL')}
+              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                shiftFilter === 'ALL'
+                  ? 'bg-white text-indigo-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              ทุกกะ
+            </button>
+            <button
+              onClick={() => setShiftFilter(1)}
+              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                shiftFilter === 1
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              กะ 1
+            </button>
+            <button
+              onClick={() => setShiftFilter(2)}
+              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                shiftFilter === 2
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              กะ 2
+            </button>
+            <button
+              onClick={() => setShiftFilter(3)}
+              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                shiftFilter === 3
+                  ? 'bg-purple-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              กะ 3
+            </button>
           </div>
+
+          {/* Export Excel Button */}
+          <button
+            onClick={handleExportExcel}
+            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+            title="ส่งออกรายงานโครงสร้างชั่วโมงทำงาน & OT"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>ส่งออก Excel</span>
+          </button>
         </div>
       </div>
 
-      {/* 2. Charts Section (3 Interactive Visualizations) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart 1: Normal Hours vs OT Hours by Manager */}
-        <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div className="flex items-center space-x-2.5">
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <BarChart3 className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">ชั่วโมงทำงานปกติ และ OT แยกตาม Manager</h3>
-                <p className="text-xs text-slate-500">เปรียบเทียบชั่วโมงปกติ (Normal) และโอเวอร์ไทม์ (OT) ของแต่ละสายงาน</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-500 inline-block"></span> ชม. ปกติ</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-500 inline-block"></span> ชม. OT</span>
-            </div>
-          </div>
-
-          <div className="h-72 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={managerChartData} margin={{ top: 10, right: 10, left: -10, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} interval={0} angle={-15} textAnchor="end" />
-                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
-                <Tooltip
-                  formatter={(val: any, name: any) => [`${Number(val).toLocaleString()} ชม.`, name]}
-                  labelFormatter={(label, payload) => {
-                    const full = payload?.[0]?.payload?.fullName;
-                    return full ? `Manager: ${full}` : label;
-                  }}
-                  contentStyle={{ backgroundColor: '#1e293b', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '12px' }}
-                />
-                <Bar dataKey="ชม. ทำงานปกติ" stackId="a" fill="#6366f1" radius={[0, 0, 0, 0]} />
-                <Bar dataKey="ชม. OT" stackId="a" fill="#f59e0b" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 2: Total Hours Share by 3 Groups */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4 flex flex-col justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
-              <PieIcon className="w-5 h-5" />
+      {/* 2. Interactive Plant Organization Chart Tree (Org Chart Format) */}
+      <div className="bg-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-800/80 overflow-x-auto">
+        {/* Org Chart Header */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 shadow-inner">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">สัดส่วน 3 กลุ่มพนักงาน</h3>
-              <p className="text-xs text-slate-500">สัดส่วนชั่วโมงทำงานรวมทั้งโรงงาน</p>
-            </div>
-          </div>
-
-          <div className="h-56 w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={groupPieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={75}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {groupPieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(val: any) => [`${Number(val).toLocaleString()} ชม. (${((Number(val) / (overallTotals.grandTotal || 1)) * 100).toFixed(1)}%)`, 'ชั่วโมง']}
-                  contentStyle={{ backgroundColor: '#1e293b', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '12px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
-            {groupPieData.map((g, i) => (
-              <div key={i} className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-slate-700">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color }}></span>
-                  {g.name}
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-black tracking-wide text-slate-100 uppercase">
+                  โครงสร้างผังองค์กรโรงงาน (Plant Organization Chart)
+                </h3>
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-400 text-slate-950">
+                  Org Chart Tree
                 </span>
-                <span className="font-bold text-slate-900">
-                  {g.value.toLocaleString()} ชม. ({((g.value / (overallTotals.grandTotal || 1)) * 100).toFixed(1)}%)
-                </span>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Chart 3: Top Machines by OT */}
-      {topOtMachinesChartData.length > 0 && (
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
-              <Flame className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Top 6 เครื่องจักร / ตำแหน่งที่มีชั่วโมง OT สูงสุด</h3>
-              <p className="text-xs text-slate-500">ติดตามพื้นที่ที่มีการทำโอเวอร์ไทม์เข้มข้นที่สุดประจำวัน</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
-            {topOtMachinesChartData.map((m, idx) => (
-              <div key={idx} className="bg-amber-50/60 border border-amber-200/70 p-3.5 rounded-2xl flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs text-amber-800 font-bold mb-1">
-                    <span>#{idx + 1}</span>
-                    <span className="text-[11px] text-amber-600 font-medium">{m.workers} คน</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-900 line-clamp-2" title={m.name}>
-                    {m.name}
-                  </h4>
-                  <p className="text-[10px] text-slate-500 truncate mt-0.5" title={`${m.dept} • ${m.manager}`}>
-                    {m.dept}
-                  </p>
-                </div>
-                <div className="mt-3 pt-2 border-t border-amber-200/50 flex items-baseline justify-between">
-                  <span className="text-xs text-amber-700 font-medium">OT:</span>
-                  <span className="text-base font-black text-amber-600">
-                    {m.otHours.toLocaleString()} <span className="text-[10px] font-normal">ชม.</span>
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 3. Filter & Search Toolbar */}
-      <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Employee Group Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-2xl">
-            <button
-              onClick={() => setFilterGroup('ALL')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'ALL' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              ทุกกลุ่ม ({unifiedWorkers.length} คน)
-            </button>
-            <button
-              onClick={() => setFilterGroup('GY')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'GY' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              พนักงาน GY ({overallTotals.gyCount} คน)
-            </button>
-            <button
-              onClick={() => setFilterGroup('CONTRACTOR')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'CONTRACTOR' ? 'bg-teal-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Contractor รายชม. ({overallTotals.contCount} คน)
-            </button>
-            <button
-              onClick={() => setFilterGroup('MONTHLY_ALL')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'MONTHLY_ALL' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              รายเดือนรวม ({overallTotals.monthlyCount} คน)
-            </button>
-            <button
-              onClick={() => setFilterGroup('WAS_MONTHLY')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'WAS_MONTHLY' ? 'bg-purple-700 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              - เฉพาะรายเดือน WAS (9 คน)
-            </button>
-            <button
-              onClick={() => setFilterGroup('GY_MONTHLY')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterGroup === 'GY_MONTHLY' ? 'bg-purple-700 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              - เฉพาะรายเดือน GY (59 คน)
-            </button>
-          </div>
-
-          {/* Expand / Collapse All Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={expandAll}
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition-all cursor-pointer"
-            >
-              ขยายทั้งหมด (+)
-            </button>
-            <button
-              onClick={collapseAll}
-              className="text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-all cursor-pointer"
-            >
-              ย่อทั้งหมด (-)
-            </button>
-          </div>
-        </div>
-
-        {/* Dropdowns & Search Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
-          {/* Manager Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-slate-500 mb-1 block">กรองตาม Manager:</label>
-            <select
-              value={selectedManagerFilter}
-              onChange={(e) => setSelectedManagerFilter(e.target.value)}
-              className="w-full text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
-            >
-              <option value="ALL">ผู้จัดการทั้งหมด ({availableManagers.length} ท่าน)</option>
-              {availableManagers.map((m, idx) => (
-                <option key={idx} value={m}>{m}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Department Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-slate-500 mb-1 block">กรองตาม แผนก:</label>
-            <select
-              value={selectedDeptFilter}
-              onChange={(e) => setSelectedDeptFilter(e.target.value)}
-              className="w-full text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
-            >
-              <option value="ALL">แผนกทั้งหมด ({availableDepts.length} แผนก)</option>
-              {availableDepts.map((d, idx) => (
-                <option key={idx} value={d}>{d}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Machine Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-slate-500 mb-1 block">กรองตาม เครื่องจักร (Machine):</label>
-            <select
-              value={selectedMachineFilter}
-              onChange={(e) => setSelectedMachineFilter(e.target.value)}
-              className="w-full text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
-            >
-              <option value="ALL">เครื่องจักรทั้งหมด ({availableMachines.length} เครื่อง)</option>
-              {availableMachines.map((mc, idx) => (
-                <option key={idx} value={mc}>{mc}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Search Box */}
-          <div>
-            <label className="text-[11px] font-bold text-slate-500 mb-1 block">ค้นหาด่วน:</label>
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="ชื่อ, รหัส, แผนก, เครื่องจักร..."
-                className="w-full text-xs pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Comprehensive Hierarchical Summary Table */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div className="p-5 bg-gradient-to-r from-slate-50 via-indigo-50/40 to-slate-50 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-indigo-600 text-white rounded-xl shadow-xs">
-              <Layers className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                ตารางสรุปชั่วโมงทำงานและ OT (ลำดับชั้น Manager ➔ แผนก ➔ เครื่องจักร)
-              </h3>
-              <p className="text-xs text-slate-500">
-                คลิกแถว Manager เพื่อดูแผนกย่อย และคลิกแถวแผนกเพื่อดูรายการเครื่องจักร (Machine) รายบุคคล
+              <p className="text-xs text-slate-400 mt-0.5">
+                คลิกที่กล่อง (Node) ใดก็ได้ในผังองค์กรเพื่อเลือกเจาะลึกข้อมูลชั่วโมงทำงาน OT และรายชื่อพนักงานแบบเฉพาะจุด
               </p>
             </div>
           </div>
 
-          <div className="text-xs text-slate-500 font-medium">
-            แสดงข้อมูลผลลัพธ์: <strong className="text-indigo-600 font-bold">{Object.keys(aggregatedByManager).length}</strong> สายงาน Manager
+          {/* Filter Selection Buttons: ALL / Production / Eng / Qtech / WAS */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shadow-inner">
+            <span className="text-[11px] font-black text-slate-400 px-2 flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-amber-400" />
+              <span>แสดงเฉพาะ:</span>
+            </span>
+
+            {/* ALL */}
+            <button
+              onClick={() => setCategoryFilter('ALL')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                categoryFilter === 'ALL'
+                  ? 'bg-amber-400 text-slate-950 shadow-md font-black ring-2 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              ทั้งหมด (ALL)
+            </button>
+
+            {/* Production */}
+            <button
+              onClick={() => setCategoryFilter('PRODUCTION')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                categoryFilter === 'PRODUCTION'
+                  ? 'bg-blue-500 text-white shadow-md font-black ring-2 ring-blue-300'
+                  : 'text-blue-300 hover:text-white hover:bg-blue-950/60'
+              }`}
+            >
+              <span>🏭</span>
+              <span>Production</span>
+            </button>
+
+            {/* Eng */}
+            <button
+              onClick={() => setCategoryFilter('ENG')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                categoryFilter === 'ENG'
+                  ? 'bg-amber-500 text-slate-950 shadow-md font-black ring-2 ring-amber-300'
+                  : 'text-amber-300 hover:text-white hover:bg-amber-950/60'
+              }`}
+            >
+              <span>⚙️</span>
+              <span>Eng</span>
+            </button>
+
+            {/* Qtech */}
+            <button
+              onClick={() => setCategoryFilter('QTECH')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                categoryFilter === 'QTECH'
+                  ? 'bg-purple-500 text-white shadow-md font-black ring-2 ring-purple-300'
+                  : 'text-purple-300 hover:text-white hover:bg-purple-950/60'
+              }`}
+            >
+              <span>🔬</span>
+              <span>Qtech</span>
+            </button>
+
+            {/* WAS */}
+            <button
+              onClick={() => setCategoryFilter('WAS')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                categoryFilter === 'WAS'
+                  ? 'bg-emerald-500 text-slate-950 shadow-md font-black ring-2 ring-emerald-300'
+                  : 'text-emerald-300 hover:text-white hover:bg-emerald-950/60'
+              }`}
+            >
+              <span>🦺</span>
+              <span>WAS</span>
+            </button>
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-100/80 text-slate-700 font-bold border-b border-slate-200">
-                <th className="py-3 px-4 w-72">โครงสร้าง (Manager / แผนก / เครื่องจักร)</th>
-                <th className="py-3 px-3 text-center bg-blue-50/70 text-blue-900 border-l border-r border-blue-100" colSpan={4}>
-                  🔵 1. พนักงาน GY (รายกะ)
-                </th>
-                <th className="py-3 px-3 text-center bg-teal-50/70 text-teal-900 border-r border-teal-100" colSpan={4}>
-                  🟢 2. Contractor รายชั่วโมง (WAS)
-                </th>
-                <th className="py-3 px-3 text-center bg-purple-50/70 text-purple-900 border-r border-purple-100" colSpan={2}>
-                  🟣 3. รายเดือน (WAS+GY)
-                </th>
-                <th className="py-3 px-3 text-center bg-amber-50/70 text-amber-950 font-black" colSpan={3}>
-                  ⭐ รวมทุกกลุ่ม (Grand Total)
-                </th>
-              </tr>
-              <tr className="bg-slate-50 text-[11px] font-semibold text-slate-600 border-b border-slate-200">
-                <th className="py-2.5 px-4">ชื่อกลุ่ม / สายงาน</th>
-                {/* GY Subheaders */}
-                <th className="py-2 px-2 text-center bg-blue-50/30 text-blue-800">คน</th>
-                <th className="py-2 px-2 text-right bg-blue-50/30 text-blue-800">ปกติ</th>
-                <th className="py-2 px-2 text-right bg-blue-50/30 text-amber-700 font-bold">OT</th>
-                <th className="py-2 px-2 text-right bg-blue-50/30 text-blue-900 font-bold border-r border-blue-100">รวม</th>
-                {/* Contractor Subheaders */}
-                <th className="py-2 px-2 text-center bg-teal-50/30 text-teal-800">คน</th>
-                <th className="py-2 px-2 text-right bg-teal-50/30 text-teal-800">ปกติ</th>
-                <th className="py-2 px-2 text-right bg-teal-50/30 text-amber-700 font-bold">OT</th>
-                <th className="py-2 px-2 text-right bg-teal-50/30 text-teal-900 font-bold border-r border-teal-100">รวม</th>
-                {/* Monthly Subheaders */}
-                <th className="py-2 px-2 text-center bg-purple-50/30 text-purple-800">คน</th>
-                <th className="py-2 px-2 text-right bg-purple-50/30 text-purple-900 font-bold border-r border-purple-100">ปกติ</th>
-                {/* Total Subheaders */}
-                <th className="py-2 px-2 text-right bg-amber-50/30 text-slate-800 font-bold">ชม. ปกติ</th>
-                <th className="py-2 px-2 text-right bg-amber-50/30 text-amber-700 font-bold">ชม. OT</th>
-                <th className="py-2 px-3 text-right bg-amber-100/50 text-amber-950 font-black">รวม ชม.</th>
+        {/* Tree Canvas */}
+        <div className="min-w-[1050px] pb-4 select-none">
+          {/* LEVEL 0: ROOT - PLANT LEVEL (Centered) */}
+          <div className="flex flex-col items-center">
+            <div
+              onClick={() => setSelectedNodeId('PLANT')}
+              className={`w-[440px] rounded-2xl p-4 transition-all duration-200 cursor-pointer shadow-xl relative overflow-hidden group ${
+                selectedNodeId === 'PLANT'
+                  ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-slate-950 ring-4 ring-amber-400/60 scale-[1.02] shadow-amber-500/25'
+                  : 'bg-slate-900 border-2 border-amber-500/60 hover:border-amber-400 text-slate-100 hover:bg-slate-850 hover:scale-[1.01]'
+              }`}
+            >
+              {/* Accent top stripe */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
+              
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className={`p-1.5 rounded-xl ${selectedNodeId === 'PLANT' ? 'bg-slate-950/20 text-slate-950' : 'bg-amber-400/20 text-amber-400'}`}>
+                    <Building2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider block opacity-75">
+                      Root Node (ระดับโรงงาน)
+                    </span>
+                    <span className="text-sm font-black tracking-wide">
+                      PLANT (ทั้งโรงงาน Goodyear)
+                    </span>
+                  </div>
+                </div>
+                {selectedNodeId === 'PLANT' && (
+                  <span className="bg-slate-950 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                    กำลังดูอยู่
+                  </span>
+                )}
+              </div>
+
+              <div className={`grid grid-cols-3 gap-2 pt-2 border-t text-center ${selectedNodeId === 'PLANT' ? 'border-black/15' : 'border-slate-800'}`}>
+                <div className="bg-black/10 rounded-lg py-1 px-2">
+                  <span className="text-[10px] block opacity-75 font-semibold">กำลังพลรวม</span>
+                  <span className="text-xs font-black">👥 {root.metrics.headcount.toLocaleString()} คน</span>
+                </div>
+                <div className="bg-black/10 rounded-lg py-1 px-2">
+                  <span className="text-[10px] block opacity-75 font-semibold">ชม. ทำงานรวม</span>
+                  <span className="text-xs font-black">⏱️ {root.metrics.totalHours.toLocaleString()} ชม.</span>
+                </div>
+                <div className="bg-black/10 rounded-lg py-1 px-2">
+                  <span className="text-[10px] block opacity-75 font-semibold">ชั่วโมง OT</span>
+                  <span className="text-xs font-black text-amber-300 drop-shadow-xs">
+                    🔥 {root.metrics.otHours.toLocaleString()}h ({root.metrics.otPercentage}%)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Vertical stem from Plant to Bus Bar */}
+            <div className="w-0.5 h-8 bg-slate-600" />
+          </div>
+
+          {/* LEVEL 1 BUS CONNECTOR & 4 TEAM COLUMNS */}
+          <div className="relative">
+            {/* Horizontal Bus Bar spanning all 4 columns */}
+            <div className="hidden lg:block absolute top-0 left-[12.5%] right-[12.5%] h-0.5 bg-slate-600">
+              {/* Junction indicators */}
+              <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400" />
+              <div className="absolute top-1/2 left-[33.33%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
+              <div className="absolute top-1/2 left-[66.66%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
+              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
+            </div>
+
+            {/* 4 Team Columns */}
+            <div className="grid grid-cols-4 gap-4 pt-4">
+              {/* ============================================================ */}
+              {/* COLUMN 1: BCA */}
+              {/* ============================================================ */}
+              {(() => {
+                const bcaNode = root.children?.find(t => t.id === 'BCA');
+                const isTeamSelected = selectedNodeId === 'BCA' || (breadcrumbs.some(b => b.id === 'BCA') && selectedNodeId !== 'PLANT');
+                const mixNode = bcaNode?.children?.find(p => p.id === 'BCA_MIX_EXTRUSION');
+                const prepNode = bcaNode?.children?.find(p => p.id === 'BCA_COMPONENT_PREP');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('BCA')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'BCA'
+                          ? 'bg-amber-400 text-slate-950 ring-4 ring-amber-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-amber-400/90 text-slate-950 ring-2 ring-amber-400'
+                          : 'bg-slate-900 border border-amber-500/50 hover:border-amber-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-amber-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                        <span>BCA</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Banbury / Calender / Prep</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {bcaNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {bcaNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {bcaNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Processes */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Bus Bar for BCA (Mix & Extrusion + Component Prep) */}
+                    <div className="w-full relative">
+                      <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
+                      <div className="grid grid-cols-2 gap-2 pt-3">
+                        {/* Process 1: Mix & Extrusion */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('BCA_MIX_EXTRUSION')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'BCA_MIX_EXTRUSION'
+                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-105'
+                                : 'bg-slate-900 border border-blue-500/40 hover:border-blue-400 text-blue-100 hover:bg-blue-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Mix & Extrusion</div>
+                            <div className="text-[10px] text-blue-300 font-semibold mt-1">
+                              {mixNode?.metrics.totalHours || 0} ชม. ({mixNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines (Every Machine by M/C) */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-amber-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {mixNode?.children && mixNode.children.length > 0 ? (
+                              mixNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 2: Component Prep */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('BCA_COMPONENT_PREP')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'BCA_COMPONENT_PREP'
+                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-105'
+                                : 'bg-slate-900 border border-blue-500/40 hover:border-blue-400 text-blue-100 hover:bg-blue-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Component Prep</div>
+                            <div className="text-[10px] text-blue-300 font-semibold mt-1">
+                              {prepNode?.metrics.totalHours || 0} ชม. ({prepNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines (Every Machine by M/C) */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-amber-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {prepNode?.children && prepNode.children.length > 0 ? (
+                              prepNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ============================================================ */}
+              {/* COLUMN 2: CONSUMER */}
+              {/* ============================================================ */}
+              {(() => {
+                const conNode = root.children?.find(t => t.id === 'CONSUMER');
+                const isTeamSelected = selectedNodeId === 'CONSUMER' || (breadcrumbs.some(b => b.id === 'CONSUMER') && selectedNodeId !== 'PLANT');
+                const buildNode = conNode?.children?.find(p => p.id === 'CONSUMER_BUILD');
+                const ffNode = conNode?.children?.find(p => p.id === 'CONSUMER_FF_CURING');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('CONSUMER')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'CONSUMER'
+                          ? 'bg-cyan-400 text-slate-950 ring-4 ring-cyan-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-cyan-400/90 text-slate-950 ring-2 ring-cyan-400'
+                          : 'bg-slate-900 border border-cyan-500/50 hover:border-cyan-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block" />
+                        <span>CONSUMER</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Tire Assembly & Cure</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {conNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {conNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {conNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Processes */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Bus Bar for Consumer (Build + FF/Curing) */}
+                    <div className="w-full relative">
+                      <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
+                      <div className="grid grid-cols-2 gap-2 pt-3">
+                        {/* Process 1: Build */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('CONSUMER_BUILD')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'CONSUMER_BUILD'
+                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-105'
+                                : 'bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-100 hover:bg-cyan-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Build (Building)</div>
+                            <div className="text-[10px] text-cyan-300 font-semibold mt-1">
+                              {buildNode?.metrics.totalHours || 0} ชม. ({buildNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-cyan-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {buildNode?.children && buildNode.children.length > 0 ? (
+                              buildNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 2: FF / Curing */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('CONSUMER_FF_CURING')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'CONSUMER_FF_CURING'
+                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-105'
+                                : 'bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-100 hover:bg-cyan-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">FF / Curing</div>
+                            <div className="text-[10px] text-cyan-300 font-semibold mt-1">
+                              {ffNode?.metrics.totalHours || 0} ชม. ({ffNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-cyan-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {ffNode?.children && ffNode.children.length > 0 ? (
+                              ffNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ============================================================ */}
+              {/* COLUMN 3: AERO */}
+              {/* ============================================================ */}
+              {(() => {
+                const aeroNode = root.children?.find(t => t.id === 'AERO');
+                const isTeamSelected = selectedNodeId === 'AERO' || (breadcrumbs.some(b => b.id === 'AERO') && selectedNodeId !== 'PLANT');
+                const biasNode = aeroNode?.children?.find(p => p.id === 'AERO_BIAS');
+                const radialNode = aeroNode?.children?.find(p => p.id === 'AERO_RADIAL');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('AERO')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'AERO'
+                          ? 'bg-purple-400 text-slate-950 ring-4 ring-purple-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-purple-400/90 text-slate-950 ring-2 ring-purple-400'
+                          : 'bg-slate-900 border border-purple-500/50 hover:border-purple-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-purple-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-purple-400 inline-block" />
+                        <span>AERO</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Aviation Tire Ops</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {aeroNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {aeroNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {aeroNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Processes */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Bus Bar for AERO (Bias + Radial) */}
+                    <div className="w-full relative">
+                      <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
+                      <div className="grid grid-cols-2 gap-2 pt-3">
+                        {/* Process 1: Bias Aero */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('AERO_BIAS')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'AERO_BIAS'
+                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-105'
+                                : 'bg-slate-900 border border-purple-500/40 hover:border-purple-400 text-purple-100 hover:bg-purple-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Bias Aero</div>
+                            <div className="text-[10px] text-purple-300 font-semibold mt-1">
+                              {biasNode?.metrics.totalHours || 0} ชม. ({biasNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-purple-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {biasNode?.children && biasNode.children.length > 0 ? (
+                              biasNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 2: Radial Aero */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('AERO_RADIAL')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'AERO_RADIAL'
+                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-105'
+                                : 'bg-slate-900 border border-purple-500/40 hover:border-purple-400 text-purple-100 hover:bg-purple-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Radial Aero</div>
+                            <div className="text-[10px] text-purple-300 font-semibold mt-1">
+                              {radialNode?.metrics.totalHours || 0} ชม. ({radialNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-purple-400 text-center tracking-wider mb-1">
+                              เครื่องจักร (By M/C)
+                            </div>
+                            {radialNode?.children && radialNode.children.length > 0 ? (
+                              radialNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ============================================================ */}
+              {/* COLUMN 4: RETREAD */}
+              {/* ============================================================ */}
+              {(() => {
+                const retNode = root.children?.find(t => t.id === 'RETREAD');
+                const isTeamSelected = selectedNodeId === 'RETREAD' || (breadcrumbs.some(b => b.id === 'RETREAD') && selectedNodeId !== 'PLANT');
+                const retOpsNode = retNode?.children?.find(p => p.id === 'RETREAD_RETREAD_OPS');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('RETREAD')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'RETREAD'
+                          ? 'bg-emerald-400 text-slate-950 ring-4 ring-emerald-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-emerald-400/90 text-slate-950 ring-2 ring-emerald-400'
+                          : 'bg-slate-900 border border-emerald-500/50 hover:border-emerald-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                        <span>RETREAD</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Retread Facility</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {retNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {retNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {retNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Process */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Single Process for Retread */}
+                    <div className="w-full flex flex-col items-center pt-3">
+                      <div
+                        onClick={() => setSelectedNodeId('RETREAD_RETREAD_OPS')}
+                        className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                          selectedNodeId === 'RETREAD_RETREAD_OPS'
+                            ? 'bg-emerald-600 text-white ring-2 ring-emerald-300 scale-105'
+                            : 'bg-slate-900 border border-emerald-500/40 hover:border-emerald-400 text-emerald-100 hover:bg-emerald-950/50'
+                        }`}
+                      >
+                        <div className="text-[11px] font-black leading-tight">Retread Operations</div>
+                        <div className="text-[10px] text-emerald-300 font-semibold mt-1">
+                          {retOpsNode?.metrics.totalHours || 0} ชม. ({retOpsNode?.metrics.headcount || 0} คน)
+                        </div>
+                      </div>
+
+                      {/* Stem to Level 3 Machines */}
+                      <div className="w-0.5 h-4 bg-slate-700" />
+                      <div className="w-full space-y-1">
+                        <div className="text-[9px] font-black uppercase text-emerald-400 text-center tracking-wider mb-1">
+                          เครื่องจักร (By M/C)
+                        </div>
+                        {retOpsNode?.children && retOpsNode.children.length > 0 ? (
+                          retOpsNode.children.map(mach => {
+                            const isMachSelected = selectedNodeId === mach.id;
+                            return (
+                              <button
+                                key={mach.id}
+                                onClick={() => setSelectedNodeId(mach.id)}
+                                className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                  isMachSelected
+                                    ? 'bg-emerald-400 text-slate-950 border-emerald-300 ring-2 ring-emerald-300 font-bold shadow-sm'
+                                    : 'bg-slate-900/90 border-slate-700/80 hover:border-emerald-400 hover:bg-slate-800 text-slate-200'
+                                }`}
+                                title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                              >
+                                <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-emerald-300 font-semibold'}`}>
+                                  {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                </span>
+                              </button>
+                            );
+                          })
+                        ) : (
+                          <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Breadcrumbs & Node Selection Indicator */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center flex-wrap gap-2 text-xs font-bold text-slate-600">
+          <span className="text-slate-400">มุมมองปัจจุบัน:</span>
+          {breadcrumbs.map((b, idx) => (
+            <React.Fragment key={b.id}>
+              {idx > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
+              <button
+                onClick={() => setSelectedNodeId(b.id)}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                  idx === breadcrumbs.length - 1
+                    ? 'bg-indigo-600 text-white shadow-xs font-black'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                }`}
+              >
+                {b.title}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+
+        {selectedNodeId !== 'PLANT' && (
+          <button
+            onClick={() => setSelectedNodeId('PLANT')}
+            className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>กลับไประดับโรงงาน (Plant Level)</span>
+          </button>
+        )}
+      </div>
+
+      {/* 4. Core KPI Summary Cards for Selected Node */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {/* Total Working Hours */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ชั่วโมงทำงานรวม</span>
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-slate-900 mt-2">
+            {currentNode.metrics.totalHours.toLocaleString()}
+            <span className="text-xs font-semibold text-slate-400 ml-1">ชม.</span>
+          </div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-1">
+            ปกติ {currentNode.metrics.normalHours.toLocaleString()} ชม.
+          </div>
+        </div>
+
+        {/* OT Hours */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">ชั่วโมง OT</span>
+            <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+              <Flame className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-amber-600 mt-2">
+            {currentNode.metrics.otHours.toLocaleString()}
+            <span className="text-xs font-semibold text-slate-400 ml-1">ชม.</span>
+          </div>
+          <div className="text-[11px] font-bold text-amber-700 mt-1">
+            อัตรา OT: {currentNode.metrics.otPercentage}%
+          </div>
+        </div>
+
+        {/* Headcount */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">กำลังพลรวม</span>
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+              <Users className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-blue-700 mt-2">
+            {currentNode.metrics.headcount.toLocaleString()}
+            <span className="text-xs font-semibold text-slate-400 ml-1">คน</span>
+          </div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-1">
+            เฉลี่ย {(currentNode.metrics.headcount > 0 ? (currentNode.metrics.totalHours / currentNode.metrics.headcount).toFixed(1) : 0)} ชม./คน
+          </div>
+        </div>
+
+        {/* GY Hourly Workers */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">พนักงาน GY</span>
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-emerald-700 mt-2">
+            {currentNode.employment.gyHourly.totalHours.toLocaleString()}
+            <span className="text-xs font-semibold text-slate-400 ml-1">ชม.</span>
+          </div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-1">
+            {currentNode.employment.gyHourly.headcount} คน (OT {currentNode.employment.gyHourly.otHours}h)
+          </div>
+        </div>
+
+        {/* Contractor (WAS) */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs col-span-2 md:col-span-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Contractor (WAS)</span>
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
+              <HardHat className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-purple-700 mt-2">
+            {currentNode.employment.contractor.totalHours.toLocaleString()}
+            <span className="text-xs font-semibold text-slate-400 ml-1">ชม.</span>
+          </div>
+          <div className="text-[11px] font-semibold text-slate-500 mt-1">
+            {currentNode.employment.contractor.headcount} คน (OT {currentNode.employment.contractor.otHours}h)
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Functional Breakdown (Production, Qtech, Eng, Share) Cards */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-sm font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4 text-indigo-600" />
+              <span>การจำแนกตามสายงาน (Function Breakdown in {currentNode.title})</span>
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              แยกตาม 4 ฝ่ายหลัก: ฝ่ายผลิต (Production), คุณภาพ (Qtech), วิศวกรรม (Eng), และงานสนับสนุนส่วนกลาง (Share)
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Function 1: Production */}
+          <div
+            onClick={() => setFunctionFilter(functionFilter === 'PRODUCTION' ? 'ALL' : 'PRODUCTION')}
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+              functionFilter === 'PRODUCTION'
+                ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-300'
+                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-blue-900 flex items-center gap-1.5">
+                🏭 Production (ฝ่ายผลิต)
+              </span>
+              <span className="text-[10px] font-extrabold bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full">
+                {currentNode.functions.production.headcount} คน
+              </span>
+            </div>
+            <div className="text-xl font-black text-blue-950 mt-2">
+              {currentNode.functions.production.totalHours.toLocaleString()} ชม.
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
+              <span>ปกติ {currentNode.functions.production.normalHours}h</span>
+              <span className="font-bold text-amber-700">OT {currentNode.functions.production.otHours}h ({currentNode.functions.production.otPercentage}%)</span>
+            </div>
+          </div>
+
+          {/* Function 2: Qtech */}
+          <div
+            onClick={() => setFunctionFilter(functionFilter === 'QTECH' ? 'ALL' : 'QTECH')}
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+              functionFilter === 'QTECH'
+                ? 'bg-purple-50 border-purple-500 ring-2 ring-purple-300'
+                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-purple-900 flex items-center gap-1.5">
+                🔬 Qtech (ฝ่ายคุณภาพ/QA)
+              </span>
+              <span className="text-[10px] font-extrabold bg-purple-200 text-purple-800 px-2 py-0.5 rounded-full">
+                {currentNode.functions.qtech.headcount} คน
+              </span>
+            </div>
+            <div className="text-xl font-black text-purple-950 mt-2">
+              {currentNode.functions.qtech.totalHours.toLocaleString()} ชม.
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
+              <span>ปกติ {currentNode.functions.qtech.normalHours}h</span>
+              <span className="font-bold text-amber-700">OT {currentNode.functions.qtech.otHours}h ({currentNode.functions.qtech.otPercentage}%)</span>
+            </div>
+          </div>
+
+          {/* Function 3: Eng */}
+          <div
+            onClick={() => setFunctionFilter(functionFilter === 'ENG' ? 'ALL' : 'ENG')}
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+              functionFilter === 'ENG'
+                ? 'bg-amber-50 border-amber-500 ring-2 ring-amber-300'
+                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                ⚙️ Eng (วิศวกรรม/ซ่อมบำรุง)
+              </span>
+              <span className="text-[10px] font-extrabold bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
+                {currentNode.functions.eng.headcount} คน
+              </span>
+            </div>
+            <div className="text-xl font-black text-amber-950 mt-2">
+              {currentNode.functions.eng.totalHours.toLocaleString()} ชม.
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
+              <span>ปกติ {currentNode.functions.eng.normalHours}h</span>
+              <span className="font-bold text-amber-700">OT {currentNode.functions.eng.otHours}h ({currentNode.functions.eng.otPercentage}%)</span>
+            </div>
+          </div>
+
+          {/* Function 4: Share / Support */}
+          <div
+            onClick={() => setFunctionFilter(functionFilter === 'SHARE' ? 'ALL' : 'SHARE')}
+            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+              functionFilter === 'SHARE'
+                ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-300'
+                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-emerald-900 flex items-center gap-1.5">
+                🤝 Share (ส่วนกลาง/Support)
+              </span>
+              <span className="text-[10px] font-extrabold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full">
+                {currentNode.functions.share.headcount} คน
+              </span>
+            </div>
+            <div className="text-xl font-black text-emerald-950 mt-2">
+              {currentNode.functions.share.totalHours.toLocaleString()} ชม.
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
+              <span>ปกติ {currentNode.functions.share.normalHours}h</span>
+              <span className="font-bold text-amber-700">OT {currentNode.functions.share.otHours}h ({currentNode.functions.share.otPercentage}%)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Visual Analytics Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 pt-6 border-t border-slate-100">
+          {/* Chart 1: Sub-Nodes / Breakdown BarChart */}
+          <div className="lg:col-span-2 bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
+            <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center justify-between">
+              <span>📊 เปรียบเทียบชั่วโมงทำงาน & OT ใน {currentNode.title}</span>
+              <span className="text-[10px] text-slate-500 font-normal">ปกติ (Normal) vs OT</span>
+            </h4>
+            <div className="h-60 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={currentNode.children && currentNode.children.length > 0
+                    ? currentNode.children.map(c => ({
+                        name: c.title.length > 18 ? c.title.slice(0, 16) + '…' : c.title,
+                        'ชม. ปกติ': c.metrics.normalHours,
+                        'ชม. OT': c.metrics.otHours,
+                        'คน': c.metrics.headcount
+                      }))
+                    : [
+                        { name: 'Production', 'ชม. ปกติ': currentNode.functions.production.normalHours, 'ชม. OT': currentNode.functions.production.otHours, 'คน': currentNode.functions.production.headcount },
+                        { name: 'Qtech', 'ชม. ปกติ': currentNode.functions.qtech.normalHours, 'ชม. OT': currentNode.functions.qtech.otHours, 'คน': currentNode.functions.qtech.headcount },
+                        { name: 'Eng', 'ชม. ปกติ': currentNode.functions.eng.normalHours, 'ชม. OT': currentNode.functions.eng.otHours, 'คน': currentNode.functions.eng.headcount },
+                        { name: 'Share', 'ชม. ปกติ': currentNode.functions.share.normalHours, 'ชม. OT': currentNode.functions.share.otHours, 'คน': currentNode.functions.share.headcount }
+                      ]
+                  }
+                  margin={{ top: 10, right: 10, left: -20, bottom: 25 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748b' }} interval={0} angle={-15} textAnchor="end" />
+                  <YAxis tick={{ fontSize: 10, fill: '#64748b' }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
+                  <Bar dataKey="ชม. ปกติ" stackId="a" fill="#6366f1" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="ชม. OT" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Chart 2: Functions & Employment Distribution PieCharts */}
+          <div className="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 flex flex-col justify-between">
+            <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">
+              🥧 สัดส่วนชั่วโมงจำแนกตามฝ่าย (Function Share)
+            </h4>
+            <div className="h-44 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Production', value: currentNode.functions.production.totalHours, color: '#3b82f6' },
+                      { name: 'Qtech', value: currentNode.functions.qtech.totalHours, color: '#a855f7' },
+                      { name: 'Eng', value: currentNode.functions.eng.totalHours, color: '#f59e0b' },
+                      { name: 'Share', value: currentNode.functions.share.totalHours, color: '#10b981' }
+                    ].filter(d => d.value > 0)}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={36}
+                    outerRadius={62}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {[
+                      { name: 'Production', color: '#3b82f6' },
+                      { name: 'Qtech', color: '#a855f7' },
+                      { name: 'Eng', color: '#f59e0b' },
+                      { name: 'Share', color: '#10b981' }
+                    ].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: any) => [`${Number(value).toLocaleString()} ชม.`, 'ชั่วโมงรวม']}
+                    contentStyle={{ borderRadius: 12, fontSize: 11 }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 10 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1 pt-2 border-t border-slate-200/60 text-center text-[10px]">
+              <div className="bg-white p-1 rounded-lg border border-slate-200">
+                <span className="text-slate-500 block">GY รายกะ</span>
+                <span className="font-extrabold text-emerald-700">{currentNode.employment.gyHourly.totalHours}h</span>
+              </div>
+              <div className="bg-white p-1 rounded-lg border border-slate-200">
+                <span className="text-slate-500 block">Contractor</span>
+                <span className="font-extrabold text-purple-700">{currentNode.employment.contractor.totalHours}h</span>
+              </div>
+              <div className="bg-white p-1 rounded-lg border border-slate-200">
+                <span className="text-slate-500 block">รายเดือน</span>
+                <span className="font-extrabold text-indigo-700">{currentNode.employment.monthly.totalHours}h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Sub-Nodes Comparison Table / Cards (Drill Down to Children) */}
+      {currentNode.children && currentNode.children.length > 0 && (
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-indigo-600" />
+                <span>
+                  {currentNode.level === 'PLANT'
+                    ? 'โครงสร้างแยกตามทีม (Teams in Plant)'
+                    : currentNode.level === 'TEAM'
+                    ? `กระบวนการย่อยในทีม ${currentNode.title} (Processes)`
+                    : `เครื่องจักร / ประจำจุดใน ${currentNode.title} (Machines & Stations)`}
+                </span>
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                คลิกที่แถวเพื่อเจาะลึกลงไปในระดับถัดไป
+              </p>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-extrabold">
+                  <th className="py-3 px-4">ชื่อส่วนงาน / เครื่องจักร</th>
+                  <th className="py-3 px-3 text-center">กำลังพล (คน)</th>
+                  <th className="py-3 px-3 text-right">ชม. ปกติ</th>
+                  <th className="py-3 px-3 text-right">ชม. OT</th>
+                  <th className="py-3 px-3 text-right text-indigo-900">ชม. รวม</th>
+                  <th className="py-3 px-3 text-center">อัตรา OT</th>
+                  <th className="py-3 px-3 text-right">🏭 Production</th>
+                  <th className="py-3 px-3 text-right">🔬 Qtech</th>
+                  <th className="py-3 px-3 text-right">⚙️ Eng</th>
+                  <th className="py-3 px-3 text-right">🤝 Share</th>
+                  <th className="py-3 px-3 text-center">การกระทำ</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {currentNode.children.map(child => (
+                  <tr
+                    key={child.id}
+                    onClick={() => setSelectedNodeId(child.id)}
+                    className="hover:bg-indigo-50/50 transition-colors cursor-pointer group"
+                  >
+                    <td className="py-3 px-4 font-bold text-slate-900 flex items-center gap-2">
+                      <span className="p-1 bg-slate-100 text-slate-600 rounded group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                      <span>{child.title}</span>
+                    </td>
+                    <td className="py-3 px-3 text-center font-bold text-slate-700">
+                      {child.metrics.headcount}
+                    </td>
+                    <td className="py-3 px-3 text-right text-slate-600">
+                      {child.metrics.normalHours.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-3 text-right font-bold text-amber-600">
+                      {child.metrics.otHours.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-3 text-right font-black text-indigo-700 bg-indigo-50/30">
+                      {child.metrics.totalHours.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-3 text-center font-semibold text-slate-600">
+                      {child.metrics.otPercentage}%
+                    </td>
+                    <td className="py-3 px-3 text-right text-blue-700 font-semibold">
+                      {child.functions.production.totalHours}
+                    </td>
+                    <td className="py-3 px-3 text-right text-purple-700 font-semibold">
+                      {child.functions.qtech.totalHours}
+                    </td>
+                    <td className="py-3 px-3 text-right text-amber-700 font-semibold">
+                      {child.functions.eng.totalHours}
+                    </td>
+                    <td className="py-3 px-3 text-right text-emerald-700 font-semibold">
+                      {child.functions.share.totalHours}
+                    </td>
+                    <td className="py-3 px-3 text-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedNodeId(child.id);
+                        }}
+                        className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white rounded-lg text-[11px] font-bold transition-all"
+                      >
+                        เจาะลึก ➔
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Individual Worker Roster in Selected Node */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h3 className="text-sm font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <Users className="w-4 h-4 text-indigo-600" />
+              <span>รายชื่อพนักงานใน {currentNode.title} ({displayedWorkers.length} คน)</span>
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              แสดงรายการพนักงานและผู้รับเหมาช่วงที่ลงบันทึกเวลาในจุดนี้
+            </p>
+          </div>
+
+          {/* Table Filters & Search */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {/* Employment Filter */}
+            <select
+              value={employmentFilter}
+              onChange={(e) => setEmploymentFilter(e.target.value as any)}
+              className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none"
+            >
+              <option value="ALL">ทุกประเภทการจ้าง</option>
+              <option value="GY_HOURLY">พนักงาน GY (รายกะ)</option>
+              <option value="CONTRACTOR_HOURLY">Contractor (WAS)</option>
+              <option value="MONTHLY">พนักงานรายเดือน (Monthly)</option>
+            </select>
+
+            {/* Function Filter */}
+            <select
+              value={functionFilter}
+              onChange={(e) => setFunctionFilter(e.target.value as any)}
+              className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 focus:outline-none"
+            >
+              <option value="ALL">ทุกสายงาน (All Functions)</option>
+              <option value="PRODUCTION">🏭 Production</option>
+              <option value="QTECH">🔬 Qtech</option>
+              <option value="ENG">⚙️ Eng</option>
+              <option value="SHARE">🤝 Share</option>
+            </select>
+
+            {/* Search Box */}
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="ค้นหารหัส/ชื่อ/เครื่อง..."
+                className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-44"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Worker Table */}
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 max-h-[500px]">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-600 font-extrabold">
+              <tr>
+                <th className="py-2.5 px-3">รหัสพนักงาน</th>
+                <th className="py-2.5 px-3">ชื่อ-นามสกุล</th>
+                <th className="py-2.5 px-3">ประเภท</th>
+                <th className="py-2.5 px-3">สายงาน</th>
+                <th className="py-2.5 px-3">ทีม / กระบวนการ</th>
+                <th className="py-2.5 px-3">เครื่องจักร / จุดงาน</th>
+                <th className="py-2.5 px-3">Cost Center</th>
+                <th className="py-2.5 px-2 text-center">กะ</th>
+                <th className="py-2.5 px-3 text-right">ชม. ปกติ</th>
+                <th className="py-2.5 px-3 text-right">ชม. OT</th>
+                <th className="py-2.5 px-3 text-right text-indigo-900 font-black">ชม. รวม</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {Object.values(aggregatedByManager).map((m) => {
-                const isMgrExpanded = !!expandedManagers[m.manager];
-
-                return (
-                  <React.Fragment key={m.manager}>
-                    {/* Level 1 Row: Manager */}
-                    <tr
-                      onClick={() => toggleManager(m.manager)}
-                      className={`font-bold transition-all cursor-pointer ${
-                        isMgrExpanded ? 'bg-indigo-50/60' : 'bg-white hover:bg-slate-50'
-                      }`}
-                    >
-                      <td className="py-3 px-4 flex items-center gap-2">
-                        {isMgrExpanded ? (
-                          <ChevronDown className="w-4 h-4 text-indigo-600 shrink-0" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
-                        )}
-                        <span className="text-slate-900 text-xs sm:text-[13px] font-bold">
-                          {m.manager}
-                        </span>
-                        <span className="text-[10px] text-slate-500 font-normal ml-1">
-                          ({Object.keys(m.departments).length} แผนก)
-                        </span>
-                      </td>
-
-                      {/* GY */}
-                      <td className="py-3 px-2 text-center text-blue-700">{m.gyCount || '-'}</td>
-                      <td className="py-3 px-2 text-right text-slate-700">{m.gyNormalHours ? m.gyNormalHours.toLocaleString() : '-'}</td>
-                      <td className="py-3 px-2 text-right text-amber-600 font-bold">{m.gyOtHours ? m.gyOtHours.toLocaleString() : '-'}</td>
-                      <td className="py-3 px-2 text-right font-bold text-blue-900 border-r border-blue-100">
-                        {m.gyTotalHours ? m.gyTotalHours.toLocaleString() : '-'}
-                      </td>
-
-                      {/* Contractor */}
-                      <td className="py-3 px-2 text-center text-teal-700">{m.contractorCount || '-'}</td>
-                      <td className="py-3 px-2 text-right text-slate-700">{m.contractorNormalHours ? m.contractorNormalHours.toLocaleString() : '-'}</td>
-                      <td className="py-3 px-2 text-right text-amber-600 font-bold">{m.contractorOtHours ? m.contractorOtHours.toLocaleString() : '-'}</td>
-                      <td className="py-3 px-2 text-right font-bold text-teal-900 border-r border-teal-100">
-                        {m.contractorTotalHours ? m.contractorTotalHours.toLocaleString() : '-'}
-                      </td>
-
-                      {/* Monthly */}
-                      <td className="py-3 px-2 text-center text-purple-700">{m.monthlyCount || '-'}</td>
-                      <td className="py-3 px-2 text-right font-bold text-purple-900 border-r border-purple-100">
-                        {m.monthlyNormalHours ? m.monthlyNormalHours.toLocaleString() : '-'}
-                      </td>
-
-                      {/* Grand Total */}
-                      <td className="py-3 px-2 text-right font-bold text-slate-800">{m.totalNormalHours.toLocaleString()}</td>
-                      <td className="py-3 px-2 text-right font-bold text-amber-600">
-                        {m.totalOtHours > 0 ? (
-                          <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded-md font-bold">
-                            +{m.totalOtHours.toLocaleString()}
-                          </span>
-                        ) : '-'}
-                      </td>
-                      <td className="py-3 px-3 text-right font-black text-indigo-900 text-sm bg-indigo-50/40">
-                        {m.grandTotalHours.toLocaleString()}
-                      </td>
-                    </tr>
-
-                    {/* Level 2 Rows: Departments under Manager */}
-                    {isMgrExpanded && Object.values(m.departments).map((d) => {
-                      const deptKey = `${m.manager}_${d.dept}`;
-                      const isDeptExpanded = !!expandedDepts[deptKey];
-
-                      return (
-                        <React.Fragment key={deptKey}>
-                          <tr
-                            onClick={() => toggleDept(deptKey)}
-                            className={`transition-all cursor-pointer ${
-                              isDeptExpanded ? 'bg-slate-100/80' : 'bg-slate-50/60 hover:bg-slate-100/50'
-                            }`}
-                          >
-                            <td className="py-2.5 px-4 pl-9 flex items-center gap-2">
-                              {isDeptExpanded ? (
-                                <ChevronDown className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                              ) : (
-                                <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              )}
-                              <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                              <span className="text-slate-800 font-semibold text-xs">
-                                {d.dept}
-                              </span>
-                              <span className="text-[10px] text-slate-400 font-normal">
-                                ({Object.keys(d.machines).length} เครื่องจักร)
-                              </span>
-                            </td>
-
-                            {/* GY */}
-                            <td className="py-2 px-2 text-center text-blue-600">{d.gyCount || '-'}</td>
-                            <td className="py-2 px-2 text-right text-slate-600">{d.gyNormalHours ? d.gyNormalHours.toLocaleString() : '-'}</td>
-                            <td className="py-2 px-2 text-right text-amber-600 font-semibold">{d.gyOtHours ? d.gyOtHours.toLocaleString() : '-'}</td>
-                            <td className="py-2 px-2 text-right text-blue-800 font-semibold border-r border-blue-100">
-                              {d.gyTotalHours ? d.gyTotalHours.toLocaleString() : '-'}
-                            </td>
-
-                            {/* Contractor */}
-                            <td className="py-2 px-2 text-center text-teal-600">{d.contractorCount || '-'}</td>
-                            <td className="py-2 px-2 text-right text-slate-600">{d.contractorNormalHours ? d.contractorNormalHours.toLocaleString() : '-'}</td>
-                            <td className="py-2 px-2 text-right text-amber-600 font-semibold">{d.contractorOtHours ? d.contractorOtHours.toLocaleString() : '-'}</td>
-                            <td className="py-2 px-2 text-right text-teal-800 font-semibold border-r border-teal-100">
-                              {d.contractorTotalHours ? d.contractorTotalHours.toLocaleString() : '-'}
-                            </td>
-
-                            {/* Monthly */}
-                            <td className="py-2 px-2 text-center text-purple-600">{d.monthlyCount || '-'}</td>
-                            <td className="py-2 px-2 text-right text-purple-800 font-semibold border-r border-purple-100">
-                              {d.monthlyNormalHours ? d.monthlyNormalHours.toLocaleString() : '-'}
-                            </td>
-
-                            {/* Total */}
-                            <td className="py-2 px-2 text-right text-slate-700 font-medium">{d.totalNormalHours.toLocaleString()}</td>
-                            <td className="py-2 px-2 text-right text-amber-600 font-semibold">
-                              {d.totalOtHours ? `+${d.totalOtHours.toLocaleString()}` : '-'}
-                            </td>
-                            <td className="py-2 px-3 text-right font-bold text-slate-900 bg-slate-100/50">
-                              {d.grandTotalHours.toLocaleString()}
-                            </td>
-                          </tr>
-
-                          {/* Level 3 Rows: Machines under Department */}
-                          {isDeptExpanded && Object.values(d.machines).map((mc) => {
-                            const machineKey = `${m.manager}_${d.dept}_${mc.machine}`;
-                            const isMachineExpanded = !!expandedMachines[machineKey];
-
-                            return (
-                              <React.Fragment key={machineKey}>
-                                <tr
-                                  onClick={() => toggleMachine(machineKey)}
-                                  className={`bg-white hover:bg-indigo-50/30 transition-all cursor-pointer ${
-                                    isMachineExpanded ? 'bg-indigo-50/20' : ''
-                                  }`}
-                                >
-                                  <td className="py-2 px-4 pl-16 flex items-center gap-2">
-                                    {isMachineExpanded ? (
-                                      <ChevronDown className="w-3 h-3 text-indigo-400 shrink-0" />
-                                    ) : (
-                                      <ChevronRight className="w-3 h-3 text-slate-300 shrink-0" />
-                                    )}
-                                    <span className="text-slate-700 font-medium text-xs">
-                                      ⚙️ {mc.machine}
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 font-normal">
-                                      ({mc.workers.length} คน)
-                                    </span>
-                                  </td>
-
-                                  {/* GY */}
-                                  <td className="py-1.5 px-2 text-center text-slate-500">{mc.gyCount || '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-slate-500">{mc.gyNormalHours ? mc.gyNormalHours.toLocaleString() : '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-amber-600 font-medium">{mc.gyOtHours ? mc.gyOtHours.toLocaleString() : '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-slate-700 font-medium border-r border-blue-50">
-                                    {mc.gyTotalHours ? mc.gyTotalHours.toLocaleString() : '-'}
-                                  </td>
-
-                                  {/* Contractor */}
-                                  <td className="py-1.5 px-2 text-center text-slate-500">{mc.contractorCount || '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-slate-500">{mc.contractorNormalHours ? mc.contractorNormalHours.toLocaleString() : '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-amber-600 font-medium">{mc.contractorOtHours ? mc.contractorOtHours.toLocaleString() : '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-slate-700 font-medium border-r border-teal-50">
-                                    {mc.contractorTotalHours ? mc.contractorTotalHours.toLocaleString() : '-'}
-                                  </td>
-
-                                  {/* Monthly */}
-                                  <td className="py-1.5 px-2 text-center text-slate-500">{mc.monthlyCount || '-'}</td>
-                                  <td className="py-1.5 px-2 text-right text-slate-700 font-medium border-r border-purple-50">
-                                    {mc.monthlyNormalHours ? mc.monthlyNormalHours.toLocaleString() : '-'}
-                                  </td>
-
-                                  {/* Total */}
-                                  <td className="py-1.5 px-2 text-right text-slate-600">{mc.totalNormalHours.toLocaleString()}</td>
-                                  <td className="py-1.5 px-2 text-right text-amber-600 font-medium">
-                                    {mc.totalOtHours ? `+${mc.totalOtHours.toLocaleString()}` : '-'}
-                                  </td>
-                                  <td className="py-1.5 px-3 text-right font-semibold text-slate-800">
-                                    {mc.grandTotalHours.toLocaleString()}
-                                  </td>
-                                </tr>
-
-                                {/* Level 4: Worker Details on Machine */}
-                                {isMachineExpanded && (
-                                  <tr className="bg-slate-50/90 border-y border-slate-200/60">
-                                    <td colSpan={14} className="py-3 px-6 pl-20">
-                                      <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-                                        <div className="text-xs font-bold text-slate-800 flex items-center justify-between">
-                                          <span>👥 รายชื่อพนักงานประจำเครื่อง: <strong>{mc.machine}</strong></span>
-                                          <span className="text-[11px] text-slate-500 font-normal">ทั้งหมด {mc.workers.length} คน</span>
-                                        </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
-                                          {mc.workers.map((w, wIdx) => (
-                                            <div
-                                              key={wIdx}
-                                              className={`p-2.5 rounded-xl border text-xs flex items-center justify-between ${
-                                                w.group === 'GY_HOURLY'
-                                                  ? 'bg-blue-50/40 border-blue-200/60 text-blue-950'
-                                                  : w.group === 'CONTRACTOR_HOURLY'
-                                                  ? 'bg-teal-50/40 border-teal-200/60 text-teal-950'
-                                                  : 'bg-purple-50/40 border-purple-200/60 text-purple-950'
-                                              }`}
-                                            >
-                                              <div>
-                                                <div className="font-bold flex items-center gap-1.5">
-                                                  <span className="font-mono text-[11px] opacity-80">{w.empId}</span>
-                                                  <span className="truncate max-w-[140px]">{w.name}</span>
-                                                </div>
-                                                <div className="text-[10px] text-slate-500 mt-0.5">
-                                                  {w.position} • {w.shiftLabel} • {w.groupLabel}
-                                                </div>
-                                              </div>
-                                              <div className="text-right">
-                                                <div className="font-bold text-slate-900">
-                                                  {w.totalHours} <span className="text-[10px] font-normal text-slate-500">ชม.</span>
-                                                </div>
-                                                {w.otHours > 0 && (
-                                                  <div className="text-[10px] font-bold text-amber-600">
-                                                    OT: +{w.otHours} ชม.
-                                                  </div>
-                                                )}
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </React.Fragment>
-                            );
-                          })}
-                        </React.Fragment>
-                      );
-                    })}
-                  </React.Fragment>
-                );
-              })}
+              {displayedWorkers.length > 0 ? (
+                displayedWorkers.map((w, idx) => (
+                  <tr key={`${w.empId}_${w.shift}_${idx}`} className="hover:bg-slate-50">
+                    <td className="py-2 px-3 font-mono font-bold text-slate-700">{w.empId}</td>
+                    <td className="py-2 px-3 font-semibold text-slate-900">{w.name}</td>
+                    <td className="py-2 px-3">
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        w.employmentType === 'GY_HOURLY'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : w.employmentType === 'CONTRACTOR_HOURLY'
+                          ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                          : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                      }`}>
+                        {w.employmentLabel}
+                      </span>
+                    </td>
+                    <td className="py-2 px-3">
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        w.functionType === 'PRODUCTION'
+                          ? 'bg-blue-50 text-blue-700'
+                          : w.functionType === 'QTECH'
+                          ? 'bg-purple-50 text-purple-700'
+                          : w.functionType === 'ENG'
+                          ? 'bg-amber-50 text-amber-700'
+                          : 'bg-slate-100 text-slate-700'
+                      }`}>
+                        {w.functionLabel}
+                      </span>
+                    </td>
+                    <td className="py-2 px-3 text-slate-600 font-medium">
+                      {w.teamName} ➔ {w.processName}
+                    </td>
+                    <td className="py-2 px-3 text-slate-800 font-bold">
+                      {w.machineName}
+                    </td>
+                    <td className="py-2 px-3 font-mono text-slate-500">{w.costCenter}</td>
+                    <td className="py-2 px-2 text-center font-bold text-slate-700">{w.shiftLabel}</td>
+                    <td className="py-2 px-3 text-right text-slate-600">{w.normalHours}</td>
+                    <td className="py-2 px-3 text-right font-bold text-amber-600">{w.otHours}</td>
+                    <td className="py-2 px-3 text-right font-black text-indigo-700 bg-indigo-50/40">{w.totalHours}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={11} className="py-8 text-center text-slate-400 font-medium">
+                    ไม่พบข้อมูลพนักงานตามเงื่อนไขที่เลือก
+                  </td>
+                </tr>
+              )}
             </tbody>
-
-            {/* Table Footer: Overall Grand Total */}
-            <tfoot>
-              <tr className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white font-bold border-t-2 border-slate-700">
-                <td className="py-4 px-4 text-xs sm:text-sm font-black text-amber-300">
-                  ⭐ รวมทั้งสิ้นทั้งโรงงาน (5 พื้นที่ 100%)
-                </td>
-
-                {/* GY Total */}
-                <td className="py-4 px-2 text-center text-blue-300 font-black">{overallTotals.gyCount}</td>
-                <td className="py-4 px-2 text-right text-slate-200">{overallTotals.gyNormal.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right text-amber-300 font-black">+{overallTotals.gyOt.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right font-black text-blue-300 border-r border-indigo-900/60">
-                  {overallTotals.gyTotal.toLocaleString()}
-                </td>
-
-                {/* Contractor Total */}
-                <td className="py-4 px-2 text-center text-teal-300 font-black">{overallTotals.contCount}</td>
-                <td className="py-4 px-2 text-right text-slate-200">{overallTotals.contNormal.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right text-amber-300 font-black">+{overallTotals.contOt.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right font-black text-teal-300 border-r border-indigo-900/60">
-                  {overallTotals.contTotal.toLocaleString()}
-                </td>
-
-                {/* Monthly Total */}
-                <td className="py-4 px-2 text-center text-purple-300 font-black">{overallTotals.monthlyCount}</td>
-                <td className="py-4 px-2 text-right font-black text-purple-300 border-r border-indigo-900/60">
-                  {overallTotals.monthlyNormal.toLocaleString()}
-                </td>
-
-                {/* Grand Totals */}
-                <td className="py-4 px-2 text-right font-black text-slate-100">{overallTotals.grandNormal.toLocaleString()}</td>
-                <td className="py-4 px-2 text-right font-black text-amber-300 text-sm">
-                  +{overallTotals.grandOt.toLocaleString()}
-                </td>
-                <td className="py-4 px-3 text-right font-black text-amber-400 text-base bg-white/10">
-                  {overallTotals.grandTotal.toLocaleString()}
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>

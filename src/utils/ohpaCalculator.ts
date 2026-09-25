@@ -4,7 +4,8 @@ import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, 
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { DEFAULT_STOCKING_REPORTS } from '../data/default_stocking_reports';
 import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
-import { processScanRecords } from './parser';
+import { getRtrShutdownHoursForDate } from '../data/default_rtr_shutdown';
+import { processScanRecords, normalizeDateToMMDDYYYY } from './parser';
 
 export function parseDateComponents(dateStr: string): { day: number; month: number; year: number } {
   const clean = (dateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
@@ -59,29 +60,93 @@ export function getMonthShiftCycleInfo(dateStr: string): MonthShiftCycleInfo {
   };
 }
 
+export function findScanPresetForDate(
+  allScanPresets: { id?: string; name: string; dateFormatted?: string; content: string }[] = [],
+  year: number,
+  month: number,
+  day: number
+) {
+  if (!allScanPresets || allScanPresets.length === 0) return undefined;
+  const dPad = String(day).padStart(2, '0');
+  const mPad = String(month).padStart(2, '0');
+  const yStr = String(year);
+  const yyyymmdd = `${yStr}${mPad}${dPad}`;
+  const mmddyyyy = `${mPad}${dPad}${yStr}`;
+
+  // 1. Check by preset id (most accurate)
+  const byId = allScanPresets.find(p => {
+    if (!p.id) return false;
+    return p.id === `scan_${yyyymmdd}` || p.id.startsWith(`scan_${yyyymmdd}_`) || p.id.includes(yyyymmdd);
+  });
+  if (byId) return byId;
+
+  // 2. Exact regex on name or dateFormatted to prevent substring collision (e.g. 21/9 matching 1/9)
+  const dateRegex = new RegExp(`(^|[^0-9])0?${day}\\/0?${month}\\/${year}([^0-9]|$)`);
+  const isoRegex = new RegExp(`(^|[^0-9])${year}-0?${month}-0?${day}([^0-9]|$)`);
+
+  const byDate = allScanPresets.find(p => {
+    const pName = p.name || '';
+    const pDate = p.dateFormatted || '';
+    if (pName.includes(yyyymmdd) || pName.includes(mmddyyyy)) return true;
+    if (dateRegex.test(pName) || dateRegex.test(pDate)) return true;
+    if (isoRegex.test(pName) || isoRegex.test(pDate)) return true;
+    return false;
+  });
+
+  return byDate;
+}
+
+export function findContractorEntryForDate(
+  contractorRecordsByDate: Record<string, { dateFormatted?: string; dateShort?: string; isoDate?: string; records: ContractorScanRecord[] }> = {},
+  year: number,
+  month: number,
+  day: number
+) {
+  if (!contractorRecordsByDate) return undefined;
+  const dPad = String(day).padStart(2, '0');
+  const mPad = String(month).padStart(2, '0');
+  const dShort = String(day);
+  const mShort = String(month);
+
+  const keysToTry = [
+    `${dShort}/${mShort}/${year}`,
+    `${dPad}/${mPad}/${year}`,
+    `${dShort}/${mPad}/${year}`,
+    `${dPad}/${mShort}/${year}`,
+    `${year}-${mPad}-${dPad}`,
+    `${year}-${mShort}-${dShort}`,
+  ];
+
+  for (const k of keysToTry) {
+    if (contractorRecordsByDate[k] && Array.isArray(contractorRecordsByDate[k].records)) {
+      return contractorRecordsByDate[k];
+    }
+  }
+
+  // Fallback: check normalizeDateToMMDDYYYY
+  const targetNorm = `${mPad}${dPad}${year}`;
+  const matchKey = Object.keys(contractorRecordsByDate).find(k => {
+    const kNorm = normalizeDateToMMDDYYYY(k);
+    return kNorm === targetNorm;
+  });
+
+  return matchKey ? contractorRecordsByDate[matchKey] : undefined;
+}
+
 export function getPreviousMonthShift3Records(
   prevMonthLastDayDateStr: string,
-  allScanPresets: { name: string; dateFormatted?: string; content: string }[] = [],
+  allScanPresets: { id?: string; name: string; dateFormatted?: string; content: string }[] = [],
   contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
   dailyAdjustments: DailyAdjustmentRecord[] = []
 ): { gyRecords: ParsedShiftRecord[]; contRecords: ContractorScanRecord[] } {
   const { day, month, year } = parseDateComponents(prevMonthLastDayDateStr);
-  const dPad = String(day).padStart(2, '0');
-  const mPad = String(month).padStart(2, '0');
-  const yStr = String(year);
 
   let gyRecords: ParsedShiftRecord[] = [];
   let contRecords: ContractorScanRecord[] = [];
 
   // Find GY scan preset for prev month last day
-  const preset = allScanPresets.find(p => {
-    const pName = p.name || '';
-    const pDate = p.dateFormatted || '';
-    if (pName.includes(`${yStr}${mPad}${dPad}`) || pName.includes(`${mPad}${dPad}${yStr}`)) return true;
-    if (pDate.includes(prevMonthLastDayDateStr) || pDate.includes(`${day}/${month}/${year}`)) return true;
-    return false;
-  });
+  const preset = findScanPresetForDate(allScanPresets, year, month, day);
 
   if (preset && preset.content) {
     const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
@@ -93,10 +158,7 @@ export function getPreviousMonthShift3Records(
   }
 
   // Find Contractor records for prev month last day
-  const contEntry = contractorRecordsByDate[`${day}/${month}/${year}`] ||
-    contractorRecordsByDate[prevMonthLastDayDateStr] ||
-    contractorRecordsByDate[`${yStr}-${mPad}-${dPad}`] ||
-    contractorRecordsByDate[`${day}/${Number(month)}/${year}`];
+  const contEntry = findContractorEntryForDate(contractorRecordsByDate as any, year, month, day);
 
   if (contEntry && contEntry.records) {
     contRecords = contEntry.records
@@ -154,7 +216,7 @@ export function getMonthlyStaffMetrics(dateStr: string): MonthlyStaffMetrics {
     hoursPerPerson = 0;
   }
 
-  const count = 62;
+  const count = 61;
   const totalHours = count * hoursPerPerson;
 
   const wasCount = 9;
@@ -333,6 +395,7 @@ export interface AreaAccumulator {
   pdiDeductHours: number;
   bcaReductionHours: number;
   bcaDevHours: number;
+  rtrShutdownHours: number;
   retreadReceivedHours: number;
   finalOpahHours: number;
   deptMap: Record<string, OhpaAreaDeptItem>;
@@ -366,6 +429,7 @@ export function createEmptyAreaMap(): Record<string, AreaAccumulator> {
       pdiDeductHours: 0,
       bcaReductionHours: 0,
       bcaDevHours: 0,
+      rtrShutdownHours: 0,
       retreadReceivedHours: 0,
       finalOpahHours: 0,
       deptMap: {}
@@ -383,7 +447,8 @@ export function accumulateRecordsIntoAreaMap(
   pdiDeductMap: Record<string, number> = {},
   employeeMapping: Record<string, EmployeeInfo> = {},
   bcaReductionHours: number = 0,
-  bcaDevHours: number = 0
+  bcaDevHours: number = 0,
+  rtrShutdownMap: Record<string, number> = {}
 ): void {
   // Helper to get MU
   const getEmpMu = (empId: string, fallbackMu?: string, category?: string, dept?: string, costCenter?: string): string => {
@@ -812,6 +877,28 @@ export function accumulateRecordsIntoAreaMap(
       aBca.deptMap['BCA_DEV_Compound'].totalHours -= bcaDevHours;
     }
   }
+
+  // 8. RTR Shutdown Hours (Deduct from specified areas)
+  Object.entries(rtrShutdownMap).forEach(([areaKey, hrs]) => {
+    if (hrs > 0 && areaMap[areaKey]) {
+      const a = areaMap[areaKey];
+      a.rtrShutdownHours += hrs;
+      const rtrKey = `RTR Shutdown (${a.areaLabel || areaKey} - หัก ${hrs} ชม.)`;
+      if (!a.deptMap['RTR_Shutdown']) {
+        a.deptMap['RTR_Shutdown'] = {
+          dept: rtrKey,
+          isContractor: false,
+          isMonthly: false,
+          headcount: 0,
+          normalHours: 0,
+          otHours: 0,
+          totalHours: 0
+        };
+      }
+      a.deptMap['RTR_Shutdown'].normalHours -= hrs;
+      a.deptMap['RTR_Shutdown'].totalHours -= hrs;
+    }
+  });
 }
 
 export function getAreaTonnage(
@@ -979,8 +1066,9 @@ export function buildAreaBreakdownList(
       const pdiH = a.pdiDeductHours;
       const bcaRedH = a.bcaReductionHours;
       const bcaDevH = a.bcaDevHours;
+      const rtrShutdownH = a.rtrShutdownHours;
       const retreadRecH = a.retreadReceivedHours;
-      const finalOpah = grossTotH + beadH - pdiH - bcaRedH - bcaDevH + retreadRecH;
+      const finalOpah = grossTotH + beadH - pdiH - bcaRedH - bcaDevH - rtrShutdownH + retreadRecH;
 
       const totHc = Math.round(((a.gyHc + a.contHc + a.monthlyHc) / avgDays) * 10) / 10;
       const gyHc = Math.round((a.gyHc / avgDays) * 10) / 10;
@@ -1035,6 +1123,7 @@ export function buildAreaBreakdownList(
         pdiDeductHours: Math.round(pdiH * 10) / 10,
         bcaReductionHours: Math.round(bcaRedH * 10) / 10,
         bcaDevHours: Math.round(bcaDevH * 10) / 10,
+        rtrShutdownHours: Math.round(rtrShutdownH * 10) / 10,
         retreadReceivedHours: Math.round(retreadRecH * 10) / 10,
         finalOpahHours: Math.round(finalOpah * 10) / 10,
         percentageOfTotalHours: totalWorkingHours > 0 && !a.isExcluded6320
@@ -1122,6 +1211,7 @@ export function calculateMtdSummary(
   let mtdBeadAddHours = 0;
   let mtdBcaReductionHours = 0;
   let mtdBcaDevHours = 0;
+  let mtdRtrShutdownHours = 0;
   let mtdOpahWorkingHours = 0;
 
   const mtdAreaMap = createEmptyAreaMap();
@@ -1143,13 +1233,7 @@ export function calculateMtdSummary(
     if (d === targetDay) {
       dayGyRecords = [...currentGyRecords];
     } else {
-      const preset = allScanPresets.find(p => {
-        const pName = p.name || '';
-        const pDate = p.dateFormatted || '';
-        if (pName.includes(`${targetYear}${mPad}${dPad}`) || pName.includes(`${mPad}${dPad}${targetYear}`)) return true;
-        if (pDate.includes(dayDateStr) || pDate.includes(`${d}/${targetMonth}/${targetYear}`)) return true;
-        return false;
-      });
+      const preset = findScanPresetForDate(allScanPresets as any, targetYear, targetMonth, d);
 
       if (preset && preset.content) {
         const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
@@ -1161,9 +1245,7 @@ export function calculateMtdSummary(
     if (d === targetDay) {
       dayContRecords = currentContRecords.filter(r => r.hasScannedIn || r.totalHours > 0);
     } else {
-      const contEntry = contractorRecordsByDate[`${d}/${targetMonth}/${targetYear}`] ||
-        contractorRecordsByDate[dayDateStr] ||
-        contractorRecordsByDate[`${targetYear}-${mPad}-${dPad}`];
+      const contEntry = findContractorEntryForDate(contractorRecordsByDate as any, targetYear, targetMonth, d);
 
       if (contEntry && contEntry.records) {
         dayContRecords = contEntry.records.filter(r => r.hasScannedIn || r.totalHours > 0);
@@ -1203,6 +1285,8 @@ export function calculateMtdSummary(
     const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[d] || (pdiBeadReport?.bcaReductionDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[d] / 60) * 100) / 100 : 0);
     const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[d] || (pdiBeadReport?.bcaDevDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[d] / 60) * 100) / 100 : 0);
     const dayPdiDeductMap = buildPdiDeductMap(pdiBeadReport, d);
+    const dayRtrShutdownMap = getRtrShutdownHoursForDate(dayDateStr);
+    const dayRtrShutdownHours = Object.values(dayRtrShutdownMap).reduce((s, h) => s + (h || 0), 0);
 
     // Calculate day-level area breakdown
     const dayAreaMap = createEmptyAreaMap();
@@ -1215,7 +1299,8 @@ export function calculateMtdSummary(
       dayPdiDeductMap,
       employeeMapping,
       bcaReductionHours,
-      bcaDevHours
+      bcaDevHours,
+      dayRtrShutdownMap
     );
 
     // Accumulate area breakdown for day d into MTD
@@ -1228,7 +1313,8 @@ export function calculateMtdSummary(
       dayPdiDeductMap,
       employeeMapping,
       bcaReductionHours,
-      bcaDevHours
+      bcaDevHours,
+      dayRtrShutdownMap
     );
 
     // Derive active 4 areas for day d
@@ -1239,7 +1325,7 @@ export function calculateMtdSummary(
     const dayContH = Math.round(dayActiveAreas.reduce((s, a) => s + a.contNormal + a.contOt, 0) * 10) / 10;
     const dayMonthlyH = Math.round(dayActiveAreas.reduce((s, a) => s + a.monthlyNormal, 0) * 10) / 10;
     const dayTotalHours = Math.round((dayGyH + dayContH + dayMonthlyH) * 10) / 10;
-    const dayOpahHours = Math.max(0, Math.round((dayTotalHours - pdiDeductHours + beadAddHours - bcaReductionHours - bcaDevHours) * 10) / 10);
+    const dayOpahHours = Math.max(0, Math.round((dayTotalHours - pdiDeductHours + beadAddHours - bcaReductionHours - bcaDevHours - dayRtrShutdownHours) * 10) / 10);
 
     mtdGyHours += dayGyH;
     mtdContractorHours += dayContH;
@@ -1249,6 +1335,7 @@ export function calculateMtdSummary(
     mtdBeadAddHours += beadAddHours;
     mtdBcaReductionHours += bcaReductionHours;
     mtdBcaDevHours += bcaDevHours;
+    mtdRtrShutdownHours += dayRtrShutdownHours;
     mtdOpahWorkingHours += dayOpahHours;
 
     const LBS_CONST = 2.20462;
@@ -1257,13 +1344,13 @@ export function calculateMtdSummary(
     const dayTonnageReport: StockingTonnageReport | null = (d === targetDay && tonnageReport)
       ? tonnageReport
       : (tonnageReport?.dailyReportsByDate?.[dayDateStr] ||
-         tonnageReport?.dailyReportsByDate?.[`${targetYear}-09-${dPad}`] ||
+         tonnageReport?.dailyReportsByDate?.[`${targetYear}-${mPad}-${dPad}`] ||
          DEFAULT_STOCKING_REPORTS[dayDateStr] ||
-         DEFAULT_STOCKING_REPORTS[`${d}/9/${targetYear}`] ||
-         DEFAULT_STOCKING_REPORTS[`${targetYear}-09-${dPad}`] ||
+         DEFAULT_STOCKING_REPORTS[`${d}/${targetMonth}/${targetYear}`] ||
+         DEFAULT_STOCKING_REPORTS[`${targetYear}-${mPad}-${dPad}`] ||
          null);
 
-    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, dayTonnageReport || tonnageReport, 'DAILY', dayDateStr);
+    const dayAreaBreakdown = buildAreaBreakdownList(dayAreaMap, dayTotalHours, 1, dayTonnageReport || tonnageReport, 'DAILY', dayDateStr, retreadTonnage);
 
     // Calculate daily stocking tonnage
     let dayStockingKg = 0;
@@ -1303,6 +1390,7 @@ export function calculateMtdSummary(
       beadAddHours: Math.round(beadAddHours * 10) / 10,
       bcaReductionHours: Math.round(bcaReductionHours * 10) / 10,
       bcaDevHours: Math.round(bcaDevHours * 10) / 10,
+      rtrShutdownHours: Math.round(dayRtrShutdownHours * 10) / 10,
       opahWorkingHours: Math.round(dayOpahHours * 10) / 10,
       cumulativeTotalHours: Math.round(mtdTotalHours * 10) / 10,
       cumulativeOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10,
@@ -1347,6 +1435,7 @@ export function calculateMtdSummary(
     mtdBeadAddHours: Math.round(mtdBeadAddHours * 10) / 10,
     mtdBcaReductionHours: Math.round(mtdBcaReductionHours * 10) / 10,
     mtdBcaDevHours: Math.round(mtdBcaDevHours * 10) / 10,
+    mtdRtrShutdownHours: Math.round(mtdRtrShutdownHours * 10) / 10,
     mtdOpahWorkingHours: Math.round(mtdOpahWorkingHours * 10) / 10,
     mtdStockingKg,
     mtdStockingLbs,
@@ -1395,17 +1484,7 @@ export function calculateOhpaSummary(
 
   let resolvedGyRecords = [...records];
   if (resolvedGyRecords.length === 0 && allScanPresets && allScanPresets.length > 0) {
-    const preset = allScanPresets.find(p => {
-      const pName = p.name || '';
-      const pDate = p.dateFormatted || '';
-      return (
-        pName.includes(`${targetYear}${mPad}${dPad}`) ||
-        pName.includes(`${mPad}${dPad}${targetYear}`) ||
-        pDate.includes(dayDateStr) ||
-        pDate.includes(dayDateShort) ||
-        pDate.includes(cleanDate)
-      );
-    });
+    const preset = findScanPresetForDate(allScanPresets as any, targetYear, targetMonth, targetDay);
     if (preset && preset.content) {
       const parsed = processScanRecords(preset.content, employeeMapping, dailyAdjustments);
       resolvedGyRecords = parsed.records;
@@ -1414,11 +1493,7 @@ export function calculateOhpaSummary(
 
   let resolvedContRecords = (contractorRecords || []).filter(r => r && (r.hasScannedIn || r.totalHours > 0));
   if (resolvedContRecords.length === 0 && contractorRecordsByDate) {
-    const contEntry =
-      contractorRecordsByDate[dayDateShort] ||
-      contractorRecordsByDate[dayDateStr] ||
-      contractorRecordsByDate[cleanDate] ||
-      contractorRecordsByDate[isoDateStr];
+    const contEntry = findContractorEntryForDate(contractorRecordsByDate as any, targetYear, targetMonth, targetDay);
     if (contEntry && contEntry.records) {
       resolvedContRecords = contEntry.records.filter(r => r && (r.hasScannedIn || r.totalHours > 0));
     }
@@ -1461,6 +1536,8 @@ export function calculateOhpaSummary(
   const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[targetDay] || (pdiBeadReport?.bcaReductionDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
   const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[targetDay] || (pdiBeadReport?.bcaDevDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
   const pdiDeductMap = buildPdiDeductMap(pdiBeadReport, targetDay);
+  const rtrShutdownMap = getRtrShutdownHoursForDate(productionDayFormatted);
+  const totalRtrShutdownHours = Object.values(rtrShutdownMap).reduce((s, h) => s + (h || 0), 0);
 
   // 3. Process Area Breakdown (5 Areas based on Master Headcount 16 Sep)
   const areaMap = createEmptyAreaMap();
@@ -1473,7 +1550,8 @@ export function calculateOhpaSummary(
     pdiDeductMap,
     employeeMapping,
     bcaReductionHours,
-    bcaDevHours
+    bcaDevHours,
+    rtrShutdownMap
   );
 
   // Active 4 Areas & Retread derived from areaBreakdown
@@ -1668,15 +1746,16 @@ export function calculateOhpaSummary(
     const normalHours = Math.round((gyNorm + contNorm) * 10) / 10;
     const otHours = Math.round((gyOt + contOt) * 10) / 10;
 
-    // Distribute monthly staff, PDI deduct, and Bead add equally across active shifts
+    // Distribute monthly staff, PDI deduct, Bead add, and RTR Shutdown equally across active shifts
     const monthlyHours = Math.round((totalMonthlyHours / numShifts) * 10) / 10;
     const monthlyHeadcount = Math.round((totalMonthlyHc / numShifts) * 10) / 10;
 
     const shiftPdiDeduct = Math.round((activePdiHours / numShifts) * 10) / 10;
     const shiftBeadAdd = Math.round((activeBeadHours / numShifts) * 10) / 10;
+    const shiftRtrShutdown = Math.round((totalRtrShutdownHours / numShifts) * 10) / 10;
 
     const grossHours = Math.round((gyTot + contTot + monthlyHours) * 10) / 10;
-    const opahWorkingHours = Math.round((grossHours - shiftPdiDeduct + shiftBeadAdd) * 10) / 10;
+    const opahWorkingHours = Math.round((grossHours - shiftPdiDeduct + shiftBeadAdd - shiftRtrShutdown) * 10) / 10;
     const totalHours = opahWorkingHours; // Set totalHours to Net OPAH Working Hours
 
     let tonnageKg = 0;
@@ -1732,6 +1811,7 @@ export function calculateOhpaSummary(
       monthlyHours,
       pdiDeductHours: shiftPdiDeduct,
       beadAddHours: shiftBeadAdd,
+      rtrShutdownHours: shiftRtrShutdown,
       opahWorkingHours,
       tonnageKg,
       tonnageTon: Math.round(tonnageTon * 1000) / 1000,
@@ -1840,6 +1920,18 @@ export function calculateOhpaSummary(
     };
   }
 
+  if (totalRtrShutdownHours > 0) {
+    const rtrKey = `RTR Shutdown Hour (หักชั่วโมง RTR Shutdown - ${totalRtrShutdownHours} ชม.)`;
+    deptMap[rtrKey] = {
+      isContractor: false,
+      isMonthly: false,
+      headcount: 0,
+      normalHours: -totalRtrShutdownHours,
+      otHours: 0,
+      totalHours: -totalRtrShutdownHours
+    };
+  }
+
   const departmentBreakdown: OhpaDeptMetrics[] = Object.entries(deptMap)
     .map(([dept, val]) => ({
       dept,
@@ -1880,6 +1972,7 @@ export function calculateOhpaSummary(
     beadAddHours: Math.round(beadAddHours * 10) / 10,
     bcaReductionHours: Math.round(bcaReductionHours * 10) / 10,
     bcaDevHours: Math.round(bcaDevHours * 10) / 10,
+    rtrShutdownHours: Math.round(totalRtrShutdownHours * 10) / 10,
     opahWorkingHours: Math.round(opahWorkingHours * 10) / 10,
 
     gyEmployeesCount,

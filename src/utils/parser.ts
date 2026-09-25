@@ -209,6 +209,57 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   return null;
 }
 
+export function cleanEmpScanClusters(empScans: RawScanRecord[]): RawScanRecord[] {
+  if (empScans.length <= 1) return empScans;
+  const sorted = [...empScans].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+  const cleaned: RawScanRecord[] = [];
+  let i = 0;
+  while (i < sorted.length) {
+    const cluster = [sorted[i]];
+    let j = i + 1;
+    while (j < sorted.length && (sorted[j].timestamp.getTime() - sorted[i].timestamp.getTime() <= 120 * 1000)) {
+      cluster.push(sorted[j]);
+      j++;
+    }
+    i = j;
+
+    if (cluster.length === 1) {
+      cleaned.push(cluster[0]);
+    } else {
+      const hasI = cluster.some(s => s.io === 'I');
+      const hasO = cluster.some(s => s.io === 'O');
+      if (hasI && hasO) {
+        const hasLater = sorted.some(s => s.timestamp.getTime() - cluster[cluster.length - 1].timestamp.getTime() > 4 * 3600 * 1000);
+        const hasEarlier = sorted.some(s => cluster[0].timestamp.getTime() - s.timestamp.getTime() > 4 * 3600 * 1000);
+
+        if (hasLater && !hasEarlier) {
+          // Definitely arriving for a shift (IN)
+          cleaned.push(cluster.find(s => s.io === 'I') || cluster[0]);
+        } else if (hasEarlier && !hasLater) {
+          // Definitely leaving a shift (OUT)
+          cleaned.push(cluster.find(s => s.io === 'O') || cluster[0]);
+        } else {
+          // Single standalone cluster in the day
+          const hh = cluster[0].timestamp.getHours();
+          const mm = cluster[0].timestamp.getMinutes();
+          const mins = hh * 60 + mm;
+          if (mins < 12 * 60) {
+            // Morning arrival (Shift 1)
+            cleaned.push(cluster.find(s => s.io === 'I') || cluster[0]);
+          } else {
+            // Afternoon/Night departure (Shift 1 or 2 exit)
+            cleaned.push(cluster.find(s => s.io === 'O') || cluster[0]);
+          }
+        }
+      } else {
+        cleaned.push(cluster[0]);
+      }
+    }
+  }
+  return cleaned;
+}
+
 export function processScanRecords(
   fileContent: string,
   employeeMap: Record<string, EmployeeInfo> = {},
@@ -324,15 +375,16 @@ export function processScanRecords(
     const empInfo: EmployeeInfo = employeeMap[empId] || { empId };
     const empAdjustments: DailyAdjustmentRecord[] = adjMap[empId] || [];
     const empAdjustment = empAdjustments[0];
-    const empScans = scansByEmp[empId];
-    const ins = empScans.filter(s => s.io === 'I');
-    const outs = empScans.filter(s => s.io === 'O');
+    const rawEmpScans = scansByEmp[empId] || [];
+    let empScans = cleanEmpScanClusters(rawEmpScans);
 
     // Filter out previous day's leftover clock-out punches:
-    // Case 1: The employee has NO IN scan (ins.length === 0) and only has OUT scans before 12:00 noon (00:00 - 11:59).
+    // Case 1: The employee has NO IN scan and only has OUT scans before 12:00 noon (00:00 - 11:59).
     // These are checkouts from yesterday's Shift 2 (overtime/midnight checkout 00:00 - 04:00) or Shift 3 (morning checkout 05:00 - 11:30).
-    if (ins.length === 0 && outs.length > 0) {
-      const allBeforeNoon = outs.every(s => s.timestamp.getHours() < 12);
+    const initialIns = empScans.filter(s => s.io === 'I');
+    const initialOuts = empScans.filter(s => s.io === 'O');
+    if (initialIns.length === 0 && initialOuts.length > 0) {
+      const allBeforeNoon = initialOuts.every(s => s.timestamp.getHours() < 12);
       if (allBeforeNoon) {
         return; // Skip ghost shift record from yesterday's checkout
       }
@@ -350,11 +402,16 @@ export function processScanRecords(
         const minTime = Math.min(...empScans.map(s => s.timestamp.getTime()));
         const maxTime = Math.max(...empScans.map(s => s.timestamp.getTime()));
         const spanMins = (maxTime - minTime) / (60 * 1000);
-        if (spanMins <= 30 && outs.length > 0) {
+        if (spanMins <= 30 && initialOuts.length > 0) {
           return; // Skip ghost shift record
         }
       }
     }
+
+    const ins = empScans.filter(s => s.io === 'I');
+    const outs = empScans.filter(s => s.io === 'O');
+
+    const isEmp01454 = empId === '01454' || empId === '1454' || (Boolean(empInfo.nameTH) && empInfo.nameTH.includes('มนตรี') && empInfo.nameTH.includes('สุขสนิท'));
 
     // Candidate sessions pairing each IN scan with its corresponding OUT scan (within 18 hours max)
     let inScan: RawScanRecord | null = null;
@@ -368,12 +425,24 @@ export function processScanRecords(
         provShift: ShiftType;
       }> = [];
 
-      for (const inS of ins) {
-        const prov = determineShift(inS.timestamp);
+      for (let idx = 0; idx < ins.length; idx++) {
+        const inS = ins[idx];
+        const nextIn = (idx + 1 < ins.length) ? ins[idx + 1] : null;
+        let prov = determineShift(inS.timestamp);
+        if (isEmp01454) {
+          const inHh = inS.timestamp.getHours();
+          if (inHh >= 1 && inHh <= 11) {
+            prov = 1;
+          }
+        }
         // Exclude outs at the exact same minute (< 60s) or > 18 hours after inScan
+        // Also if employee punched IN again >= 4 hours later (a new shift), outs after that next IN belong to the new shift session
         const validOuts = outs.filter(o => {
           const diffMs = o.timestamp.getTime() - inS.timestamp.getTime();
           if (diffMs <= 60 * 1000 || diffMs > 18 * 3600 * 1000) return false;
+          if (nextIn && (nextIn.timestamp.getTime() - inS.timestamp.getTime() >= 4 * 3600 * 1000) && o.timestamp.getTime() >= nextIn.timestamp.getTime()) {
+            return false;
+          }
           if (prov === 3) {
             const oh = o.timestamp.getHours();
             const om = o.timestamp.getMinutes();
@@ -385,29 +454,52 @@ export function processScanRecords(
         let outS: RawScanRecord | null = null;
         if (validOuts.length > 0) {
           outS = validOuts[validOuts.length - 1];
+        } else if (prov === 3) {
+          // In a single-day scan file, the Shift 3 morning checkout appears earlier in the file (05:00 - 11:30)
+          const morningOut = outs.find(o => {
+            const oh = o.timestamp.getHours();
+            const om = o.timestamp.getMinutes();
+            const omins = oh * 60 + om;
+            return omins >= 5 * 60 && omins <= 11 * 60 + 30;
+          });
+          if (morningOut) {
+            outS = morningOut;
+          }
         }
 
-        const durationHours = outS ? (outS.timestamp.getTime() - inS.timestamp.getTime()) / (3600 * 1000) : 0;
+        const durationHours = outS ? (outS.timestamp.getTime() > inS.timestamp.getTime() ? (outS.timestamp.getTime() - inS.timestamp.getTime()) / (3600 * 1000) : 8) : 0;
         candidateSessions.push({ inS, outS, durationHours, provShift: prov });
       }
 
-      // Sort candidate sessions: prefer valid full shift (>= 4h) over brief aborted punches (< 1.5h)
+      // Sort candidate sessions:
+      // 1. Prefer full valid shift (duration >= 4h) over brief aborted / wrong-shift punches (< 2h)
+      // 2. If both are full shifts or both are partial, prefer the latest IN timestamp (ยึดเวลาเข้าตัวล่าสุด และออกตัวล่าสุด)
       candidateSessions.sort((a, b) => {
-        if (a.durationHours >= 4 && b.durationHours < 1.5) return -1;
-        if (b.durationHours >= 4 && a.durationHours < 1.5) return 1;
-        return b.durationHours - a.durationHours;
+        const aIsFull = a.durationHours >= 4;
+        const bIsFull = b.durationHours >= 4;
+        if (aIsFull && !bIsFull) return -1;
+        if (!aIsFull && bIsFull) return 1;
+
+        return b.inS.timestamp.getTime() - a.inS.timestamp.getTime();
       });
 
       inScan = candidateSessions[0].inS;
       outScan = candidateSessions[0].outS;
     } else if (outs.length > 0) {
-      outScan = outs[0];
+      // Pick the latest OUT punch
+      outScan = outs[outs.length - 1];
     }
 
     // Determine provisional shift from inScan (or outs if no inScan)
     let provShift: ShiftType = 1;
     if (inScan) {
       provShift = determineShift(inScan.timestamp);
+      if (isEmp01454) {
+        const inHh = inScan.timestamp.getHours();
+        if (inHh >= 1 && inHh <= 11) {
+          provShift = 1;
+        }
+      }
     } else if (outScan) {
       provShift = determineShiftFromOut(outScan.timestamp);
     }
@@ -415,7 +507,6 @@ export function processScanRecords(
     // Determine shift
     let shiftNum: ShiftType = 1;
     let isPreShiftReliefOt = false;
-    const isEmp01454 = empId === '01454' || empId === '1454' || (Boolean(empInfo.nameTH) && empInfo.nameTH.includes('มนตรี') && empInfo.nameTH.includes('สุขสนิท'));
 
     if (isEmp01454) {
       // Special Case: Employee 01454 (มนตรี สุขสนิท)
@@ -580,25 +671,75 @@ export function processScanRecords(
       let preOtHours = 0;
       let postOtHours = 0;
 
-      if (hasApprovedTiming) {
-        // Custom approved schedule (e.g. 11:00 to 19:00 = 8h normal)
-        if (effectiveWorkHours >= 7.5) {
-          normalWorkHours = 8;
-          otHours = Math.max(0, Math.round(effectiveWorkHours - 8));
-        } else {
-          normalWorkHours = effectiveWorkHours;
-          otHours = 0;
+      // Check if custom start/end time is specified
+      const customStartStr = empAdjustment?.customStartTime;
+      const customEndStr = empAdjustment?.customEndTime;
+
+      let isStandardShiftAdjustment = false;
+      let isOtWindowForShift = false;
+      let customSpanHours = 8;
+
+      if (customStartStr) {
+        const [csH, csM] = customStartStr.split(':').map(Number);
+        const csMins = (csH || 0) * 60 + (csM || 0);
+
+        if (customEndStr) {
+          const [ceH, ceM] = customEndStr.split(':').map(Number);
+          let ceMins = (ceH || 0) * 60 + (ceM || 0);
+          if (ceMins <= csMins) ceMins += 24 * 60;
+          customSpanHours = (ceMins - csMins) / 60;
         }
+
+        if (customSpanHours === 8 && (csH === 7 || csH === 15 || csH === 23)) {
+          isStandardShiftAdjustment = true;
+        }
+
+        if (
+          isStandardShiftAdjustment ||
+          (shiftNum === 1 && csH === 15) ||
+          (shiftNum === 2 && csH === 23) ||
+          (shiftNum === 3 && csH === 7)
+        ) {
+          isOtWindowForShift = true;
+        }
+      }
+
+      if (hasApprovedTiming && !isOtWindowForShift) {
+        // Non-standard Custom approved schedule (e.g. 11:00 to 19:00, or 07:00 to 19:00 = 12h)
+        if (customSpanHours > 8) {
+          // Scheduled OT built into custom schedule (e.g. 12h shift = 8h normal + 4h OT)
+          preOtHours = Math.round(customSpanHours - 8);
+          normalWorkHours = 8;
+        } else {
+          normalWorkHours = Math.min(8, effectiveWorkHours);
+        }
+
+        // Post-shift OT beyond custom end time if stayed >= 53 mins past custom end (e.g. 1h OT at 16:00 = out >= 15:53)
+        if (customEndStr) {
+          const [ceH, ceM] = customEndStr.split(':').map(Number);
+          const ceMins = (ceH || 0) * 60 + (ceM || 0);
+          const isCrossDay = outHh < inHh || (outScan.timestamp.getTime() - inScan.timestamp.getTime() > 14 * 3600 * 1000);
+          const totalOutMins = isCrossDay && outHh < 12 ? (outHh + 24) * 60 + outMm : outMins;
+          const adjustedCeMins = isCrossDay && ceH < 12 ? (ceH + 24) * 60 + ceM : ceMins;
+          const minsPastEnd = totalOutMins - adjustedCeMins;
+          if (minsPastEnd >= 53) {
+            postOtHours = Math.floor((minsPastEnd + 7) / 60);
+          }
+        }
+
+        otHours = preOtHours + postOtHours;
       } else if (isEmp01454 && shiftNum === 1) {
         // Special 01454: Pre-shift OT before 07:00 (e.g. in at 02:51 -> 4h OT; in at 04:57 -> 2h OT)
         if (inMins < 7 * 60) {
           const preMins = 7 * 60 - inMins;
-          preOtHours = Math.floor((preMins + 15) / 60);
+          if (preMins >= 53) {
+            preOtHours = Math.floor((preMins + 7) / 60);
+          }
         }
-        // Post-shift OT after 15:00
+        // Post-shift OT after 15:00 (1h OT = 16:00, out >= 15:53)
         const minsPastShift = outMins - 15 * 60;
-        if (minsPastShift >= 45) {
-          postOtHours = Math.floor((minsPastShift + 15) / 60);
+        if (minsPastShift >= 53) {
+          postOtHours = Math.floor((minsPastShift + 7) / 60);
         }
         otHours = preOtHours + postOtHours;
         normalWorkHours = Math.min(8, Math.max(0, effectiveWorkHours - otHours));
@@ -610,32 +751,27 @@ export function processScanRecords(
           preOtHours = 4; // 19:00 - 23:00
         }
 
-        // 2. Post-shift OT (calculated as standard OT hours with transit/checkout grace buffer)
+        // 2. Post-shift OT (calculated as standard OT hours: 1h OT = 16:00 [out >= 15:53], 2h = 17:00 [out >= 16:53], 8h = 23:00 [out >= 22:53])
         if (shiftNum === 1) {
           // Shift 1: 07:00 to 15:00
           // Only consider crossing midnight if duration is long (> 14h) and outHh <= 12
           const isNextDay = (outScan.timestamp.getTime() - inScan.timestamp.getTime()) > 14 * 3600 * 1000 && outHh <= 12;
           const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
           const minsPastShift = totalOutMins - 15 * 60;
-          if (minsPastShift >= 45) { // At least 45 mins past shift end (1h OT = 16:00, 2h = 17:00, 3h = 18:00, 4h = 19:00, 8h = 23:00)
-            postOtHours = Math.floor((minsPastShift + 15) / 60);
+          if (minsPastShift >= 53) { // 1h OT = 16:00 (out >= 15:53), 2h = 17:00 (out >= 16:53), 8h = 23:00 (out >= 22:53)
+            postOtHours = Math.floor((minsPastShift + 7) / 60);
           }
         } else if (shiftNum === 2) {
           // Shift 2: 15:00 to 23:00
           const isNextDay = outHh < 12;
           const totalOutMins = isNextDay ? (outHh + 24) * 60 + outMm : outMins;
           const minsPastShift = totalOutMins - 23 * 60;
-          if (minsPastShift >= 45) {
-            postOtHours = Math.floor((minsPastShift + 15) / 60);
+          if (minsPastShift >= 53) { // 1h OT = 24:00 (out >= 23:53), 4h = 03:00 (out >= 02:53), 8h = 07:00 (out >= 06:53)
+            postOtHours = Math.floor((minsPastShift + 7) / 60);
           }
         } else if (shiftNum === 3) {
-          // Shift 3: 23:00 to 07:00 (No continuous OT into Shift 1; max handover up to 11:30)
-          if (outMins >= 7 * 60 + 45 && outMins <= 11 * 60 + 30) {
-            const minsPastShift = outMins - 7 * 60;
-            if (minsPastShift >= 45) {
-              postOtHours = Math.floor((minsPastShift + 15) / 60);
-            }
-          }
+          // Shift 3: 23:00 to 07:00 (No post-shift OT into Shift 1; morning checkout 07:00-08:30+ is handover/transit/wait for transport, NOT OT)
+          postOtHours = 0;
         }
 
         otHours = preOtHours + postOtHours;
@@ -646,8 +782,10 @@ export function processScanRecords(
         otNote = `OT ${otHours} ชม.`;
       }
     } else if (!inScan || !outScan) {
-      effectiveWorkHours = 0;
-      normalWorkHours = 0;
+      effectiveWorkHours = 8;
+      normalWorkHours = 8;
+      otHours = 0;
+      otNote = '-';
     }
 
     // Check Early Leave (scan out before official shift end)
@@ -759,8 +897,8 @@ export function processScanRecords(
       earlyLeaveHours,
       isEarlyScan: false,
       isPreShiftReliefOt,
-      hasMissingPunch: !inScan || !outScan,
-      missingPunchType: !inScan ? 'MISSING_IN' : (!outScan ? 'MISSING_OUT' : undefined),
+      hasMissingPunch: (!inScan || !outScan) && !(shiftNum === 3 && Boolean(inScan)),
+      missingPunchType: !inScan ? 'MISSING_IN' : (!outScan && !(shiftNum === 3 && Boolean(inScan)) ? 'MISSING_OUT' : undefined),
       manpowerStatus: 'EXACT',
       manpowerStatusLabel: 'จัดคนพอดี',
       adjustmentInfo: empAdjustment,

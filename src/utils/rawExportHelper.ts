@@ -46,6 +46,7 @@ export interface TeamSummaryRow {
   beadAddHours?: number;
   bcaReductionHours?: number;
   bcaDevHours?: number;
+  rtrShutdownHours?: number;
   retreadReceivedHours?: number;
   netOpahHours: number;
   tonnageCodes?: string;
@@ -305,6 +306,7 @@ export function buildRawEmployeeRecords(
       beadAddHours: a.beadAddHours || 0,
       bcaReductionHours: a.bcaReductionHours || 0,
       bcaDevHours: a.bcaDevHours || 0,
+      rtrShutdownHours: a.rtrShutdownHours || 0,
       retreadReceivedHours: a.retreadReceivedHours || 0,
       netOpahHours: a.finalOpahHours ?? a.totalHours,
       tonnageCodes: a.areaTonnageCodes || '-',
@@ -348,6 +350,7 @@ export function buildRawEmployeeRecords(
           beadAddHours: 0,
           bcaReductionHours: 0,
           bcaDevHours: 0,
+          rtrShutdownHours: Math.round(((biasSum?.rtrShutdownHours || 0) + (radSum?.rtrShutdownHours || 0)) * 10) / 10,
           retreadReceivedHours: 0,
           netOpahHours: avNetH,
           tonnageCodes: 'CODE A + B + 6',
@@ -427,13 +430,14 @@ export function buildRawEmployeeRecords(
 
     if (teamSummaryMap['BCA']) {
       const bca = teamSummaryMap['BCA'];
-      bca.beadAddHours = beadAdd;
       bca.bcaReductionHours = bcaReduction;
       bca.bcaDevHours = bcaDev;
-      bca.netOpahHours = Math.round((bca.totalHours + beadAdd - bcaReduction - bcaDev) * 10) / 10;
+      bca.netOpahHours = Math.max(0, Math.round((bca.totalHours - bcaReduction - bcaDev) * 10) / 10);
     }
     if (teamSummaryMap['Consumer']) {
-      teamSummaryMap['Consumer'].netOpahHours = teamSummaryMap['Consumer'].totalHours;
+      const cons = teamSummaryMap['Consumer'];
+      cons.beadAddHours = beadAdd;
+      cons.netOpahHours = Math.round((cons.totalHours + beadAdd) * 10) / 10;
     }
     if (teamSummaryMap['Bias Aero']) {
       const bias = teamSummaryMap['Bias Aero'];
@@ -586,6 +590,7 @@ export function exportTeamRawDataExcel(
     '🟢 Bead Add (ชม.)': s.beadAddHours ? `+${s.beadAddHours}` : 0,
     '🔄 BCA หักโอน (ชม.)': s.bcaReductionHours ? `-${s.bcaReductionHours}` : 0,
     '🧪 BCA DEV (ชม.)': s.bcaDevHours ? `-${s.bcaDevHours}` : 0,
+    '⚠️ RTR Shutdown (ชม.)': s.rtrShutdownHours ? `-${s.rtrShutdownHours}` : 0,
     '📥 Retread รับโอน (ชม.)': s.retreadReceivedHours ? `+${s.retreadReceivedHours}` : 0,
     '⭐ ชม. สุทธิคิด OPAH (ชม.)': s.netOpahHours,
     'รหัส Stocking 55012 / SAP': s.tonnageCodes || '-',

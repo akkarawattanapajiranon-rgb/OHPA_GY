@@ -627,6 +627,15 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           ? `/l2web/datahost/all_areas/dpics.php?server=db_server&action=r06&mt=TBM&smt=TBM&pd=${pdParam}`
           : '/l2web/datahost/all_areas/dpics.php?server=db_server&action=r06';
 
+        // Load all available daily stocking reports
+        let dailyReportsCache: Record<string, any> = {};
+        const liveStockingFile = path.resolve(__dirname, 'scripts/live_september_stocking.json');
+        if (fs.existsSync(liveStockingFile)) {
+          try {
+            dailyReportsCache = JSON.parse(fs.readFileSync(liveStockingFile, 'utf8'));
+          } catch (e) {}
+        }
+
         const reqOptions = {
           hostname: '10.124.129.34',
           port: 443,
@@ -701,15 +710,31 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                 }
               });
 
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({
-                success: true,
+              const currentReport = {
                 productionDay: activeDayLabel || (pdParam ? `${pdParam.slice(6,8)}/${pdParam.slice(4,6)}/${pdParam.slice(0,4)}` : '-'),
                 productionDayValue: pdParam || availableDates[0]?.value || '',
                 availableDates,
                 rows,
                 total: totalRow,
                 fetchedAt: new Date().toISOString()
+              };
+
+              if (pdParam && currentReport.total) {
+                const dPad = pdParam.slice(6, 8);
+                const mPad = pdParam.slice(4, 6);
+                const yyyy = pdParam.slice(0, 4);
+                const dNum = parseInt(dPad, 10);
+                const mNum = parseInt(mPad, 10);
+                dailyReportsCache[`${yyyy}-${mPad}-${dPad}`] = currentReport;
+                dailyReportsCache[`${dPad}/${mPad}/${yyyy}`] = currentReport;
+                dailyReportsCache[`${dNum}/${mNum}/${yyyy}`] = currentReport;
+              }
+
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({
+                success: true,
+                ...currentReport,
+                dailyReportsByDate: dailyReportsCache
               }));
             } catch (parseErr: any) {
               res.statusCode = 500;
@@ -726,25 +751,15 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
             success: false,
             message: `ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์รายงาน 55012 (10.124.129.34): ${err.message}`,
             isMock: true,
-            productionDay: '14/09/2026',
-            productionDayValue: '20260914000000',
+            productionDay: '18/09/2026',
+            productionDayValue: '20260918000000',
+            dailyReportsByDate: dailyReportsCache,
             availableDates: [
-              { value: '20260915000000', label: '15/09/2026', selected: false },
-              { value: '20260914000000', label: '14/09/2026', selected: true },
-              { value: '20260913000000', label: '13/09/2026', selected: false },
-              { value: '20260912000000', label: '12/09/2026', selected: false }
+              { value: '20260918000000', label: '18/09/2026', selected: true },
+              { value: '20260917000000', label: '17/09/2026', selected: false }
             ],
-            rows: [
-              { code: '6', categoryName: 'Aero Radial', mtdTonnage: 145348, mtdPallets: 2498, shift1Tonnage: 5091, shift1Pallets: 70, shift2Tonnage: 4992, shift2Pallets: 70, shift3Tonnage: 2188, shift3Pallets: 66, dailyTotalTonnage: 12271, dailyTotalPallets: 206 },
-              { code: 'A', categoryName: 'Aircraft', mtdTonnage: 7041, mtdPallets: 1601, shift1Tonnage: 33, shift1Pallets: 7, shift2Tonnage: 202, shift2Pallets: 43, shift3Tonnage: 157, shift3Pallets: 33, dailyTotalTonnage: 392, dailyTotalPallets: 83 },
-              { code: 'B', categoryName: 'Aircraft High Performance', mtdTonnage: 207241, mtdPallets: 4198, shift1Tonnage: 4524, shift1Pallets: 84, shift2Tonnage: 4767, shift2Pallets: 107, shift3Tonnage: 5254, shift3Pallets: 119, dailyTotalTonnage: 14545, dailyTotalPallets: 310 },
-              { code: 'D', categoryName: 'Passenger Radial', mtdTonnage: 0, mtdPallets: 0, shift1Tonnage: 0, shift1Pallets: 0, shift2Tonnage: 0, shift2Pallets: 0, shift3Tonnage: 0, shift3Pallets: 0, dailyTotalTonnage: 0, dailyTotalPallets: 0 },
-              { code: 'P', categoryName: 'Pass Conv Spare', mtdTonnage: 0, mtdPallets: 0, shift1Tonnage: 0, shift1Pallets: 0, shift2Tonnage: 0, shift2Pallets: 0, shift3Tonnage: 0, shift3Pallets: 0, dailyTotalTonnage: 0, dailyTotalPallets: 0 },
-              { code: 'Q', categoryName: 'Passenger Radial', mtdTonnage: 123786, mtdPallets: 11278, shift1Tonnage: -516, shift1Pallets: -41, shift2Tonnage: 4123, shift2Pallets: 380, shift3Tonnage: 2532, shift3Pallets: 240, dailyTotalTonnage: 6139, dailyTotalPallets: 579 },
-              { code: 'T', categoryName: 'Bias Truck', mtdTonnage: 0, mtdPallets: 0, shift1Tonnage: 0, shift1Pallets: 0, shift2Tonnage: 0, shift2Pallets: 0, shift3Tonnage: 0, shift3Pallets: 0, dailyTotalTonnage: 0, dailyTotalPallets: 0 },
-              { code: 'W', categoryName: 'ULT', mtdTonnage: 848420, mtdPallets: 60028, shift1Tonnage: 9284, shift1Pallets: 652, shift2Tonnage: 22660, shift2Pallets: 1621, shift3Tonnage: 18551, shift3Pallets: 1279, dailyTotalTonnage: 50495, dailyTotalPallets: 3552 }
-            ],
-            total: { code: 'TOTAL', categoryName: 'TOTAL', mtdTonnage: 1331836, mtdPallets: 79603, shift1Tonnage: 18416, shift1Pallets: 772, shift2Tonnage: 36744, shift2Pallets: 2221, shift3Tonnage: 28682, shift3Pallets: 1737, dailyTotalTonnage: 83842, dailyTotalPallets: 4730 }
+            rows: dailyReportsCache['18/09/2026']?.rows || [],
+            total: dailyReportsCache['18/09/2026']?.total || null
           }));
         });
 
@@ -754,7 +769,8 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           res.end(JSON.stringify({
             success: false,
             message: 'Timeout connecting to 10.124.129.34',
-            isMock: true
+            isMock: true,
+            dailyReportsByDate: dailyReportsCache
           }));
         });
 

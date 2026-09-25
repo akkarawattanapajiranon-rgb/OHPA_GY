@@ -474,6 +474,10 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                     <td className="py-2.5 px-3 text-center font-mono">
                       {r.outTimeFormatted !== '-' ? (
                         <span className="font-medium text-slate-800">{r.outTimeFormatted}</span>
+                      ) : r.shift === 3 && r.inTimeFormatted !== '-' ? (
+                        <span className="inline-flex items-center gap-1 text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-[11px] font-medium" title="กะดึก (23:00 - 07:00 น.) สแกนออกเช้าวันรุ่งขึ้น">
+                          🌙 ออกวันถัดไป (~07:00 น.)
+                        </span>
                       ) : (
                         <span className="text-rose-500 font-semibold text-[11px]">ไม่พบสแกนออก</span>
                       )}
@@ -514,10 +518,10 @@ export const EmployeeDetailTable: React.FC<EmployeeDetailTableProps> = ({
                           <AlertTriangle className="w-3 h-3 text-rose-500" />
                           สาย ({r.lateMinutes} นาที)
                         </span>
-                      ) : r.inTimeFormatted !== '-' && r.outTimeFormatted !== '-' ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold text-[11px]">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                          ตรงเวลา
+                      ) : (r.inTimeFormatted !== '-' && r.outTimeFormatted !== '-') || (r.shift === 3 && r.inTimeFormatted !== '-') ? (
+                        <span className={`inline-flex items-center gap-1 font-semibold text-[11px] ${r.shift === 3 && r.outTimeFormatted === '-' ? 'text-indigo-700' : 'text-emerald-700'}`}>
+                          <CheckCircle2 className={`w-3 h-3 ${r.shift === 3 && r.outTimeFormatted === '-' ? 'text-indigo-500' : 'text-emerald-500'}`} />
+                          {r.shift === 3 && r.outTimeFormatted === '-' ? 'ตรงเวลา (กะดึก)' : 'ตรงเวลา'}
                         </span>
                       ) : (
                         <span className="text-slate-400 font-mono">-</span>

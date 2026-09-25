@@ -53,8 +53,8 @@ export function calculateContractorShiftAndHours(
       const isNextDay = outHour < 12 && (outHour * 60 + outMin < inTotalMins);
       const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
       const minsPast15 = totalOutMins - 15 * 60;
-      if (minsPast15 >= 45) {
-        otHours = Math.floor((minsPast15 + 15) / 60);
+      if (minsPast15 >= 53) {
+        otHours = Math.floor((minsPast15 + 7) / 60);
       } else if (otCol > 0) {
         otHours = otCol;
       }
@@ -76,8 +76,8 @@ export function calculateContractorShiftAndHours(
       const isNextDay = outHour < 12;
       const totalOutMins = isNextDay ? (outHour + 24) * 60 + outMin : (outHour * 60 + outMin);
       const minsPast23 = totalOutMins - 23 * 60;
-      if (minsPast23 >= 45) {
-        otHours = Math.floor((minsPast23 + 15) / 60);
+      if (minsPast23 >= 53) {
+        otHours = Math.floor((minsPast23 + 7) / 60);
       } else if (otCol > 0) {
         otHours = otCol;
       }
@@ -103,9 +103,6 @@ export function calculateContractorShiftAndHours(
     shiftNumber = 3;
     if (otCol > 0) {
       otHours = otCol;
-      shiftLabel = `กะ 3 + OT ${otHours}h`;
-    } else if (outHour >= 7 && (outHour * 60 + outMin - 7 * 60 >= 45)) {
-      otHours = Math.floor(((outHour * 60 + outMin - 7 * 60) + 15) / 60);
       shiftLabel = `กะ 3 + OT ${otHours}h`;
     } else {
       shiftLabel = 'กะ 3 (23:00 - 07:00)';

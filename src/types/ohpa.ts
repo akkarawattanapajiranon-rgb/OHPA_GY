@@ -46,6 +46,7 @@ export interface OhpaShiftMetrics {
   monthlyHours?: number;
   pdiDeductHours?: number;
   beadAddHours?: number;
+  rtrShutdownHours?: number;
   opahWorkingHours?: number;
   tonnageKg: number;
   tonnageTon: number;
@@ -119,6 +120,7 @@ export interface OhpaAreaMetrics {
   pdiDeductHours?: number;
   bcaReductionHours?: number;
   bcaDevHours?: number;
+  rtrShutdownHours?: number;
   retreadReceivedHours?: number;
   finalOpahHours?: number;
   percentageOfTotalHours: number;
@@ -144,6 +146,7 @@ export interface DailyMtdItem {
   beadAddHours: number;
   bcaReductionHours?: number;
   bcaDevHours?: number;
+  rtrShutdownHours?: number;
   opahWorkingHours: number;
   cumulativeTotalHours: number;
   cumulativeOpahWorkingHours?: number;
@@ -165,6 +168,7 @@ export interface MtdOhpaSummary {
   mtdBeadAddHours: number;
   mtdBcaReductionHours?: number;
   mtdBcaDevHours?: number;
+  mtdRtrShutdownHours?: number;
   mtdOpahWorkingHours: number;
   mtdStockingKg: number;
   mtdStockingLbs: number;
@@ -190,6 +194,7 @@ export interface OhpaSummary {
   beadAddHours: number;
   bcaReductionHours?: number;
   bcaDevHours?: number;
+  rtrShutdownHours?: number;
   retreadReceivedHours?: number;
   opahWorkingHours: number;
 
