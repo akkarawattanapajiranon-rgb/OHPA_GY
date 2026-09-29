@@ -1,7 +1,6 @@
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
-import { MonthlyStaffMetrics } from '../types/ohpa';
-import { getMonthlyStaffMetrics, getMonthShiftCycleInfo, getPreviousMonthShift3Records } from './ohpaCalculator';
+import { getMonthShiftCycleInfo, getPreviousMonthShift3Records } from './ohpaCalculator';
 
 export type FunctionType = 'PRODUCTION' | 'QTECH' | 'ENG' | 'SHARE';
 export type EmploymentType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'MONTHLY';
@@ -136,29 +135,36 @@ export interface PlantClassification {
   machineName: string;
 }
 
+export function extractCleanCostCenter(costCenter?: string, dept?: string): string {
+  let cc = (costCenter || '').trim().toUpperCase();
+  if (!cc && dept) {
+    const match = dept.trim().toUpperCase().match(/^[A-Z]?\d+/);
+    if (match) cc = match[0];
+  }
+  return cc;
+}
+
 export function classifyPlantLocation(dept: string, costCenter: string, position: string, machine: string): PlantClassification {
+  const cc = extractCleanCostCenter(costCenter, dept);
   const d = (dept || '').toUpperCase();
-  const cc = (costCenter || '').trim();
   const p = (position || '').toUpperCase();
   const m = (machine || '').toUpperCase();
   const combined = `${d} ${cc} ${p} ${m}`;
 
-  // 1. RETREAD (6320)
-  if (cc === '6320' || d.includes('6320') || combined.includes('RETREAD')) {
-    let subMachine = 'Build';
+  // 1. RETREAD PLANT (Cost Centers: 6320, 6300)
+  if (cc === '6320' || cc === '6300' || d.startsWith('6') || combined.includes('RETREAD')) {
+    let subMachine = 'Build & Prep';
     let machineKey = 'RETREAD_BUILD';
+
     if (combined.includes('BUFF') || combined.includes('ขัด')) {
-      subMachine = 'Buff';
+      subMachine = 'Buffing';
       machineKey = 'RETREAD_BUFF';
     } else if (combined.includes('CURE') || combined.includes('CURING') || combined.includes('อบ')) {
-      subMachine = 'Cure';
+      subMachine = 'Curing';
       machineKey = 'RETREAD_CURE';
     } else if (combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('ตรวจ')) {
-      subMachine = 'Finish';
+      subMachine = 'Final Inspection';
       machineKey = 'RETREAD_FINISH';
-    } else {
-      subMachine = 'Build';
-      machineKey = 'RETREAD_BUILD';
     }
 
     return {
@@ -167,35 +173,35 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       processKey: 'RETREAD_OPS',
       processName: 'Retread Operations',
       machineKey,
-      machineName: subMachine
+      machineName: `CC ${cc || '6320'} - ${subMachine}`
     };
   }
 
-  // 2. AERO (Aviation: Bias & Radial)
+  // 2. AERO (AVIATION) - BIAS (A5110, A5120, A5130, 5210, 5230) & RADIAL (S5110, S5120, S5130, 5310, 5330)
   if (
-    d.startsWith('A') ||
+    cc.startsWith('A5') ||
+    cc.startsWith('S5') ||
+    ['5210', '5230', '5310', '5330'].includes(cc) ||
+    d.startsWith('A5') ||
+    d.startsWith('S5') ||
     d.includes('AERO') ||
     d.includes('AVIATION') ||
-    cc.startsWith('A') ||
     combined.includes('AERO') ||
-    combined.includes('AVIATION') ||
-    combined.includes('เครื่องบิน') ||
-    cc === '5210' ||
-    cc === '5230' ||
-    cc === '5310' ||
-    cc === '5330'
+    combined.includes('เครื่องบิน')
   ) {
-    const isRadial = combined.includes('RADIAL') || combined.includes('A5110R') || combined.includes('A5130R') || cc === '5310' || cc === '5330' || d.startsWith('S') || cc.startsWith('S');
+    const isRadial = cc.startsWith('S5') || cc === '5310' || cc === '5330' || d.startsWith('S5') || combined.includes('RADIAL');
     const subProcessKey = isRadial ? 'RADIAL' : 'BIAS';
     const subProcessName = isRadial ? 'Radial Aero' : 'Bias Aero';
 
-    let subMachine = 'Build';
-    if (combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('TEST') || combined.includes('X-RAY') || combined.includes('FINAL')) {
-      subMachine = 'Finishing';
-    } else if (combined.includes('CURE') || combined.includes('CURING') || combined.includes('เตาอบ') || d.includes('5130') || d.includes('5230') || d.includes('5330')) {
+    let subMachine = 'Building';
+    let machineKey = `AERO_${subProcessKey}_BUILD`;
+
+    if (cc.endsWith('20') || cc === '5230' || cc === '5330' || combined.includes('CURE') || combined.includes('CURING') || combined.includes('เตาอบ')) {
       subMachine = 'Curing';
-    } else {
-      subMachine = 'Build';
+      machineKey = `AERO_${subProcessKey}_CURING`;
+    } else if (cc.endsWith('30') || combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('TEST') || combined.includes('X-RAY')) {
+      subMachine = 'Finishing';
+      machineKey = `AERO_${subProcessKey}_FINISHING`;
     }
 
     return {
@@ -203,87 +209,77 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       teamName: 'Aero (Aviation)',
       processKey: subProcessKey,
       processName: subProcessName,
-      machineKey: `AERO_${subProcessKey}_${subMachine.toUpperCase()}`,
-      machineName: subMachine
+      machineKey,
+      machineName: `CC ${cc || (isRadial ? 'S5110' : 'A5110')} - ${subMachine}`
     };
   }
 
-  // 3. CONSUMER (Passenger & Light Truck: 5110, 5130)
+  // 3. CONSUMER (5110 Building, 5120 Curing, 5130 Final Finish)
   if (
-    cc === '5110' ||
-    cc === '5130' ||
-    d.includes('5110') ||
-    d.includes('5130') ||
+    ['5110', '5120', '5130'].includes(cc) ||
+    d.startsWith('5110') ||
+    d.startsWith('5120') ||
+    d.startsWith('5130') ||
     combined.includes('CONSUMER') ||
     combined.includes('VMI') ||
     combined.includes('R.25') ||
-    combined.includes('R25') ||
-    combined.includes('FINAL FINISH') ||
-    (combined.includes('CURING') && !combined.includes('BCA'))
+    combined.includes('R25')
   ) {
-    const isBuild = cc === '5110' || d.includes('5110') || combined.includes('BUILD') || combined.includes('VMI') || combined.includes('R25') || combined.includes('R.25');
+    const isBuild = cc === '5110' || d.startsWith('5110') || combined.includes('BUILD') || combined.includes('VMI') || combined.includes('R25') || combined.includes('R.25');
 
     if (isBuild) {
       const isVmi = combined.includes('VMI');
-      const subMachine = isVmi ? 'VMI' : 'R.25';
       return {
         teamKey: 'CONSUMER',
         teamName: 'Consumer',
         processKey: 'BUILD',
         processName: 'Build (Building)',
-        machineKey: `CONSUMER_BUILD_${isVmi ? 'VMI' : 'R25'}`,
-        machineName: subMachine
+        machineKey: isVmi ? 'CONSUMER_BUILD_VMI' : 'CONSUMER_BUILD_R25',
+        machineName: isVmi ? 'CC 5110 - VMI' : 'CC 5110 - R.25'
       };
     } else {
-      const isFF = combined.includes('FINAL') || combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('TRIM') || combined.includes('UNIFORM') || combined.includes('X-RAY');
-      const subMachine = isFF ? 'Final Finish' : 'Curing';
+      const isCuring = cc === '5120' || d.startsWith('5120') || combined.includes('CURE') || combined.includes('CURING');
       return {
         teamKey: 'CONSUMER',
         teamName: 'Consumer',
         processKey: 'FF_CURING',
         processName: 'FF/Curing (Final Finish & Curing)',
-        machineKey: `CONSUMER_FF_${isFF ? 'FINAL_FINISH' : 'CURING'}`,
-        machineName: subMachine
+        machineKey: isCuring ? 'CONSUMER_FF_CURING' : 'CONSUMER_FF_FINAL_FINISH',
+        machineName: isCuring ? 'CC 5120 - Curing' : 'CC 5130 - Final Finish'
       };
     }
   }
 
-  // 4. BCA (Banbury, Calender, Stock Prep & Components: 3200, 3300, 4110, 4120, 4130, 4200, 4300)
-  const isMixExtrusion =
-    (cc === '3200' ||
-    cc === '4300' ||
+  // 4. BCA (Banbury, Calender, Stock Prep, Extrusion)
+  // Cost Centers: 3200 (Banbury), 3300 (Cement), 3700 (Mix Support), 4300 (Tuber/Quad)
+  // Cost Centers: 4110 (Calender), 4120 (Steel Calender), 4130 (Bead/Band 72), 4140 (Bladder/Tube), 4200 (Apex/Hex Bead)
+  const isMix =
+    ['3200', '3300', '3700', '4300'].includes(cc) ||
+    cc.startsWith('3') ||
+    d.startsWith('3') ||
     combined.includes('BANBURY') ||
     combined.includes('MIXER') ||
     combined.includes('PIGMENT') ||
     combined.includes('EXTRU') ||
     combined.includes('TUBER') ||
-    combined.includes('6"X8"') ||
-    combined.includes('6X8') ||
-    combined.includes('QUAD')) &&
-    !combined.includes('4ROLL') &&
-    !combined.includes('CALENDER') &&
-    !combined.includes('CEMENT') &&
-    !combined.includes('3ROLL');
+    combined.includes('QUAD');
 
-  if (isMixExtrusion) {
-    let subMachine = '430 6"x8" Tuber';
-    let machineKey = '430_6X8_TUBER';
+  if (isMix) {
+    let subMachine = '320 BANBURY # 1';
+    let machineKey = '320_BANBURY_1';
 
-    if (combined.includes('BANBURY # 1') || combined.includes('BANBURY #1') || combined.includes('MIXER 1') || combined.includes('BB1')) {
-      subMachine = '320 BANBURY # 1';
+    if (cc === '3300' || combined.includes('CEMENT')) {
+      subMachine = '330 Cement House';
       machineKey = '320_BANBURY_1';
-    } else if (combined.includes('BANBURY # 2') || combined.includes('BANBURY #2') || combined.includes('MIXER 2') || combined.includes('BB2')) {
+    } else if (cc === '4300' || combined.includes('QUAD') || combined.includes('6X8') || combined.includes('6"X8"')) {
+      subMachine = combined.includes('QUAD') ? '430 Quad' : '430 6"x8" Tuber';
+      machineKey = combined.includes('QUAD') ? '430_QUAD' : '430_6X8_TUBER';
+    } else if (combined.includes('BANBURY # 2') || combined.includes('BANBURY #2') || combined.includes('BB2')) {
       subMachine = '320 BANBURY # 2';
       machineKey = '320_BANBURY_2';
     } else if (combined.includes('PIGMENT')) {
       subMachine = '320 Pigment';
       machineKey = '320_PIGMENT';
-    } else if (combined.includes('QUAD')) {
-      subMachine = '430 Quad';
-      machineKey = '430_QUAD';
-    } else {
-      subMachine = '430 6"x8" Tuber';
-      machineKey = '430_6X8_TUBER';
     }
 
     return {
@@ -292,55 +288,46 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       processKey: 'MIX_EXTRUSION',
       processName: 'Mix & Extrusion',
       machineKey,
-      machineName: subMachine
+      machineName: `CC ${cc || '3200'} - ${subMachine}`
     };
   } else {
-    // Component Prep (13 specific machines from Team A standard list)
+    // Component Prep (4110, 4120, 4130, 4140, 4200, etc.)
     let subMachine = '411 4Roll#1';
     let machineKey = '411_4ROLL_1';
 
-    if (combined.includes('3ROLL') || combined.includes('3-ROLL') || combined.includes('3 ROLL') || combined.includes('CEMENT') || cc === '3300' || cc === '3700') {
-      subMachine = '3roll + Cement (3300/3700)';
-      machineKey = '3ROLL_CEMENT_3300_3700';
-    } else if (combined.includes('4ROLL#2') || combined.includes('4 ROLL #2') || combined.includes('4ROLL # 2') || combined.includes('4 ROLL#2') || combined.includes('4ROLL 2')) {
+    if (cc === '4120' || combined.includes('BAND54') || combined.includes('BAND 54')) {
+      subMachine = '412 Band54"';
+      machineKey = '412_BAND_54';
+    } else if (cc === '4130' || combined.includes('BAND72') || combined.includes('BAND 72')) {
+      subMachine = '413 Band72"';
+      machineKey = '413_BAND_72';
+    } else if (cc === '4200' || combined.includes('HEX BEAD') || combined.includes('HEXBEAD')) {
+      subMachine = '420 Hex Bead';
+      machineKey = '420_HEX_BEAD';
+    } else if (combined.includes('HOT APEX') || combined.includes('APEXER')) {
+      subMachine = '420 Hot apexer';
+      machineKey = '420_HOT_APEXER';
+    } else if (combined.includes('BEAD FLAP')) {
+      subMachine = '420 Bead Flap';
+      machineKey = '420_BEAD_FLAP';
+    } else if (combined.includes('BEAD INSUL')) {
+      subMachine = '420 Bead insulation';
+      machineKey = '420_BEAD_INSULATION';
+    } else if (combined.includes('BEAD WRAP')) {
+      subMachine = '420 Bead Wrap';
+      machineKey = '420_BEAD_WRAP';
+    } else if (combined.includes('4ROLL#2') || combined.includes('4 ROLL #2') || combined.includes('4ROLL 2')) {
       subMachine = '411 4Roll#2';
       machineKey = '411_4ROLL_2';
-    } else if (combined.includes('4ROLL#1') || combined.includes('4 ROLL #1') || combined.includes('4ROLL # 1') || combined.includes('4 ROLL#1') || combined.includes('4-ROLL CALENDER') || combined.includes('4ROLL 1')) {
-      subMachine = '411 4Roll#1';
-      machineKey = '411_4ROLL_1';
     } else if (combined.includes('CHAFER')) {
       subMachine = '411 Chafer lay up';
       machineKey = '411_CHAFER_LAY_UP';
     } else if (combined.includes('LUX') || combined.includes('SLITTER')) {
       subMachine = '411 Lux/slitter';
       machineKey = '411_LUX_SLITTER';
-    } else if (combined.includes('SHEAR') || combined.includes('FISCER') || combined.includes('FISCHER')) {
+    } else if (combined.includes('SHEAR') || combined.includes('FISCER')) {
       subMachine = '411 Shear Fiscer';
       machineKey = '411_SHEAR_FISCER';
-    } else if (combined.includes('BAND72') || combined.includes('BAND 72') || cc === '4130') {
-      subMachine = '413 Band72"';
-      machineKey = '413_BAND_72';
-    } else if (combined.includes('BAND54') || combined.includes('BAND 54') || combined.includes('BAND') || cc === '4120') {
-      subMachine = '412 Band54"';
-      machineKey = '412_BAND_54';
-    } else if (combined.includes('BEAD FLAP') || combined.includes('BEADFLAP')) {
-      subMachine = '420 Bead Flap';
-      machineKey = '420_BEAD_FLAP';
-    } else if (combined.includes('BEAD INSUL') || combined.includes('INSULATION')) {
-      subMachine = '420 Bead insulation';
-      machineKey = '420_BEAD_INSULATION';
-    } else if (combined.includes('BEAD WRAP') || combined.includes('BEADWRAP')) {
-      subMachine = '420 Bead Wrap';
-      machineKey = '420_BEAD_WRAP';
-    } else if (combined.includes('HOT APEX') || combined.includes('HOTAPEX') || combined.includes('APEXER')) {
-      subMachine = '420 Hot apexer';
-      machineKey = '420_HOT_APEXER';
-    } else if (combined.includes('HEX BEAD') || combined.includes('HEXBEAD') || combined.includes('BEAD') || cc === '4200') {
-      subMachine = '420 Hex Bead';
-      machineKey = '420_HEX_BEAD';
-    } else {
-      subMachine = '411 4Roll#1';
-      machineKey = '411_4ROLL_1';
     }
 
     return {
@@ -349,7 +336,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       processKey: 'COMPONENT_PREP',
       processName: 'Component Prep',
       machineKey,
-      machineName: subMachine
+      machineName: `CC ${cc || '4110'} - ${subMachine}`
     };
   }
 }
@@ -366,7 +353,6 @@ export function buildPlantHierarchyTree(
   categoryFilter: 'ALL' | 'PRODUCTION' | 'ENG' | 'QTECH' | 'WAS' = 'ALL'
 ): { root: HierarchyNode; allWorkers: HierarchyWorker[] } {
   const allWorkers: HierarchyWorker[] = [];
-  const monthlyMetrics = getMonthlyStaffMetrics(currentDateFormatted);
   const cycleInfo = getMonthShiftCycleInfo(currentDateFormatted);
 
   let activeGyRecords = [...gyRecords];
@@ -387,15 +373,7 @@ export function buildPlantHierarchyTree(
     activeContRecords = activeContRecords.filter(r => r.shiftNumber !== 3);
   }
 
-  // Helper to get MU
-  const getEmpMu = (empId: string, fallbackMu?: string, category?: string, dept?: string, costCenter?: string): string => {
-    const emp = employeeMapping[empId] || employeeMapping[empId.replace(/^0+/, '')] || employeeMapping[empId.padStart(5, '0')];
-    if (emp?.mu) return emp.mu.trim();
-    if (fallbackMu) return fallbackMu.trim();
-    return 'Non-HPT';
-  };
-
-  // 1. Process GY Hourly Records
+  // 1. Process GY Hourly Records strictly by Department & Cost Center
   activeGyRecords.forEach(r => {
     if (categoryFilter === 'WAS') return; // GY workers are not WAS
     if (shiftFilter !== 'ALL' && r.shift !== shiftFilter) return;
@@ -417,52 +395,7 @@ export function buildPlantHierarchyTree(
 
     const fnLabel = fnType === 'PRODUCTION' ? 'Production' : (fnType === 'QTECH' ? 'Qtech' : (fnType === 'ENG' ? 'Eng' : 'Share'));
     const loc = classifyPlantLocation(dept, cc, pos, mach);
-    const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
     const baseName = r.nameTH || r.nameEN || empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${r.empId}`;
-
-    let teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' = 'BCA';
-    let teamName = 'BCA';
-    let processKey = loc.processKey;
-    let processName = loc.processName;
-    let machineKey = loc.machineKey;
-    let machineName = loc.machineName;
-
-    if (mu === 'BCA') {
-      teamKey = 'BCA';
-      teamName = 'BCA';
-      processKey = loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP';
-      processName = loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep';
-    } else if (mu === 'Consumer') {
-      teamKey = 'CONSUMER';
-      teamName = 'Consumer';
-      processKey = loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING';
-      processName = loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)';
-    } else if (mu === 'Bias Aero') {
-      teamKey = 'AERO';
-      teamName = 'Aero (Aviation)';
-      processKey = 'BIAS';
-      processName = 'Bias Aero';
-      machineKey = loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD'));
-    } else if (mu === 'Radial Aero') {
-      teamKey = 'AERO';
-      teamName = 'Aero (Aviation)';
-      processKey = 'RADIAL';
-      processName = 'Radial Aero';
-      machineKey = loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD'));
-    } else if (mu === 'Retread') {
-      teamKey = 'RETREAD';
-      teamName = 'Retread Plant';
-      processKey = 'RETREAD_OPS';
-      processName = 'Retread Operations';
-      machineKey = loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD';
-    } else {
-      teamKey = loc.teamKey;
-      teamName = loc.teamName;
-      processKey = loc.processKey;
-      processName = loc.processName;
-      machineKey = loc.machineKey;
-      machineName = loc.machineName;
-    }
 
     allWorkers.push({
       empId: r.empId,
@@ -472,12 +405,12 @@ export function buildPlantHierarchyTree(
       employmentLabel: 'พนักงาน GY (รายกะ)',
       functionType: fnType,
       functionLabel: fnLabel,
-      teamKey,
-      teamName,
-      processKey,
-      processName,
-      machineKey,
-      machineName,
+      teamKey: loc.teamKey,
+      teamName: loc.teamName,
+      processKey: loc.processKey,
+      processName: loc.processName,
+      machineKey: loc.machineKey,
+      machineName: loc.machineName,
       dept: dept || cc,
       costCenter: cc,
       position: pos || mach,
@@ -489,7 +422,7 @@ export function buildPlantHierarchyTree(
     });
   });
 
-  // 2. Process Contractor Hourly Records
+  // 2. Process Contractor Hourly Records strictly by Department & Cost Center
   activeContRecords.forEach(r => {
     if (!r.hasScannedIn && r.totalHours <= 0) return;
     if (shiftFilter !== 'ALL' && r.shiftNumber !== shiftFilter) return;
@@ -515,58 +448,10 @@ export function buildPlantHierarchyTree(
     const loc = classifyPlantLocation(dept, cc, pos, mach);
 
     const empCode = r.empCode || (r as any).workerId || '';
-    const empInfo = employeeMapping[empCode] || employeeMapping[empCode.replace(/^0+/, '')] || employeeMapping[empCode.padStart(5, '0')];
-    let mu = getEmpMu(empCode, '', '', r.department, r.closing);
-    if (!mu || mu === 'Non-HPT' || mu === 'Consumer/Bias Aero') {
-      if (cc === '6320' || dept.includes('6320') || mach.toLowerCase().includes('retread')) mu = 'Retread';
-      else if (dept.startsWith('A') || cc.startsWith('A') || loc.processKey === 'BIAS') mu = 'Bias Aero';
-      else if (dept.startsWith('S') || cc.startsWith('S') || loc.processKey === 'RADIAL') mu = 'Radial Aero';
-      else if (['5110', '5120', '5130'].includes(cc) || loc.teamKey === 'CONSUMER') mu = 'Consumer';
-      else if (['3200', '3300', '4110', '4120', '4130', '4200', '4300'].includes(cc) || loc.teamKey === 'BCA') mu = 'BCA';
-      else mu = loc.teamKey;
-    }
-
     const normH = r.normalHours || 0;
     const otH = r.otHours || 0;
     const totH = normH + otH;
     const baseName = r.nameTh || r.nameEn || r.empCode || 'Contractor Worker';
-
-    let teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' = loc.teamKey;
-    let teamName = loc.teamName;
-    let processKey = loc.processKey;
-    let processName = loc.processName;
-    let machineKey = loc.machineKey;
-    let machineName = loc.machineName;
-
-    if (mu === 'BCA') {
-      teamKey = 'BCA';
-      teamName = 'BCA';
-      processKey = loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP';
-      processName = loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep';
-    } else if (mu === 'Consumer') {
-      teamKey = 'CONSUMER';
-      teamName = 'Consumer';
-      processKey = loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING';
-      processName = loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)';
-    } else if (mu === 'Bias Aero') {
-      teamKey = 'AERO';
-      teamName = 'Aero (Aviation)';
-      processKey = 'BIAS';
-      processName = 'Bias Aero';
-      machineKey = loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD'));
-    } else if (mu === 'Radial Aero') {
-      teamKey = 'AERO';
-      teamName = 'Aero (Aviation)';
-      processKey = 'RADIAL';
-      processName = 'Radial Aero';
-      machineKey = loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD'));
-    } else if (mu === 'Retread') {
-      teamKey = 'RETREAD';
-      teamName = 'Retread Plant';
-      processKey = 'RETREAD_OPS';
-      processName = 'Retread Operations';
-      machineKey = loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD';
-    }
 
     allWorkers.push({
       empId: empCode || 'CONT',
@@ -576,12 +461,12 @@ export function buildPlantHierarchyTree(
       employmentLabel: empLabel,
       functionType: fnType,
       functionLabel: fnLabel,
-      teamKey,
-      teamName,
-      processKey,
-      processName,
-      machineKey,
-      machineName,
+      teamKey: loc.teamKey,
+      teamName: loc.teamName,
+      processKey: loc.processKey,
+      processName: loc.processName,
+      machineKey: loc.machineKey,
+      machineName: loc.machineName,
       dept: dept || cc,
       costCenter: cc,
       position: pos || mach,
