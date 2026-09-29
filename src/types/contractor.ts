@@ -23,20 +23,29 @@ export interface ContractorScanRecord {
   shiftLabel: string;
   scanIn: string;
   scanOut: string;
-  late: string;
-  earlyOut: string;
-  absent: string;
-  remark: string;
-  deptRaw: string;
-  isWorkDay: boolean;
+  late?: string;
+  earlyOut?: string;
+  absent?: string;
+  remark?: string;
+  deptRaw?: string;
+  isWorkDay?: boolean;
   hasScannedIn: boolean;
   normalHours: number;
   otHours: number;
   totalHours: number;
   status: string;
-  date: string;
-  dateFormatted: string;
-  dateShort: string;
+  date?: string;
+  dateFormatted?: string;
+  dateShort?: string;
+  isAbsent?: boolean;
+  absentReason?: string;
+  isLeave?: boolean;
+  leaveType?: string;
+  isLate?: boolean;
+  isEarlyOut?: boolean;
+  workerId?: string;
+  isMonthly?: boolean;
+  [key: string]: any;
 }
 
 export interface ContractorDaySummary {

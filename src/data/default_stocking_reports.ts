@@ -1,10 +1,4098 @@
 import { StockingTonnageReport } from "../types/ohpa";
 
 export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
+  "2026-09-30": {
+    "productionDay": "30/09/2026",
+    "productionDayValue": "20260930000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
+  },
+  "30/09/2026": {
+    "productionDay": "30/09/2026",
+    "productionDayValue": "20260930000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
+  },
+  "30/9/2026": {
+    "productionDay": "30/09/2026",
+    "productionDayValue": "20260930000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 0,
+      "dailyTotalPallets": 0
+    }
+  },
+  "2026-09-29": {
+    "productionDay": "29/09/2026",
+    "productionDayValue": "20260929000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 1973,
+        "shift1Pallets": 132,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 1973,
+        "dailyTotalPallets": 132
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 1973,
+      "shift1Pallets": 132,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 1973,
+      "dailyTotalPallets": 132
+    }
+  },
+  "29/09/2026": {
+    "productionDay": "29/09/2026",
+    "productionDayValue": "20260929000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 1973,
+        "shift1Pallets": 132,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 1973,
+        "dailyTotalPallets": 132
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 1973,
+      "shift1Pallets": 132,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 1973,
+      "dailyTotalPallets": 132
+    }
+  },
+  "29/9/2026": {
+    "productionDay": "29/09/2026",
+    "productionDayValue": "20260929000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1644054,
+        "mtdPallets": 115946,
+        "shift1Tonnage": 1973,
+        "shift1Pallets": 132,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 1973,
+        "dailyTotalPallets": 132
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2566743,
+      "mtdPallets": 151795,
+      "shift1Tonnage": 1973,
+      "shift1Pallets": 132,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 0,
+      "shift3Pallets": 0,
+      "dailyTotalTonnage": 1973,
+      "dailyTotalPallets": 132
+    }
+  },
+  "2026-09-28": {
+    "productionDay": "28/09/2026",
+    "productionDayValue": "20260928000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 5600,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 5600,
+        "shift2Pallets": 77,
+        "shift3Tonnage": 1239,
+        "shift3Pallets": 78,
+        "dailyTotalTonnage": 12439,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 51,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 134,
+        "shift2Pallets": 21,
+        "shift3Tonnage": 11,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 196,
+        "dailyTotalPallets": 30
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 10563,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 8862,
+        "shift2Pallets": 162,
+        "shift3Tonnage": 4535,
+        "shift3Pallets": 87,
+        "dailyTotalTonnage": 23960,
+        "dailyTotalPallets": 425
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 4153,
+        "shift1Pallets": 392,
+        "shift2Tonnage": 1600,
+        "shift2Pallets": 153,
+        "shift3Tonnage": 4080,
+        "shift3Pallets": 386,
+        "dailyTotalTonnage": 9833,
+        "dailyTotalPallets": 931
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1642081,
+        "mtdPallets": 115814,
+        "shift1Tonnage": 15550,
+        "shift1Pallets": 1120,
+        "shift2Tonnage": 18847,
+        "shift2Pallets": 1352,
+        "shift3Tonnage": 21668,
+        "shift3Pallets": 1560,
+        "dailyTotalTonnage": 56065,
+        "dailyTotalPallets": 4032
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2564770,
+      "mtdPallets": 151663,
+      "shift1Tonnage": 35917,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 35043,
+      "shift2Pallets": 1765,
+      "shift3Tonnage": 31533,
+      "shift3Pallets": 2113,
+      "dailyTotalTonnage": 102493,
+      "dailyTotalPallets": 5650
+    }
+  },
+  "28/09/2026": {
+    "productionDay": "28/09/2026",
+    "productionDayValue": "20260928000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 5600,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 5600,
+        "shift2Pallets": 77,
+        "shift3Tonnage": 1239,
+        "shift3Pallets": 78,
+        "dailyTotalTonnage": 12439,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 51,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 134,
+        "shift2Pallets": 21,
+        "shift3Tonnage": 11,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 196,
+        "dailyTotalPallets": 30
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 10563,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 8862,
+        "shift2Pallets": 162,
+        "shift3Tonnage": 4535,
+        "shift3Pallets": 87,
+        "dailyTotalTonnage": 23960,
+        "dailyTotalPallets": 425
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 4153,
+        "shift1Pallets": 392,
+        "shift2Tonnage": 1600,
+        "shift2Pallets": 153,
+        "shift3Tonnage": 4080,
+        "shift3Pallets": 386,
+        "dailyTotalTonnage": 9833,
+        "dailyTotalPallets": 931
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1642081,
+        "mtdPallets": 115814,
+        "shift1Tonnage": 15550,
+        "shift1Pallets": 1120,
+        "shift2Tonnage": 18847,
+        "shift2Pallets": 1352,
+        "shift3Tonnage": 21668,
+        "shift3Pallets": 1560,
+        "dailyTotalTonnage": 56065,
+        "dailyTotalPallets": 4032
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2564770,
+      "mtdPallets": 151663,
+      "shift1Tonnage": 35917,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 35043,
+      "shift2Pallets": 1765,
+      "shift3Tonnage": 31533,
+      "shift3Pallets": 2113,
+      "dailyTotalTonnage": 102493,
+      "dailyTotalPallets": 5650
+    }
+  },
+  "28/9/2026": {
+    "productionDay": "28/09/2026",
+    "productionDayValue": "20260928000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 292199,
+        "mtdPallets": 5052,
+        "shift1Tonnage": 5600,
+        "shift1Pallets": 77,
+        "shift2Tonnage": 5600,
+        "shift2Pallets": 77,
+        "shift3Tonnage": 1239,
+        "shift3Pallets": 78,
+        "dailyTotalTonnage": 12439,
+        "dailyTotalPallets": 232
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11241,
+        "mtdPallets": 2577,
+        "shift1Tonnage": 51,
+        "shift1Pallets": 7,
+        "shift2Tonnage": 134,
+        "shift2Pallets": 21,
+        "shift3Tonnage": 11,
+        "shift3Pallets": 2,
+        "dailyTotalTonnage": 196,
+        "dailyTotalPallets": 30
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 396389,
+        "mtdPallets": 7578,
+        "shift1Tonnage": 10563,
+        "shift1Pallets": 176,
+        "shift2Tonnage": 8862,
+        "shift2Pallets": 162,
+        "shift3Tonnage": 4535,
+        "shift3Pallets": 87,
+        "dailyTotalTonnage": 23960,
+        "dailyTotalPallets": 425
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 222860,
+        "mtdPallets": 20642,
+        "shift1Tonnage": 4153,
+        "shift1Pallets": 392,
+        "shift2Tonnage": 1600,
+        "shift2Pallets": 153,
+        "shift3Tonnage": 4080,
+        "shift3Pallets": 386,
+        "dailyTotalTonnage": 9833,
+        "dailyTotalPallets": 931
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1642081,
+        "mtdPallets": 115814,
+        "shift1Tonnage": 15550,
+        "shift1Pallets": 1120,
+        "shift2Tonnage": 18847,
+        "shift2Pallets": 1352,
+        "shift3Tonnage": 21668,
+        "shift3Pallets": 1560,
+        "dailyTotalTonnage": 56065,
+        "dailyTotalPallets": 4032
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2564770,
+      "mtdPallets": 151663,
+      "shift1Tonnage": 35917,
+      "shift1Pallets": 1772,
+      "shift2Tonnage": 35043,
+      "shift2Pallets": 1765,
+      "shift3Tonnage": 31533,
+      "shift3Pallets": 2113,
+      "dailyTotalTonnage": 102493,
+      "dailyTotalPallets": 5650
+    }
+  },
+  "2026-09-27": {
+    "productionDay": "27/09/2026",
+    "productionDayValue": "20260927000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 213025,
+        "mtdPallets": 19711,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 1900,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 1900,
+        "dailyTotalPallets": 177
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1586014,
+        "mtdPallets": 111782,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 8333,
+        "shift3Pallets": 597,
+        "dailyTotalTonnage": 8333,
+        "dailyTotalPallets": 597
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2462268,
+      "mtdPallets": 146013,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 10233,
+      "shift3Pallets": 774,
+      "dailyTotalTonnage": 10233,
+      "dailyTotalPallets": 774
+    }
+  },
+  "27/09/2026": {
+    "productionDay": "27/09/2026",
+    "productionDayValue": "20260927000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 213025,
+        "mtdPallets": 19711,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 1900,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 1900,
+        "dailyTotalPallets": 177
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1586014,
+        "mtdPallets": 111782,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 8333,
+        "shift3Pallets": 597,
+        "dailyTotalTonnage": 8333,
+        "dailyTotalPallets": 597
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2462268,
+      "mtdPallets": 146013,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 10233,
+      "shift3Pallets": 774,
+      "dailyTotalTonnage": 10233,
+      "dailyTotalPallets": 774
+    }
+  },
+  "27/9/2026": {
+    "productionDay": "27/09/2026",
+    "productionDayValue": "20260927000000",
+    "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": true
+      },
+      {
+        "value": "20260926000000",
+        "label": "26/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260925000000",
+        "label": "25/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260924000000",
+        "label": "24/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260923000000",
+        "label": "23/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260922000000",
+        "label": "22/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260921000000",
+        "label": "21/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260920000000",
+        "label": "20/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260919000000",
+        "label": "19/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260918000000",
+        "label": "18/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260917000000",
+        "label": "17/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260916000000",
+        "label": "16/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260915000000",
+        "label": "15/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260914000000",
+        "label": "14/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260913000000",
+        "label": "13/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260912000000",
+        "label": "12/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260911000000",
+        "label": "11/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260910000000",
+        "label": "10/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260909000000",
+        "label": "09/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260908000000",
+        "label": "08/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260907000000",
+        "label": "07/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260906000000",
+        "label": "06/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260905000000",
+        "label": "05/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260904000000",
+        "label": "04/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260903000000",
+        "label": "03/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260902000000",
+        "label": "02/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260901000000",
+        "label": "01/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260831000000",
+        "label": "31/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260830000000",
+        "label": "30/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260829000000",
+        "label": "29/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260828000000",
+        "label": "28/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260827000000",
+        "label": "27/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260826000000",
+        "label": "26/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260825000000",
+        "label": "25/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260824000000",
+        "label": "24/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260823000000",
+        "label": "23/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260822000000",
+        "label": "22/08/2026",
+        "selected": false
+      },
+      {
+        "value": "20260821000000",
+        "label": "21/08/2026",
+        "selected": false
+      }
+    ],
+    "rows": [
+      {
+        "code": "6",
+        "categoryName": "Aero Radial",
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "A",
+        "categoryName": "Aircraft",
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "B",
+        "categoryName": "Aircraft High Performance",
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "D",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "P",
+        "categoryName": "Pass Conv Spare",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "Q",
+        "categoryName": "Passenger Radial",
+        "mtdTonnage": 213025,
+        "mtdPallets": 19711,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 1900,
+        "shift3Pallets": 177,
+        "dailyTotalTonnage": 1900,
+        "dailyTotalPallets": 177
+      },
+      {
+        "code": "T",
+        "categoryName": "Bias Truck",
+        "mtdTonnage": 0,
+        "mtdPallets": 0,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 0,
+        "shift3Pallets": 0,
+        "dailyTotalTonnage": 0,
+        "dailyTotalPallets": 0
+      },
+      {
+        "code": "W",
+        "categoryName": "ULT",
+        "mtdTonnage": 1586014,
+        "mtdPallets": 111782,
+        "shift1Tonnage": 0,
+        "shift1Pallets": 0,
+        "shift2Tonnage": 0,
+        "shift2Pallets": 0,
+        "shift3Tonnage": 8333,
+        "shift3Pallets": 597,
+        "dailyTotalTonnage": 8333,
+        "dailyTotalPallets": 597
+      }
+    ],
+    "total": {
+      "code": "TOTAL",
+      "categoryName": "TOTAL",
+      "mtdTonnage": 2462268,
+      "mtdPallets": 146013,
+      "shift1Tonnage": 0,
+      "shift1Pallets": 0,
+      "shift2Tonnage": 0,
+      "shift2Pallets": 0,
+      "shift3Tonnage": 10233,
+      "shift3Pallets": 774,
+      "dailyTotalTonnage": 10233,
+      "dailyTotalPallets": 774
+    }
+  },
   "2026-09-26": {
     "productionDay": "26/09/2026",
     "productionDayValue": "20260926000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -189,48 +4277,28 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 1175,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1271,
+        "shift2Pallets": 80,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 2446,
+        "dailyTotalPallets": 154
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
         "shift2Tonnage": 0,
@@ -243,16 +4311,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 532,
+        "shift1Pallets": 16,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 532,
+        "dailyTotalPallets": 16
       },
       {
         "code": "D",
@@ -285,16 +4353,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 211125,
+        "mtdPallets": 19534,
+        "shift1Tonnage": 2288,
+        "shift1Pallets": 216,
+        "shift2Tonnage": 1034,
+        "shift2Pallets": 96,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 3322,
+        "dailyTotalPallets": 312
       },
       {
         "code": "T",
@@ -313,31 +4381,31 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 1577681,
+        "mtdPallets": 111185,
+        "shift1Tonnage": 15323,
+        "shift1Pallets": 1087,
+        "shift2Tonnage": 8688,
+        "shift2Pallets": 623,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 24011,
+        "dailyTotalPallets": 1710
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 0,
-      "shift1Pallets": 0,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
+      "mtdTonnage": 2452035,
+      "mtdPallets": 145239,
+      "shift1Tonnage": 19318,
+      "shift1Pallets": 1393,
+      "shift2Tonnage": 10993,
+      "shift2Pallets": 799,
       "shift3Tonnage": 0,
       "shift3Pallets": 0,
-      "dailyTotalTonnage": 0,
-      "dailyTotalPallets": 0
+      "dailyTotalTonnage": 30311,
+      "dailyTotalPallets": 2192
     }
   },
   "26/09/2026": {
@@ -345,6 +4413,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260926000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": true
@@ -528,48 +4616,28 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 1175,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1271,
+        "shift2Pallets": 80,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 2446,
+        "dailyTotalPallets": 154
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
         "shift2Tonnage": 0,
@@ -582,16 +4650,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 532,
+        "shift1Pallets": 16,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 532,
+        "dailyTotalPallets": 16
       },
       {
         "code": "D",
@@ -624,16 +4692,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 211125,
+        "mtdPallets": 19534,
+        "shift1Tonnage": 2288,
+        "shift1Pallets": 216,
+        "shift2Tonnage": 1034,
+        "shift2Pallets": 96,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 3322,
+        "dailyTotalPallets": 312
       },
       {
         "code": "T",
@@ -652,31 +4720,31 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 1577681,
+        "mtdPallets": 111185,
+        "shift1Tonnage": 15323,
+        "shift1Pallets": 1087,
+        "shift2Tonnage": 8688,
+        "shift2Pallets": 623,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 24011,
+        "dailyTotalPallets": 1710
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 0,
-      "shift1Pallets": 0,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
+      "mtdTonnage": 2452035,
+      "mtdPallets": 145239,
+      "shift1Tonnage": 19318,
+      "shift1Pallets": 1393,
+      "shift2Tonnage": 10993,
+      "shift2Pallets": 799,
       "shift3Tonnage": 0,
       "shift3Pallets": 0,
-      "dailyTotalTonnage": 0,
-      "dailyTotalPallets": 0
+      "dailyTotalTonnage": 30311,
+      "dailyTotalPallets": 2192
     }
   },
   "26/9/2026": {
@@ -684,6 +4752,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260926000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": true
@@ -867,48 +4955,28 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 279759,
+        "mtdPallets": 4820,
+        "shift1Tonnage": 1175,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 1271,
+        "shift2Pallets": 80,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 2446,
+        "dailyTotalPallets": 154
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
         "shift2Tonnage": 0,
@@ -921,16 +4989,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
+        "mtdTonnage": 372427,
+        "mtdPallets": 7153,
+        "shift1Tonnage": 532,
+        "shift1Pallets": 16,
         "shift2Tonnage": 0,
         "shift2Pallets": 0,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 532,
+        "dailyTotalPallets": 16
       },
       {
         "code": "D",
@@ -963,16 +5031,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 211125,
+        "mtdPallets": 19534,
+        "shift1Tonnage": 2288,
+        "shift1Pallets": 216,
+        "shift2Tonnage": 1034,
+        "shift2Pallets": 96,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 3322,
+        "dailyTotalPallets": 312
       },
       {
         "code": "T",
@@ -991,31 +5059,31 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
+        "mtdTonnage": 1577681,
+        "mtdPallets": 111185,
+        "shift1Tonnage": 15323,
+        "shift1Pallets": 1087,
+        "shift2Tonnage": 8688,
+        "shift2Pallets": 623,
         "shift3Tonnage": 0,
         "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "dailyTotalTonnage": 24011,
+        "dailyTotalPallets": 1710
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 0,
-      "shift1Pallets": 0,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
+      "mtdTonnage": 2452035,
+      "mtdPallets": 145239,
+      "shift1Tonnage": 19318,
+      "shift1Pallets": 1393,
+      "shift2Tonnage": 10993,
+      "shift2Pallets": 799,
       "shift3Tonnage": 0,
       "shift3Pallets": 0,
-      "dailyTotalTonnage": 0,
-      "dailyTotalPallets": 0
+      "dailyTotalTonnage": 30311,
+      "dailyTotalPallets": 2192
     }
   },
   "2026-09-25": {
@@ -1023,6 +5091,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260925000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -1206,70 +5294,50 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 277312,
+        "mtdPallets": 4666,
+        "shift1Tonnage": 9057,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 6904,
+        "shift2Pallets": 74,
+        "shift3Tonnage": 5673,
+        "shift3Pallets": 74,
+        "dailyTotalTonnage": 21634,
+        "dailyTotalPallets": 222
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 263,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 249,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 21,
+        "shift3Pallets": 3,
+        "dailyTotalTonnage": 533,
+        "dailyTotalPallets": 74
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 371894,
+        "mtdPallets": 7137,
+        "shift1Tonnage": 4622,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 5991,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 5290,
+        "shift3Pallets": 80,
+        "dailyTotalTonnage": 15903,
+        "dailyTotalPallets": 280
       },
       {
         "code": "D",
@@ -1302,16 +5370,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 259,
-        "shift1Pallets": 25,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 259,
-        "dailyTotalPallets": 25
+        "mtdTonnage": 207802,
+        "mtdPallets": 19222,
+        "shift1Tonnage": 2996,
+        "shift1Pallets": 282,
+        "shift2Tonnage": 2445,
+        "shift2Pallets": 229,
+        "shift3Tonnage": 2672,
+        "shift3Pallets": 251,
+        "dailyTotalTonnage": 8113,
+        "dailyTotalPallets": 762
       },
       {
         "code": "T",
@@ -1330,31 +5398,31 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 3863,
-        "shift1Pallets": 264,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 3863,
-        "dailyTotalPallets": 264
+        "mtdTonnage": 1553669,
+        "mtdPallets": 109475,
+        "shift1Tonnage": 17446,
+        "shift1Pallets": 1224,
+        "shift2Tonnage": 20031,
+        "shift2Pallets": 1411,
+        "shift3Tonnage": 21184,
+        "shift3Pallets": 1519,
+        "dailyTotalTonnage": 58661,
+        "dailyTotalPallets": 4154
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 4122,
-      "shift1Pallets": 289,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
-      "shift3Tonnage": 0,
-      "shift3Pallets": 0,
-      "dailyTotalTonnage": 4122,
-      "dailyTotalPallets": 289
+      "mtdTonnage": 2421720,
+      "mtdPallets": 143047,
+      "shift1Tonnage": 34384,
+      "shift1Pallets": 1700,
+      "shift2Tonnage": 35620,
+      "shift2Pallets": 1865,
+      "shift3Tonnage": 34840,
+      "shift3Pallets": 1927,
+      "dailyTotalTonnage": 104844,
+      "dailyTotalPallets": 5492
     }
   },
   "25/09/2026": {
@@ -1362,6 +5430,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260925000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -1545,70 +5633,50 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 277312,
+        "mtdPallets": 4666,
+        "shift1Tonnage": 9057,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 6904,
+        "shift2Pallets": 74,
+        "shift3Tonnage": 5673,
+        "shift3Pallets": 74,
+        "dailyTotalTonnage": 21634,
+        "dailyTotalPallets": 222
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 263,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 249,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 21,
+        "shift3Pallets": 3,
+        "dailyTotalTonnage": 533,
+        "dailyTotalPallets": 74
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 371894,
+        "mtdPallets": 7137,
+        "shift1Tonnage": 4622,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 5991,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 5290,
+        "shift3Pallets": 80,
+        "dailyTotalTonnage": 15903,
+        "dailyTotalPallets": 280
       },
       {
         "code": "D",
@@ -1641,16 +5709,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 259,
-        "shift1Pallets": 25,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 259,
-        "dailyTotalPallets": 25
+        "mtdTonnage": 207802,
+        "mtdPallets": 19222,
+        "shift1Tonnage": 2996,
+        "shift1Pallets": 282,
+        "shift2Tonnage": 2445,
+        "shift2Pallets": 229,
+        "shift3Tonnage": 2672,
+        "shift3Pallets": 251,
+        "dailyTotalTonnage": 8113,
+        "dailyTotalPallets": 762
       },
       {
         "code": "T",
@@ -1669,31 +5737,31 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 3863,
-        "shift1Pallets": 264,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 3863,
-        "dailyTotalPallets": 264
+        "mtdTonnage": 1553669,
+        "mtdPallets": 109475,
+        "shift1Tonnage": 17446,
+        "shift1Pallets": 1224,
+        "shift2Tonnage": 20031,
+        "shift2Pallets": 1411,
+        "shift3Tonnage": 21184,
+        "shift3Pallets": 1519,
+        "dailyTotalTonnage": 58661,
+        "dailyTotalPallets": 4154
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 4122,
-      "shift1Pallets": 289,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
-      "shift3Tonnage": 0,
-      "shift3Pallets": 0,
-      "dailyTotalTonnage": 4122,
-      "dailyTotalPallets": 289
+      "mtdTonnage": 2421720,
+      "mtdPallets": 143047,
+      "shift1Tonnage": 34384,
+      "shift1Pallets": 1700,
+      "shift2Tonnage": 35620,
+      "shift2Pallets": 1865,
+      "shift3Tonnage": 34840,
+      "shift3Pallets": 1927,
+      "dailyTotalTonnage": 104844,
+      "dailyTotalPallets": 5492
     }
   },
   "25/9/2026": {
@@ -1701,6 +5769,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260925000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -1884,70 +5972,50 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
-        "mtdPallets": 4444,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 277312,
+        "mtdPallets": 4666,
+        "shift1Tonnage": 9057,
+        "shift1Pallets": 74,
+        "shift2Tonnage": 6904,
+        "shift2Pallets": 74,
+        "shift3Tonnage": 5673,
+        "shift3Pallets": 74,
+        "dailyTotalTonnage": 21634,
+        "dailyTotalPallets": 222
       },
       {
         "code": "A",
         "categoryName": "Aircraft",
-        "mtdTonnage": 10508,
-        "mtdPallets": 2473,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 11043,
+        "mtdPallets": 2547,
+        "shift1Tonnage": 263,
+        "shift1Pallets": 36,
+        "shift2Tonnage": 249,
+        "shift2Pallets": 35,
+        "shift3Tonnage": 21,
+        "shift3Pallets": 3,
+        "dailyTotalTonnage": 533,
+        "dailyTotalPallets": 74
       },
       {
         "code": "B",
         "categoryName": "Aircraft High Performance",
-        "mtdTonnage": 355990,
-        "mtdPallets": 6857,
-        "shift1Tonnage": 0,
-        "shift1Pallets": 0,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 0,
-        "dailyTotalPallets": 0
+        "mtdTonnage": 371894,
+        "mtdPallets": 7137,
+        "shift1Tonnage": 4622,
+        "shift1Pallets": 84,
+        "shift2Tonnage": 5991,
+        "shift2Pallets": 116,
+        "shift3Tonnage": 5290,
+        "shift3Pallets": 80,
+        "dailyTotalTonnage": 15903,
+        "dailyTotalPallets": 280
       },
       {
         "code": "D",
@@ -1980,16 +6048,16 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "Q",
         "categoryName": "Passenger Radial",
-        "mtdTonnage": 199947,
-        "mtdPallets": 18485,
-        "shift1Tonnage": 259,
-        "shift1Pallets": 25,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 259,
-        "dailyTotalPallets": 25
+        "mtdTonnage": 207802,
+        "mtdPallets": 19222,
+        "shift1Tonnage": 2996,
+        "shift1Pallets": 282,
+        "shift2Tonnage": 2445,
+        "shift2Pallets": 229,
+        "shift3Tonnage": 2672,
+        "shift3Pallets": 251,
+        "dailyTotalTonnage": 8113,
+        "dailyTotalPallets": 762
       },
       {
         "code": "T",
@@ -2008,37 +6076,57 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "code": "W",
         "categoryName": "ULT",
-        "mtdTonnage": 1498870,
-        "mtdPallets": 105585,
-        "shift1Tonnage": 3863,
-        "shift1Pallets": 264,
-        "shift2Tonnage": 0,
-        "shift2Pallets": 0,
-        "shift3Tonnage": 0,
-        "shift3Pallets": 0,
-        "dailyTotalTonnage": 3863,
-        "dailyTotalPallets": 264
+        "mtdTonnage": 1553669,
+        "mtdPallets": 109475,
+        "shift1Tonnage": 17446,
+        "shift1Pallets": 1224,
+        "shift2Tonnage": 20031,
+        "shift2Pallets": 1411,
+        "shift3Tonnage": 21184,
+        "shift3Pallets": 1519,
+        "dailyTotalTonnage": 58661,
+        "dailyTotalPallets": 4154
       }
     ],
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2320949,
-      "mtdPallets": 137844,
-      "shift1Tonnage": 4122,
-      "shift1Pallets": 289,
-      "shift2Tonnage": 0,
-      "shift2Pallets": 0,
-      "shift3Tonnage": 0,
-      "shift3Pallets": 0,
-      "dailyTotalTonnage": 4122,
-      "dailyTotalPallets": 289
+      "mtdTonnage": 2421720,
+      "mtdPallets": 143047,
+      "shift1Tonnage": 34384,
+      "shift1Pallets": 1700,
+      "shift2Tonnage": 35620,
+      "shift2Pallets": 1865,
+      "shift3Tonnage": 34840,
+      "shift3Pallets": 1927,
+      "dailyTotalTonnage": 104844,
+      "dailyTotalPallets": 5492
     }
   },
   "2026-09-24": {
     "productionDay": "24/09/2026",
     "productionDayValue": "20260924000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -2223,41 +6311,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
+        "mtdTonnage": 255677,
         "mtdPallets": 4444,
-        "shift1Tonnage": 1218,
+        "shift1Tonnage": 1223,
         "shift1Pallets": 77,
-        "shift2Tonnage": 1234,
+        "shift2Tonnage": 1239,
         "shift2Pallets": 78,
-        "shift3Tonnage": 1218,
+        "shift3Tonnage": 1223,
         "shift3Pallets": 77,
-        "dailyTotalTonnage": 3670,
+        "dailyTotalTonnage": 3685,
         "dailyTotalPallets": 232
       },
       {
@@ -2362,15 +6430,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2316826,
+      "mtdTonnage": 2316869,
       "mtdPallets": 137555,
-      "shift1Tonnage": 32053,
+      "shift1Tonnage": 32058,
       "shift1Pallets": 2164,
-      "shift2Tonnage": 32152,
+      "shift2Tonnage": 32157,
       "shift2Pallets": 2157,
-      "shift3Tonnage": 32820,
+      "shift3Tonnage": 32825,
       "shift3Pallets": 2131,
-      "dailyTotalTonnage": 97025,
+      "dailyTotalTonnage": 97040,
       "dailyTotalPallets": 6452
     }
   },
@@ -2379,6 +6447,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260924000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -2562,41 +6650,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
+        "mtdTonnage": 255677,
         "mtdPallets": 4444,
-        "shift1Tonnage": 1218,
+        "shift1Tonnage": 1223,
         "shift1Pallets": 77,
-        "shift2Tonnage": 1234,
+        "shift2Tonnage": 1239,
         "shift2Pallets": 78,
-        "shift3Tonnage": 1218,
+        "shift3Tonnage": 1223,
         "shift3Pallets": 77,
-        "dailyTotalTonnage": 3670,
+        "dailyTotalTonnage": 3685,
         "dailyTotalPallets": 232
       },
       {
@@ -2701,15 +6769,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2316826,
+      "mtdTonnage": 2316869,
       "mtdPallets": 137555,
-      "shift1Tonnage": 32053,
+      "shift1Tonnage": 32058,
       "shift1Pallets": 2164,
-      "shift2Tonnage": 32152,
+      "shift2Tonnage": 32157,
       "shift2Pallets": 2157,
-      "shift3Tonnage": 32820,
+      "shift3Tonnage": 32825,
       "shift3Pallets": 2131,
-      "dailyTotalTonnage": 97025,
+      "dailyTotalTonnage": 97040,
       "dailyTotalPallets": 6452
     }
   },
@@ -2718,6 +6786,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260924000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -2901,41 +6989,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 255634,
+        "mtdTonnage": 255677,
         "mtdPallets": 4444,
-        "shift1Tonnage": 1218,
+        "shift1Tonnage": 1223,
         "shift1Pallets": 77,
-        "shift2Tonnage": 1234,
+        "shift2Tonnage": 1239,
         "shift2Pallets": 78,
-        "shift3Tonnage": 1218,
+        "shift3Tonnage": 1223,
         "shift3Pallets": 77,
-        "dailyTotalTonnage": 3670,
+        "dailyTotalTonnage": 3685,
         "dailyTotalPallets": 232
       },
       {
@@ -3040,15 +7108,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2316826,
+      "mtdTonnage": 2316869,
       "mtdPallets": 137555,
-      "shift1Tonnage": 32053,
+      "shift1Tonnage": 32058,
       "shift1Pallets": 2164,
-      "shift2Tonnage": 32152,
+      "shift2Tonnage": 32157,
       "shift2Pallets": 2157,
-      "shift3Tonnage": 32820,
+      "shift3Tonnage": 32825,
       "shift3Pallets": 2131,
-      "dailyTotalTonnage": 97025,
+      "dailyTotalTonnage": 97040,
       "dailyTotalPallets": 6452
     }
   },
@@ -3056,6 +7124,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "23/09/2026",
     "productionDayValue": "20260923000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -3240,33 +7328,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 251963,
+        "mtdTonnage": 251991,
         "mtdPallets": 4212,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -3379,7 +7447,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2219796,
+      "mtdTonnage": 2219824,
       "mtdPallets": 131103,
       "shift1Tonnage": 29025,
       "shift1Pallets": 1704,
@@ -3396,6 +7464,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260923000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -3579,33 +7667,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 251963,
+        "mtdTonnage": 251991,
         "mtdPallets": 4212,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -3718,7 +7786,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2219796,
+      "mtdTonnage": 2219824,
       "mtdPallets": 131103,
       "shift1Tonnage": 29025,
       "shift1Pallets": 1704,
@@ -3735,6 +7803,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260923000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -3918,33 +8006,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 251963,
+        "mtdTonnage": 251991,
         "mtdPallets": 4212,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -4057,7 +8125,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2219796,
+      "mtdTonnage": 2219824,
       "mtdPallets": 131103,
       "shift1Tonnage": 29025,
       "shift1Pallets": 1704,
@@ -4074,6 +8142,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260922000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -4257,41 +8345,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 235116,
+        "mtdTonnage": 235145,
         "mtdPallets": 3980,
-        "shift1Tonnage": 4156,
+        "shift1Tonnage": 4158,
         "shift1Pallets": 70,
         "shift2Tonnage": 6581,
         "shift2Pallets": 70,
         "shift3Tonnage": 5026,
         "shift3Pallets": 70,
-        "dailyTotalTonnage": 15763,
+        "dailyTotalTonnage": 15765,
         "dailyTotalPallets": 210
       },
       {
@@ -4396,15 +8464,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2114377,
+      "mtdTonnage": 2114406,
       "mtdPallets": 125070,
-      "shift1Tonnage": 35370,
+      "shift1Tonnage": 35372,
       "shift1Pallets": 2102,
       "shift2Tonnage": 34841,
       "shift2Pallets": 1887,
       "shift3Tonnage": 29563,
       "shift3Pallets": 1706,
-      "dailyTotalTonnage": 99774,
+      "dailyTotalTonnage": 99776,
       "dailyTotalPallets": 5695
     }
   },
@@ -4413,6 +8481,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260922000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -4596,41 +8684,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 235116,
+        "mtdTonnage": 235145,
         "mtdPallets": 3980,
-        "shift1Tonnage": 4156,
+        "shift1Tonnage": 4158,
         "shift1Pallets": 70,
         "shift2Tonnage": 6581,
         "shift2Pallets": 70,
         "shift3Tonnage": 5026,
         "shift3Pallets": 70,
-        "dailyTotalTonnage": 15763,
+        "dailyTotalTonnage": 15765,
         "dailyTotalPallets": 210
       },
       {
@@ -4735,15 +8803,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2114377,
+      "mtdTonnage": 2114406,
       "mtdPallets": 125070,
-      "shift1Tonnage": 35370,
+      "shift1Tonnage": 35372,
       "shift1Pallets": 2102,
       "shift2Tonnage": 34841,
       "shift2Pallets": 1887,
       "shift3Tonnage": 29563,
       "shift3Pallets": 1706,
-      "dailyTotalTonnage": 99774,
+      "dailyTotalTonnage": 99776,
       "dailyTotalPallets": 5695
     }
   },
@@ -4752,6 +8820,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260922000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -4935,41 +9023,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 235116,
+        "mtdTonnage": 235145,
         "mtdPallets": 3980,
-        "shift1Tonnage": 4156,
+        "shift1Tonnage": 4158,
         "shift1Pallets": 70,
         "shift2Tonnage": 6581,
         "shift2Pallets": 70,
         "shift3Tonnage": 5026,
         "shift3Pallets": 70,
-        "dailyTotalTonnage": 15763,
+        "dailyTotalTonnage": 15765,
         "dailyTotalPallets": 210
       },
       {
@@ -5074,15 +9142,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2114377,
+      "mtdTonnage": 2114406,
       "mtdPallets": 125070,
-      "shift1Tonnage": 35370,
+      "shift1Tonnage": 35372,
       "shift1Pallets": 2102,
       "shift2Tonnage": 34841,
       "shift2Pallets": 1887,
       "shift3Tonnage": 29563,
       "shift3Pallets": 1706,
-      "dailyTotalTonnage": 99774,
+      "dailyTotalTonnage": 99776,
       "dailyTotalPallets": 5695
     }
   },
@@ -5090,6 +9158,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "21/09/2026",
     "productionDayValue": "20260921000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -5274,33 +9362,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 219352,
+        "mtdTonnage": 219379,
         "mtdPallets": 3770,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -5413,7 +9481,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2014597,
+      "mtdTonnage": 2014624,
       "mtdPallets": 119375,
       "shift1Tonnage": 31532,
       "shift1Pallets": 1778,
@@ -5430,6 +9498,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260921000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -5613,33 +9701,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 219352,
+        "mtdTonnage": 219379,
         "mtdPallets": 3770,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -5752,7 +9820,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2014597,
+      "mtdTonnage": 2014624,
       "mtdPallets": 119375,
       "shift1Tonnage": 31532,
       "shift1Pallets": 1778,
@@ -5769,6 +9837,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260921000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -5952,33 +10040,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 219352,
+        "mtdTonnage": 219379,
         "mtdPallets": 3770,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -6091,7 +10159,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 2014597,
+      "mtdTonnage": 2014624,
       "mtdPallets": 119375,
       "shift1Tonnage": 31532,
       "shift1Pallets": 1778,
@@ -6108,6 +10176,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260920000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -6291,33 +10379,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 204555,
+        "mtdTonnage": 204581,
         "mtdPallets": 3565,
         "shift1Tonnage": 1066,
         "shift1Pallets": 15,
@@ -6430,7 +10498,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1914520,
+      "mtdTonnage": 1914546,
       "mtdPallets": 113643,
       "shift1Tonnage": 21897,
       "shift1Pallets": 1421,
@@ -6447,6 +10515,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260920000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -6630,33 +10718,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 204555,
+        "mtdTonnage": 204581,
         "mtdPallets": 3565,
         "shift1Tonnage": 1066,
         "shift1Pallets": 15,
@@ -6769,7 +10837,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1914520,
+      "mtdTonnage": 1914546,
       "mtdPallets": 113643,
       "shift1Tonnage": 21897,
       "shift1Pallets": 1421,
@@ -6786,6 +10854,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260920000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -6969,33 +11057,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 204555,
+        "mtdTonnage": 204581,
         "mtdPallets": 3565,
         "shift1Tonnage": 1066,
         "shift1Pallets": 15,
@@ -7108,7 +11176,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1914520,
+      "mtdTonnage": 1914546,
       "mtdPallets": 113643,
       "shift1Tonnage": 21897,
       "shift1Pallets": 1421,
@@ -7125,6 +11193,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260919000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -7308,41 +11396,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 201710,
+        "mtdTonnage": 201736,
         "mtdPallets": 3525,
-        "shift1Tonnage": 1214,
+        "shift1Tonnage": 1218,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1107,
+        "shift2Tonnage": 1112,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1028,
+        "shift3Tonnage": 1032,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 3349,
+        "dailyTotalTonnage": 3362,
         "dailyTotalPallets": 205
       },
       {
@@ -7447,15 +11515,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1837347,
+      "mtdTonnage": 1837373,
       "mtdPallets": 108723,
-      "shift1Tonnage": 26968,
+      "shift1Tonnage": 26972,
       "shift1Pallets": 1772,
-      "shift2Tonnage": 28588,
+      "shift2Tonnage": 28593,
       "shift2Pallets": 1808,
-      "shift3Tonnage": 30552,
+      "shift3Tonnage": 30556,
       "shift3Pallets": 1901,
-      "dailyTotalTonnage": 86108,
+      "dailyTotalTonnage": 86121,
       "dailyTotalPallets": 5481
     }
   },
@@ -7464,6 +11532,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260919000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -7647,41 +11735,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 201710,
+        "mtdTonnage": 201736,
         "mtdPallets": 3525,
-        "shift1Tonnage": 1214,
+        "shift1Tonnage": 1218,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1107,
+        "shift2Tonnage": 1112,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1028,
+        "shift3Tonnage": 1032,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 3349,
+        "dailyTotalTonnage": 3362,
         "dailyTotalPallets": 205
       },
       {
@@ -7786,15 +11854,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1837347,
+      "mtdTonnage": 1837373,
       "mtdPallets": 108723,
-      "shift1Tonnage": 26968,
+      "shift1Tonnage": 26972,
       "shift1Pallets": 1772,
-      "shift2Tonnage": 28588,
+      "shift2Tonnage": 28593,
       "shift2Pallets": 1808,
-      "shift3Tonnage": 30552,
+      "shift3Tonnage": 30556,
       "shift3Pallets": 1901,
-      "dailyTotalTonnage": 86108,
+      "dailyTotalTonnage": 86121,
       "dailyTotalPallets": 5481
     }
   },
@@ -7803,6 +11871,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260919000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -7986,41 +12074,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 201710,
+        "mtdTonnage": 201736,
         "mtdPallets": 3525,
-        "shift1Tonnage": 1214,
+        "shift1Tonnage": 1218,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1107,
+        "shift2Tonnage": 1112,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1028,
+        "shift3Tonnage": 1032,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 3349,
+        "dailyTotalTonnage": 3362,
         "dailyTotalPallets": 205
       },
       {
@@ -8125,15 +12193,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1837347,
+      "mtdTonnage": 1837373,
       "mtdPallets": 108723,
-      "shift1Tonnage": 26968,
+      "shift1Tonnage": 26972,
       "shift1Pallets": 1772,
-      "shift2Tonnage": 28588,
+      "shift2Tonnage": 28593,
       "shift2Pallets": 1808,
-      "shift3Tonnage": 30552,
+      "shift3Tonnage": 30556,
       "shift3Pallets": 1901,
-      "dailyTotalTonnage": 86108,
+      "dailyTotalTonnage": 86121,
       "dailyTotalPallets": 5481
     }
   },
@@ -8141,6 +12209,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "18/09/2026",
     "productionDayValue": "20260918000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -8325,33 +12413,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198359,
+        "mtdTonnage": 198373,
         "mtdPallets": 3320,
         "shift1Tonnage": 5246,
         "shift1Pallets": 70,
@@ -8464,7 +12532,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751231,
+      "mtdTonnage": 1751245,
       "mtdPallets": 103242,
       "shift1Tonnage": 34830,
       "shift1Pallets": 1826,
@@ -8481,6 +12549,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260918000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -8664,33 +12752,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198359,
+        "mtdTonnage": 198373,
         "mtdPallets": 3320,
         "shift1Tonnage": 5246,
         "shift1Pallets": 70,
@@ -8803,7 +12871,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751231,
+      "mtdTonnage": 1751245,
       "mtdPallets": 103242,
       "shift1Tonnage": 34830,
       "shift1Pallets": 1826,
@@ -8820,6 +12888,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260918000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -9003,33 +13091,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 198359,
+        "mtdTonnage": 198373,
         "mtdPallets": 3320,
         "shift1Tonnage": 5246,
         "shift1Pallets": 70,
@@ -9142,7 +13210,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1751231,
+      "mtdTonnage": 1751245,
       "mtdPallets": 103242,
       "shift1Tonnage": 34830,
       "shift1Pallets": 1826,
@@ -9159,6 +13227,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260917000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -9342,33 +13430,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
+        "mtdTonnage": 188339,
         "mtdPallets": 3115,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -9481,7 +13549,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
+      "mtdTonnage": 1651108,
       "mtdPallets": 97519,
       "shift1Tonnage": 35922,
       "shift1Pallets": 2015,
@@ -9498,6 +13566,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260917000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -9681,33 +13769,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
+        "mtdTonnage": 188339,
         "mtdPallets": 3115,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -9820,7 +13888,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
+      "mtdTonnage": 1651108,
       "mtdPallets": 97519,
       "shift1Tonnage": 35922,
       "shift1Pallets": 2015,
@@ -9837,6 +13905,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260917000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -10020,33 +14108,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 188325,
+        "mtdTonnage": 188339,
         "mtdPallets": 3115,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -10159,7 +14227,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1651094,
+      "mtdTonnage": 1651108,
       "mtdPallets": 97519,
       "shift1Tonnage": 35922,
       "shift1Pallets": 2015,
@@ -10176,6 +14244,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260916000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -10359,33 +14447,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
+        "mtdTonnage": 173429,
         "mtdPallets": 2910,
         "shift1Tonnage": 2725,
         "shift1Pallets": 70,
@@ -10498,7 +14566,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
+      "mtdTonnage": 1543362,
       "mtdPallets": 91394,
       "shift1Tonnage": 30324,
       "shift1Pallets": 1785,
@@ -10515,6 +14583,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260916000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -10698,33 +14786,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
+        "mtdTonnage": 173429,
         "mtdPallets": 2910,
         "shift1Tonnage": 2725,
         "shift1Pallets": 70,
@@ -10837,7 +14905,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
+      "mtdTonnage": 1543362,
       "mtdPallets": 91394,
       "shift1Tonnage": 30324,
       "shift1Pallets": 1785,
@@ -10854,6 +14922,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260916000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -11037,33 +15125,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 173415,
+        "mtdTonnage": 173429,
         "mtdPallets": 2910,
         "shift1Tonnage": 2725,
         "shift1Pallets": 70,
@@ -11176,7 +15244,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1543348,
+      "mtdTonnage": 1543362,
       "mtdPallets": 91394,
       "shift1Tonnage": 30324,
       "shift1Pallets": 1785,
@@ -11193,6 +15261,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260915000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -11376,33 +15464,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
+        "mtdTonnage": 160918,
         "mtdPallets": 2704,
         "shift1Tonnage": 5664,
         "shift1Pallets": 70,
@@ -11515,7 +15583,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
+      "mtdTonnage": 1438689,
       "mtdPallets": 85304,
       "shift1Tonnage": 35378,
       "shift1Pallets": 1740,
@@ -11532,6 +15600,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260915000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -11715,33 +15803,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
+        "mtdTonnage": 160918,
         "mtdPallets": 2704,
         "shift1Tonnage": 5664,
         "shift1Pallets": 70,
@@ -11854,7 +15922,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
+      "mtdTonnage": 1438689,
       "mtdPallets": 85304,
       "shift1Tonnage": 35378,
       "shift1Pallets": 1740,
@@ -11871,6 +15939,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260915000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -12054,33 +16142,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 160904,
+        "mtdTonnage": 160918,
         "mtdPallets": 2704,
         "shift1Tonnage": 5664,
         "shift1Pallets": 70,
@@ -12193,7 +16261,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1438675,
+      "mtdTonnage": 1438689,
       "mtdPallets": 85304,
       "shift1Tonnage": 35378,
       "shift1Pallets": 1740,
@@ -12210,6 +16278,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260914000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -12393,33 +16481,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
+        "mtdTonnage": 145362,
         "mtdPallets": 2498,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -12532,7 +16600,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
+      "mtdTonnage": 1331850,
       "mtdPallets": 79603,
       "shift1Tonnage": 18416,
       "shift1Pallets": 772,
@@ -12549,6 +16617,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260914000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -12732,33 +16820,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
+        "mtdTonnage": 145362,
         "mtdPallets": 2498,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -12871,7 +16939,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
+      "mtdTonnage": 1331850,
       "mtdPallets": 79603,
       "shift1Tonnage": 18416,
       "shift1Pallets": 772,
@@ -12888,6 +16956,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260914000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -13071,33 +17159,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 145348,
+        "mtdTonnage": 145362,
         "mtdPallets": 2498,
         "shift1Tonnage": 5091,
         "shift1Pallets": 70,
@@ -13210,7 +17278,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1331836,
+      "mtdTonnage": 1331850,
       "mtdPallets": 79603,
       "shift1Tonnage": 18416,
       "shift1Pallets": 772,
@@ -13227,6 +17295,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260913000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -13410,33 +17498,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
+        "mtdTonnage": 133089,
         "mtdPallets": 2292,
         "shift1Tonnage": 797,
         "shift1Pallets": 34,
@@ -13549,7 +17617,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
+      "mtdTonnage": 1248002,
       "mtdPallets": 74873,
       "shift1Tonnage": 24936,
       "shift1Pallets": 1549,
@@ -13566,6 +17634,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260913000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -13749,33 +17837,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
+        "mtdTonnage": 133089,
         "mtdPallets": 2292,
         "shift1Tonnage": 797,
         "shift1Pallets": 34,
@@ -13888,7 +17956,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
+      "mtdTonnage": 1248002,
       "mtdPallets": 74873,
       "shift1Tonnage": 24936,
       "shift1Pallets": 1549,
@@ -13905,6 +17973,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260913000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -14088,33 +18176,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 133075,
+        "mtdTonnage": 133089,
         "mtdPallets": 2292,
         "shift1Tonnage": 797,
         "shift1Pallets": 34,
@@ -14227,7 +18295,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1247988,
+      "mtdTonnage": 1248002,
       "mtdPallets": 74873,
       "shift1Tonnage": 24936,
       "shift1Pallets": 1549,
@@ -14244,6 +18312,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260912000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -14427,33 +18515,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
+        "mtdTonnage": 132292,
         "mtdPallets": 2258,
         "shift1Tonnage": 4529,
         "shift1Pallets": 70,
@@ -14566,7 +18634,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
+      "mtdTonnage": 1168818,
       "mtdPallets": 69835,
       "shift1Tonnage": 36541,
       "shift1Pallets": 2194,
@@ -14583,6 +18651,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260912000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -14766,33 +18854,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
+        "mtdTonnage": 132292,
         "mtdPallets": 2258,
         "shift1Tonnage": 4529,
         "shift1Pallets": 70,
@@ -14905,7 +18973,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
+      "mtdTonnage": 1168818,
       "mtdPallets": 69835,
       "shift1Tonnage": 36541,
       "shift1Pallets": 2194,
@@ -14922,6 +18990,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260912000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -15105,33 +19193,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 132278,
+        "mtdTonnage": 132292,
         "mtdPallets": 2258,
         "shift1Tonnage": 4529,
         "shift1Pallets": 70,
@@ -15244,7 +19312,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1168804,
+      "mtdTonnage": 1168818,
       "mtdPallets": 69835,
       "shift1Tonnage": 36541,
       "shift1Pallets": 2194,
@@ -15261,6 +19329,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260911000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -15444,33 +19532,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
+        "mtdTonnage": 119298,
         "mtdPallets": 2051,
         "shift1Tonnage": 5042,
         "shift1Pallets": 70,
@@ -15583,7 +19651,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
+      "mtdTonnage": 1067591,
       "mtdPallets": 63904,
       "shift1Tonnage": 35205,
       "shift1Pallets": 2026,
@@ -15600,6 +19668,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260911000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -15783,33 +19871,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
+        "mtdTonnage": 119298,
         "mtdPallets": 2051,
         "shift1Tonnage": 5042,
         "shift1Pallets": 70,
@@ -15922,7 +19990,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
+      "mtdTonnage": 1067591,
       "mtdPallets": 63904,
       "shift1Tonnage": 35205,
       "shift1Pallets": 2026,
@@ -15939,6 +20007,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260911000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -16122,33 +20210,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 119284,
+        "mtdTonnage": 119298,
         "mtdPallets": 2051,
         "shift1Tonnage": 5042,
         "shift1Pallets": 70,
@@ -16261,7 +20329,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 1067577,
+      "mtdTonnage": 1067591,
       "mtdPallets": 63904,
       "shift1Tonnage": 35205,
       "shift1Pallets": 2026,
@@ -16278,6 +20346,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260910000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -16461,33 +20549,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
+        "mtdTonnage": 109144,
         "mtdPallets": 1845,
         "shift1Tonnage": 3262,
         "shift1Pallets": 70,
@@ -16600,7 +20668,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
+      "mtdTonnage": 963960,
       "mtdPallets": 57614,
       "shift1Tonnage": 28887,
       "shift1Pallets": 1731,
@@ -16617,6 +20685,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260910000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -16800,33 +20888,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
+        "mtdTonnage": 109144,
         "mtdPallets": 1845,
         "shift1Tonnage": 3262,
         "shift1Pallets": 70,
@@ -16939,7 +21007,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
+      "mtdTonnage": 963960,
       "mtdPallets": 57614,
       "shift1Tonnage": 28887,
       "shift1Pallets": 1731,
@@ -16956,6 +21024,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260910000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -17139,33 +21227,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 109130,
+        "mtdTonnage": 109144,
         "mtdPallets": 1845,
         "shift1Tonnage": 3262,
         "shift1Pallets": 70,
@@ -17278,7 +21346,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 963946,
+      "mtdTonnage": 963960,
       "mtdPallets": 57614,
       "shift1Tonnage": 28887,
       "shift1Pallets": 1731,
@@ -17295,6 +21363,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260909000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -17478,41 +21566,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
+        "mtdTonnage": 96146,
         "mtdPallets": 1640,
         "shift1Tonnage": 3589,
         "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
+        "shift2Tonnage": 3152,
         "shift2Pallets": 69,
         "shift3Tonnage": 3542,
         "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
+        "dailyTotalTonnage": 10283,
         "dailyTotalPallets": 205
       },
       {
@@ -17617,15 +21685,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
+      "mtdTonnage": 861427,
       "mtdPallets": 51626,
       "shift1Tonnage": 29403,
       "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
+      "shift2Tonnage": 33657,
       "shift2Pallets": 2020,
       "shift3Tonnage": 29451,
       "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
+      "dailyTotalTonnage": 92511,
       "dailyTotalPallets": 5634
     }
   },
@@ -17634,6 +21702,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260909000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -17817,41 +21905,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
+        "mtdTonnage": 96146,
         "mtdPallets": 1640,
         "shift1Tonnage": 3589,
         "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
+        "shift2Tonnage": 3152,
         "shift2Pallets": 69,
         "shift3Tonnage": 3542,
         "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
+        "dailyTotalTonnage": 10283,
         "dailyTotalPallets": 205
       },
       {
@@ -17956,15 +22024,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
+      "mtdTonnage": 861427,
       "mtdPallets": 51626,
       "shift1Tonnage": 29403,
       "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
+      "shift2Tonnage": 33657,
       "shift2Pallets": 2020,
       "shift3Tonnage": 29451,
       "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
+      "dailyTotalTonnage": 92511,
       "dailyTotalPallets": 5634
     }
   },
@@ -17973,6 +22041,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260909000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -18156,41 +22244,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 96132,
+        "mtdTonnage": 96146,
         "mtdPallets": 1640,
         "shift1Tonnage": 3589,
         "shift1Pallets": 69,
-        "shift2Tonnage": 3150,
+        "shift2Tonnage": 3152,
         "shift2Pallets": 69,
         "shift3Tonnage": 3542,
         "shift3Pallets": 67,
-        "dailyTotalTonnage": 10281,
+        "dailyTotalTonnage": 10283,
         "dailyTotalPallets": 205
       },
       {
@@ -18295,15 +22363,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 861413,
+      "mtdTonnage": 861427,
       "mtdPallets": 51626,
       "shift1Tonnage": 29403,
       "shift1Pallets": 1773,
-      "shift2Tonnage": 33655,
+      "shift2Tonnage": 33657,
       "shift2Pallets": 2020,
       "shift3Tonnage": 29451,
       "shift3Pallets": 1841,
-      "dailyTotalTonnage": 92509,
+      "dailyTotalTonnage": 92511,
       "dailyTotalPallets": 5634
     }
   },
@@ -18312,6 +22380,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260908000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -18495,41 +22583,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
+        "mtdTonnage": 85862,
         "mtdPallets": 1435,
         "shift1Tonnage": 4302,
         "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
+        "shift2Tonnage": 3044,
         "shift2Pallets": 70,
         "shift3Tonnage": 4663,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
+        "dailyTotalTonnage": 12009,
         "dailyTotalPallets": 205
       },
       {
@@ -18634,15 +22702,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
+      "mtdTonnage": 768909,
       "mtdPallets": 45992,
       "shift1Tonnage": 28263,
       "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
+      "shift2Tonnage": 37009,
       "shift2Pallets": 2129,
       "shift3Tonnage": 36033,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
+      "dailyTotalTonnage": 101305,
       "dailyTotalPallets": 5967
     }
   },
@@ -18651,6 +22719,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260908000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -18834,41 +22922,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
+        "mtdTonnage": 85862,
         "mtdPallets": 1435,
         "shift1Tonnage": 4302,
         "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
+        "shift2Tonnage": 3044,
         "shift2Pallets": 70,
         "shift3Tonnage": 4663,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
+        "dailyTotalTonnage": 12009,
         "dailyTotalPallets": 205
       },
       {
@@ -18973,15 +23041,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
+      "mtdTonnage": 768909,
       "mtdPallets": 45992,
       "shift1Tonnage": 28263,
       "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
+      "shift2Tonnage": 37009,
       "shift2Pallets": 2129,
       "shift3Tonnage": 36033,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
+      "dailyTotalTonnage": 101305,
       "dailyTotalPallets": 5967
     }
   },
@@ -18990,6 +23058,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260908000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -19173,41 +23261,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 85850,
+        "mtdTonnage": 85862,
         "mtdPallets": 1435,
         "shift1Tonnage": 4302,
         "shift1Pallets": 70,
-        "shift2Tonnage": 3042,
+        "shift2Tonnage": 3044,
         "shift2Pallets": 70,
         "shift3Tonnage": 4663,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12007,
+        "dailyTotalTonnage": 12009,
         "dailyTotalPallets": 205
       },
       {
@@ -19312,15 +23380,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 768897,
+      "mtdTonnage": 768909,
       "mtdPallets": 45992,
       "shift1Tonnage": 28263,
       "shift1Pallets": 1742,
-      "shift2Tonnage": 37007,
+      "shift2Tonnage": 37009,
       "shift2Pallets": 2129,
       "shift3Tonnage": 36033,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 101303,
+      "dailyTotalTonnage": 101305,
       "dailyTotalPallets": 5967
     }
   },
@@ -19328,6 +23396,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "07/09/2026",
     "productionDayValue": "20260907000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -19512,33 +23600,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
+        "mtdTonnage": 73851,
         "mtdPallets": 1230,
         "shift1Tonnage": 6450,
         "shift1Pallets": 74,
@@ -19651,7 +23719,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
+      "mtdTonnage": 667593,
       "mtdPallets": 40025,
       "shift1Tonnage": 29404,
       "shift1Pallets": 1429,
@@ -19668,6 +23736,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260907000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -19851,33 +23939,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
+        "mtdTonnage": 73851,
         "mtdPallets": 1230,
         "shift1Tonnage": 6450,
         "shift1Pallets": 74,
@@ -19990,7 +24058,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
+      "mtdTonnage": 667593,
       "mtdPallets": 40025,
       "shift1Tonnage": 29404,
       "shift1Pallets": 1429,
@@ -20007,6 +24075,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260907000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -20190,33 +24278,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 73842,
+        "mtdTonnage": 73851,
         "mtdPallets": 1230,
         "shift1Tonnage": 6450,
         "shift1Pallets": 74,
@@ -20329,7 +24397,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 667584,
+      "mtdTonnage": 667593,
       "mtdPallets": 40025,
       "shift1Tonnage": 29404,
       "shift1Pallets": 1429,
@@ -20346,6 +24414,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260906000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -20529,33 +24617,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
@@ -20668,7 +24736,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
+      "mtdTonnage": 567792,
       "mtdPallets": 34334,
       "shift1Tonnage": 27840,
       "shift1Pallets": 1866,
@@ -20685,6 +24753,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260906000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -20868,33 +24956,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
@@ -21007,7 +25075,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
+      "mtdTonnage": 567792,
       "mtdPallets": 34334,
       "shift1Tonnage": 27840,
       "shift1Pallets": 1866,
@@ -21024,6 +25092,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260906000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -21207,33 +25295,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 0,
         "shift1Pallets": 0,
@@ -21346,7 +25414,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 567783,
+      "mtdTonnage": 567792,
       "mtdPallets": 34334,
       "shift1Tonnage": 27840,
       "shift1Pallets": 1866,
@@ -21363,6 +25431,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260905000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -21546,41 +25634,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 5071,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
+        "shift2Tonnage": 1490,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
+        "shift3Tonnage": 1365,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
+        "dailyTotalTonnage": 7926,
         "dailyTotalPallets": 205
       },
       {
@@ -21685,15 +25753,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
+      "mtdTonnage": 488148,
       "mtdPallets": 28923,
       "shift1Tonnage": 33839,
       "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
+      "shift2Tonnage": 33644,
       "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
+      "shift3Tonnage": 33491,
       "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
+      "dailyTotalTonnage": 100974,
       "dailyTotalPallets": 6291
     }
   },
@@ -21702,6 +25770,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260905000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -21885,41 +25973,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 5071,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
+        "shift2Tonnage": 1490,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
+        "shift3Tonnage": 1365,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
+        "dailyTotalTonnage": 7926,
         "dailyTotalPallets": 205
       },
       {
@@ -22024,15 +26092,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
+      "mtdTonnage": 488148,
       "mtdPallets": 28923,
       "shift1Tonnage": 33839,
       "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
+      "shift2Tonnage": 33644,
       "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
+      "shift3Tonnage": 33491,
       "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
+      "dailyTotalTonnage": 100974,
       "dailyTotalPallets": 6291
     }
   },
@@ -22041,6 +26109,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260905000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -22224,41 +26312,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 61378,
+        "mtdTonnage": 61387,
         "mtdPallets": 1025,
         "shift1Tonnage": 5071,
         "shift1Pallets": 70,
-        "shift2Tonnage": 1489,
+        "shift2Tonnage": 1490,
         "shift2Pallets": 70,
-        "shift3Tonnage": 1364,
+        "shift3Tonnage": 1365,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 7924,
+        "dailyTotalTonnage": 7926,
         "dailyTotalPallets": 205
       },
       {
@@ -22363,15 +26431,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 488139,
+      "mtdTonnage": 488148,
       "mtdPallets": 28923,
       "shift1Tonnage": 33839,
       "shift1Pallets": 1939,
-      "shift2Tonnage": 33643,
+      "shift2Tonnage": 33644,
       "shift2Pallets": 2137,
-      "shift3Tonnage": 33490,
+      "shift3Tonnage": 33491,
       "shift3Pallets": 2215,
-      "dailyTotalTonnage": 100972,
+      "dailyTotalTonnage": 100974,
       "dailyTotalPallets": 6291
     }
   },
@@ -22379,6 +26447,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "04/09/2026",
     "productionDayValue": "20260904000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -22563,33 +26651,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
+        "mtdTonnage": 53459,
         "mtdPallets": 820,
         "shift1Tonnage": 4945,
         "shift1Pallets": 68,
@@ -22702,7 +26770,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
+      "mtdTonnage": 387165,
       "mtdPallets": 22632,
       "shift1Tonnage": 33193,
       "shift1Pallets": 1927,
@@ -22719,6 +26787,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260904000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -22902,33 +26990,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
+        "mtdTonnage": 53459,
         "mtdPallets": 820,
         "shift1Tonnage": 4945,
         "shift1Pallets": 68,
@@ -23041,7 +27109,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
+      "mtdTonnage": 387165,
       "mtdPallets": 22632,
       "shift1Tonnage": 33193,
       "shift1Pallets": 1927,
@@ -23058,6 +27126,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260904000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -23241,33 +27329,13 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 53453,
+        "mtdTonnage": 53459,
         "mtdPallets": 820,
         "shift1Tonnage": 4945,
         "shift1Pallets": 68,
@@ -23380,7 +27448,7 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 387159,
+      "mtdTonnage": 387165,
       "mtdPallets": 22632,
       "shift1Tonnage": 33193,
       "shift1Pallets": 1927,
@@ -23397,6 +27465,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260903000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -23580,41 +27668,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
+        "mtdTonnage": 38676,
         "mtdPallets": 615,
         "shift1Tonnage": 5152,
         "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 3596,
         "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
+        "dailyTotalTonnage": 11422,
         "dailyTotalPallets": 205
       },
       {
@@ -23719,15 +27787,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
+      "mtdTonnage": 280605,
       "mtdPallets": 16433,
       "shift1Tonnage": 31163,
       "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
+      "shift2Tonnage": 35581,
       "shift2Pallets": 2132,
       "shift3Tonnage": 37177,
       "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
+      "dailyTotalTonnage": 103921,
       "dailyTotalPallets": 6211
     }
   },
@@ -23736,6 +27804,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260903000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -23919,41 +28007,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
+        "mtdTonnage": 38676,
         "mtdPallets": 615,
         "shift1Tonnage": 5152,
         "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 3596,
         "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
+        "dailyTotalTonnage": 11422,
         "dailyTotalPallets": 205
       },
       {
@@ -24058,15 +28126,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
+      "mtdTonnage": 280605,
       "mtdPallets": 16433,
       "shift1Tonnage": 31163,
       "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
+      "shift2Tonnage": 35581,
       "shift2Pallets": 2132,
       "shift3Tonnage": 37177,
       "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
+      "dailyTotalTonnage": 103921,
       "dailyTotalPallets": 6211
     }
   },
@@ -24075,6 +28143,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260903000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -24258,41 +28346,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 38670,
+        "mtdTonnage": 38676,
         "mtdPallets": 615,
         "shift1Tonnage": 5152,
         "shift1Pallets": 72,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 3596,
         "shift3Pallets": 63,
-        "dailyTotalTonnage": 11418,
+        "dailyTotalTonnage": 11422,
         "dailyTotalPallets": 205
       },
       {
@@ -24397,15 +28465,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 280599,
+      "mtdTonnage": 280605,
       "mtdPallets": 16433,
       "shift1Tonnage": 31163,
       "shift1Pallets": 1837,
-      "shift2Tonnage": 35577,
+      "shift2Tonnage": 35581,
       "shift2Pallets": 2132,
       "shift3Tonnage": 37177,
       "shift3Pallets": 2242,
-      "dailyTotalTonnage": 103917,
+      "dailyTotalTonnage": 103921,
       "dailyTotalPallets": 6211
     }
   },
@@ -24414,6 +28482,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260902000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -24597,41 +28685,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
+        "mtdTonnage": 27253,
         "mtdPallets": 410,
         "shift1Tonnage": 5010,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 4695,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
+        "dailyTotalTonnage": 12379,
         "dailyTotalPallets": 205
       },
       {
@@ -24736,15 +28804,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
+      "mtdTonnage": 176676,
       "mtdPallets": 10222,
       "shift1Tonnage": 25865,
       "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
+      "shift2Tonnage": 30754,
       "shift2Pallets": 1928,
       "shift3Tonnage": 35154,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
+      "dailyTotalTonnage": 91773,
       "dailyTotalPallets": 5419
     }
   },
@@ -24753,6 +28821,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260902000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -24936,41 +29024,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
+        "mtdTonnage": 27253,
         "mtdPallets": 410,
         "shift1Tonnage": 5010,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 4695,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
+        "dailyTotalTonnage": 12379,
         "dailyTotalPallets": 205
       },
       {
@@ -25075,15 +29143,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
+      "mtdTonnage": 176676,
       "mtdPallets": 10222,
       "shift1Tonnage": 25865,
       "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
+      "shift2Tonnage": 30754,
       "shift2Pallets": 1928,
       "shift3Tonnage": 35154,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
+      "dailyTotalTonnage": 91773,
       "dailyTotalPallets": 5419
     }
   },
@@ -25092,6 +29160,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260902000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -25275,41 +29363,21 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
         "value": "20260821000000",
         "label": "21/08/2026",
         "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
-        "selected": false
       }
     ],
     "rows": [
       {
         "code": "6",
         "categoryName": "Aero Radial",
-        "mtdTonnage": 27249,
+        "mtdTonnage": 27253,
         "mtdPallets": 410,
         "shift1Tonnage": 5010,
         "shift1Pallets": 70,
-        "shift2Tonnage": 2670,
+        "shift2Tonnage": 2674,
         "shift2Pallets": 70,
         "shift3Tonnage": 4695,
         "shift3Pallets": 65,
-        "dailyTotalTonnage": 12375,
+        "dailyTotalTonnage": 12379,
         "dailyTotalPallets": 205
       },
       {
@@ -25414,15 +29482,15 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "total": {
       "code": "TOTAL",
       "categoryName": "TOTAL",
-      "mtdTonnage": 176672,
+      "mtdTonnage": 176676,
       "mtdPallets": 10222,
       "shift1Tonnage": 25865,
       "shift1Pallets": 1395,
-      "shift2Tonnage": 30750,
+      "shift2Tonnage": 30754,
       "shift2Pallets": 1928,
       "shift3Tonnage": 35154,
       "shift3Pallets": 2096,
-      "dailyTotalTonnage": 91769,
+      "dailyTotalTonnage": 91773,
       "dailyTotalPallets": 5419
     }
   },
@@ -25430,6 +29498,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDay": "01/09/2026",
     "productionDayValue": "20260901000000",
     "availableDates": [
+      {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
       {
         "value": "20260926000000",
         "label": "26/09/2026",
@@ -25613,26 +29701,6 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "value": "20260821000000",
         "label": "21/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
         "selected": false
       }
     ],
@@ -25770,6 +29838,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260901000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -25952,26 +30040,6 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "value": "20260821000000",
         "label": "21/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
         "selected": false
       }
     ],
@@ -26109,6 +30177,26 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
     "productionDayValue": "20260901000000",
     "availableDates": [
       {
+        "value": "20260930000000",
+        "label": "30/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260929000000",
+        "label": "29/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260928000000",
+        "label": "28/09/2026",
+        "selected": false
+      },
+      {
+        "value": "20260927000000",
+        "label": "27/09/2026",
+        "selected": false
+      },
+      {
         "value": "20260926000000",
         "label": "26/09/2026",
         "selected": false
@@ -26291,26 +30379,6 @@ export const DEFAULT_STOCKING_REPORTS: Record<string, StockingTonnageReport> = {
       {
         "value": "20260821000000",
         "label": "21/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260820000000",
-        "label": "20/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260819000000",
-        "label": "19/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260818000000",
-        "label": "18/08/2026",
-        "selected": false
-      },
-      {
-        "value": "20260817000000",
-        "label": "17/08/2026",
         "selected": false
       }
     ],

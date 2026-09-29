@@ -17,6 +17,7 @@ import defaultAdjustmentsRaw from './data/default_adjustments.json';
 import { DEFAULT_CONTRACTOR_MAPPING, DEFAULT_CONTRACTOR_RECORDS_BY_DATE } from './data/default_contractor_data';
 import { DEFAULT_PDI_BEAD_REPORT, PdiBeadReport } from './data/default_pdi_bead';
 import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from './data/default_retread_tonnage';
+import { DEFAULT_RTR_SHUTDOWN_DATA, RtrShutdownEntry } from './data/default_rtr_shutdown';
 import { processScanRecords, createPresetsFromScanFiles, normalizeDateToMMDDYYYY, RawScanFileItem } from './utils/parser';
 import { EmployeeInfo, DailyAdjustmentRecord } from './types/attendance';
 import { ContractorScanRecord } from './types/contractor';
@@ -73,6 +74,20 @@ export default function App() {
       return DEFAULT_RETREAD_TONNAGE;
     } catch {
       return DEFAULT_RETREAD_TONNAGE;
+    }
+  });
+
+  // RTR Shutdown Hour state
+  const [rtrShutdownData, setRtrShutdownData] = useState<Record<string, RtrShutdownEntry>>(() => {
+    try {
+      const saved = localStorage.getItem('ohpa_rtr_shutdown_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) return parsed;
+      }
+      return DEFAULT_RTR_SHUTDOWN_DATA;
+    } catch {
+      return DEFAULT_RTR_SHUTDOWN_DATA;
     }
   });
 
@@ -380,6 +395,23 @@ export default function App() {
         }
       } catch (e: any) {
         console.warn('Sync retread tonnage error:', e);
+      }
+
+      // 6. Fetch RTR Shutdown Hours from /api/sync-rtr-shutdown
+      try {
+        const rtrRes = await fetch('/api/sync-rtr-shutdown');
+        if (rtrRes.ok) {
+          const rtrData = await rtrRes.json();
+          if (rtrData.success && rtrData.data) {
+            setRtrShutdownData(rtrData.data);
+            try {
+              localStorage.setItem('ohpa_rtr_shutdown_data', JSON.stringify(rtrData.data));
+            } catch (e) {}
+            syncSummary.push(`RTR Shutdown (${rtrData.datesCount || Object.keys(rtrData.data).length} วัน)`);
+          }
+        }
+      } catch (e: any) {
+        console.warn('Sync RTR shutdown error:', e);
       }
 
       if (syncSummary.length > 0) {
@@ -730,6 +762,7 @@ export default function App() {
             dailyAdjustments={dailyAdjustments}
             pdiBeadReport={pdiBeadReport}
             retreadTonnage={retreadTonnage}
+            rtrShutdownData={rtrShutdownData}
           />
         )}
 

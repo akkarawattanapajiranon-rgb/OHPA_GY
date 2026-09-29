@@ -5,6 +5,7 @@ import { ContractorScanRecord } from '../types/contractor';
 import { StockingTonnageReport, OhpaAreaMetrics } from '../types/ohpa';
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
+import { DEFAULT_RTR_SHUTDOWN_DATA, RtrShutdownEntry } from '../data/default_rtr_shutdown';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
 import {
@@ -20,6 +21,7 @@ import {
   Layers,
   Sparkles,
   AlertCircle,
+  AlertTriangle,
   TrendingUp,
   Users,
   HardHat,
@@ -50,6 +52,7 @@ interface OhpaCalculationViewProps {
   dailyAdjustments?: any[];
   pdiBeadReport?: PdiBeadReport;
   retreadTonnage?: RetreadTonnageData;
+  rtrShutdownData?: Record<string, RtrShutdownEntry>;
 }
 
 export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
@@ -62,7 +65,8 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   employeeMapping = {},
   dailyAdjustments = [],
   pdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
-  retreadTonnage = DEFAULT_RETREAD_TONNAGE
+  retreadTonnage = DEFAULT_RETREAD_TONNAGE,
+  rtrShutdownData = DEFAULT_RTR_SHUTDOWN_DATA
 }) => {
   const [tonnageReport, setTonnageReport] = useState<StockingTonnageReport | null>(null);
   const [selectedPdValue, setSelectedPdValue] = useState<string>('');
@@ -79,23 +83,25 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
     setIsSyncingPdi(true);
     setSyncStatus(null);
     try {
-      const res = await fetch('/api/sync-pdi-bead');
-      const data = await res.json();
-      if (data.success) {
+      const pdiPromise = fetch('/api/sync-pdi-bead').then(r => r.json()).catch(() => null);
+      const rtrPromise = fetch('/api/sync-rtr-shutdown').then(r => r.json()).catch(() => null);
+      const [pdiData, rtrData] = await Promise.all([pdiPromise, rtrPromise]);
+
+      if (pdiData && pdiData.success) {
         setSyncStatus({
           type: 'success',
-          message: data.message || 'ซิงค์ข้อมูล PDI & Bead & BCA สำเร็จ'
+          message: pdiData.message ? `${pdiData.message} & RTR Shutdown` : 'ซิงค์ข้อมูล PDI & Bead & BCA & RTR Shutdown สำเร็จ'
         });
       } else {
         setSyncStatus({
           type: 'error',
-          message: data.message || 'เกิดข้อผิดพลาดในการซิงค์ข้อมูล PDI & Bead'
+          message: pdiData?.message || 'เกิดข้อผิดพลาดในการซิงค์ข้อมูล'
         });
       }
     } catch (err: any) {
       setSyncStatus({
         type: 'error',
-        message: err.message || 'ไม่สามารถเชื่อมต่อ API ซิงค์ PDI & Bead ได้'
+        message: err.message || 'ไม่สามารถเชื่อมต่อ API ซิงค์ข้อมูลได้'
       });
     } finally {
       setIsSyncingPdi(false);
@@ -196,9 +202,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
       employeeMapping,
       dailyAdjustments,
       pdiBeadReport,
-      retreadTonnage
+      retreadTonnage,
+      rtrShutdownData
     );
-  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport, retreadTonnage]);
+  }, [records, contractorRecords, tonnageReport, currentScanDateFormatted, allScanPresets, contractorRecordsByDate, employeeMapping, dailyAdjustments, pdiBeadReport, retreadTonnage, rtrShutdownData]);
 
   const activeAreaBreakdown = useMemo(() => {
     if (viewMode === 'MTD' && ohpaSummary.mtd?.areaBreakdown && ohpaSummary.mtd.areaBreakdown.length > 0) {
@@ -591,11 +598,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
               <span className="bg-rose-100 text-rose-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-300/40">
                 ตัดแผนก 6320 ออก
               </span>
-              <span className="bg-amber-100 text-amber-900 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300/40">
-                🔻 PDI (-{ohpaSummary.pdiDeductHours}h) &nbsp; 🟢 Bead (+{ohpaSummary.beadAddHours}h)
-                {ohpaSummary.bcaReductionHours ? ` | 🔄 โอน BCA→Retread (-${ohpaSummary.bcaReductionHours}h)` : ''}
-                {ohpaSummary.bcaDevHours ? ` | 🧪 BCA DEV (-${ohpaSummary.bcaDevHours}h)` : ''}
-                {ohpaSummary.rtrShutdownHours ? ` | ⚠️ RTR Shutdown (-${ohpaSummary.rtrShutdownHours}h)` : ''}
+              <span className="bg-amber-100 text-amber-900 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300/40 inline-flex items-center gap-1.5 flex-wrap">
+                <span>🔻 PDI (-{ohpaSummary.pdiDeductHours}h) &nbsp; 🟢 Bead (+{ohpaSummary.beadAddHours}h)</span>
+                {ohpaSummary.bcaReductionHours ? <span>| 🔄 โอน BCA→Retread (-{ohpaSummary.bcaReductionHours}h)</span> : ''}
+                {ohpaSummary.bcaDevHours ? <span>| 🧪 BCA DEV (-{ohpaSummary.bcaDevHours}h)</span> : ''}
+                {ohpaSummary.rtrShutdownHours ? (
+                  <span className="inline-flex items-center gap-1 bg-rose-200/80 text-rose-900 px-1.5 py-0.2 rounded font-black border border-rose-400/50 shadow-2xs">
+                    <AlertTriangle className="w-3 h-3 text-rose-700 inline" /> RTR Shutdown (-{ohpaSummary.rtrShutdownHours}h)
+                  </span>
+                ) : ''}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -1147,8 +1158,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </span>
                 ) : null}
                 {ohpaSummary.rtrShutdownHours ? (
-                  <span className="inline-flex items-center gap-1 bg-rose-50 border border-rose-200/60 px-2 py-1 rounded-lg text-xs font-semibold text-rose-900 whitespace-nowrap" title="RTR Shutdown Hours หักตามแผนก">
-                    <span className="text-rose-700">⚠️ RTR:</span>
+                  <span className="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 px-2 py-1 rounded-lg text-xs font-semibold text-rose-900 whitespace-nowrap shadow-2xs" title="RTR Shutdown Hours หักตามแผนก">
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600 inline shrink-0" />
+                    <span className="text-rose-700 font-bold">RTR:</span>
                     <span className="font-mono font-black text-rose-950">-{ohpaSummary.rtrShutdownHours}h</span>
                   </span>
                 ) : null}
@@ -1283,8 +1295,9 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                   </span>
                 ) : null}
                 {ohpaSummary.mtd?.mtdRtrShutdownHours ? (
-                  <span className="inline-flex items-center gap-1 bg-rose-50 border border-rose-200/60 px-2 py-1 rounded-lg text-xs font-semibold text-rose-900 whitespace-nowrap" title="MTD RTR Shutdown Hours หักตามแผนก">
-                    <span className="text-rose-700">⚠️ RTR:</span>
+                  <span className="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 px-2 py-1 rounded-lg text-xs font-semibold text-rose-900 whitespace-nowrap shadow-2xs" title="MTD RTR Shutdown Hours หักตามแผนก">
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600 inline shrink-0" />
+                    <span className="text-rose-700 font-bold">RTR:</span>
                     <span className="font-mono font-black text-rose-950">-{ohpaSummary.mtd?.mtdRtrShutdownHours.toLocaleString()}h</span>
                   </span>
                 ) : null}
@@ -1613,8 +1626,20 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       <div className="text-sm font-black text-slate-900 font-mono leading-tight">
                         {(area.finalOpahHours || area.totalHours).toLocaleString()} <span className="text-xs font-sans font-normal text-slate-500">ชม.สุทธิ</span>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono">
-                        (ฐาน: {area.totalHours.toLocaleString()} ชม.{area.beadAddHours ? ` +Bead ${area.beadAddHours}h` : ''}{area.pdiDeductHours ? ` -PDI ${area.pdiDeductHours}h` : ''}{area.bcaReductionHours ? ` -โอนRetread ${area.bcaReductionHours}h` : ''}{area.bcaDevHours ? ` -DEV ${area.bcaDevHours}h` : ''}{area.rtrShutdownHours ? ` -RTR ${area.rtrShutdownHours}h` : ''}{area.retreadReceivedHours ? ` +รับโอนBCA ${area.retreadReceivedHours}h` : ''})
+                      <div className="text-[10px] text-slate-500 font-mono flex flex-wrap items-center gap-1 mt-0.5">
+                        <span>(ฐาน: {area.totalHours.toLocaleString()} ชม.</span>
+                        {area.beadAddHours ? <span className="text-emerald-700 font-semibold">+Bead {area.beadAddHours}h</span> : null}
+                        {area.pdiDeductHours ? <span className="text-rose-700 font-semibold">-PDI {area.pdiDeductHours}h</span> : null}
+                        {area.bcaReductionHours ? <span className="text-amber-800 font-semibold">-โอนRetread {area.bcaReductionHours}h</span> : null}
+                        {area.bcaDevHours ? <span className="text-purple-800 font-semibold">-DEV {area.bcaDevHours}h</span> : null}
+                        {area.rtrShutdownHours ? (
+                          <span className="inline-flex items-center gap-0.5 text-rose-800 font-bold bg-rose-100/90 px-1 py-0.2 rounded border border-rose-300 shadow-2xs">
+                            <AlertTriangle className="w-2.5 h-2.5 text-rose-600 inline" />
+                            -RTR {area.rtrShutdownHours}h
+                          </span>
+                        ) : null}
+                        {area.retreadReceivedHours ? <span className="text-emerald-700 font-semibold">+รับโอนBCA {area.retreadReceivedHours}h</span> : null}
+                        <span>)</span>
                       </div>
                     </div>
 
@@ -1631,14 +1656,17 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            const effGy = ohpaSummary.effectiveGyRecords && ohpaSummary.effectiveGyRecords.length > 0 ? ohpaSummary.effectiveGyRecords : records;
+                            const effCont = ohpaSummary.effectiveContRecords && ohpaSummary.effectiveContRecords.length > 0 ? ohpaSummary.effectiveContRecords : contractorRecords;
                             exportTeamRawDataExcel(
-                              records,
-                              contractorRecords,
+                              effGy,
+                              effCont,
                               employeeMapping,
                               ohpaSummary.productionDay,
                               area.areaKey,
                               pdiBeadReport,
-                              tonnageReport
+                              tonnageReport,
+                              ohpaSummary.areaBreakdown
                             );
                           }}
                           className={`text-[10px] font-bold flex items-center gap-1 hover:underline cursor-pointer ${
@@ -1863,9 +1891,10 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                             </span>
                           ) : area.rtrShutdownHours && area.rtrShutdownHours > 0 ? (
                             <span
-                              className="font-bold text-rose-700"
+                              className="inline-flex items-center gap-0.5 font-bold text-rose-700 bg-rose-50 px-1 rounded"
                               title={`RTR Shutdown: -${area.rtrShutdownHours} ชม.`}
                             >
+                              <AlertTriangle className="w-3 h-3 text-rose-600 inline" />
                               -{area.rtrShutdownHours.toFixed(1)}
                             </span>
                           ) : (
@@ -2230,10 +2259,15 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                       GY {s.gyTotalHours}h | Cont {s.contractorTotalHours}h | Mon {s.monthlyHours}h
                     </span>
                   </div>
-                  <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-[10px]">
+                  <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-[10px] flex-wrap gap-1">
                     <span className="text-rose-600 font-bold">🔻 PDI: -{s.pdiDeductHours || 0}h</span>
                     <span className="text-emerald-600 font-bold">🟢 Bead: +{s.beadAddHours || 0}h</span>
-                    {s.rtrShutdownHours ? <span className="text-rose-800 font-bold">⚠️ RTR: -{s.rtrShutdownHours}h</span> : null}
+                    {s.rtrShutdownHours ? (
+                      <span className="inline-flex items-center gap-0.5 text-rose-800 font-bold bg-rose-100/80 px-1 py-0.2 rounded border border-rose-200">
+                        <AlertTriangle className="w-2.5 h-2.5 text-rose-600 inline" />
+                        RTR: -{s.rtrShutdownHours}h
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 

@@ -404,7 +404,7 @@ export const LateEarlyDashboardView: React.FC<LateEarlyDashboardViewProps> = ({
     const selectedDateStr = horizon === 'DAILY'
       ? `${String(selectedDay > 0 ? selectedDay : currentDayNum).padStart(2, '0')}/09/2026`
       : 'September_2026';
-    exportLateEarlyExcel(dataset, horizon, selectedDateStr, selectedWeek);
+    exportLateEarlyExcel(dataset, horizon, selectedWeek, selectedDateStr);
   };
 
   return (

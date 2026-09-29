@@ -4,7 +4,7 @@ import { StockingTonnageReport, OhpaSummary, OhpaShiftMetrics, OhpaDeptMetrics, 
 import { PdiBeadReport, DEFAULT_PDI_BEAD_REPORT } from '../data/default_pdi_bead';
 import { DEFAULT_STOCKING_REPORTS } from '../data/default_stocking_reports';
 import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_retread_tonnage';
-import { getRtrShutdownHoursForDate } from '../data/default_rtr_shutdown';
+import { getRtrShutdownHoursForDate, DEFAULT_RTR_SHUTDOWN_DATA, RtrShutdownEntry } from '../data/default_rtr_shutdown';
 import { processScanRecords, normalizeDateToMMDDYYYY } from './parser';
 
 export function parseDateComponents(dateStr: string): { day: number; month: number; year: number } {
@@ -1185,7 +1185,8 @@ export function calculateMtdSummary(
   employeeMapping: Record<string, EmployeeInfo> = {},
   dailyAdjustments: DailyAdjustmentRecord[] = [],
   pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
-  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE,
+  rtrShutdownData: Record<string, RtrShutdownEntry> = DEFAULT_RTR_SHUTDOWN_DATA
 ): MtdOhpaSummary {
   const clean = (targetDateStr || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
   const parts = clean.split(/[/.-]/);
@@ -1285,7 +1286,7 @@ export function calculateMtdSummary(
     const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[d] || (pdiBeadReport?.bcaReductionDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[d] / 60) * 100) / 100 : 0);
     const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[d] || (pdiBeadReport?.bcaDevDailyMinutes?.[d] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[d] / 60) * 100) / 100 : 0);
     const dayPdiDeductMap = buildPdiDeductMap(pdiBeadReport, d);
-    const dayRtrShutdownMap = getRtrShutdownHoursForDate(dayDateStr);
+    const dayRtrShutdownMap = getRtrShutdownHoursForDate(dayDateStr, rtrShutdownData);
     const dayRtrShutdownHours = Object.values(dayRtrShutdownMap).reduce((s, h) => s + (h || 0), 0);
 
     // Calculate day-level area breakdown
@@ -1459,7 +1460,8 @@ export function calculateOhpaSummary(
   employeeMapping: Record<string, EmployeeInfo> = {},
   dailyAdjustments: DailyAdjustmentRecord[] = [],
   pdiBeadReport: PdiBeadReport = DEFAULT_PDI_BEAD_REPORT,
-  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE
+  retreadTonnage: RetreadTonnageData = DEFAULT_RETREAD_TONNAGE,
+  rtrShutdownData: Record<string, RtrShutdownEntry> = DEFAULT_RTR_SHUTDOWN_DATA
 ): OhpaSummary {
   const cleanDate = (productionDayFormatted || '').replace(/^[📅📄\s]*วันที่\s*/, '').trim();
   const dateParts = cleanDate.split(/[/.-]/);
@@ -1536,7 +1538,7 @@ export function calculateOhpaSummary(
   const bcaReductionHours = pdiBeadReport?.bcaReductionDailyHours?.[targetDay] || (pdiBeadReport?.bcaReductionDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaReductionDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
   const bcaDevHours = pdiBeadReport?.bcaDevDailyHours?.[targetDay] || (pdiBeadReport?.bcaDevDailyMinutes?.[targetDay] ? Math.round((pdiBeadReport.bcaDevDailyMinutes[targetDay] / 60) * 100) / 100 : 0);
   const pdiDeductMap = buildPdiDeductMap(pdiBeadReport, targetDay);
-  const rtrShutdownMap = getRtrShutdownHoursForDate(productionDayFormatted);
+  const rtrShutdownMap = getRtrShutdownHoursForDate(productionDayFormatted, rtrShutdownData);
   const totalRtrShutdownHours = Object.values(rtrShutdownMap).reduce((s, h) => s + (h || 0), 0);
 
   // 3. Process Area Breakdown (5 Areas based on Master Headcount 16 Sep)
@@ -1958,7 +1960,8 @@ export function calculateOhpaSummary(
     employeeMapping,
     dailyAdjustments,
     pdiBeadReport,
-    retreadTonnage
+    retreadTonnage,
+    rtrShutdownData
   );
 
   return {

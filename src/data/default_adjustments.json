@@ -700,5 +700,137 @@
     "customEndTime": "07:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ พันหัวบีด Hex (23.00-07.00)"
+  },
+  {
+    "id": "adj-64-12674",
+    "dateStr": "25/09/2026",
+    "empId": "12674",
+    "empName": "พงศกรณ์ พวงใส",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "07:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (07.00-23.00)"
+  },
+  {
+    "id": "adj-65-12676",
+    "dateStr": "25/09/2026",
+    "empId": "12676",
+    "empName": "ประชา ไชยโชติ",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (23.00-07.00)"
+  },
+  {
+    "id": "adj-66-10373",
+    "dateStr": "25/09/2026",
+    "empId": "10373",
+    "empName": "ชัยณรงค์ คำแสน",
+    "otMachineOverride": "พันหัวบีด Hex",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ พันหัวบีด Hex (07.00-15.00)"
+  },
+  {
+    "id": "adj-67-12306",
+    "dateStr": "25/09/2026",
+    "empId": "12306",
+    "empName": "ณัฐพล ศิริโท",
+    "otMachineOverride": "พันหัวบีด Hex",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ พันหัวบีด Hex (07.00-15.00)"
+  },
+  {
+    "id": "adj-68-12115",
+    "dateStr": "25/09/2026",
+    "empId": "12115",
+    "empName": "สมนึก จุรัมย์",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "15:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (15.00-07.00)"
+  },
+  {
+    "id": "adj-69-12679",
+    "dateStr": "25/09/2026",
+    "empId": "12679",
+    "empName": "สุทธิชัย ส่งศิริ",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (23.00-07.00)"
+  },
+  {
+    "id": "adj-70-12808",
+    "dateStr": "25/09/2026",
+    "empId": "12808",
+    "empName": "เกรียงศักดิ์ โสมอินทร์",
+    "otMachineOverride": "Truker 4roll#1",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Truker 4roll#1 (15.00-23.00)"
+  },
+  {
+    "id": "adj-71-12486",
+    "dateStr": "26/09/2026",
+    "empId": "12486",
+    "empName": "ดวงสิทธิ์ เพ็ญพินิจ",
+    "otMachineOverride": "Truker 4roll#1",
+    "customStartTime": "07:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Truker 4roll#1 (07.00-19.00)"
+  },
+  {
+    "id": "adj-72-12674",
+    "dateStr": "26/09/2026",
+    "empId": "12674",
+    "empName": "พงศกรณ์ พวงใส",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (07.00-15.00)"
+  },
+  {
+    "id": "adj-73-09833",
+    "dateStr": "26/09/2026",
+    "empId": "09833",
+    "empName": "ปรีชา สุนทวงษ์",
+    "otMachineOverride": "54\" Band Building",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 54\" Band Building (15.00-23.00)"
+  },
+  {
+    "id": "adj-74-12185",
+    "dateStr": "26/09/2026",
+    "empId": "12185",
+    "empName": "จักรพงษ์ โคตรแป",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+  },
+  {
+    "id": "adj-75-12945",
+    "dateStr": "28/09/2026",
+    "empId": "12945",
+    "empName": "วรวุฒิ  มาพงษ์",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
   }
 ]
