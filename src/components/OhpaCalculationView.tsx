@@ -68,6 +68,30 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
   retreadTonnage = DEFAULT_RETREAD_TONNAGE,
   rtrShutdownData = DEFAULT_RTR_SHUTDOWN_DATA
 }) => {
+  // ===== OPAH TARGET DEFINITIONS =====
+  const OPAH_TARGETS: Record<string, number> = {
+    'Plant': 36,
+    'Total Aviation': 30,
+    'Consumer': 88,
+    'BCA': 104,
+    'Retread': 9,
+  };
+
+  const getOpahTarget = (areaKey: string): number | null => {
+    if (areaKey === 'Total Aviation') return OPAH_TARGETS['Total Aviation'];
+    if (areaKey === 'BCA') return OPAH_TARGETS['BCA'];
+    if (areaKey === 'Consumer') return OPAH_TARGETS['Consumer'];
+    if (areaKey === 'Retread') return OPAH_TARGETS['Retread'];
+    return null; // Bias Aero and Radial Aero don't have individual targets
+  };
+
+  const getTargetBadge = (actual: number, target: number) => {
+    const diff = actual - target;
+    const pct = target > 0 ? Math.round((diff / target) * 1000) / 10 : 0;
+    const isAbove = diff >= 0;
+    return { diff: Math.round(diff * 100) / 100, pct, isAbove };
+  };
+
   const [tonnageReport, setTonnageReport] = useState<StockingTonnageReport | null>(null);
   const [selectedPdValue, setSelectedPdValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -1101,6 +1125,24 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                 </span>
                 <span className="text-sm font-bold text-blue-200">lbs / ชม.</span>
               </div>
+              {/* Target comparison badge */}
+              {(() => {
+                const plantTarget = OPAH_TARGETS['Plant'];
+                const actual = ohpaSummary.overallOpahLbsPerHour;
+                if (!plantTarget || !actual) return null;
+                const { diff, pct, isAbove } = getTargetBadge(actual, plantTarget);
+                return (
+                  <div className={`mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold ${
+                    isAbove ? 'bg-emerald-500/30 text-emerald-100 border border-emerald-400/30' : 'bg-rose-500/30 text-rose-100 border border-rose-400/30'
+                  }`}>
+                    <span>🎯 Target: {plantTarget} lbs/ชม.</span>
+                    <span className="font-mono font-black">
+                      ({isAbove ? '+' : ''}{diff} | {isAbove ? '+' : ''}{pct}%)
+                    </span>
+                    <span>{isAbove ? '✅' : '⚠️'}</span>
+                  </div>
+                );
+              })()}
               <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">
                 สูตร: ({ohpaSummary.totalTonnageKg.toLocaleString()} kg × 2.20462) ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม. (สุทธิ) = <strong>{ohpaSummary.totalTonnageLbs.toLocaleString()} lbs</strong> ÷ {ohpaSummary.opahWorkingHours.toLocaleString()} ชม.
               </p>
@@ -1602,6 +1644,21 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           }`}>
                             {opahText}
                           </div>
+                          {/* Target comparison */}
+                          {(() => {
+                            const areaTarget = getOpahTarget(area.areaKey);
+                            if (!areaTarget || !area.areaOpahLbsPerHour) return null;
+                            const { diff, pct, isAbove } = getTargetBadge(area.areaOpahLbsPerHour, areaTarget);
+                            return (
+                              <div className={`mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                isAbove ? 'bg-emerald-100 text-emerald-800 border border-emerald-200/80' : 'bg-rose-100 text-rose-800 border border-rose-200/80'
+                              }`}>
+                                <span>🎯 {areaTarget}</span>
+                                <span className="font-mono font-black">({isAbove ? '+' : ''}{diff})</span>
+                                <span>{isAbove ? '✅' : '⚠️'}</span>
+                              </div>
+                            );
+                          })()}
                           <div className="text-[10px] text-emerald-700 font-semibold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
                             📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
                           </div>
@@ -1614,6 +1671,21 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                           <div className="text-xl font-black font-mono text-amber-950 leading-tight mt-0.5">
                             {area.areaOpahLbsPerHour ? `${area.areaOpahLbsPerHour.toLocaleString()} lbs/ชม.` : '-'}
                           </div>
+                          {/* Retread Target comparison */}
+                          {(() => {
+                            const retTarget = OPAH_TARGETS['Retread'];
+                            if (!retTarget || !area.areaOpahLbsPerHour) return null;
+                            const { diff, isAbove } = getTargetBadge(area.areaOpahLbsPerHour, retTarget);
+                            return (
+                              <div className={`mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                isAbove ? 'bg-emerald-100 text-emerald-800 border border-emerald-200/80' : 'bg-rose-100 text-rose-800 border border-rose-200/80'
+                              }`}>
+                                <span>🎯 {retTarget}</span>
+                                <span className="font-mono font-black">({isAbove ? '+' : ''}{diff})</span>
+                                <span>{isAbove ? '✅' : '⚠️'}</span>
+                              </div>
+                            );
+                          })()}
                           <div className="text-[10px] text-amber-800 font-bold truncate mt-1" title={`${area.areaTonnageKg?.toLocaleString()} kg (${area.areaTonnageLbs?.toLocaleString()} lbs)`}>
                             📦 {area.areaTonnageKg?.toLocaleString()} kg ({area.areaTonnageLbs?.toLocaleString()} lbs)
                           </div>
@@ -1939,6 +2011,17 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                             <div className={`text-[9px] font-sans font-semibold ${
                               isTotalAviation ? 'text-teal-700' : area.isExcluded6320 ? 'text-amber-800' : 'text-purple-700'
                             }`}>{area.isExcluded6320 ? 'lbs/ชม. (6320)' : 'lbs/ชม.'}</div>
+                            {/* Target badge in table */}
+                            {(() => {
+                              const t = getOpahTarget(area.areaKey);
+                              if (!t || !area.areaOpahLbsPerHour) return null;
+                              const { diff, isAbove } = getTargetBadge(area.areaOpahLbsPerHour, t);
+                              return (
+                                <div className={`text-[8px] font-sans font-bold mt-0.5 ${isAbove ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                  🎯 {t} ({isAbove ? '+' : ''}{diff}) {isAbove ? '✅' : '⚠️'}
+                                </div>
+                              );
+                            })()}
                           </div>
                         </td>
                       </tr>
@@ -2093,6 +2176,18 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
                     {viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdOpahLbsPerHour || '-') : ohpaSummary.overallOpahLbsPerHour}
                   </div>
                   <div className="text-[9px] text-purple-300/80 font-sans">lbs/ชม.</div>
+                  {/* Plant Target */}
+                  {(() => {
+                    const actual = viewMode === 'MTD' ? (ohpaSummary.mtd?.mtdOpahLbsPerHour || 0) : ohpaSummary.overallOpahLbsPerHour;
+                    const target = OPAH_TARGETS['Plant'];
+                    if (!target || !actual) return null;
+                    const { diff, isAbove } = getTargetBadge(actual, target);
+                    return (
+                      <div className={`text-[8px] font-sans font-bold mt-0.5 ${isAbove ? 'text-emerald-300' : 'text-rose-300'}`}>
+                        🎯 {target} ({isAbove ? '+' : ''}{diff}) {isAbove ? '✅' : '⚠️'}
+                      </div>
+                    );
+                  })()}
                 </td>
               </tr>
 
