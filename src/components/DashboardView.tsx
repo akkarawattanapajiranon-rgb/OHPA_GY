@@ -555,10 +555,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines (Every Machine by M/C) */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {mixNode?.children && mixNode.children.length > 0 ? (
                               mixNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -566,22 +563,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold shadow-sm'
+                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -605,10 +607,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines (Every Machine by M/C) */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {prepNode?.children && prepNode.children.length > 0 ? (
                               prepNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -616,22 +615,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold shadow-sm'
+                                        ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -705,10 +709,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {buildNode?.children && buildNode.children.length > 0 ? (
                               buildNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -716,22 +717,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold shadow-sm'
+                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -755,10 +761,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {ffNode?.children && ffNode.children.length > 0 ? (
                               ffNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -766,22 +769,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold shadow-sm'
+                                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -855,10 +863,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {biasNode?.children && biasNode.children.length > 0 ? (
                               biasNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -866,22 +871,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold shadow-sm'
+                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -905,10 +915,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {radialNode?.children && radialNode.children.length > 0 ? (
                               radialNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -916,22 +923,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold shadow-sm'
+                                        ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -999,10 +1011,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                       {/* Stem to Level 3 Machines */}
                       <div className="w-0.5 h-4 bg-slate-700" />
-                      <div className="w-full space-y-1">
-                        <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                          ศูนย์ต้นทุน (Cost Center)
-                        </div>
+                      <div className="w-full space-y-1.5">
                         {retOpsNode?.children && retOpsNode.children.length > 0 ? (
                           retOpsNode.children.map(mach => {
                             const isMachSelected = selectedNodeId === mach.id;
@@ -1010,22 +1019,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                               <button
                                 key={mach.id}
                                 onClick={() => setSelectedNodeId(mach.id)}
-                                className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                   isMachSelected
-                                    ? 'bg-emerald-400 text-slate-950 border-emerald-300 ring-2 ring-emerald-300 font-bold shadow-sm'
+                                    ? 'bg-emerald-400 text-slate-950 border-emerald-300 ring-2 ring-emerald-300 font-bold'
                                     : 'bg-slate-900/90 border-slate-700/80 hover:border-emerald-400 hover:bg-slate-800 text-slate-200'
                                 }`}
                                 title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                               >
-                                <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-emerald-300 font-semibold'}`}>
-                                  {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                </span>
+                                <div className="text-[11px] font-bold leading-tight break-words">
+                                  {mach.title}
+                                </div>
+                                <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                  isMachSelected ? 'text-slate-950 font-black' : 'text-emerald-300'
+                                }`}>
+                                  <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                  <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                </div>
                               </button>
                             );
                           })
                         ) : (
-                          <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีเครื่องจักร</div>
+                          <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                         )}
                       </div>
                     </div>
@@ -1097,10 +1111,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {maintNode?.children && maintNode.children.length > 0 ? (
                               maintNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1108,22 +1119,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold shadow-sm'
+                                        ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1147,10 +1163,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {plantEngNode?.children && plantEngNode.children.length > 0 ? (
                               plantEngNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1158,22 +1171,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold shadow-sm'
+                                        ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1249,10 +1267,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {qtechANode?.children && qtechANode.children.length > 0 ? (
                               qtechANode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1260,22 +1275,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1299,10 +1319,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {qtechBNode?.children && qtechBNode.children.length > 0 ? (
                               qtechBNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1310,22 +1327,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1348,10 +1370,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {qtechAeroNode?.children && qtechAeroNode.children.length > 0 ? (
                               qtechAeroNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1359,22 +1378,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1397,10 +1421,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                           {/* Stem to Level 3 Cost Centers */}
                           <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
-                              ศูนย์ต้นทุน (Cost Center)
-                            </div>
+                          <div className="w-full space-y-1.5">
                             {qtechQaNode?.children && qtechQaNode.children.length > 0 ? (
                               qtechQaNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1408,22 +1429,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
                                       isMachSelected
-                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
                                         : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
-                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
-                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
-                                    </span>
+                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                      {mach.title}
+                                    </div>
+                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                      isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
+                                    }`}>
+                                      <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                      <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                    </div>
                                   </button>
                                 );
                               })
                             ) : (
-                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
