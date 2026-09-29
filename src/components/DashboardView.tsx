@@ -476,21 +476,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="w-0.5 h-8 bg-slate-600" />
           </div>
 
-          {/* LEVEL 1 BUS CONNECTOR & 6 TEAM COLUMNS */}
+          {/* LEVEL 1 BUS CONNECTOR & 7 TEAM COLUMNS */}
           <div className="relative">
-            {/* Horizontal Bus Bar spanning all 6 columns */}
-            <div className="hidden lg:block absolute top-0 left-[8.33%] right-[8.33%] h-0.5 bg-slate-600">
-              {/* Junction indicators */}
+            {/* Horizontal Bus Bar spanning all 7 columns */}
+            <div className="hidden xl:block absolute top-0 left-[7.14%] right-[7.14%] h-0.5 bg-slate-600">
+              {/* Junction indicators for 7 columns */}
               <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400" />
-              <div className="absolute top-1/2 left-[20%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
-              <div className="absolute top-1/2 left-[40%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
-              <div className="absolute top-1/2 left-[60%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
-              <div className="absolute top-1/2 left-[80%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400" />
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-rose-400" />
+              <div className="absolute top-1/2 left-[16.67%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
+              <div className="absolute top-1/2 left-[33.33%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
+              <div className="absolute top-1/2 left-[50%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="absolute top-1/2 left-[66.67%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400" />
+              <div className="absolute top-1/2 left-[83.33%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-rose-400" />
+              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-teal-400" />
             </div>
 
-            {/* 6 Team Columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-2.5 pt-4">
+            {/* 7 Team Columns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-2.5 pt-4">
               {/* ============================================================ */}
               {/* COLUMN 1: BCA */}
               {/* ============================================================ */}
@@ -1244,11 +1245,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {/* Stem down to Processes */}
                     <div className="w-0.5 h-6 bg-slate-600" />
 
-                    {/* Level 2 Bus Bar for QTECH (Qtech A, B, Aero, QA) */}
+                    {/* Level 2 Bus Bar for QTECH (4 Equal Pillars: Qtech A, Qtech B, Aero, QA) */}
                     <div className="w-full relative">
-                      <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
-                      <div className="grid grid-cols-2 gap-2 pt-3">
-                        {/* Process 1: Qtech A */}
+                      <div className="absolute top-0 left-[12.5%] right-[12.5%] h-0.5 bg-slate-600">
+                        <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
+                        <div className="absolute top-1/2 left-[33.33%] -translate-y-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
+                        <div className="absolute top-1/2 left-[66.67%] -translate-y-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
+                        <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
+                      </div>
+                      <div className="grid grid-cols-4 gap-1.5 pt-3">
+                        {/* Pillar 1: Qtech A */}
                         <div className="flex flex-col items-center">
                           <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
                           <div
@@ -1265,7 +1271,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
+                          {/* Stem to Level 3 Stations */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1.5">
                             {qtechANode?.children && qtechANode.children.length > 0 ? (
@@ -1300,7 +1306,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           </div>
                         </div>
 
-                        {/* Process 2: Qtech B */}
+                        {/* Pillar 2: Qtech B */}
                         <div className="flex flex-col items-center">
                           <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
                           <div
@@ -1317,7 +1323,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
+                          {/* Stem to Level 3 Stations */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1.5">
                             {qtechBNode?.children && qtechBNode.children.length > 0 ? (
@@ -1352,8 +1358,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           </div>
                         </div>
 
-                        {/* Process 3: Qtech Aero */}
-                        <div className="flex flex-col items-center mt-2">
+                        {/* Pillar 3: Aero */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_AERO')}
                             className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
@@ -1368,7 +1375,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
+                          {/* Stem to Level 3 Stations */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1.5">
                             {qtechAeroNode?.children && qtechAeroNode.children.length > 0 ? (
@@ -1403,8 +1410,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           </div>
                         </div>
 
-                        {/* Process 4: QA */}
-                        <div className="flex flex-col items-center mt-2">
+                        {/* Pillar 4: QA */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_QA')}
                             className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
@@ -1419,7 +1427,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
+                          {/* Stem to Level 3 Stations */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1.5">
                             {qtechQaNode?.children && qtechQaNode.children.length > 0 ? (
@@ -1453,6 +1461,100 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             )}
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ============================================================ */}
+              {/* COLUMN 7: SUPPORT DEPT */}
+              {/* ============================================================ */}
+              {(() => {
+                const supportNode = root.children?.find(t => t.id === 'SUPPORT');
+                const isTeamSelected = selectedNodeId === 'SUPPORT' || (breadcrumbs.some(b => b.id === 'SUPPORT') && selectedNodeId !== 'PLANT');
+                const supportOpsNode = supportNode?.children?.find(p => p.id === 'SUPPORT_SUPPORT_OPS');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('SUPPORT')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'SUPPORT'
+                          ? 'bg-teal-400 text-slate-950 ring-4 ring-teal-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-teal-400/90 text-slate-950 ring-2 ring-teal-400'
+                          : 'bg-slate-900 border border-teal-500/50 hover:border-teal-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-teal-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-teal-400 inline-block" />
+                        <span>SUPPORT</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Support Dept (1200, 1850, 1860)</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {supportNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {supportNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {supportNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Process */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Process for Support Dept */}
+                    <div className="w-full flex flex-col items-center pt-3">
+                      <div
+                        onClick={() => setSelectedNodeId('SUPPORT_SUPPORT_OPS')}
+                        className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                          selectedNodeId === 'SUPPORT_SUPPORT_OPS'
+                            ? 'bg-teal-600 text-white ring-2 ring-teal-300 scale-105'
+                            : 'bg-slate-900 border border-teal-500/40 hover:border-teal-400 text-teal-100 hover:bg-teal-950/50'
+                        }`}
+                      >
+                        <div className="text-[11px] font-black leading-tight">Support Operations</div>
+                        <div className="text-[10px] text-teal-300 font-semibold mt-1">
+                          {supportOpsNode?.metrics.totalHours || 0} ชม. ({supportOpsNode?.metrics.headcount || 0} คน)
+                        </div>
+                      </div>
+
+                      {/* Stem to Level 3 Stations */}
+                      <div className="w-0.5 h-4 bg-slate-700" />
+                      <div className="w-full space-y-1.5">
+                        {supportOpsNode?.children && supportOpsNode.children.length > 0 ? (
+                          supportOpsNode.children.map(mach => {
+                            const isMachSelected = selectedNodeId === mach.id;
+                            return (
+                              <button
+                                key={mach.id}
+                                onClick={() => setSelectedNodeId(mach.id)}
+                                className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                  isMachSelected
+                                    ? 'bg-teal-400 text-slate-950 border-teal-300 ring-2 ring-teal-300 font-bold'
+                                    : 'bg-slate-900/90 border-slate-700/80 hover:border-teal-400 hover:bg-slate-800 text-slate-200'
+                                }`}
+                                title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                              >
+                                <div className="text-[11px] font-bold leading-tight break-words">
+                                  {mach.title}
+                                </div>
+                                <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                  isMachSelected ? 'text-slate-950 font-black' : 'text-teal-300'
+                                }`}>
+                                  <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
+                                  <span className="opacity-90">👥 {mach.metrics.headcount} คน</span>
+                                </div>
+                              </button>
+                            );
+                          })
+                        ) : (
+                          <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                        )}
                       </div>
                     </div>
                   </div>

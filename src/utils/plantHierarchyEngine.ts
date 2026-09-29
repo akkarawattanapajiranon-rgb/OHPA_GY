@@ -85,11 +85,12 @@ export function classifyFunction(dept: string, costCenter: string, position: str
   const loc = classifyPlantLocation(dept, costCenter, position, machine);
   if (loc.teamKey === 'QTECH') return 'QTECH';
   if (loc.teamKey === 'ENG') return 'ENG';
+  if (loc.teamKey === 'SUPPORT') return 'SHARE';
   return 'PRODUCTION';
 }
 
 export interface PlantClassification {
-  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH';
+  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH' | 'SUPPORT';
   teamName: string;
   processKey: string;
   processName: string;
@@ -113,7 +114,43 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   const m = (machine || '').toUpperCase();
   const combined = `${d} ${cc} ${p} ${m}`;
 
-  // 1. ENGINEERING & MAINTENANCE (5th Branch: CC 1110, 1100, S1100, 1161, 1164, 1210)
+  // 1. SUPPORT DEPT (7th Branch: CC 1200, 1850, 1860)
+  if (
+    ['1200', '1850', '1860'].includes(cc) ||
+    d.includes('1200') ||
+    d.includes('1850') ||
+    d.includes('1860') ||
+    d.includes('WAREHOUSE') ||
+    d.includes('RECEIVING') ||
+    d.includes('WASTE') ||
+    d.includes('PPIC') ||
+    d.includes('KANBAN') ||
+    p.includes('WAREHOUSE') ||
+    p.includes('RECEIVING') ||
+    p.includes('WASTE') ||
+    p.includes('PPIC') ||
+    p.includes('KANBAN')
+  ) {
+    let machKey = '1200';
+    let machName = '1200 : Receiving & Warehouse';
+    if (cc === '1850' || combined.includes('1850') || combined.includes('WASTE')) {
+      machKey = '1850';
+      machName = '1850 : Waste Yard';
+    } else if (cc === '1860' || combined.includes('1860') || combined.includes('PPIC') || combined.includes('KANBAN')) {
+      machKey = '1860';
+      machName = '1860 : PPIC & Kanban';
+    }
+    return {
+      teamKey: 'SUPPORT',
+      teamName: 'Support Dept',
+      processKey: 'SUPPORT_OPS',
+      processName: 'Support Operations',
+      machineKey: machKey,
+      machineName: machName
+    };
+  }
+
+  // 2. ENGINEERING & MAINTENANCE (5th Branch: CC 1110, 1100, S1100, 1161, 1164, 1210)
   if (
     ['1110', '1100', 'S1100', '1161', '1164', '1210'].includes(cc) ||
     d.includes('ENGINEERING') ||
@@ -124,17 +161,24 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     p.includes('DRUM REPAIR')
   ) {
     const isMaintenance = cc === '1110' || p.includes('MECHANIC') || p.includes('ELECTRIC') || p.includes('DRUM') || p.includes('MAINT');
+    const machKey = cc || (isMaintenance ? '1110' : '1100');
+    let machName = isMaintenance ? `${machKey} : Plant Maintenance` : `${machKey} : Plant Eng & Facilities`;
+    if (cc === '1161' || combined.includes('DRUM')) {
+      machName = '1161 : Drum Repair';
+    } else if (cc === 'S1100') {
+      machName = 'S1100 : Aviation Eng';
+    }
     return {
       teamKey: 'ENG',
       teamName: 'Engineering',
       processKey: isMaintenance ? 'ENG_MAINT' : 'ENG_PLANT',
       processName: isMaintenance ? 'Maintenance & Repairs' : 'Plant Eng & Facilities',
-      machineKey: `CC_${cc || (isMaintenance ? '1110' : '1100')}`,
-      machineName: isMaintenance ? `CC ${cc || '1110'} : Plant Maintenance` : `CC ${cc || '1100'} : Engineering & Reliability`
+      machineKey: machKey,
+      machineName: machName
     };
   }
 
-  // 2. QTECH (6th Branch: Qtech A, Qtech B, Aero, QA)
+  // 3. QTECH (6th Branch: Qtech A, Qtech B, Aero, QA)
   if (
     ['1022', '1021', '1040', 'S1040'].includes(cc) ||
     d.includes('QTECH') ||
@@ -148,7 +192,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     p.includes('SHEAROGRAPHY') ||
     p.includes('RESILIOMETER')
   ) {
-    // 2.1 Qtech A: CC 1022 ทั้งหมด (แยกเป็น Die tech / Lab Technician)
+    // 3.1 Qtech A: CC 1022 ทั้งหมด (แยกเป็น Die tech / Lab Technician)
     if (
       cc === '1022' ||
       d.includes('1022') ||
@@ -161,29 +205,29 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'Qtech',
         processKey: 'QTECH_A',
         processName: 'Qtech A',
-        machineKey: isDie ? 'CC_1022_DIE' : 'CC_1022_LAB',
-        machineName: isDie ? 'CC 1022 : Die Tech' : 'CC 1022 : Lab Technician'
+        machineKey: isDie ? '1022_DIE' : '1022_LAB',
+        machineName: isDie ? '1022 : Die Tech' : '1022 : Lab Technician'
       };
     }
 
-    // 2.2 Qtech B: CC 1021 ทั้งหมด (Build Monitor / Cure Monitor / NTI / อื่นๆ)
+    // 3.2 Qtech B: CC 1021 ทั้งหมด (Build Monitor / Cure Monitor / NTI / อื่นๆ)
     if (
       cc === '1021' ||
       d.includes('1021') ||
       combined.includes('1021') ||
       (d.includes('QUALITY') && (combined.includes('BUILD') || combined.includes('CURE') || combined.includes('NTI') || combined.includes('MONITOR')))
     ) {
-      let machKey = 'CC_1021_OTHER';
-      let machName = 'CC 1021 : Monitor & Support';
+      let machKey = '1021_OTHER';
+      let machName = '1021 : Monitor & Support';
       if (combined.includes('BUILD') || combined.includes('TIRE') || combined.includes('RADIAL TIRE') || combined.includes('CTA')) {
-        machKey = 'CC_1021_BUILD';
-        machName = 'CC 1021 : Build Monitor';
+        machKey = '1021_BUILD';
+        machName = '1021 : Build Monitor';
       } else if (combined.includes('CURE') || combined.includes('PRESS') || combined.includes('THERMO')) {
-        machKey = 'CC_1021_CURE';
-        machName = 'CC 1021 : Cure Monitor';
+        machKey = '1021_CURE';
+        machName = '1021 : Cure Monitor';
       } else if (combined.includes('NTI') || combined.includes('NPI')) {
-        machKey = 'CC_1021_NTI';
-        machName = 'CC 1021 : NTI';
+        machKey = '1021_NTI';
+        machName = '1021 : NTI';
       }
       return {
         teamKey: 'QTECH',
@@ -195,7 +239,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       };
     }
 
-    // 2.3 Qtech Aero: CC S1040, 1040 (Aero Certifying Staff / SDS Shearography / Burst Test)
+    // 3.3 Qtech Aero: CC S1040, 1040 (Aero Certifying Staff / SDS Shearography / Burst Test)
     if (
       cc === 'S1040' ||
       d.includes('S1040') ||
@@ -206,14 +250,14 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       combined.includes('BURST') ||
       combined.includes('RADIAL AV')
     ) {
-      let machKey = 'CC_S1040_CERT';
-      let machName = 'CC S1040 : Aero Certifying Staff';
+      let machKey = 'S1040_CERT';
+      let machName = 'S1040 : Aero Certifying Staff';
       if (combined.includes('BURST') || combined.includes('CUT TIRE')) {
-        machKey = 'CC_1040_BURST';
-        machName = 'CC 1040 : Burst Test';
+        machKey = '1040_BURST';
+        machName = '1040 : Burst Test';
       } else if (combined.includes('SHEAROGRAPHY') || combined.includes('SDS') || combined.includes('GEOMETRY')) {
-        machKey = 'CC_S1040_SDS';
-        machName = 'CC S1040 : SDS Shearography';
+        machKey = 'S1040_SDS';
+        machName = 'S1040 : SDS Shearography';
       }
       return {
         teamKey: 'QTECH',
@@ -225,21 +269,21 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       };
     }
 
-    // 2.4 QA: CC 1040 (QA Process Auditor / QA Inspector / PDI Inspector / Resiliometer (DOT) / X-Ray)
-    let machKey = 'CC_1040_INSPECT';
-    let machName = 'CC 1040 : QA Inspector';
+    // 3.4 QA: CC 1040 (QA Process Auditor / QA Inspector / PDI Inspector / Resiliometer (DOT) / X-Ray)
+    let machKey = '1040_INSPECT';
+    let machName = '1040 : QA Inspector';
     if (combined.includes('RESILIOMETER') || combined.includes('DOT')) {
-      machKey = 'CC_1040_RESILIO';
-      machName = 'CC 1040 : Resiliometer (DOT)';
+      machKey = '1040_RESILIO';
+      machName = '1040 : Resiliometer (DOT)';
     } else if (combined.includes('X-RAY') || combined.includes('XRAY')) {
-      machKey = 'CC_1040_XRAY';
-      machName = 'CC 1040 : X-Ray';
+      machKey = '1040_XRAY';
+      machName = '1040 : X-Ray';
     } else if (combined.includes('PDI')) {
-      machKey = 'CC_1040_PDI';
-      machName = 'CC 1040 : PDI Inspector';
+      machKey = '1040_PDI';
+      machName = '1040 : PDI Inspector';
     } else if (combined.includes('AUDITOR') || combined.includes('AUDIT')) {
-      machKey = 'CC_1040_AUDIT';
-      machName = 'CC 1040 : QA Process Auditor';
+      machKey = '1040_AUDIT';
+      machName = '1040 : QA Process Auditor';
     }
     return {
       teamKey: 'QTECH',
@@ -251,19 +295,19 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     };
   }
 
-  // 3. RETREAD PLANT (CC 6320, 6300)
+  // 4. RETREAD PLANT (CC 6320, 6300)
   if (cc === '6320' || cc === '6300' || d.startsWith('6') || combined.includes('RETREAD')) {
     return {
       teamKey: 'RETREAD',
       teamName: 'Retread Plant',
       processKey: 'RETREAD_OPS',
       processName: 'Retread Operations',
-      machineKey: 'CC_6320',
-      machineName: 'CC 6320 : Retread Operations'
+      machineKey: '6320',
+      machineName: '6320 : Retread Operations'
     };
   }
 
-  // 4. AERO (AVIATION TIRES)
+  // 5. AERO (AVIATION TIRES)
   // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
   // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
@@ -286,8 +330,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'RADIAL',
           processName: 'Radial Aero',
-          machineKey: 'CC_S5120',
-          machineName: 'CC S5120 : Radial Curing'
+          machineKey: 'S5120',
+          machineName: 'S5120 : Radial Curing'
         };
       } else if (cc === 'S5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
         return {
@@ -295,8 +339,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'RADIAL',
           processName: 'Radial Aero',
-          machineKey: 'CC_S5130',
-          machineName: 'CC S5130 : Radial Final Finish'
+          machineKey: 'S5130',
+          machineName: 'S5130 : Radial Final Finish'
         };
       } else {
         return {
@@ -304,8 +348,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'RADIAL',
           processName: 'Radial Aero',
-          machineKey: 'CC_S5110',
-          machineName: 'CC S5110 : Radial Building'
+          machineKey: 'S5110',
+          machineName: 'S5110 : Radial Building'
         };
       }
     } else {
@@ -315,8 +359,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'BIAS',
           processName: 'Bias Aero',
-          machineKey: 'CC_A5120',
-          machineName: 'CC A5120 : Bias Curing'
+          machineKey: 'A5120',
+          machineName: 'A5120 : Bias Curing'
         };
       } else if (cc === 'A5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
         return {
@@ -324,8 +368,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'BIAS',
           processName: 'Bias Aero',
-          machineKey: 'CC_A5130',
-          machineName: 'CC A5130 : Bias Final Finish'
+          machineKey: 'A5130',
+          machineName: 'A5130 : Bias Final Finish'
         };
       } else {
         return {
@@ -333,14 +377,14 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
           teamName: 'Aero (Aviation)',
           processKey: 'BIAS',
           processName: 'Bias Aero',
-          machineKey: 'CC_A5110',
-          machineName: 'CC A5110 : Bias Building'
+          machineKey: 'A5110',
+          machineName: 'A5110 : Bias Building'
         };
       }
     }
   }
 
-  // 4. CONSUMER (PASSENGER & LIGHT TRUCK)
+  // 6. CONSUMER (PASSENGER & LIGHT TRUCK)
   // Build: 5110
   // FF / Curing: 5120, 5130
   if (
@@ -356,8 +400,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'Consumer',
         processKey: 'FF_CURING',
         processName: 'FF / Curing',
-        machineKey: 'CC_5120',
-        machineName: 'CC 5120 : Curing'
+        machineKey: '5120',
+        machineName: '5120 : Curing'
       };
     } else if (cc === '5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
       return {
@@ -365,8 +409,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'Consumer',
         processKey: 'FF_CURING',
         processName: 'FF / Curing',
-        machineKey: 'CC_5130',
-        machineName: 'CC 5130 : Final Finish'
+        machineKey: '5130',
+        machineName: '5130 : Final Finish'
       };
     } else {
       return {
@@ -374,13 +418,13 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'Consumer',
         processKey: 'BUILD',
         processName: 'Build (Building)',
-        machineKey: 'CC_5110',
-        machineName: 'CC 5110 : Building'
+        machineKey: '5110',
+        machineName: '5110 : Building'
       };
     }
   }
 
-  // 5. BCA (BANBURY / CALENDER / PREP)
+  // 7. BCA (BANBURY / CALENDER / PREP)
   // Mix & Extrusion: 3200, 3300, 3700, 4300
   // Component Prep: 4110, 4120, 4130, 4140, 4200
   const isMix =
@@ -400,8 +444,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'MIX_EXTRUSION',
         processName: 'Mix & Extrusion',
-        machineKey: 'CC_3300',
-        machineName: 'CC 3300 : Cement House'
+        machineKey: '3300',
+        machineName: '3300 : Cement House'
       };
     } else if (cc === '3700') {
       return {
@@ -409,8 +453,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'MIX_EXTRUSION',
         processName: 'Mix & Extrusion',
-        machineKey: 'CC_3700',
-        machineName: 'CC 3700 : Mix Support'
+        machineKey: '3700',
+        machineName: '3700 : Mix Support'
       };
     } else if (cc === '4300' || combined.includes('QUAD') || combined.includes('TUBER') || combined.includes('6"X8"') || combined.includes('6X8')) {
       return {
@@ -418,8 +462,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'MIX_EXTRUSION',
         processName: 'Mix & Extrusion',
-        machineKey: 'CC_4300',
-        machineName: 'CC 4300 : Tuber & Extrusion'
+        machineKey: '4300',
+        machineName: '4300 : Tuber & Extrusion'
       };
     } else {
       return {
@@ -427,8 +471,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'MIX_EXTRUSION',
         processName: 'Mix & Extrusion',
-        machineKey: 'CC_3200',
-        machineName: 'CC 3200 : Banbury & Mixing'
+        machineKey: '3200',
+        machineName: '3200 : Banbury & Mixing'
       };
     }
   } else {
@@ -439,8 +483,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'COMPONENT_PREP',
         processName: 'Component Prep',
-        machineKey: 'CC_4120',
-        machineName: 'CC 4120 : Steel Calender'
+        machineKey: '4120',
+        machineName: '4120 : Steel Calender'
       };
     } else if (cc === '4130' || combined.includes('BAND72') || combined.includes('BAND 72')) {
       return {
@@ -448,8 +492,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'COMPONENT_PREP',
         processName: 'Component Prep',
-        machineKey: 'CC_4130',
-        machineName: 'CC 4130 : Bead & Band 72"'
+        machineKey: '4130',
+        machineName: '4130 : Bead & Band 72"'
       };
     } else if (cc === '4140') {
       return {
@@ -457,8 +501,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'COMPONENT_PREP',
         processName: 'Component Prep',
-        machineKey: 'CC_4140',
-        machineName: 'CC 4140 : Bladder & Tube'
+        machineKey: '4140',
+        machineName: '4140 : Bladder & Tube'
       };
     } else if (cc === '4200' || combined.includes('HEX BEAD') || combined.includes('APEX')) {
       return {
@@ -466,8 +510,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'COMPONENT_PREP',
         processName: 'Component Prep',
-        machineKey: 'CC_4200',
-        machineName: 'CC 4200 : Apex & Hex Bead'
+        machineKey: '4200',
+        machineName: '4200 : Apex & Hex Bead'
       };
     } else {
       return {
@@ -475,8 +519,8 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         teamName: 'BCA',
         processKey: 'COMPONENT_PREP',
         processName: 'Component Prep',
-        machineKey: 'CC_4110',
-        machineName: 'CC 4110 : Fabric Calender & Prep'
+        machineKey: '4110',
+        machineName: '4110 : Fabric Calender & Prep'
       };
     }
   }
@@ -563,17 +607,14 @@ export function buildPlantHierarchyTree(
     });
   });
 
-  // 2. Process Contractor Hourly Records strictly by Department & Cost Center
+  // 2. Process Contractor Records (Both Hourly and Salary WAS) strictly by Department & Cost Center
   activeContRecords.forEach(r => {
     if (!r.hasScannedIn && r.totalHours <= 0) return;
     if (shiftFilter !== 'ALL' && r.shiftNumber !== shiftFilter) return;
 
-    // Cut monthly / salaried contractor out completely per user request
     const isMonthly = r.type === 'Salary' || (r as any).isMonthly;
-    if (isMonthly) return;
-
-    const empType: EmploymentType = 'CONTRACTOR_HOURLY';
-    const empLabel = 'Contractor รายชั่วโมง (WAS)';
+    const empType: EmploymentType = isMonthly ? 'MONTHLY' : 'CONTRACTOR_HOURLY';
+    const empLabel = isMonthly ? 'Contractor รายเดือน (Salary WAS)' : 'Contractor รายชั่วโมง (WAS)';
 
     const dept = (r.department || '').trim();
     const cc = (r.closing || '').trim();
@@ -660,8 +701,16 @@ export function buildPlantHierarchyTree(
   }
 
   // Build Hierarchy Structure:
-  // Level 1: 6 Branches (BCA, CONSUMER, AERO, RETREAD, ENG, QTECH)
-  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH'> = ['BCA', 'CONSUMER', 'AERO', 'RETREAD', 'ENG', 'QTECH'];
+  // Level 1: 7 Branches (BCA, CONSUMER, AERO, RETREAD, ENG, QTECH, SUPPORT)
+  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH' | 'SUPPORT'> = [
+    'BCA',
+    'CONSUMER',
+    'AERO',
+    'RETREAD',
+    'ENG',
+    'QTECH',
+    'SUPPORT'
+  ];
   const teamNodes: HierarchyNode[] = teamKeys.map(tKey => {
     const teamWorkers = allWorkers.filter(w => w.teamKey === tKey);
     const teamTitle =
@@ -675,7 +724,9 @@ export function buildPlantHierarchyTree(
         ? 'Retread'
         : tKey === 'ENG'
         ? 'Engineering'
-        : 'Qtech';
+        : tKey === 'QTECH'
+        ? 'Qtech'
+        : 'Support Dept';
 
     // Level 2: Processes under this team
     const processMap = new Map<string, HierarchyWorker[]>();
@@ -702,59 +753,63 @@ export function buildPlantHierarchyTree(
       // Sort machines strictly by standard Cost Center sequence
       const costCenterOrder = [
         // BCA Mix & Extrusion
-        'CC_3200',
-        'CC_3300',
-        'CC_3700',
-        'CC_4300',
+        '3200',
+        '3300',
+        '3700',
+        '4300',
         // BCA Component Prep
-        'CC_4110',
-        'CC_4120',
-        'CC_4130',
-        'CC_4140',
-        'CC_4200',
+        '4110',
+        '4120',
+        '4130',
+        '4140',
+        '4200',
         // Consumer
-        'CC_5110',
-        'CC_5120',
-        'CC_5130',
+        '5110',
+        '5120',
+        '5130',
         // Bias Aero
-        'CC_A5110',
-        'CC_A5120',
-        'CC_A5130',
+        'A5110',
+        'A5120',
+        'A5130',
         // Radial Aero
-        'CC_S5110',
-        'CC_S5120',
-        'CC_S5130',
+        'S5110',
+        'S5120',
+        'S5130',
         // Retread
-        'CC_6320',
+        '6320',
         // Engineering
-        'CC_1110',
-        'CC_1100',
-        'CC_S1100',
-        'CC_1161',
-        'CC_1164',
-        'CC_1210',
+        '1110',
+        '1100',
+        'S1100',
+        '1161',
+        '1164',
+        '1210',
         // Qtech A (CC 1022)
-        'CC_1022_DIE',
-        'CC_1022_LAB',
-        'CC_1022',
+        '1022_DIE',
+        '1022_LAB',
+        '1022',
         // Qtech B (CC 1021)
-        'CC_1021_BUILD',
-        'CC_1021_CURE',
-        'CC_1021_NTI',
-        'CC_1021_OTHER',
-        'CC_1021',
+        '1021_BUILD',
+        '1021_CURE',
+        '1021_NTI',
+        '1021_OTHER',
+        '1021',
         // Qtech Aero (CC S1040, 1040)
-        'CC_S1040_CERT',
-        'CC_S1040_SDS',
-        'CC_1040_BURST',
-        'CC_S1040',
+        'S1040_CERT',
+        'S1040_SDS',
+        '1040_BURST',
+        'S1040',
         // QA (CC 1040)
-        'CC_1040_AUDIT',
-        'CC_1040_INSPECT',
-        'CC_1040_PDI',
-        'CC_1040_RESILIO',
-        'CC_1040_XRAY',
-        'CC_1040'
+        '1040_AUDIT',
+        '1040_INSPECT',
+        '1040_PDI',
+        '1040_RESILIO',
+        '1040_XRAY',
+        '1040',
+        // Support Dept (CC 1200, 1850, 1860)
+        '1200',
+        '1850',
+        '1860'
       ];
 
       machineNodes.sort((a, b) => {
@@ -788,7 +843,8 @@ export function buildPlantHierarchyTree(
         'QTECH_A',
         'QTECH_B',
         'QTECH_AERO',
-        'QTECH_QA'
+        'QTECH_QA',
+        'SUPPORT_OPS'
       ];
       const idxA = order.indexOf(a.id.split('_')[1] || '');
       const idxB = order.indexOf(b.id.split('_')[1] || '');
