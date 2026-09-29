@@ -123,22 +123,7 @@ export function classifyFunction(dept: string, costCenter: string, position: str
     return 'ENG';
   }
 
-  // 3. Share / Support (Leaders, Supervisors, Material Handling, Support)
-  if (
-    p.includes('leader') ||
-    p.includes('supervisor') ||
-    p.includes('หัวหน้า') ||
-    p.includes('manager') ||
-    p.includes('support') ||
-    p.includes('shared') ||
-    p.includes('admin') ||
-    p.includes('planning') ||
-    (d.includes('6320') && (p.includes('admin') || p.includes('office')))
-  ) {
-    return 'SHARE';
-  }
-
-  // 4. Default: Direct Manufacturing Production
+  // 3. Default: Direct Manufacturing Production (Operators, Leaders, Line Workers, Material Handling)
   return 'PRODUCTION';
 }
 
@@ -435,222 +420,86 @@ export function buildPlantHierarchyTree(
     const mu = getEmpMu(r.empId, r.mu, r.category, r.dept, r.costCenter);
     const baseName = r.nameTH || r.nameEN || empInfo?.nameTH || empInfo?.nameEN || `พนักงาน ${r.empId}`;
 
-    if (mu === 'BCA') {
-      allWorkers.push({
-        empId: r.empId,
-        name: baseName,
-        headcount: 1,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'BCA',
-        teamName: 'BCA',
-        processKey: loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP',
-        processName: loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep',
-        machineKey: loc.machineKey,
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Consumer') {
-      allWorkers.push({
-        empId: r.empId,
-        name: baseName,
-        headcount: 1,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'CONSUMER',
-        teamName: 'Consumer',
-        processKey: loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING',
-        processName: loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)',
-        machineKey: loc.machineKey,
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Bias Aero') {
-      allWorkers.push({
-        empId: r.empId,
-        name: baseName,
-        headcount: 1,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'BIAS',
-        processName: 'Bias Aero',
-        machineKey: loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD')),
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Radial Aero') {
-      allWorkers.push({
-        empId: r.empId,
-        name: baseName,
-        headcount: 1,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'RADIAL',
-        processName: 'Radial Aero',
-        machineKey: loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD')),
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Retread') {
-      allWorkers.push({
-        empId: r.empId,
-        name: baseName,
-        headcount: 1,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'RETREAD',
-        teamName: 'Retread Plant',
-        processKey: 'RETREAD_OPS',
-        processName: 'Retread Operations',
-        machineKey: loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD',
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Consumer/Bias Aero') {
-      // Shared 50% between Consumer and Bias Aero
-      allWorkers.push({
-        empId: `${r.empId}-CON`,
-        name: `${baseName} (50% Consumer)`,
-        headcount: 0.5,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'CONSUMER',
-        teamName: 'Consumer',
-        processKey: 'BUILD',
-        processName: 'Build (Building)',
-        machineKey: 'CONSUMER_SHARED_CON_BIAS',
-        machineName: 'Shared Con/Bias (Building)',
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: Math.round(normH * 0.5 * 10) / 10,
-        otHours: Math.round(otH * 0.5 * 10) / 10,
-        totalHours: Math.round(totH * 0.5 * 10) / 10
-      });
-      allWorkers.push({
-        empId: `${r.empId}-BIAS`,
-        name: `${baseName} (50% Bias Aero)`,
-        headcount: 0.5,
-        employmentType: 'GY_HOURLY',
-        employmentLabel: 'พนักงาน GY (รายกะ)',
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'BIAS',
-        processName: 'Bias Aero',
-        machineKey: 'AERO_BIAS_SHARED_CON_BIAS',
-        machineName: 'Shared Con/Bias (Bias Aero)',
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shift,
-        shiftLabel: r.shiftLabel,
-        normalHours: Math.round(normH * 0.5 * 10) / 10,
-        otHours: Math.round(otH * 0.5 * 10) / 10,
-        totalHours: Math.round(totH * 0.5 * 10) / 10
-      });
-    } else {
-      // Non-HPT: 20% (1/5) distributed across all 5 areas
-      const nonHptConfigs = [
-        { teamKey: 'BCA' as const, teamName: 'BCA', processKey: 'COMPONENT_PREP', processName: 'Component Prep', machineKey: 'BCA_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (BCA 1/5)' },
-        { teamKey: 'CONSUMER' as const, teamName: 'Consumer', processKey: 'BUILD', processName: 'Build (Building)', machineKey: 'CONSUMER_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Consumer 1/5)' },
-        { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'BIAS', processName: 'Bias Aero', machineKey: 'AERO_BIAS_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Bias Aero 1/5)' },
-        { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'RADIAL', processName: 'Radial Aero', machineKey: 'AERO_RADIAL_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Radial Aero 1/5)' },
-        { teamKey: 'RETREAD' as const, teamName: 'Retread Plant', processKey: 'RETREAD_OPS', processName: 'Retread Operations', machineKey: 'RETREAD_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Retread 1/5)' },
-      ];
+    let teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' = 'BCA';
+    let teamName = 'BCA';
+    let processKey = loc.processKey;
+    let processName = loc.processName;
+    let machineKey = loc.machineKey;
+    let machineName = loc.machineName;
 
-      nonHptConfigs.forEach(cfg => {
-        allWorkers.push({
-          empId: `${r.empId}-${cfg.teamKey}-${cfg.processKey}`,
-          name: `${baseName} (${cfg.teamName} 1/5)`,
-          headcount: 0.2,
-          employmentType: 'GY_HOURLY',
-          employmentLabel: 'พนักงาน GY (รายกะ)',
-          functionType: fnType,
-          functionLabel: fnLabel,
-          teamKey: cfg.teamKey,
-          teamName: cfg.teamName,
-          processKey: cfg.processKey,
-          processName: cfg.processName,
-          machineKey: cfg.machineKey,
-          machineName: cfg.machineName,
-          dept: dept || cc,
-          costCenter: cc,
-          position: pos || mach,
-          shift: r.shift,
-          shiftLabel: r.shiftLabel,
-          normalHours: Math.round(normH * 0.2 * 10) / 10,
-          otHours: Math.round(otH * 0.2 * 10) / 10,
-          totalHours: Math.round(totH * 0.2 * 10) / 10
-        });
-      });
+    if (mu === 'BCA') {
+      teamKey = 'BCA';
+      teamName = 'BCA';
+      processKey = loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP';
+      processName = loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep';
+    } else if (mu === 'Consumer') {
+      teamKey = 'CONSUMER';
+      teamName = 'Consumer';
+      processKey = loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING';
+      processName = loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)';
+    } else if (mu === 'Bias Aero') {
+      teamKey = 'AERO';
+      teamName = 'Aero (Aviation)';
+      processKey = 'BIAS';
+      processName = 'Bias Aero';
+      machineKey = loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD'));
+    } else if (mu === 'Radial Aero') {
+      teamKey = 'AERO';
+      teamName = 'Aero (Aviation)';
+      processKey = 'RADIAL';
+      processName = 'Radial Aero';
+      machineKey = loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD'));
+    } else if (mu === 'Retread') {
+      teamKey = 'RETREAD';
+      teamName = 'Retread Plant';
+      processKey = 'RETREAD_OPS';
+      processName = 'Retread Operations';
+      machineKey = loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD';
+    } else {
+      teamKey = loc.teamKey;
+      teamName = loc.teamName;
+      processKey = loc.processKey;
+      processName = loc.processName;
+      machineKey = loc.machineKey;
+      machineName = loc.machineName;
     }
+
+    allWorkers.push({
+      empId: r.empId,
+      name: baseName,
+      headcount: 1,
+      employmentType: 'GY_HOURLY',
+      employmentLabel: 'พนักงาน GY (รายกะ)',
+      functionType: fnType,
+      functionLabel: fnLabel,
+      teamKey,
+      teamName,
+      processKey,
+      processName,
+      machineKey,
+      machineName,
+      dept: dept || cc,
+      costCenter: cc,
+      position: pos || mach,
+      shift: r.shift,
+      shiftLabel: r.shiftLabel,
+      normalHours: normH,
+      otHours: otH,
+      totalHours: totH
+    });
   });
 
   // 2. Process Contractor Hourly Records
-  let hasScannedWasMonthly = false;
   activeContRecords.forEach(r => {
     if (!r.hasScannedIn && r.totalHours <= 0) return;
     if (shiftFilter !== 'ALL' && r.shiftNumber !== shiftFilter) return;
 
+    // Cut monthly / salaried contractor out completely per user request
     const isMonthly = r.type === 'Salary' || (r as any).isMonthly;
-    if (isMonthly) hasScannedWasMonthly = true;
-    const empType: EmploymentType = isMonthly ? 'MONTHLY' : 'CONTRACTOR_HOURLY';
-    const empLabel = isMonthly ? 'Contractor รายเดือน (WAS)' : 'Contractor รายชั่วโมง (WAS)';
+    if (isMonthly) return;
+
+    const empType: EmploymentType = 'CONTRACTOR_HOURLY';
+    const empLabel = 'Contractor รายชั่วโมง (WAS)';
 
     const dept = (r.department || '').trim();
     const cc = (r.closing || '').trim();
@@ -668,13 +517,13 @@ export function buildPlantHierarchyTree(
     const empCode = r.empCode || (r as any).workerId || '';
     const empInfo = employeeMapping[empCode] || employeeMapping[empCode.replace(/^0+/, '')] || employeeMapping[empCode.padStart(5, '0')];
     let mu = getEmpMu(empCode, '', '', r.department, r.closing);
-    if (!mu || mu === 'Non-HPT') {
+    if (!mu || mu === 'Non-HPT' || mu === 'Consumer/Bias Aero') {
       if (cc === '6320' || dept.includes('6320') || mach.toLowerCase().includes('retread')) mu = 'Retread';
-      else if (dept.startsWith('A') || cc.startsWith('A')) mu = 'Bias Aero';
-      else if (dept.startsWith('S') || cc.startsWith('S')) mu = 'Radial Aero';
-      else if (['5110', '5120', '5130'].includes(cc)) mu = 'Consumer';
-      else if (['3200', '3300', '4110', '4120', '4130', '4200', '4300'].includes(cc)) mu = 'BCA';
-      else mu = 'Non-HPT';
+      else if (dept.startsWith('A') || cc.startsWith('A') || loc.processKey === 'BIAS') mu = 'Bias Aero';
+      else if (dept.startsWith('S') || cc.startsWith('S') || loc.processKey === 'RADIAL') mu = 'Radial Aero';
+      else if (['5110', '5120', '5130'].includes(cc) || loc.teamKey === 'CONSUMER') mu = 'Consumer';
+      else if (['3200', '3300', '4110', '4120', '4130', '4200', '4300'].includes(cc) || loc.teamKey === 'BCA') mu = 'BCA';
+      else mu = loc.teamKey;
     }
 
     const normH = r.normalHours || 0;
@@ -682,512 +531,67 @@ export function buildPlantHierarchyTree(
     const totH = normH + otH;
     const baseName = r.nameTh || r.nameEn || r.empCode || 'Contractor Worker';
 
+    let teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' = loc.teamKey;
+    let teamName = loc.teamName;
+    let processKey = loc.processKey;
+    let processName = loc.processName;
+    let machineKey = loc.machineKey;
+    let machineName = loc.machineName;
+
     if (mu === 'BCA') {
-      allWorkers.push({
-        empId: empCode || 'CONT',
-        name: baseName,
-        headcount: 1,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'BCA',
-        teamName: 'BCA',
-        processKey: loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP',
-        processName: loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep',
-        machineKey: loc.machineKey,
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
+      teamKey = 'BCA';
+      teamName = 'BCA';
+      processKey = loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP';
+      processName = loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep';
     } else if (mu === 'Consumer') {
-      allWorkers.push({
-        empId: empCode || 'CONT',
-        name: baseName,
-        headcount: 1,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'CONSUMER',
-        teamName: 'Consumer',
-        processKey: loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING',
-        processName: loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)',
-        machineKey: loc.machineKey,
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
+      teamKey = 'CONSUMER';
+      teamName = 'Consumer';
+      processKey = loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING';
+      processName = loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)';
     } else if (mu === 'Bias Aero') {
-      allWorkers.push({
-        empId: empCode || 'CONT',
-        name: baseName,
-        headcount: 1,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'BIAS',
-        processName: 'Bias Aero',
-        machineKey: loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD')),
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
+      teamKey = 'AERO';
+      teamName = 'Aero (Aviation)';
+      processKey = 'BIAS';
+      processName = 'Bias Aero';
+      machineKey = loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD'));
     } else if (mu === 'Radial Aero') {
-      allWorkers.push({
-        empId: empCode || 'CONT',
-        name: baseName,
-        headcount: 1,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'RADIAL',
-        processName: 'Radial Aero',
-        machineKey: loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD')),
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
+      teamKey = 'AERO';
+      teamName = 'Aero (Aviation)';
+      processKey = 'RADIAL';
+      processName = 'Radial Aero';
+      machineKey = loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD'));
     } else if (mu === 'Retread') {
-      allWorkers.push({
-        empId: empCode || 'CONT',
-        name: baseName,
-        headcount: 1,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'RETREAD',
-        teamName: 'Retread Plant',
-        processKey: 'RETREAD_OPS',
-        processName: 'Retread Operations',
-        machineKey: loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD',
-        machineName: loc.machineName,
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: normH,
-        otHours: otH,
-        totalHours: totH
-      });
-    } else if (mu === 'Consumer/Bias Aero') {
-      allWorkers.push({
-        empId: `${empCode}-CON`,
-        name: `${baseName} (Cont 50% Con)`,
-        headcount: 0.5,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'CONSUMER',
-        teamName: 'Consumer',
-        processKey: 'BUILD',
-        processName: 'Build (Building)',
-        machineKey: 'CONSUMER_SHARED_CON_BIAS',
-        machineName: 'Shared Con/Bias (Building)',
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: Math.round(normH * 0.5 * 10) / 10,
-        otHours: Math.round(otH * 0.5 * 10) / 10,
-        totalHours: Math.round(totH * 0.5 * 10) / 10
-      });
-      allWorkers.push({
-        empId: `${empCode}-BIAS`,
-        name: `${baseName} (Cont 50% Bias)`,
-        headcount: 0.5,
-        employmentType: empType,
-        employmentLabel: empLabel,
-        functionType: fnType,
-        functionLabel: fnLabel,
-        teamKey: 'AERO',
-        teamName: 'Aero (Aviation)',
-        processKey: 'BIAS',
-        processName: 'Bias Aero',
-        machineKey: 'AERO_BIAS_SHARED_CON_BIAS',
-        machineName: 'Shared Con/Bias (Bias Aero)',
-        dept: dept || cc,
-        costCenter: cc,
-        position: pos || mach,
-        shift: r.shiftNumber || 1,
-        shiftLabel: `กะ ${r.shiftNumber || 1}`,
-        normalHours: Math.round(normH * 0.5 * 10) / 10,
-        otHours: Math.round(otH * 0.5 * 10) / 10,
-        totalHours: Math.round(totH * 0.5 * 10) / 10
-      });
-    } else {
-      const nonHptConfigs = [
-        { teamKey: 'BCA' as const, teamName: 'BCA', processKey: 'COMPONENT_PREP', processName: 'Component Prep', machineKey: 'BCA_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (BCA 1/5)' },
-        { teamKey: 'CONSUMER' as const, teamName: 'Consumer', processKey: 'BUILD', processName: 'Build (Building)', machineKey: 'CONSUMER_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Consumer 1/5)' },
-        { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'BIAS', processName: 'Bias Aero', machineKey: 'AERO_BIAS_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Bias Aero 1/5)' },
-        { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'RADIAL', processName: 'Radial Aero', machineKey: 'AERO_RADIAL_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Radial Aero 1/5)' },
-        { teamKey: 'RETREAD' as const, teamName: 'Retread Plant', processKey: 'RETREAD_OPS', processName: 'Retread Operations', machineKey: 'RETREAD_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Retread 1/5)' },
-      ];
-
-      nonHptConfigs.forEach(cfg => {
-        allWorkers.push({
-          empId: `${empCode}-${cfg.teamKey}-${cfg.processKey}`,
-          name: `${baseName} (Cont ${cfg.teamName} 1/5)`,
-          headcount: 0.2,
-          employmentType: empType,
-          employmentLabel: empLabel,
-          functionType: fnType,
-          functionLabel: fnLabel,
-          teamKey: cfg.teamKey,
-          teamName: cfg.teamName,
-          processKey: cfg.processKey,
-          processName: cfg.processName,
-          machineKey: cfg.machineKey,
-          machineName: cfg.machineName,
-          dept: dept || cc,
-          costCenter: cc,
-          position: pos || mach,
-          shift: r.shiftNumber || 1,
-          shiftLabel: `กะ ${r.shiftNumber || 1}`,
-          normalHours: Math.round(normH * 0.2 * 10) / 10,
-          otHours: Math.round(otH * 0.2 * 10) / 10,
-          totalHours: Math.round(totH * 0.2 * 10) / 10
-        });
-      });
+      teamKey = 'RETREAD';
+      teamName = 'Retread Plant';
+      processKey = 'RETREAD_OPS';
+      processName = 'Retread Operations';
+      machineKey = loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD';
     }
+
+    allWorkers.push({
+      empId: empCode || 'CONT',
+      name: baseName,
+      headcount: 1,
+      employmentType: empType,
+      employmentLabel: empLabel,
+      functionType: fnType,
+      functionLabel: fnLabel,
+      teamKey,
+      teamName,
+      processKey,
+      processName,
+      machineKey,
+      machineName,
+      dept: dept || cc,
+      costCenter: cc,
+      position: pos || mach,
+      shift: r.shiftNumber || 1,
+      shiftLabel: `กะ ${r.shiftNumber || 1}`,
+      normalHours: normH,
+      otHours: otH,
+      totalHours: totH
+    });
   });
-
-  // 3. Process Monthly Staff Distribution (If shiftFilter === 'ALL' or shiftFilter === 1)
-  if (shiftFilter === 'ALL' || shiftFilter === 1) {
-    const hoursPerPerson = typeof monthlyMetrics.hoursPerPerson === 'number' ? monthlyMetrics.hoursPerPerson : 8;
-    const monthlyStaffList = Object.values(employeeMapping).filter(e => e.sourceSheet === 'Salaries' || e.mor === 'Salaried');
-
-    if (hoursPerPerson > 0 && monthlyStaffList.length > 0) {
-      monthlyStaffList.forEach(e => {
-        const mu = (e.mu || 'Non-HPT').trim();
-        const dept = e.dept || 'Monthly Staff';
-        const cc = e.costCenter || 'Monthly Staff';
-        const pos = e.position || 'Monthly Staff';
-        const mach = e.machine || pos || 'General';
-
-        const fnType = classifyFunction(dept, cc, pos, mach);
-        if (categoryFilter === 'WAS') return; // GY Monthly staff is not WAS
-        if (categoryFilter !== 'ALL' && (fnType as string) !== categoryFilter) return;
-
-        const fnLabel = fnType === 'PRODUCTION' ? 'Production' : (fnType === 'QTECH' ? 'Qtech' : (fnType === 'ENG' ? 'Eng' : 'Share'));
-        const loc = classifyPlantLocation(dept, cc, pos, mach);
-        const baseName = e.nameTH || e.nameEN || `เจ้าหน้าที่รายเดือน ${e.empId}`;
-
-        if (mu === 'BCA') {
-          allWorkers.push({
-            empId: e.empId,
-            name: baseName,
-            headcount: 1,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'BCA',
-            teamName: 'BCA',
-            processKey: loc.processKey === 'MIX_EXTRUSION' ? 'MIX_EXTRUSION' : 'COMPONENT_PREP',
-            processName: loc.processKey === 'MIX_EXTRUSION' ? 'Mix & Extrusion' : 'Component Prep',
-            machineKey: loc.machineKey,
-            machineName: loc.machineName,
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: hoursPerPerson,
-            otHours: 0,
-            totalHours: hoursPerPerson
-          });
-        } else if (mu === 'Consumer') {
-          allWorkers.push({
-            empId: e.empId,
-            name: baseName,
-            headcount: 1,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'CONSUMER',
-            teamName: 'Consumer',
-            processKey: loc.processKey === 'BUILD' ? 'BUILD' : 'FF_CURING',
-            processName: loc.processKey === 'BUILD' ? 'Build (Building)' : 'FF/Curing (Final Finish & Curing)',
-            machineKey: loc.machineKey,
-            machineName: loc.machineName,
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: hoursPerPerson,
-            otHours: 0,
-            totalHours: hoursPerPerson
-          });
-        } else if (mu === 'Bias Aero') {
-          allWorkers.push({
-            empId: e.empId,
-            name: baseName,
-            headcount: 1,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'AERO',
-            teamName: 'Aero (Aviation)',
-            processKey: 'BIAS',
-            processName: 'Bias Aero',
-            machineKey: loc.machineKey.startsWith('AERO_BIAS_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_BIAS_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_BIAS_FINISHING' : 'AERO_BIAS_BUILD')),
-            machineName: loc.machineName,
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: hoursPerPerson,
-            otHours: 0,
-            totalHours: hoursPerPerson
-          });
-        } else if (mu === 'Radial Aero') {
-          allWorkers.push({
-            empId: e.empId,
-            name: baseName,
-            headcount: 1,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'AERO',
-            teamName: 'Aero (Aviation)',
-            processKey: 'RADIAL',
-            processName: 'Radial Aero',
-            machineKey: loc.machineKey.startsWith('AERO_RADIAL_') ? loc.machineKey : (loc.machineKey.includes('CURE') ? 'AERO_RADIAL_CURING' : (loc.machineKey.includes('FIN') ? 'AERO_RADIAL_FINISHING' : 'AERO_RADIAL_BUILD')),
-            machineName: loc.machineName,
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: hoursPerPerson,
-            otHours: 0,
-            totalHours: hoursPerPerson
-          });
-        } else if (mu === 'Retread') {
-          allWorkers.push({
-            empId: e.empId,
-            name: baseName,
-            headcount: 1,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'RETREAD',
-            teamName: 'Retread Plant',
-            processKey: 'RETREAD_OPS',
-            processName: 'Retread Operations',
-            machineKey: loc.machineKey.startsWith('RETREAD_') ? loc.machineKey : 'RETREAD_BUILD',
-            machineName: loc.machineName,
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: hoursPerPerson,
-            otHours: 0,
-            totalHours: hoursPerPerson
-          });
-        } else if (mu === 'Consumer/Bias Aero') {
-          allWorkers.push({
-            empId: `${e.empId}-CON`,
-            name: `${baseName} (รายเดือน 50% Con)`,
-            headcount: 0.5,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'CONSUMER',
-            teamName: 'Consumer',
-            processKey: 'BUILD',
-            processName: 'Build (Building)',
-            machineKey: 'CONSUMER_SHARED_CON_BIAS',
-            machineName: 'Shared Con/Bias (Building)',
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: Math.round(hoursPerPerson * 0.5 * 10) / 10,
-            otHours: 0,
-            totalHours: Math.round(hoursPerPerson * 0.5 * 10) / 10
-          });
-          allWorkers.push({
-            empId: `${e.empId}-BIAS`,
-            name: `${baseName} (รายเดือน 50% Bias)`,
-            headcount: 0.5,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: fnType,
-            functionLabel: fnLabel,
-            teamKey: 'AERO',
-            teamName: 'Aero (Aviation)',
-            processKey: 'BIAS',
-            processName: 'Bias Aero',
-            machineKey: 'AERO_BIAS_SHARED_CON_BIAS',
-            machineName: 'Shared Con/Bias (Bias Aero)',
-            dept,
-            costCenter: cc,
-            position: pos,
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: Math.round(hoursPerPerson * 0.5 * 10) / 10,
-            otHours: 0,
-            totalHours: Math.round(hoursPerPerson * 0.5 * 10) / 10
-          });
-        } else {
-          const nonHptConfigs = [
-            { teamKey: 'BCA' as const, teamName: 'BCA', processKey: 'COMPONENT_PREP', processName: 'Component Prep', machineKey: 'BCA_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (BCA 1/5)' },
-            { teamKey: 'CONSUMER' as const, teamName: 'Consumer', processKey: 'BUILD', processName: 'Build (Building)', machineKey: 'CONSUMER_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Consumer 1/5)' },
-            { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'BIAS', processName: 'Bias Aero', machineKey: 'AERO_BIAS_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Bias Aero 1/5)' },
-            { teamKey: 'AERO' as const, teamName: 'Aero (Aviation)', processKey: 'RADIAL', processName: 'Radial Aero', machineKey: 'AERO_RADIAL_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Radial Aero 1/5)' },
-            { teamKey: 'RETREAD' as const, teamName: 'Retread Plant', processKey: 'RETREAD_OPS', processName: 'Retread Operations', machineKey: 'RETREAD_NON_HPT_SUPPORT', machineName: 'Non-HPT Support (Retread 1/5)' },
-          ];
-
-          nonHptConfigs.forEach(cfg => {
-            allWorkers.push({
-              empId: `${e.empId}-${cfg.teamKey}-${cfg.processKey}`,
-              name: `${baseName} (รายเดือน ${cfg.teamName} 1/5)`,
-              headcount: 0.2,
-              employmentType: 'MONTHLY',
-              employmentLabel: 'พนักงานรายเดือน GY',
-              functionType: fnType,
-              functionLabel: fnLabel,
-              teamKey: cfg.teamKey,
-              teamName: cfg.teamName,
-              processKey: cfg.processKey,
-              processName: cfg.processName,
-              machineKey: cfg.machineKey,
-              machineName: cfg.machineName,
-              dept,
-              costCenter: cc,
-              position: pos,
-              shift: 1,
-              shiftLabel: 'กะเช้า / Day',
-              normalHours: Math.round(hoursPerPerson * 0.2 * 10) / 10,
-              otHours: 0,
-              totalHours: Math.round(hoursPerPerson * 0.2 * 10) / 10
-            });
-          });
-        }
-      });
-    } else if (hoursPerPerson > 0 && monthlyMetrics.count > 0) {
-      // Fallback: 61 GY Monthly Staff + 9 WAS Monthly Staff (Distributed 1/5 to each of the 5 areas)
-      const targetAreas: Array<{ teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD'; teamName: string; processKey: string; processName: string; machineKey: string; machineName: string }> = [
-        { teamKey: 'BCA', teamName: 'BCA', processKey: 'COMPONENT_PREP', processName: 'Component Prep', machineKey: 'BCA_MONTHLY_STAFF', machineName: 'BCA Monthly Staff (1/5)' },
-        { teamKey: 'CONSUMER', teamName: 'Consumer', processKey: 'BUILD', processName: 'Build (Building)', machineKey: 'CONSUMER_MONTHLY_STAFF', machineName: 'Consumer Monthly Staff (1/5)' },
-        { teamKey: 'AERO', teamName: 'Aero (Aviation)', processKey: 'BIAS', processName: 'Bias Aero', machineKey: 'AERO_BIAS_MONTHLY_STAFF', machineName: 'Bias Aero Monthly Staff (1/5)' },
-        { teamKey: 'AERO', teamName: 'Aero (Aviation)', processKey: 'RADIAL', processName: 'Radial Aero', machineKey: 'AERO_RADIAL_MONTHLY_STAFF', machineName: 'Radial Aero Monthly Staff (1/5)' },
-        { teamKey: 'RETREAD', teamName: 'Retread Plant', processKey: 'RETREAD_OPS', processName: 'Retread Operations', machineKey: 'RETREAD_MONTHLY_STAFF', machineName: 'Retread Monthly Staff (1/5)' }
-      ];
-
-      // GY Monthly Staff (61 persons / 5 = 12.2 HC, 97.6 hours per area)
-      if (categoryFilter !== 'WAS') {
-        const gyHcPerArea = 61 * 0.2; // 12.2
-        const gyHoursPerArea = 61 * hoursPerPerson * 0.2; // 97.6
-
-        targetAreas.forEach((area, idx) => {
-          allWorkers.push({
-            empId: `M-GY-AREA-${idx + 1}`,
-            name: `พนักงานรายเดือน GY (${area.teamName} 1/5)`,
-            headcount: gyHcPerArea,
-            employmentType: 'MONTHLY',
-            employmentLabel: 'พนักงานรายเดือน GY',
-            functionType: 'SHARE',
-            functionLabel: 'Share',
-            teamKey: area.teamKey,
-            teamName: area.teamName,
-            processKey: area.processKey,
-            processName: area.processName,
-            machineKey: area.machineKey,
-            machineName: area.machineName,
-            dept: 'Monthly Staff',
-            costCenter: 'Monthly Staff',
-            position: 'Salaried Staff',
-            shift: 1,
-            shiftLabel: 'กะเช้า / Day',
-            normalHours: gyHoursPerArea,
-            otHours: 0,
-            totalHours: gyHoursPerArea
-          });
-        });
-      }
-
-      // WAS Monthly Staff (9 persons / 5 = 1.8 HC, 14.4 hours per area)
-      if (!hasScannedWasMonthly && (monthlyMetrics.wasCount || 9) > 0) {
-        const wasCount = monthlyMetrics.wasCount || 9;
-        const wasHcPerArea = wasCount * 0.2; // 1.8
-        const wasHoursPerArea = wasCount * hoursPerPerson * 0.2; // 14.4
-
-        if (categoryFilter === 'ALL' || categoryFilter === 'WAS') {
-          targetAreas.forEach((area, idx) => {
-            allWorkers.push({
-              empId: `M-WAS-AREA-${idx + 1}`,
-              name: `พนักงานรายเดือน WAS (${area.teamName} 1/5)`,
-              headcount: wasHcPerArea,
-              employmentType: 'MONTHLY',
-              employmentLabel: 'Contractor รายเดือน (WAS)',
-              functionType: 'SHARE',
-              functionLabel: 'Share',
-              teamKey: area.teamKey,
-              teamName: area.teamName,
-              processKey: area.processKey,
-              processName: area.processName,
-              machineKey: `WAS_${area.machineKey}`,
-              machineName: `WAS ${area.machineName}`,
-              dept: 'Contractor WAS Monthly',
-              costCenter: 'WAS Monthly',
-              position: 'WAS Staff',
-              shift: 1,
-              shiftLabel: 'กะเช้า / Day',
-              normalHours: wasHoursPerArea,
-              otHours: 0,
-              totalHours: wasHoursPerArea
-            });
-          });
-        }
-      }
-    }
-  }
 
   // Helper to build Node
   function buildNode(

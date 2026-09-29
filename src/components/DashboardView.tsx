@@ -239,7 +239,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               From Plant ➔ by Team ➔ by M/C
             </span>
             <span className="bg-indigo-100 text-indigo-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
-              Production • Qtech • Eng • Share
+              Production • Qtech • Eng
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
@@ -1164,12 +1164,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span>การจำแนกตามสายงาน (Function Breakdown in {currentNode.title})</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              แยกตาม 4 ฝ่ายหลัก: ฝ่ายผลิต (Production), คุณภาพ (Qtech), วิศวกรรม (Eng), และงานสนับสนุนส่วนกลาง (Share)
+              แยกตาม 3 ฝ่ายหลัก: ฝ่ายผลิต (Production), คุณภาพ (Qtech), และวิศวกรรม/ซ่อมบำรุง (Eng)
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Function 1: Production */}
           <div
             onClick={() => setFunctionFilter(functionFilter === 'PRODUCTION' ? 'ALL' : 'PRODUCTION')}
@@ -1247,32 +1247,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="font-bold text-amber-700">OT {currentNode.functions.eng.otHours}h ({currentNode.functions.eng.otPercentage}%)</span>
             </div>
           </div>
-
-          {/* Function 4: Share / Support */}
-          <div
-            onClick={() => setFunctionFilter(functionFilter === 'SHARE' ? 'ALL' : 'SHARE')}
-            className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-              functionFilter === 'SHARE'
-                ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-300'
-                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-emerald-900 flex items-center gap-1.5">
-                🤝 Share (ส่วนกลาง/Support)
-              </span>
-              <span className="text-[10px] font-extrabold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full">
-                {currentNode.functions.share.headcount} คน
-              </span>
-            </div>
-            <div className="text-xl font-black text-emerald-950 mt-2">
-              {currentNode.functions.share.totalHours.toLocaleString()} ชม.
-            </div>
-            <div className="flex items-center justify-between text-[11px] text-slate-600 mt-1">
-              <span>ปกติ {currentNode.functions.share.normalHours}h</span>
-              <span className="font-bold text-amber-700">OT {currentNode.functions.share.otHours}h ({currentNode.functions.share.otPercentage}%)</span>
-            </div>
-          </div>
         </div>
 
         {/* Visual Analytics Charts */}
@@ -1296,8 +1270,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     : [
                         { name: 'Production', 'ชม. ปกติ': currentNode.functions.production.normalHours, 'ชม. OT': currentNode.functions.production.otHours, 'คน': currentNode.functions.production.headcount },
                         { name: 'Qtech', 'ชม. ปกติ': currentNode.functions.qtech.normalHours, 'ชม. OT': currentNode.functions.qtech.otHours, 'คน': currentNode.functions.qtech.headcount },
-                        { name: 'Eng', 'ชม. ปกติ': currentNode.functions.eng.normalHours, 'ชม. OT': currentNode.functions.eng.otHours, 'คน': currentNode.functions.eng.headcount },
-                        { name: 'Share', 'ชม. ปกติ': currentNode.functions.share.normalHours, 'ชม. OT': currentNode.functions.share.otHours, 'คน': currentNode.functions.share.headcount }
+                        { name: 'Eng', 'ชม. ปกติ': currentNode.functions.eng.normalHours, 'ชม. OT': currentNode.functions.eng.otHours, 'คน': currentNode.functions.eng.headcount }
                       ]
                   }
                   margin={{ top: 10, right: 10, left: -20, bottom: 25 }}
@@ -1319,7 +1292,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Chart 2: Functions & Employment Distribution PieCharts */}
           <div className="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 flex flex-col justify-between">
             <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">
-              🥧 สัดส่วนชั่วโมงจำแนกตามฝ่าย (Function Share)
+              🥧 สัดส่วนชั่วโมงจำแนกตามฝ่าย (Function Breakdown)
             </h4>
             <div className="h-44 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -1328,8 +1301,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     data={[
                       { name: 'Production', value: currentNode.functions.production.totalHours, color: '#3b82f6' },
                       { name: 'Qtech', value: currentNode.functions.qtech.totalHours, color: '#a855f7' },
-                      { name: 'Eng', value: currentNode.functions.eng.totalHours, color: '#f59e0b' },
-                      { name: 'Share', value: currentNode.functions.share.totalHours, color: '#10b981' }
+                      { name: 'Eng', value: currentNode.functions.eng.totalHours, color: '#f59e0b' }
                     ].filter(d => d.value > 0)}
                     cx="50%"
                     cy="50%"
@@ -1341,8 +1313,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {[
                       { name: 'Production', color: '#3b82f6' },
                       { name: 'Qtech', color: '#a855f7' },
-                      { name: 'Eng', color: '#f59e0b' },
-                      { name: 'Share', color: '#10b981' }
+                      { name: 'Eng', color: '#f59e0b' }
                     ].map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
@@ -1356,18 +1327,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </ResponsiveContainer>
             </div>
 
-            <div className="grid grid-cols-3 gap-1 pt-2 border-t border-slate-200/60 text-center text-[10px]">
-              <div className="bg-white p-1 rounded-lg border border-slate-200">
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 text-center text-[10px]">
+              <div className="bg-white p-1.5 rounded-lg border border-slate-200">
                 <span className="text-slate-500 block">GY รายกะ</span>
                 <span className="font-extrabold text-emerald-700">{currentNode.employment.gyHourly.totalHours}h</span>
               </div>
-              <div className="bg-white p-1 rounded-lg border border-slate-200">
-                <span className="text-slate-500 block">Contractor</span>
+              <div className="bg-white p-1.5 rounded-lg border border-slate-200">
+                <span className="text-slate-500 block">Contractor (WAS)</span>
                 <span className="font-extrabold text-purple-700">{currentNode.employment.contractor.totalHours}h</span>
-              </div>
-              <div className="bg-white p-1 rounded-lg border border-slate-200">
-                <span className="text-slate-500 block">รายเดือน</span>
-                <span className="font-extrabold text-indigo-700">{currentNode.employment.monthly.totalHours}h</span>
               </div>
             </div>
           </div>
@@ -1495,7 +1462,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <option value="ALL">ทุกประเภทการจ้าง</option>
               <option value="GY_HOURLY">พนักงาน GY (รายกะ)</option>
               <option value="CONTRACTOR_HOURLY">Contractor (WAS)</option>
-              <option value="MONTHLY">พนักงานรายเดือน (Monthly)</option>
             </select>
 
             {/* Function Filter */}
@@ -1508,7 +1474,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <option value="PRODUCTION">🏭 Production</option>
               <option value="QTECH">🔬 Qtech</option>
               <option value="ENG">⚙️ Eng</option>
-              <option value="SHARE">🤝 Share</option>
             </select>
 
             {/* Search Box */}
