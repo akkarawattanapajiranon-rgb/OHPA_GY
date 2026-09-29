@@ -151,108 +151,138 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   const m = (machine || '').toUpperCase();
   const combined = `${d} ${cc} ${p} ${m}`;
 
-  // 1. RETREAD PLANT (Cost Centers: 6320, 6300)
+  // 1. RETREAD PLANT (CC 6320, 6300)
   if (cc === '6320' || cc === '6300' || d.startsWith('6') || combined.includes('RETREAD')) {
-    let subMachine = 'Build & Prep';
-    let machineKey = 'RETREAD_BUILD';
-
-    if (combined.includes('BUFF') || combined.includes('ขัด')) {
-      subMachine = 'Buffing';
-      machineKey = 'RETREAD_BUFF';
-    } else if (combined.includes('CURE') || combined.includes('CURING') || combined.includes('อบ')) {
-      subMachine = 'Curing';
-      machineKey = 'RETREAD_CURE';
-    } else if (combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('ตรวจ')) {
-      subMachine = 'Final Inspection';
-      machineKey = 'RETREAD_FINISH';
-    }
-
     return {
       teamKey: 'RETREAD',
       teamName: 'Retread Plant',
       processKey: 'RETREAD_OPS',
       processName: 'Retread Operations',
-      machineKey,
-      machineName: `CC ${cc || '6320'} - ${subMachine}`
+      machineKey: 'CC_6320',
+      machineName: 'CC 6320 : Retread Operations'
     };
   }
 
-  // 2. AERO (AVIATION) - BIAS (A5110, A5120, A5130, 5210, 5230) & RADIAL (S5110, S5120, S5130, 5310, 5330)
+  // 2. AERO (AVIATION TIRES)
+  // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
+  // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
     cc.startsWith('A5') ||
     cc.startsWith('S5') ||
     ['5210', '5230', '5310', '5330'].includes(cc) ||
     d.startsWith('A5') ||
     d.startsWith('S5') ||
-    d.includes('AERO') ||
-    d.includes('AVIATION') ||
     combined.includes('AERO') ||
-    combined.includes('เครื่องบิน')
+    combined.includes('AVIATION')
   ) {
     const isRadial = cc.startsWith('S5') || cc === '5310' || cc === '5330' || d.startsWith('S5') || combined.includes('RADIAL');
     const subProcessKey = isRadial ? 'RADIAL' : 'BIAS';
     const subProcessName = isRadial ? 'Radial Aero' : 'Bias Aero';
 
-    let subMachine = 'Building';
-    let machineKey = `AERO_${subProcessKey}_BUILD`;
-
-    if (cc.endsWith('20') || cc === '5230' || cc === '5330' || combined.includes('CURE') || combined.includes('CURING') || combined.includes('เตาอบ')) {
-      subMachine = 'Curing';
-      machineKey = `AERO_${subProcessKey}_CURING`;
-    } else if (cc.endsWith('30') || combined.includes('FINISH') || combined.includes('INSPECT') || combined.includes('TEST') || combined.includes('X-RAY')) {
-      subMachine = 'Finishing';
-      machineKey = `AERO_${subProcessKey}_FINISHING`;
+    if (isRadial) {
+      if (cc === 'S5120' || cc === '5330' || combined.includes('CURE')) {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'RADIAL',
+          processName: 'Radial Aero',
+          machineKey: 'CC_S5120',
+          machineName: 'CC S5120 : Radial Curing'
+        };
+      } else if (cc === 'S5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'RADIAL',
+          processName: 'Radial Aero',
+          machineKey: 'CC_S5130',
+          machineName: 'CC S5130 : Radial Final Finish'
+        };
+      } else {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'RADIAL',
+          processName: 'Radial Aero',
+          machineKey: 'CC_S5110',
+          machineName: 'CC S5110 : Radial Building'
+        };
+      }
+    } else {
+      if (cc === 'A5120' || cc === '5230' || combined.includes('CURE')) {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'BIAS',
+          processName: 'Bias Aero',
+          machineKey: 'CC_A5120',
+          machineName: 'CC A5120 : Bias Curing'
+        };
+      } else if (cc === 'A5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'BIAS',
+          processName: 'Bias Aero',
+          machineKey: 'CC_A5130',
+          machineName: 'CC A5130 : Bias Final Finish'
+        };
+      } else {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'BIAS',
+          processName: 'Bias Aero',
+          machineKey: 'CC_A5110',
+          machineName: 'CC A5110 : Bias Building'
+        };
+      }
     }
-
-    return {
-      teamKey: 'AERO',
-      teamName: 'Aero (Aviation)',
-      processKey: subProcessKey,
-      processName: subProcessName,
-      machineKey,
-      machineName: `CC ${cc || (isRadial ? 'S5110' : 'A5110')} - ${subMachine}`
-    };
   }
 
-  // 3. CONSUMER (5110 Building, 5120 Curing, 5130 Final Finish)
+  // 3. CONSUMER (PASSENGER & LIGHT TRUCK)
+  // Build: 5110
+  // FF / Curing: 5120, 5130
   if (
     ['5110', '5120', '5130'].includes(cc) ||
     d.startsWith('5110') ||
     d.startsWith('5120') ||
     d.startsWith('5130') ||
-    combined.includes('CONSUMER') ||
-    combined.includes('VMI') ||
-    combined.includes('R.25') ||
-    combined.includes('R25')
+    combined.includes('CONSUMER')
   ) {
-    const isBuild = cc === '5110' || d.startsWith('5110') || combined.includes('BUILD') || combined.includes('VMI') || combined.includes('R25') || combined.includes('R.25');
-
-    if (isBuild) {
-      const isVmi = combined.includes('VMI');
+    if (cc === '5120' || combined.includes('CURE')) {
+      return {
+        teamKey: 'CONSUMER',
+        teamName: 'Consumer',
+        processKey: 'FF_CURING',
+        processName: 'FF / Curing',
+        machineKey: 'CC_5120',
+        machineName: 'CC 5120 : Curing'
+      };
+    } else if (cc === '5130' || combined.includes('FINISH') || combined.includes('INSPECT')) {
+      return {
+        teamKey: 'CONSUMER',
+        teamName: 'Consumer',
+        processKey: 'FF_CURING',
+        processName: 'FF / Curing',
+        machineKey: 'CC_5130',
+        machineName: 'CC 5130 : Final Finish'
+      };
+    } else {
       return {
         teamKey: 'CONSUMER',
         teamName: 'Consumer',
         processKey: 'BUILD',
         processName: 'Build (Building)',
-        machineKey: isVmi ? 'CONSUMER_BUILD_VMI' : 'CONSUMER_BUILD_R25',
-        machineName: isVmi ? 'CC 5110 - VMI' : 'CC 5110 - R.25'
-      };
-    } else {
-      const isCuring = cc === '5120' || d.startsWith('5120') || combined.includes('CURE') || combined.includes('CURING');
-      return {
-        teamKey: 'CONSUMER',
-        teamName: 'Consumer',
-        processKey: 'FF_CURING',
-        processName: 'FF/Curing (Final Finish & Curing)',
-        machineKey: isCuring ? 'CONSUMER_FF_CURING' : 'CONSUMER_FF_FINAL_FINISH',
-        machineName: isCuring ? 'CC 5120 - Curing' : 'CC 5130 - Final Finish'
+        machineKey: 'CC_5110',
+        machineName: 'CC 5110 : Building'
       };
     }
   }
 
-  // 4. BCA (Banbury, Calender, Stock Prep, Extrusion)
-  // Cost Centers: 3200 (Banbury), 3300 (Cement), 3700 (Mix Support), 4300 (Tuber/Quad)
-  // Cost Centers: 4110 (Calender), 4120 (Steel Calender), 4130 (Bead/Band 72), 4140 (Bladder/Tube), 4200 (Apex/Hex Bead)
+  // 4. BCA (BANBURY / CALENDER / PREP)
+  // Mix & Extrusion: 3200, 3300, 3700, 4300
+  // Component Prep: 4110, 4120, 4130, 4140, 4200
   const isMix =
     ['3200', '3300', '3700', '4300'].includes(cc) ||
     cc.startsWith('3') ||
@@ -260,84 +290,95 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     combined.includes('BANBURY') ||
     combined.includes('MIXER') ||
     combined.includes('PIGMENT') ||
-    combined.includes('EXTRU') ||
     combined.includes('TUBER') ||
     combined.includes('QUAD');
 
   if (isMix) {
-    let subMachine = '320 BANBURY # 1';
-    let machineKey = '320_BANBURY_1';
-
     if (cc === '3300' || combined.includes('CEMENT')) {
-      subMachine = '330 Cement House';
-      machineKey = '320_BANBURY_1';
-    } else if (cc === '4300' || combined.includes('QUAD') || combined.includes('6X8') || combined.includes('6"X8"')) {
-      subMachine = combined.includes('QUAD') ? '430 Quad' : '430 6"x8" Tuber';
-      machineKey = combined.includes('QUAD') ? '430_QUAD' : '430_6X8_TUBER';
-    } else if (combined.includes('BANBURY # 2') || combined.includes('BANBURY #2') || combined.includes('BB2')) {
-      subMachine = '320 BANBURY # 2';
-      machineKey = '320_BANBURY_2';
-    } else if (combined.includes('PIGMENT')) {
-      subMachine = '320 Pigment';
-      machineKey = '320_PIGMENT';
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'MIX_EXTRUSION',
+        processName: 'Mix & Extrusion',
+        machineKey: 'CC_3300',
+        machineName: 'CC 3300 : Cement House'
+      };
+    } else if (cc === '3700') {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'MIX_EXTRUSION',
+        processName: 'Mix & Extrusion',
+        machineKey: 'CC_3700',
+        machineName: 'CC 3700 : Mix Support'
+      };
+    } else if (cc === '4300' || combined.includes('QUAD') || combined.includes('TUBER') || combined.includes('6"X8"') || combined.includes('6X8')) {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'MIX_EXTRUSION',
+        processName: 'Mix & Extrusion',
+        machineKey: 'CC_4300',
+        machineName: 'CC 4300 : Tuber & Extrusion'
+      };
+    } else {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'MIX_EXTRUSION',
+        processName: 'Mix & Extrusion',
+        machineKey: 'CC_3200',
+        machineName: 'CC 3200 : Banbury & Mixing'
+      };
     }
-
-    return {
-      teamKey: 'BCA',
-      teamName: 'BCA',
-      processKey: 'MIX_EXTRUSION',
-      processName: 'Mix & Extrusion',
-      machineKey,
-      machineName: `CC ${cc || '3200'} - ${subMachine}`
-    };
   } else {
-    // Component Prep (4110, 4120, 4130, 4140, 4200, etc.)
-    let subMachine = '411 4Roll#1';
-    let machineKey = '411_4ROLL_1';
-
+    // Component Prep: 4110, 4120, 4130, 4140, 4200
     if (cc === '4120' || combined.includes('BAND54') || combined.includes('BAND 54')) {
-      subMachine = '412 Band54"';
-      machineKey = '412_BAND_54';
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'COMPONENT_PREP',
+        processName: 'Component Prep',
+        machineKey: 'CC_4120',
+        machineName: 'CC 4120 : Steel Calender'
+      };
     } else if (cc === '4130' || combined.includes('BAND72') || combined.includes('BAND 72')) {
-      subMachine = '413 Band72"';
-      machineKey = '413_BAND_72';
-    } else if (cc === '4200' || combined.includes('HEX BEAD') || combined.includes('HEXBEAD')) {
-      subMachine = '420 Hex Bead';
-      machineKey = '420_HEX_BEAD';
-    } else if (combined.includes('HOT APEX') || combined.includes('APEXER')) {
-      subMachine = '420 Hot apexer';
-      machineKey = '420_HOT_APEXER';
-    } else if (combined.includes('BEAD FLAP')) {
-      subMachine = '420 Bead Flap';
-      machineKey = '420_BEAD_FLAP';
-    } else if (combined.includes('BEAD INSUL')) {
-      subMachine = '420 Bead insulation';
-      machineKey = '420_BEAD_INSULATION';
-    } else if (combined.includes('BEAD WRAP')) {
-      subMachine = '420 Bead Wrap';
-      machineKey = '420_BEAD_WRAP';
-    } else if (combined.includes('4ROLL#2') || combined.includes('4 ROLL #2') || combined.includes('4ROLL 2')) {
-      subMachine = '411 4Roll#2';
-      machineKey = '411_4ROLL_2';
-    } else if (combined.includes('CHAFER')) {
-      subMachine = '411 Chafer lay up';
-      machineKey = '411_CHAFER_LAY_UP';
-    } else if (combined.includes('LUX') || combined.includes('SLITTER')) {
-      subMachine = '411 Lux/slitter';
-      machineKey = '411_LUX_SLITTER';
-    } else if (combined.includes('SHEAR') || combined.includes('FISCER')) {
-      subMachine = '411 Shear Fiscer';
-      machineKey = '411_SHEAR_FISCER';
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'COMPONENT_PREP',
+        processName: 'Component Prep',
+        machineKey: 'CC_4130',
+        machineName: 'CC 4130 : Bead & Band 72"'
+      };
+    } else if (cc === '4140') {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'COMPONENT_PREP',
+        processName: 'Component Prep',
+        machineKey: 'CC_4140',
+        machineName: 'CC 4140 : Bladder & Tube'
+      };
+    } else if (cc === '4200' || combined.includes('HEX BEAD') || combined.includes('APEX')) {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'COMPONENT_PREP',
+        processName: 'Component Prep',
+        machineKey: 'CC_4200',
+        machineName: 'CC 4200 : Apex & Hex Bead'
+      };
+    } else {
+      return {
+        teamKey: 'BCA',
+        teamName: 'BCA',
+        processKey: 'COMPONENT_PREP',
+        processName: 'Component Prep',
+        machineKey: 'CC_4110',
+        machineName: 'CC 4110 : Fabric Calender & Prep'
+      };
     }
-
-    return {
-      teamKey: 'BCA',
-      teamName: 'BCA',
-      processKey: 'COMPONENT_PREP',
-      processName: 'Component Prep',
-      machineKey,
-      machineName: `CC ${cc || '4110'} - ${subMachine}`
-    };
   }
 }
 
@@ -547,52 +588,45 @@ export function buildPlantHierarchyTree(
         return buildNode(`${tKey}_${pKey}_${mKey}`, mTitle, 'MACHINE', mWorkers);
       });
 
-      // Sort machines by standard sequence matching factory specs
-      const bcaMixOrder = ['320_BANBURY_1', '320_BANBURY_2', '320_PIGMENT', '430_6X8_TUBER', '430_QUAD'];
-      const bcaPrepOrder = [
-        '3ROLL_CEMENT_3300_3700',
-        '411_4ROLL_1',
-        '411_4ROLL_2',
-        '411_CHAFER_LAY_UP',
-        '411_LUX_SLITTER',
-        '411_SHEAR_FISCER',
-        '412_BAND_54',
-        '413_BAND_72',
-        '420_BEAD_FLAP',
-        '420_BEAD_INSULATION',
-        '420_BEAD_WRAP',
-        '420_HEX_BEAD',
-        '420_HOT_APEXER'
+      // Sort machines strictly by standard Cost Center sequence
+      const costCenterOrder = [
+        // BCA Mix & Extrusion
+        'CC_3200',
+        'CC_3300',
+        'CC_3700',
+        'CC_4300',
+        // BCA Component Prep
+        'CC_4110',
+        'CC_4120',
+        'CC_4130',
+        'CC_4140',
+        'CC_4200',
+        // Consumer
+        'CC_5110',
+        'CC_5120',
+        'CC_5130',
+        // Bias Aero
+        'CC_A5110',
+        'CC_A5120',
+        'CC_A5130',
+        // Radial Aero
+        'CC_S5110',
+        'CC_S5120',
+        'CC_S5130',
+        // Retread
+        'CC_6320'
       ];
-      const consumerBuildOrder = ['CONSUMER_BUILD_VMI', 'CONSUMER_BUILD_R25'];
-      const consumerFFOrder = ['CONSUMER_FF_FINAL_FINISH', 'CONSUMER_FF_CURING'];
-      const retreadOrder = ['RETREAD_BUFF', 'RETREAD_BUILD', 'RETREAD_CURE', 'RETREAD_FINISH'];
 
       machineNodes.sort((a, b) => {
         const keyA = a.id.replace(`${tKey}_${pKey}_`, '');
         const keyB = b.id.replace(`${tKey}_${pKey}_`, '');
 
-        if (pKey === 'MIX_EXTRUSION') {
-          const idxA = bcaMixOrder.indexOf(keyA);
-          const idxB = bcaMixOrder.indexOf(keyB);
-          if (idxA >= 0 && idxB >= 0) return idxA - idxB;
-        } else if (pKey === 'COMPONENT_PREP') {
-          const idxA = bcaPrepOrder.indexOf(keyA);
-          const idxB = bcaPrepOrder.indexOf(keyB);
-          if (idxA >= 0 && idxB >= 0) return idxA - idxB;
-        } else if (pKey === 'BUILD') {
-          const idxA = consumerBuildOrder.indexOf(keyA);
-          const idxB = consumerBuildOrder.indexOf(keyB);
-          if (idxA >= 0 && idxB >= 0) return idxA - idxB;
-        } else if (pKey === 'FF_CURING') {
-          const idxA = consumerFFOrder.indexOf(keyA);
-          const idxB = consumerFFOrder.indexOf(keyB);
-          if (idxA >= 0 && idxB >= 0) return idxA - idxB;
-        } else if (tKey === 'RETREAD') {
-          const idxA = retreadOrder.indexOf(keyA);
-          const idxB = retreadOrder.indexOf(keyB);
-          if (idxA >= 0 && idxB >= 0) return idxA - idxB;
-        }
+        const idxA = costCenterOrder.indexOf(keyA);
+        const idxB = costCenterOrder.indexOf(keyB);
+        if (idxA >= 0 && idxB >= 0) return idxA - idxB;
+        if (idxA >= 0) return -1;
+        if (idxB >= 0) return 1;
+
         return b.metrics.totalHours - a.metrics.totalHours;
       });
 

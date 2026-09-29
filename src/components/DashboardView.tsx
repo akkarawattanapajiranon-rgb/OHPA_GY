@@ -236,14 +236,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               Plant Total Hours & OT Hierarchy Dashboard
             </h2>
             <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-xs">
-              From Plant ➔ by Team ➔ by M/C
+              From Plant ➔ by Team ➔ by Cost Center
             </span>
             <span className="bg-indigo-100 text-indigo-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
               Production • Qtech • Eng
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            แดชบอร์ดโครงสร้างโรงงานระดับลึก: ตรวจสอบกำลังพล ชั่วโมงทำงาน และ OT ทีละขั้นจากระดับโรงงาน สู่ทีม กระบวนการ และเครื่องจักร
+            แดชบอร์ดโครงสร้างโรงงานระดับลึก: ตรวจสอบกำลังพล ชั่วโมงทำงาน และ OT ทีละขั้นจากระดับโรงงาน สู่ทีม กระบวนการ และศูนย์ต้นทุน (Cost Center)
           </p>
         </div>
 
@@ -554,8 +554,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines (Every Machine by M/C) */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-amber-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {mixNode?.children && mixNode.children.length > 0 ? (
                               mixNode.children.map(mach => {
@@ -604,8 +604,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines (Every Machine by M/C) */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-amber-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {prepNode?.children && prepNode.children.length > 0 ? (
                               prepNode.children.map(mach => {
@@ -704,8 +704,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-cyan-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {buildNode?.children && buildNode.children.length > 0 ? (
                               buildNode.children.map(mach => {
@@ -754,8 +754,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-cyan-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {ffNode?.children && ffNode.children.length > 0 ? (
                               ffNode.children.map(mach => {
@@ -854,8 +854,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-purple-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {biasNode?.children && biasNode.children.length > 0 ? (
                               biasNode.children.map(mach => {
@@ -904,8 +904,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {/* Stem to Level 3 Machines */}
                           <div className="w-0.5 h-4 bg-slate-700" />
                           <div className="w-full space-y-1">
-                            <div className="text-[9px] font-black uppercase text-purple-400 text-center tracking-wider mb-1">
-                              เครื่องจักร (By M/C)
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
                             </div>
                             {radialNode?.children && radialNode.children.length > 0 ? (
                               radialNode.children.map(mach => {
@@ -998,8 +998,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       {/* Stem to Level 3 Machines */}
                       <div className="w-0.5 h-4 bg-slate-700" />
                       <div className="w-full space-y-1">
-                        <div className="text-[9px] font-black uppercase text-emerald-400 text-center tracking-wider mb-1">
-                          เครื่องจักร (By M/C)
+                        <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                          ศูนย์ต้นทุน (Cost Center)
                         </div>
                         {retOpsNode?.children && retOpsNode.children.length > 0 ? (
                           retOpsNode.children.map(mach => {
