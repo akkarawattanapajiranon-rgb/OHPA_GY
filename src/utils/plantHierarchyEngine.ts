@@ -127,7 +127,7 @@ export function classifyFunction(dept: string, costCenter: string, position: str
 }
 
 export interface PlantClassification {
-  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG';
+  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH';
   teamName: string;
   processKey: string;
   processName: string;
@@ -172,7 +172,74 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     };
   }
 
-  // 2. RETREAD PLANT (CC 6320, 6300)
+  // 2. QTECH (6th Branch: Qtech A, Qtech B, Aero, QA - CC 1021, 1022, S1040, 1040)
+  if (
+    ['1021', '1022', '1040', 'S1040'].includes(cc) ||
+    d.includes('QTECH') ||
+    d.includes('QUALITY') ||
+    d.includes(' 1021') ||
+    d.includes(' 1022') ||
+    d.includes(' 1040') ||
+    d.includes('S1040') ||
+    p.includes('QTECH') ||
+    p.includes('INSPECTOR') ||
+    p.includes('AUDITOR') ||
+    p.includes('CERTIFYING') ||
+    p.includes('SHEAROGRAPHY') ||
+    p.includes('RESILIOMETER')
+  ) {
+    if (cc === '1021' || combined.includes('1021') || combined.includes('QTECH A') || combined.includes('LAB A')) {
+      return {
+        teamKey: 'QTECH',
+        teamName: 'Qtech',
+        processKey: 'QTECH_A',
+        processName: 'Qtech A',
+        machineKey: 'CC_1021',
+        machineName: 'CC 1021 : Qtech A'
+      };
+    } else if (cc === '1022' || combined.includes('1022') || combined.includes('QTECH B') || combined.includes('LAB B') || combined.includes('DIE TECH')) {
+      return {
+        teamKey: 'QTECH',
+        teamName: 'Qtech',
+        processKey: 'QTECH_B',
+        processName: 'Qtech B',
+        machineKey: 'CC_1022',
+        machineName: 'CC 1022 : Qtech B'
+      };
+    } else if (
+      cc === 'S1040' ||
+      combined.includes('S1040') ||
+      combined.includes('AERO') ||
+      combined.includes('AV') ||
+      combined.includes('SHEAROGRAPHY') ||
+      combined.includes('SDS') ||
+      combined.includes('RESILIOMETER') ||
+      combined.includes('X-RAY') ||
+      combined.includes('BURST') ||
+      combined.includes('CERTIFYING')
+    ) {
+      return {
+        teamKey: 'QTECH',
+        teamName: 'Qtech',
+        processKey: 'QTECH_AERO',
+        processName: 'Qtech Aero',
+        machineKey: cc === 'S1040' ? 'CC_S1040' : (cc ? `CC_${cc}` : 'CC_S1040'),
+        machineName: `CC ${cc || 'S1040'} : Qtech Aero`
+      };
+    } else {
+      // Default / CC 1040 / QA / PDI / Process Auditor
+      return {
+        teamKey: 'QTECH',
+        teamName: 'Qtech',
+        processKey: 'QTECH_QA',
+        processName: 'QA',
+        machineKey: 'CC_1040',
+        machineName: 'CC 1040 : QA'
+      };
+    }
+  }
+
+  // 3. RETREAD PLANT (CC 6320, 6300)
   if (cc === '6320' || cc === '6300' || d.startsWith('6') || combined.includes('RETREAD')) {
     return {
       teamKey: 'RETREAD',
@@ -184,7 +251,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     };
   }
 
-  // 3. AERO (AVIATION TIRES)
+  // 4. AERO (AVIATION TIRES)
   // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
   // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
@@ -581,11 +648,22 @@ export function buildPlantHierarchyTree(
   }
 
   // Build Hierarchy Structure:
-  // Level 1: 5 Branches (BCA, CONSUMER, AERO, RETREAD, ENG)
-  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG'> = ['BCA', 'CONSUMER', 'AERO', 'RETREAD', 'ENG'];
+  // Level 1: 6 Branches (BCA, CONSUMER, AERO, RETREAD, ENG, QTECH)
+  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG' | 'QTECH'> = ['BCA', 'CONSUMER', 'AERO', 'RETREAD', 'ENG', 'QTECH'];
   const teamNodes: HierarchyNode[] = teamKeys.map(tKey => {
     const teamWorkers = allWorkers.filter(w => w.teamKey === tKey);
-    const teamTitle = tKey === 'BCA' ? 'BCA' : (tKey === 'CONSUMER' ? 'CONSUMER' : (tKey === 'AERO' ? 'AERO' : (tKey === 'RETREAD' ? 'Retread' : 'Engineering')));
+    const teamTitle =
+      tKey === 'BCA'
+        ? 'BCA'
+        : tKey === 'CONSUMER'
+        ? 'CONSUMER'
+        : tKey === 'AERO'
+        ? 'AERO'
+        : tKey === 'RETREAD'
+        ? 'Retread'
+        : tKey === 'ENG'
+        ? 'Engineering'
+        : 'Qtech';
 
     // Level 2: Processes under this team
     const processMap = new Map<string, HierarchyWorker[]>();
@@ -642,7 +720,12 @@ export function buildPlantHierarchyTree(
         'CC_S1100',
         'CC_1161',
         'CC_1164',
-        'CC_1210'
+        'CC_1210',
+        // Qtech
+        'CC_1021',
+        'CC_1022',
+        'CC_S1040',
+        'CC_1040'
       ];
 
       machineNodes.sort((a, b) => {
@@ -663,7 +746,21 @@ export function buildPlantHierarchyTree(
 
     // Sort processes in standard order
     processNodes.sort((a, b) => {
-      const order = ['MIX_EXTRUSION', 'COMPONENT_PREP', 'BUILD', 'FF_CURING', 'BIAS', 'RADIAL', 'RETREAD_OPS', 'ENG_MAINT', 'ENG_PLANT'];
+      const order = [
+        'MIX_EXTRUSION',
+        'COMPONENT_PREP',
+        'BUILD',
+        'FF_CURING',
+        'BIAS',
+        'RADIAL',
+        'RETREAD_OPS',
+        'ENG_MAINT',
+        'ENG_PLANT',
+        'QTECH_A',
+        'QTECH_B',
+        'QTECH_AERO',
+        'QTECH_QA'
+      ];
       const idxA = order.indexOf(a.id.split('_')[1] || '');
       const idxB = order.indexOf(b.id.split('_')[1] || '');
       return (idxA >= 0 ? idxA : 99) - (idxB >= 0 ? idxB : 99);

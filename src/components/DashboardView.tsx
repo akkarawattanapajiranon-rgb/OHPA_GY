@@ -476,20 +476,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="w-0.5 h-8 bg-slate-600" />
           </div>
 
-          {/* LEVEL 1 BUS CONNECTOR & 5 TEAM COLUMNS */}
+          {/* LEVEL 1 BUS CONNECTOR & 6 TEAM COLUMNS */}
           <div className="relative">
-            {/* Horizontal Bus Bar spanning all 5 columns */}
-            <div className="hidden lg:block absolute top-0 left-[10%] right-[10%] h-0.5 bg-slate-600">
+            {/* Horizontal Bus Bar spanning all 6 columns */}
+            <div className="hidden lg:block absolute top-0 left-[8.33%] right-[8.33%] h-0.5 bg-slate-600">
               {/* Junction indicators */}
               <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400" />
-              <div className="absolute top-1/2 left-[25%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
-              <div className="absolute top-1/2 left-[50%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
-              <div className="absolute top-1/2 left-[75%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-orange-400" />
+              <div className="absolute top-1/2 left-[20%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
+              <div className="absolute top-1/2 left-[40%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
+              <div className="absolute top-1/2 left-[60%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="absolute top-1/2 left-[80%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400" />
+              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-rose-400" />
             </div>
 
-            {/* 5 Team Columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 pt-4">
+            {/* 6 Team Columns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-2.5 pt-4">
               {/* ============================================================ */}
               {/* COLUMN 1: BCA */}
               {/* ============================================================ */}
@@ -1166,6 +1167,256 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   >
                                     <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
                                     <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ============================================================ */}
+              {/* COLUMN 6: QTECH (QUALITY & TECH) */}
+              {/* ============================================================ */}
+              {(() => {
+                const qtechNode = root.children?.find(t => t.id === 'QTECH');
+                const isTeamSelected = selectedNodeId === 'QTECH' || (breadcrumbs.some(b => b.id === 'QTECH') && selectedNodeId !== 'PLANT');
+                const qtechANode = qtechNode?.children?.find(p => p.id === 'QTECH_QTECH_A');
+                const qtechBNode = qtechNode?.children?.find(p => p.id === 'QTECH_QTECH_B');
+                const qtechAeroNode = qtechNode?.children?.find(p => p.id === 'QTECH_QTECH_AERO');
+                const qtechQaNode = qtechNode?.children?.find(p => p.id === 'QTECH_QTECH_QA');
+
+                return (
+                  <div className="flex flex-col items-center">
+                    {/* Top drop line from bus bar */}
+                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+
+                    {/* Team Node Card */}
+                    <div
+                      onClick={() => setSelectedNodeId('QTECH')}
+                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                        selectedNodeId === 'QTECH'
+                          ? 'bg-rose-400 text-slate-950 ring-4 ring-rose-300 scale-[1.02]'
+                          : isTeamSelected
+                          ? 'bg-rose-400/90 text-slate-950 ring-2 ring-rose-400'
+                          : 'bg-slate-900 border border-rose-500/50 hover:border-rose-400 text-slate-100 hover:bg-slate-850'
+                      }`}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-rose-400" />
+                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" />
+                        <span>QTECH</span>
+                      </div>
+                      <div className="text-[10px] opacity-80 mt-0.5">Quality & Tech</div>
+                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                        <span>👥 {qtechNode?.metrics.headcount || 0} คน</span>
+                        <span>⏱️ {qtechNode?.metrics.totalHours || 0} ชม.</span>
+                        <span className="text-amber-300 drop-shadow-xs">OT {qtechNode?.metrics.otHours || 0}h</span>
+                      </div>
+                    </div>
+
+                    {/* Stem down to Processes */}
+                    <div className="w-0.5 h-6 bg-slate-600" />
+
+                    {/* Level 2 Bus Bar for QTECH (Qtech A, B, Aero, QA) */}
+                    <div className="w-full relative">
+                      <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
+                      <div className="grid grid-cols-2 gap-2 pt-3">
+                        {/* Process 1: Qtech A */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('QTECH_QTECH_A')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'QTECH_QTECH_A'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Qtech A</div>
+                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                              {qtechANode?.metrics.totalHours || 0} ชม. ({qtechANode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Cost Centers */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
+                            </div>
+                            {qtechANode?.children && qtechANode.children.length > 0 ? (
+                              qtechANode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 2: Qtech B */}
+                        <div className="flex flex-col items-center">
+                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div
+                            onClick={() => setSelectedNodeId('QTECH_QTECH_B')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'QTECH_QTECH_B'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Qtech B</div>
+                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                              {qtechBNode?.metrics.totalHours || 0} ชม. ({qtechBNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Cost Centers */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
+                            </div>
+                            {qtechBNode?.children && qtechBNode.children.length > 0 ? (
+                              qtechBNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 3: Qtech Aero */}
+                        <div className="flex flex-col items-center mt-2">
+                          <div
+                            onClick={() => setSelectedNodeId('QTECH_QTECH_AERO')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'QTECH_QTECH_AERO'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">Aero</div>
+                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                              {qtechAeroNode?.metrics.totalHours || 0} ชม. ({qtechAeroNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Cost Centers */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
+                            </div>
+                            {qtechAeroNode?.children && qtechAeroNode.children.length > 0 ? (
+                              qtechAeroNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
+                                      {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Process 4: QA */}
+                        <div className="flex flex-col items-center mt-2">
+                          <div
+                            onClick={() => setSelectedNodeId('QTECH_QTECH_QA')}
+                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                              selectedNodeId === 'QTECH_QTECH_QA'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
+                            }`}
+                          >
+                            <div className="text-[11px] font-black leading-tight">QA</div>
+                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                              {qtechQaNode?.metrics.totalHours || 0} ชม. ({qtechQaNode?.metrics.headcount || 0} คน)
+                            </div>
+                          </div>
+
+                          {/* Stem to Level 3 Cost Centers */}
+                          <div className="w-0.5 h-4 bg-slate-700" />
+                          <div className="w-full space-y-1">
+                            <div className="text-[9px] font-black uppercase text-center tracking-wider mb-1 opacity-90">
+                              ศูนย์ต้นทุน (Cost Center)
+                            </div>
+                            {qtechQaNode?.children && qtechQaNode.children.length > 0 ? (
+                              qtechQaNode.children.map(mach => {
+                                const isMachSelected = selectedNodeId === mach.id;
+                                return (
+                                  <button
+                                    key={mach.id}
+                                    onClick={() => setSelectedNodeId(mach.id)}
+                                    className={`w-full p-1.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                      isMachSelected
+                                        ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold shadow-sm'
+                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                    }`}
+                                    title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
+                                  >
+                                    <span className="truncate text-[10px] font-bold pr-1">{mach.title}</span>
+                                    <span className={`text-[9px] whitespace-nowrap shrink-0 ${isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300 font-semibold'}`}>
                                       {mach.metrics.totalHours}h ({mach.metrics.headcount}p)
                                     </span>
                                   </button>
