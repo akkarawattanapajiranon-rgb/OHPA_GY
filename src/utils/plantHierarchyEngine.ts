@@ -82,47 +82,9 @@ export function aggregateMetricSummary(workers: HierarchyWorker[]): MetricSummar
 }
 
 export function classifyFunction(dept: string, costCenter: string, position: string, machine: string): FunctionType {
-  const d = (dept || '').toLowerCase();
-  const cc = (costCenter || '').trim();
-  const p = (position || '').toLowerCase();
-  const m = (machine || '').toLowerCase();
-
-  // 1. Qtech (Quality Tech / QA / QC / Lab)
-  if (
-    cc === '1040' ||
-    d.includes('1040') ||
-    d.includes('quality') ||
-    d.includes('qa') ||
-    d.includes('qc') ||
-    p.includes('qtech') ||
-    p.includes('quality') ||
-    p.includes('inspector') ||
-    p.includes('lab') ||
-    m.includes('qtech') ||
-    m.includes('inspection') ||
-    m.includes('lab')
-  ) {
-    return 'QTECH';
-  }
-
-  // 2. Eng (Engineering / Maintenance / Technicians / Electricians)
-  if (
-    cc === '1110' ||
-    d.includes('1110') ||
-    d.includes('eng') ||
-    d.includes('maintain') ||
-    p.includes('eng') ||
-    p.includes('technician') ||
-    p.includes('mechanic') ||
-    p.includes('electric') ||
-    p.includes('maint') ||
-    m.includes('maintenance') ||
-    m.includes('tech')
-  ) {
-    return 'ENG';
-  }
-
-  // 3. Default: Direct Manufacturing Production (Operators, Leaders, Line Workers, Material Handling)
+  const loc = classifyPlantLocation(dept, costCenter, position, machine);
+  if (loc.teamKey === 'QTECH') return 'QTECH';
+  if (loc.teamKey === 'ENG') return 'ENG';
   return 'PRODUCTION';
 }
 
