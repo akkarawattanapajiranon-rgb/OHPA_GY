@@ -127,7 +127,7 @@ export function classifyFunction(dept: string, costCenter: string, position: str
 }
 
 export interface PlantClassification {
-  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD';
+  teamKey: 'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG';
   teamName: string;
   processKey: string;
   processName: string;
@@ -151,7 +151,28 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   const m = (machine || '').toUpperCase();
   const combined = `${d} ${cc} ${p} ${m}`;
 
-  // 1. RETREAD PLANT (CC 6320, 6300)
+  // 1. ENGINEERING & MAINTENANCE (5th Branch: CC 1110, 1100, S1100, 1161, 1164, 1210)
+  if (
+    ['1110', '1100', 'S1100', '1161', '1164', '1210'].includes(cc) ||
+    d.includes('ENGINEERING') ||
+    d.includes(' 1110') ||
+    d.includes(' 1100') ||
+    p.includes('MECHANIC') ||
+    p.includes('ELECTRIC') ||
+    p.includes('DRUM REPAIR')
+  ) {
+    const isMaintenance = cc === '1110' || p.includes('MECHANIC') || p.includes('ELECTRIC') || p.includes('DRUM') || p.includes('MAINT');
+    return {
+      teamKey: 'ENG',
+      teamName: 'Engineering',
+      processKey: isMaintenance ? 'ENG_MAINT' : 'ENG_PLANT',
+      processName: isMaintenance ? 'Maintenance & Repairs' : 'Plant Eng & Facilities',
+      machineKey: `CC_${cc || (isMaintenance ? '1110' : '1100')}`,
+      machineName: isMaintenance ? `CC ${cc || '1110'} : Plant Maintenance` : `CC ${cc || '1100'} : Engineering & Reliability`
+    };
+  }
+
+  // 2. RETREAD PLANT (CC 6320, 6300)
   if (cc === '6320' || cc === '6300' || d.startsWith('6') || combined.includes('RETREAD')) {
     return {
       teamKey: 'RETREAD',
@@ -163,7 +184,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     };
   }
 
-  // 2. AERO (AVIATION TIRES)
+  // 3. AERO (AVIATION TIRES)
   // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
   // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
@@ -240,7 +261,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     }
   }
 
-  // 3. CONSUMER (PASSENGER & LIGHT TRUCK)
+  // 4. CONSUMER (PASSENGER & LIGHT TRUCK)
   // Build: 5110
   // FF / Curing: 5120, 5130
   if (
@@ -280,7 +301,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     }
   }
 
-  // 4. BCA (BANBURY / CALENDER / PREP)
+  // 5. BCA (BANBURY / CALENDER / PREP)
   // Mix & Extrusion: 3200, 3300, 3700, 4300
   // Component Prep: 4110, 4120, 4130, 4140, 4200
   const isMix =
@@ -560,11 +581,11 @@ export function buildPlantHierarchyTree(
   }
 
   // Build Hierarchy Structure:
-  // Level 1: BCA, CONSUMER, AERO, RETREAD
-  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD'> = ['BCA', 'CONSUMER', 'AERO', 'RETREAD'];
+  // Level 1: 5 Branches (BCA, CONSUMER, AERO, RETREAD, ENG)
+  const teamKeys: Array<'BCA' | 'CONSUMER' | 'AERO' | 'RETREAD' | 'ENG'> = ['BCA', 'CONSUMER', 'AERO', 'RETREAD', 'ENG'];
   const teamNodes: HierarchyNode[] = teamKeys.map(tKey => {
     const teamWorkers = allWorkers.filter(w => w.teamKey === tKey);
-    const teamTitle = tKey === 'BCA' ? 'BCA' : (tKey === 'CONSUMER' ? 'CONSUMER' : (tKey === 'AERO' ? 'AERO' : 'Retread'));
+    const teamTitle = tKey === 'BCA' ? 'BCA' : (tKey === 'CONSUMER' ? 'CONSUMER' : (tKey === 'AERO' ? 'AERO' : (tKey === 'RETREAD' ? 'Retread' : 'Engineering')));
 
     // Level 2: Processes under this team
     const processMap = new Map<string, HierarchyWorker[]>();
@@ -614,7 +635,14 @@ export function buildPlantHierarchyTree(
         'CC_S5120',
         'CC_S5130',
         // Retread
-        'CC_6320'
+        'CC_6320',
+        // Engineering
+        'CC_1110',
+        'CC_1100',
+        'CC_S1100',
+        'CC_1161',
+        'CC_1164',
+        'CC_1210'
       ];
 
       machineNodes.sort((a, b) => {
@@ -635,7 +663,7 @@ export function buildPlantHierarchyTree(
 
     // Sort processes in standard order
     processNodes.sort((a, b) => {
-      const order = ['MIX_EXTRUSION', 'COMPONENT_PREP', 'BUILD', 'FF_CURING', 'BIAS', 'RADIAL', 'RETREAD_OPS'];
+      const order = ['MIX_EXTRUSION', 'COMPONENT_PREP', 'BUILD', 'FF_CURING', 'BIAS', 'RADIAL', 'RETREAD_OPS', 'ENG_MAINT', 'ENG_PLANT'];
       const idxA = order.indexOf(a.id.split('_')[1] || '');
       const idxB = order.indexOf(b.id.split('_')[1] || '');
       return (idxA >= 0 ? idxA : 99) - (idxB >= 0 ? idxB : 99);
