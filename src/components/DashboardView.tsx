@@ -419,53 +419,53 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Tree Canvas */}
-        <div className="min-w-[1050px] pb-4 select-none">
+        <div className="min-w-[1440px] pb-3 select-none">
           {/* LEVEL 0: ROOT - PLANT LEVEL (Centered) */}
           <div className="flex flex-col items-center">
             <div
               onClick={() => setSelectedNodeId('PLANT')}
-              className={`w-[440px] rounded-2xl p-4 transition-all duration-200 cursor-pointer shadow-xl relative overflow-hidden group ${
+              className={`w-[380px] rounded-xl p-2.5 transition-all duration-200 cursor-pointer shadow-lg relative overflow-hidden group ${
                 selectedNodeId === 'PLANT'
                   ? 'bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-slate-950 ring-4 ring-amber-400/60 scale-[1.02] shadow-amber-500/25'
                   : 'bg-slate-900 border-2 border-amber-500/60 hover:border-amber-400 text-slate-100 hover:bg-slate-850 hover:scale-[1.01]'
               }`}
             >
               {/* Accent top stripe */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
               
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-xl ${selectedNodeId === 'PLANT' ? 'bg-slate-950/20 text-slate-950' : 'bg-amber-400/20 text-amber-400'}`}>
-                    <Building2 className="w-4 h-4" />
+                  <div className={`p-1 rounded-lg ${selectedNodeId === 'PLANT' ? 'bg-slate-950/20 text-slate-950' : 'bg-amber-400/20 text-amber-400'}`}>
+                    <Building2 className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider block opacity-75">
+                    <span className="text-[9px] font-black uppercase tracking-wider block opacity-75 leading-none">
                       Root Node (ระดับโรงงาน)
                     </span>
-                    <span className="text-sm font-black tracking-wide">
+                    <span className="text-xs font-black tracking-wide">
                       PLANT (ทั้งโรงงาน Goodyear)
                     </span>
                   </div>
                 </div>
                 {selectedNodeId === 'PLANT' && (
-                  <span className="bg-slate-950 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                  <span className="bg-slate-950 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">
                     กำลังดูอยู่
                   </span>
                 )}
               </div>
 
-              <div className={`grid grid-cols-3 gap-2 pt-2 border-t text-center ${selectedNodeId === 'PLANT' ? 'border-black/15' : 'border-slate-800'}`}>
-                <div className="bg-black/10 rounded-lg py-1 px-2">
-                  <span className="text-[10px] block opacity-75 font-semibold">กำลังพลรวม</span>
-                  <span className="text-xs font-black">👥 {root.metrics.headcount.toLocaleString()} คน</span>
+              <div className={`grid grid-cols-3 gap-1.5 pt-1.5 border-t text-center ${selectedNodeId === 'PLANT' ? 'border-black/15' : 'border-slate-800'}`}>
+                <div className="bg-black/10 rounded-md py-0.5 px-1.5">
+                  <span className="text-[9px] block opacity-75 font-semibold">กำลังพลรวม</span>
+                  <span className="text-[11px] font-black">👥 {root.metrics.headcount.toLocaleString()} คน</span>
                 </div>
-                <div className="bg-black/10 rounded-lg py-1 px-2">
-                  <span className="text-[10px] block opacity-75 font-semibold">ชม. ทำงานรวม</span>
-                  <span className="text-xs font-black">⏱️ {root.metrics.totalHours.toLocaleString()} ชม.</span>
+                <div className="bg-black/10 rounded-md py-0.5 px-1.5">
+                  <span className="text-[9px] block opacity-75 font-semibold">ชม. ทำงานรวม</span>
+                  <span className="text-[11px] font-black">⏱️ {root.metrics.totalHours.toLocaleString()} ชม.</span>
                 </div>
-                <div className="bg-black/10 rounded-lg py-1 px-2">
-                  <span className="text-[10px] block opacity-75 font-semibold">ชั่วโมง OT</span>
-                  <span className="text-xs font-black text-amber-300 drop-shadow-xs">
+                <div className="bg-black/10 rounded-md py-0.5 px-1.5">
+                  <span className="text-[9px] block opacity-75 font-semibold">ชั่วโมง OT</span>
+                  <span className="text-[11px] font-black text-amber-300 drop-shadow-xs">
                     🔥 {root.metrics.otHours.toLocaleString()}h ({root.metrics.otPercentage}%)
                   </span>
                 </div>
@@ -473,27 +473,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Vertical stem from Plant to Bus Bar */}
-            <div className="w-0.5 h-8 bg-slate-600" />
+            <div className="w-0.5 h-5 bg-slate-600" />
           </div>
 
-          {/* LEVEL 1 BUS CONNECTOR & 7 TEAM COLUMNS */}
+          {/* LEVEL 1 BUS CONNECTOR & 7 PROPORTIONAL TEAM COLUMNS */}
           <div className="relative">
-            {/* Horizontal Bus Bar spanning all 7 columns */}
-            <div className="hidden xl:block absolute top-0 left-[7.14%] right-[7.14%] h-0.5 bg-slate-600">
-              {/* Junction indicators for 7 columns */}
-              <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400" />
-              <div className="absolute top-1/2 left-[16.67%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400" />
-              <div className="absolute top-1/2 left-[33.33%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400" />
-              <div className="absolute top-1/2 left-[50%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400" />
-              <div className="absolute top-1/2 left-[66.67%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400" />
-              <div className="absolute top-1/2 left-[83.33%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-rose-400" />
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-teal-400" />
+            {/* Horizontal Bus Bar spanning across all 7 main branch centers */}
+            <div className="hidden xl:block absolute top-0 left-[7.14%] right-[3.57%] h-0.5 bg-slate-600">
+              {/* Proportional Junction indicators */}
+              <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-amber-400/30" />
+              <div className="absolute top-1/2 left-[16.0%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-cyan-400/30" />
+              <div className="absolute top-1/2 left-[32.0%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-purple-400 ring-2 ring-purple-400/30" />
+              <div className="absolute top-1/2 left-[44.0%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-emerald-400/30" />
+              <div className="absolute top-1/2 left-[56.0%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400 ring-2 ring-orange-400/30" />
+              <div className="absolute top-1/2 left-[80.0%] -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-rose-400 ring-2 ring-rose-400/30" />
+              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-teal-400 ring-2 ring-teal-400/30" />
             </div>
 
-            {/* 7 Team Columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-2.5 pt-4">
+            {/* 14 Grid Units Container for Perfect Balance */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 xl:grid-cols-14 gap-1.5 pt-3">
               {/* ============================================================ */}
-              {/* COLUMN 1: BCA */}
+              {/* COLUMN 1: BCA (2 Grid Units) */}
               {/* ============================================================ */}
               {(() => {
                 const bcaNode = root.children?.find(t => t.id === 'BCA');
@@ -502,28 +502,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const prepNode = bcaNode?.children?.find(p => p.id === 'BCA_COMPONENT_PREP');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-2 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('BCA')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'BCA'
-                          ? 'bg-amber-400 text-slate-950 ring-4 ring-amber-300 scale-[1.02]'
+                          ? 'bg-amber-400 text-slate-950 ring-4 ring-amber-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-amber-400/90 text-slate-950 ring-2 ring-amber-400'
                           : 'bg-slate-900 border border-amber-500/50 hover:border-amber-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-amber-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
                         <span>BCA</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Banbury / Calender / Prep</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Banbury / Calender / Prep</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {bcaNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {bcaNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {bcaNode?.metrics.otHours || 0}h</span>
@@ -531,32 +531,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Processes */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Bus Bar for BCA (Mix & Extrusion + Component Prep) */}
                     <div className="w-full relative">
                       <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
-                      <div className="grid grid-cols-2 gap-2 pt-3">
+                      <div className="grid grid-cols-2 gap-1.5 pt-2.5">
                         {/* Process 1: Mix & Extrusion */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('BCA_MIX_EXTRUSION')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'BCA_MIX_EXTRUSION'
-                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-105'
+                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-102'
                                 : 'bg-slate-900 border border-blue-500/40 hover:border-blue-400 text-blue-100 hover:bg-blue-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Mix & Extrusion</div>
-                            <div className="text-[10px] text-blue-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Mix & Extrusion</div>
+                            <div className="text-[9px] text-blue-300 font-semibold mt-0.5">
                               {mixNode?.metrics.totalHours || 0} ชม. ({mixNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Machines (Every Machine by M/C) */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {mixNode?.children && mixNode.children.length > 0 ? (
                               mixNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -564,17 +564,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -584,31 +584,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Process 2: Component Prep */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('BCA_COMPONENT_PREP')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'BCA_COMPONENT_PREP'
-                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-105'
+                                ? 'bg-blue-500 text-white ring-2 ring-blue-300 scale-102'
                                 : 'bg-slate-900 border border-blue-500/40 hover:border-blue-400 text-blue-100 hover:bg-blue-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Component Prep</div>
-                            <div className="text-[10px] text-blue-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Component Prep</div>
+                            <div className="text-[9px] text-blue-300 font-semibold mt-0.5">
                               {prepNode?.metrics.totalHours || 0} ชม. ({prepNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Machines (Every Machine by M/C) */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          {/* Stem to Level 3 Machines */}
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {prepNode?.children && prepNode.children.length > 0 ? (
                               prepNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -616,17 +616,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-amber-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -636,7 +636,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -647,7 +647,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 2: CONSUMER */}
+              {/* COLUMN 2: CONSUMER (2 Grid Units) */}
               {/* ============================================================ */}
               {(() => {
                 const conNode = root.children?.find(t => t.id === 'CONSUMER');
@@ -656,28 +656,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const ffNode = conNode?.children?.find(p => p.id === 'CONSUMER_FF_CURING');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-2 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('CONSUMER')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'CONSUMER'
-                          ? 'bg-cyan-400 text-slate-950 ring-4 ring-cyan-300 scale-[1.02]'
+                          ? 'bg-cyan-400 text-slate-950 ring-4 ring-cyan-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-cyan-400/90 text-slate-950 ring-2 ring-cyan-400'
                           : 'bg-slate-900 border border-cyan-500/50 hover:border-cyan-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block" />
                         <span>CONSUMER</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Tire Assembly & Cure</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Tire Assembly & Cure</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {conNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {conNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {conNode?.metrics.otHours || 0}h</span>
@@ -685,32 +685,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Processes */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Bus Bar for Consumer (Build + FF/Curing) */}
                     <div className="w-full relative">
                       <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
-                      <div className="grid grid-cols-2 gap-2 pt-3">
+                      <div className="grid grid-cols-2 gap-1.5 pt-2.5">
                         {/* Process 1: Build */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('CONSUMER_BUILD')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'CONSUMER_BUILD'
-                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-105'
+                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-102'
                                 : 'bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-100 hover:bg-cyan-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Build (Building)</div>
-                            <div className="text-[10px] text-cyan-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Build (Building)</div>
+                            <div className="text-[9px] text-cyan-300 font-semibold mt-0.5">
                               {buildNode?.metrics.totalHours || 0} ชม. ({buildNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Machines */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {buildNode?.children && buildNode.children.length > 0 ? (
                               buildNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -718,17 +718,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -738,31 +738,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Process 2: FF / Curing */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('CONSUMER_FF_CURING')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'CONSUMER_FF_CURING'
-                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-105'
+                                ? 'bg-cyan-600 text-white ring-2 ring-cyan-300 scale-102'
                                 : 'bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-100 hover:bg-cyan-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">FF / Curing</div>
-                            <div className="text-[10px] text-cyan-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">FF / Curing</div>
+                            <div className="text-[9px] text-cyan-300 font-semibold mt-0.5">
                               {ffNode?.metrics.totalHours || 0} ชม. ({ffNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Machines */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {ffNode?.children && ffNode.children.length > 0 ? (
                               ffNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -770,17 +770,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-cyan-400 text-slate-950 border-cyan-300 ring-2 ring-cyan-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -790,7 +790,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -801,7 +801,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 3: AERO */}
+              {/* COLUMN 3: AERO (2 Grid Units) */}
               {/* ============================================================ */}
               {(() => {
                 const aeroNode = root.children?.find(t => t.id === 'AERO');
@@ -810,28 +810,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const radialNode = aeroNode?.children?.find(p => p.id === 'AERO_RADIAL');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-2 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('AERO')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'AERO'
-                          ? 'bg-purple-400 text-slate-950 ring-4 ring-purple-300 scale-[1.02]'
+                          ? 'bg-purple-400 text-slate-950 ring-4 ring-purple-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-purple-400/90 text-slate-950 ring-2 ring-purple-400'
                           : 'bg-slate-900 border border-purple-500/50 hover:border-purple-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-purple-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-purple-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block" />
                         <span>AERO</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Aviation Tire Ops</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Aviation Tire Ops</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {aeroNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {aeroNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {aeroNode?.metrics.otHours || 0}h</span>
@@ -839,32 +839,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Processes */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Bus Bar for AERO (Bias + Radial) */}
                     <div className="w-full relative">
                       <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
-                      <div className="grid grid-cols-2 gap-2 pt-3">
+                      <div className="grid grid-cols-2 gap-1.5 pt-2.5">
                         {/* Process 1: Bias Aero */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('AERO_BIAS')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'AERO_BIAS'
-                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-105'
+                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-102'
                                 : 'bg-slate-900 border border-purple-500/40 hover:border-purple-400 text-purple-100 hover:bg-purple-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Bias Aero</div>
-                            <div className="text-[10px] text-purple-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Bias Aero</div>
+                            <div className="text-[9px] text-purple-300 font-semibold mt-0.5">
                               {biasNode?.metrics.totalHours || 0} ชม. ({biasNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Machines */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {biasNode?.children && biasNode.children.length > 0 ? (
                               biasNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -872,17 +872,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -892,31 +892,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Process 2: Radial Aero */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('AERO_RADIAL')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'AERO_RADIAL'
-                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-105'
+                                ? 'bg-purple-600 text-white ring-2 ring-purple-300 scale-102'
                                 : 'bg-slate-900 border border-purple-500/40 hover:border-purple-400 text-purple-100 hover:bg-purple-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Radial Aero</div>
-                            <div className="text-[10px] text-purple-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Radial Aero</div>
+                            <div className="text-[9px] text-purple-300 font-semibold mt-0.5">
                               {radialNode?.metrics.totalHours || 0} ชม. ({radialNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Machines */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {radialNode?.children && radialNode.children.length > 0 ? (
                               radialNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -924,17 +924,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-purple-400 text-slate-950 border-purple-300 ring-2 ring-purple-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-purple-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -944,7 +944,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -955,7 +955,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 4: RETREAD */}
+              {/* COLUMN 4: RETREAD (1 Grid Unit) */}
               {/* ============================================================ */}
               {(() => {
                 const retNode = root.children?.find(t => t.id === 'RETREAD');
@@ -963,28 +963,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const retOpsNode = retNode?.children?.find(p => p.id === 'RETREAD_RETREAD_OPS');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-1 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('RETREAD')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'RETREAD'
-                          ? 'bg-emerald-400 text-slate-950 ring-4 ring-emerald-300 scale-[1.02]'
+                          ? 'bg-emerald-400 text-slate-950 ring-4 ring-emerald-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-emerald-400/90 text-slate-950 ring-2 ring-emerald-400'
                           : 'bg-slate-900 border border-emerald-500/50 hover:border-emerald-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
                         <span>RETREAD</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Retread Facility</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Retread Plant</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {retNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {retNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {retNode?.metrics.otHours || 0}h</span>
@@ -992,27 +992,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Process */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Single Process for Retread */}
-                    <div className="w-full flex flex-col items-center pt-3">
+                    <div className="w-full flex flex-col items-center pt-2.5">
                       <div
                         onClick={() => setSelectedNodeId('RETREAD_RETREAD_OPS')}
-                        className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                        className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                           selectedNodeId === 'RETREAD_RETREAD_OPS'
-                            ? 'bg-emerald-600 text-white ring-2 ring-emerald-300 scale-105'
+                            ? 'bg-emerald-600 text-white ring-2 ring-emerald-300 scale-102'
                             : 'bg-slate-900 border border-emerald-500/40 hover:border-emerald-400 text-emerald-100 hover:bg-emerald-950/50'
                         }`}
                       >
-                        <div className="text-[11px] font-black leading-tight">Retread Operations</div>
-                        <div className="text-[10px] text-emerald-300 font-semibold mt-1">
+                        <div className="text-[10.5px] font-black leading-tight truncate">Retread Operations</div>
+                        <div className="text-[9px] text-emerald-300 font-semibold mt-0.5">
                           {retOpsNode?.metrics.totalHours || 0} ชม. ({retOpsNode?.metrics.headcount || 0} คน)
                         </div>
                       </div>
 
                       {/* Stem to Level 3 Machines */}
-                      <div className="w-0.5 h-4 bg-slate-700" />
-                      <div className="w-full space-y-1.5">
+                      <div className="w-0.5 h-3 bg-slate-700" />
+                      <div className="w-full space-y-1">
                         {retOpsNode?.children && retOpsNode.children.length > 0 ? (
                           retOpsNode.children.map(mach => {
                             const isMachSelected = selectedNodeId === mach.id;
@@ -1020,17 +1020,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                               <button
                                 key={mach.id}
                                 onClick={() => setSelectedNodeId(mach.id)}
-                                className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                   isMachSelected
                                     ? 'bg-emerald-400 text-slate-950 border-emerald-300 ring-2 ring-emerald-300 font-bold'
-                                    : 'bg-slate-900/90 border-slate-700/80 hover:border-emerald-400 hover:bg-slate-800 text-slate-200'
+                                    : 'bg-slate-900/95 border-slate-700/80 hover:border-emerald-400 hover:bg-slate-800 text-slate-200'
                                 }`}
                                 title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                               >
-                                <div className="text-[11px] font-bold leading-tight break-words">
+                                <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                   {mach.title}
                                 </div>
-                                <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                   isMachSelected ? 'text-slate-950 font-black' : 'text-emerald-300'
                                 }`}>
                                   <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1040,7 +1040,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             );
                           })
                         ) : (
-                          <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                          <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                         )}
                       </div>
                     </div>
@@ -1049,7 +1049,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 5: ENGINEERING (ENG) */}
+              {/* COLUMN 5: ENGINEERING (2 Grid Units) */}
               {/* ============================================================ */}
               {(() => {
                 const engNode = root.children?.find(t => t.id === 'ENG');
@@ -1058,28 +1058,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const plantEngNode = engNode?.children?.find(p => p.id === 'ENG_ENG_PLANT');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-2 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('ENG')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'ENG'
-                          ? 'bg-orange-400 text-slate-950 ring-4 ring-orange-300 scale-[1.02]'
+                          ? 'bg-orange-400 text-slate-950 ring-4 ring-orange-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-orange-400/90 text-slate-950 ring-2 ring-orange-400'
                           : 'bg-slate-900 border border-orange-500/50 hover:border-orange-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-orange-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-orange-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-orange-400 inline-block" />
                         <span>ENG</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Engineering & Maint</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Engineering & Maint</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {engNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {engNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {engNode?.metrics.otHours || 0}h</span>
@@ -1087,32 +1087,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Processes */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Bus Bar for ENG (Maintenance + Plant Eng) */}
                     <div className="w-full relative">
                       <div className="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-600" />
-                      <div className="grid grid-cols-2 gap-2 pt-3">
+                      <div className="grid grid-cols-2 gap-1.5 pt-2.5">
                         {/* Process 1: Maintenance */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('ENG_ENG_MAINT')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'ENG_ENG_MAINT'
-                                ? 'bg-orange-600 text-white ring-2 ring-orange-300 scale-105'
+                                ? 'bg-orange-600 text-white ring-2 ring-orange-300 scale-102'
                                 : 'bg-slate-900 border border-orange-500/40 hover:border-orange-400 text-orange-100 hover:bg-orange-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Maintenance</div>
-                            <div className="text-[10px] text-orange-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Maintenance</div>
+                            <div className="text-[9px] text-orange-300 font-semibold mt-0.5">
                               {maintNode?.metrics.totalHours || 0} ชม. ({maintNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          {/* Stem to Level 3 Stations */}
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {maintNode?.children && maintNode.children.length > 0 ? (
                               maintNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1120,17 +1120,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1140,31 +1140,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Process 2: Plant Engineering */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('ENG_ENG_PLANT')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'ENG_ENG_PLANT'
-                                ? 'bg-orange-600 text-white ring-2 ring-orange-300 scale-105'
+                                ? 'bg-orange-600 text-white ring-2 ring-orange-300 scale-102'
                                 : 'bg-slate-900 border border-orange-500/40 hover:border-orange-400 text-orange-100 hover:bg-orange-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Plant Eng</div>
-                            <div className="text-[10px] text-orange-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Plant Eng</div>
+                            <div className="text-[9px] text-orange-300 font-semibold mt-0.5">
                               {plantEngNode?.metrics.totalHours || 0} ชม. ({plantEngNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
-                          {/* Stem to Level 3 Cost Centers */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          {/* Stem to Level 3 Stations */}
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {plantEngNode?.children && plantEngNode.children.length > 0 ? (
                               plantEngNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1172,17 +1172,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-orange-400 text-slate-950 border-orange-300 ring-2 ring-orange-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-orange-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1192,7 +1192,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1203,7 +1203,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 6: QTECH (QUALITY & TECH) */}
+              {/* COLUMN 6: QTECH (4 Grid Units - 4 Equal Pillars) */}
               {/* ============================================================ */}
               {(() => {
                 const qtechNode = root.children?.find(t => t.id === 'QTECH');
@@ -1214,28 +1214,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const qtechQaNode = qtechNode?.children?.find(p => p.id === 'QTECH_QTECH_QA');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-4 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('QTECH')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'QTECH'
-                          ? 'bg-rose-400 text-slate-950 ring-4 ring-rose-300 scale-[1.02]'
+                          ? 'bg-rose-400 text-slate-950 ring-4 ring-rose-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-rose-400/90 text-slate-950 ring-2 ring-rose-400'
                           : 'bg-slate-900 border border-rose-500/50 hover:border-rose-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-rose-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 inline-block" />
                         <span>QTECH</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Quality & Tech</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Quality & Tech</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {qtechNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {qtechNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {qtechNode?.metrics.otHours || 0}h</span>
@@ -1243,7 +1243,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Processes */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Bus Bar for QTECH (4 Equal Pillars: Qtech A, Qtech B, Aero, QA) */}
                     <div className="w-full relative">
@@ -1253,27 +1253,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <div className="absolute top-1/2 left-[66.67%] -translate-y-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
                         <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-1.5 h-1.5 rounded-full bg-rose-400" />
                       </div>
-                      <div className="grid grid-cols-4 gap-1.5 pt-3">
+                      <div className="grid grid-cols-4 gap-1.5 pt-2.5">
                         {/* Pillar 1: Qtech A */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_A')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'QTECH_QTECH_A'
-                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-102'
                                 : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Qtech A</div>
-                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Qtech A</div>
+                            <div className="text-[9px] text-rose-300 font-semibold mt-0.5">
                               {qtechANode?.metrics.totalHours || 0} ชม. ({qtechANode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Stations */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {qtechANode?.children && qtechANode.children.length > 0 ? (
                               qtechANode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1281,17 +1281,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1301,31 +1301,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Pillar 2: Qtech B */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_B')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'QTECH_QTECH_B'
-                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-102'
                                 : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Qtech B</div>
-                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Qtech B</div>
+                            <div className="text-[9px] text-rose-300 font-semibold mt-0.5">
                               {qtechBNode?.metrics.totalHours || 0} ชม. ({qtechBNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Stations */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {qtechBNode?.children && qtechBNode.children.length > 0 ? (
                               qtechBNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1333,17 +1333,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1353,31 +1353,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Pillar 3: Aero */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_AERO')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'QTECH_QTECH_AERO'
-                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-102'
                                 : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">Aero</div>
-                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">Aero</div>
+                            <div className="text-[9px] text-rose-300 font-semibold mt-0.5">
                               {qtechAeroNode?.metrics.totalHours || 0} ชม. ({qtechAeroNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Stations */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {qtechAeroNode?.children && qtechAeroNode.children.length > 0 ? (
                               qtechAeroNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1385,17 +1385,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1405,31 +1405,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
 
                         {/* Pillar 4: QA */}
                         <div className="flex flex-col items-center">
-                          <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
+                          <div className="w-0.5 h-2.5 bg-slate-600 -mt-2.5 mb-0" />
                           <div
                             onClick={() => setSelectedNodeId('QTECH_QTECH_QA')}
-                            className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                            className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                               selectedNodeId === 'QTECH_QTECH_QA'
-                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-105'
+                                ? 'bg-rose-600 text-white ring-2 ring-rose-300 scale-102'
                                 : 'bg-slate-900 border border-rose-500/40 hover:border-rose-400 text-rose-100 hover:bg-rose-950/50'
                             }`}
                           >
-                            <div className="text-[11px] font-black leading-tight">QA</div>
-                            <div className="text-[10px] text-rose-300 font-semibold mt-1">
+                            <div className="text-[10.5px] font-black leading-tight truncate">QA</div>
+                            <div className="text-[9px] text-rose-300 font-semibold mt-0.5">
                               {qtechQaNode?.metrics.totalHours || 0} ชม. ({qtechQaNode?.metrics.headcount || 0} คน)
                             </div>
                           </div>
 
                           {/* Stem to Level 3 Stations */}
-                          <div className="w-0.5 h-4 bg-slate-700" />
-                          <div className="w-full space-y-1.5">
+                          <div className="w-0.5 h-3 bg-slate-700" />
+                          <div className="w-full space-y-1">
                             {qtechQaNode?.children && qtechQaNode.children.length > 0 ? (
                               qtechQaNode.children.map(mach => {
                                 const isMachSelected = selectedNodeId === mach.id;
@@ -1437,17 +1437,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   <button
                                     key={mach.id}
                                     onClick={() => setSelectedNodeId(mach.id)}
-                                    className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                    className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                       isMachSelected
                                         ? 'bg-rose-400 text-slate-950 border-rose-300 ring-2 ring-rose-300 font-bold'
-                                        : 'bg-slate-900/90 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
+                                        : 'bg-slate-900/95 border-slate-700/80 hover:border-rose-400 hover:bg-slate-800 text-slate-200'
                                     }`}
                                     title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                                   >
-                                    <div className="text-[11px] font-bold leading-tight break-words">
+                                    <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                       {mach.title}
                                     </div>
-                                    <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                    <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1457,7 +1457,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                 );
                               })
                             ) : (
-                              <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                              <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                             )}
                           </div>
                         </div>
@@ -1468,7 +1468,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               })()}
 
               {/* ============================================================ */}
-              {/* COLUMN 7: SUPPORT DEPT */}
+              {/* COLUMN 7: SUPPORT DEPT (1 Grid Unit) */}
               {/* ============================================================ */}
               {(() => {
                 const supportNode = root.children?.find(t => t.id === 'SUPPORT');
@@ -1476,28 +1476,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 const supportOpsNode = supportNode?.children?.find(p => p.id === 'SUPPORT_SUPPORT_OPS');
 
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="xl:col-span-1 flex flex-col items-center">
                     {/* Top drop line from bus bar */}
-                    <div className="w-0.5 h-4 bg-slate-600 -mt-4 mb-0" />
+                    <div className="w-0.5 h-3 bg-slate-600 -mt-3 mb-0" />
 
                     {/* Team Node Card */}
                     <div
                       onClick={() => setSelectedNodeId('SUPPORT')}
-                      className={`w-full rounded-xl p-3 text-center transition-all cursor-pointer shadow-lg relative overflow-hidden group ${
+                      className={`w-full rounded-xl p-2 text-center transition-all cursor-pointer shadow-md relative overflow-hidden group ${
                         selectedNodeId === 'SUPPORT'
-                          ? 'bg-teal-400 text-slate-950 ring-4 ring-teal-300 scale-[1.02]'
+                          ? 'bg-teal-400 text-slate-950 ring-4 ring-teal-300 scale-[1.01]'
                           : isTeamSelected
                           ? 'bg-teal-400/90 text-slate-950 ring-2 ring-teal-400'
                           : 'bg-slate-900 border border-teal-500/50 hover:border-teal-400 text-slate-100 hover:bg-slate-850'
                       }`}
                     >
                       <div className="absolute top-0 left-0 right-0 h-1 bg-teal-400" />
-                      <div className="text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-teal-400 inline-block" />
+                      <div className="text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal-400 inline-block" />
                         <span>SUPPORT</span>
                       </div>
-                      <div className="text-[10px] opacity-80 mt-0.5">Support Dept (1200, 1850, 1860)</div>
-                      <div className="mt-2 pt-2 border-t border-black/10 flex items-center justify-around text-[11px] font-bold">
+                      <div className="text-[9px] opacity-80 mt-0.5 truncate">Support Dept (1200, 1850, 1860)</div>
+                      <div className="mt-1.5 pt-1.5 border-t border-black/10 flex items-center justify-around text-[10px] font-bold">
                         <span>👥 {supportNode?.metrics.headcount || 0} คน</span>
                         <span>⏱️ {supportNode?.metrics.totalHours || 0} ชม.</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {supportNode?.metrics.otHours || 0}h</span>
@@ -1505,27 +1505,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </div>
 
                     {/* Stem down to Process */}
-                    <div className="w-0.5 h-6 bg-slate-600" />
+                    <div className="w-0.5 h-4 bg-slate-600" />
 
                     {/* Level 2 Process for Support Dept */}
-                    <div className="w-full flex flex-col items-center pt-3">
+                    <div className="w-full flex flex-col items-center pt-2.5">
                       <div
                         onClick={() => setSelectedNodeId('SUPPORT_SUPPORT_OPS')}
-                        className={`w-full p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                        className={`w-full p-1.5 rounded-lg text-center text-xs font-bold transition-all cursor-pointer shadow-xs ${
                           selectedNodeId === 'SUPPORT_SUPPORT_OPS'
-                            ? 'bg-teal-600 text-white ring-2 ring-teal-300 scale-105'
+                            ? 'bg-teal-600 text-white ring-2 ring-teal-300 scale-102'
                             : 'bg-slate-900 border border-teal-500/40 hover:border-teal-400 text-teal-100 hover:bg-teal-950/50'
                         }`}
                       >
-                        <div className="text-[11px] font-black leading-tight">Support Operations</div>
-                        <div className="text-[10px] text-teal-300 font-semibold mt-1">
+                        <div className="text-[10.5px] font-black leading-tight truncate">Support Operations</div>
+                        <div className="text-[9px] text-teal-300 font-semibold mt-0.5">
                           {supportOpsNode?.metrics.totalHours || 0} ชม. ({supportOpsNode?.metrics.headcount || 0} คน)
                         </div>
                       </div>
 
                       {/* Stem to Level 3 Stations */}
-                      <div className="w-0.5 h-4 bg-slate-700" />
-                      <div className="w-full space-y-1.5">
+                      <div className="w-0.5 h-3 bg-slate-700" />
+                      <div className="w-full space-y-1">
                         {supportOpsNode?.children && supportOpsNode.children.length > 0 ? (
                           supportOpsNode.children.map(mach => {
                             const isMachSelected = selectedNodeId === mach.id;
@@ -1533,17 +1533,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                               <button
                                 key={mach.id}
                                 onClick={() => setSelectedNodeId(mach.id)}
-                                className={`w-full p-2 rounded-xl border text-left flex flex-col justify-center gap-1 transition-all cursor-pointer shadow-xs ${
+                                className={`w-full p-1.5 rounded-lg border text-left flex flex-col justify-center gap-0.5 transition-all cursor-pointer shadow-xs min-h-[46px] ${
                                   isMachSelected
                                     ? 'bg-teal-400 text-slate-950 border-teal-300 ring-2 ring-teal-300 font-bold'
-                                    : 'bg-slate-900/90 border-slate-700/80 hover:border-teal-400 hover:bg-slate-800 text-slate-200'
+                                    : 'bg-slate-900/95 border-slate-700/80 hover:border-teal-400 hover:bg-slate-800 text-slate-200'
                                 }`}
                                 title={`${mach.title} (${mach.metrics.totalHours} ชม., ${mach.metrics.headcount} คน)`}
                               >
-                                <div className="text-[11px] font-bold leading-tight break-words">
+                                <div className="text-[10px] font-bold leading-tight break-words line-clamp-2">
                                   {mach.title}
                                 </div>
-                                <div className={`text-[10px] flex items-center justify-between font-extrabold ${
+                                <div className={`text-[9px] flex items-center justify-between font-extrabold ${
                                   isMachSelected ? 'text-slate-950 font-black' : 'text-teal-300'
                                 }`}>
                                   <span>⏱️ {mach.metrics.totalHours.toLocaleString()} ชม.</span>
@@ -1553,7 +1553,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             );
                           })
                         ) : (
-                          <div className="text-[10px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
+                          <div className="text-[9px] text-slate-500 italic text-center py-1">ไม่มีข้อมูล</div>
                         )}
                       </div>
                     </div>
