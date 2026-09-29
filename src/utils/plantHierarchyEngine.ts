@@ -134,9 +134,9 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     };
   }
 
-  // 2. QTECH (6th Branch: Qtech A, Qtech B, Aero, QA - CC 1021, 1022, S1040, 1040)
+  // 2. QTECH (6th Branch: Qtech A, Qtech B, Aero, QA)
   if (
-    ['1021', '1022', '1040', 'S1040'].includes(cc) ||
+    ['1022', '1021', '1040', 'S1040'].includes(cc) ||
     d.includes('QTECH') ||
     d.includes('QUALITY') ||
     d.includes(' 1021') ||
@@ -144,61 +144,111 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     d.includes(' 1040') ||
     d.includes('S1040') ||
     p.includes('QTECH') ||
-    p.includes('INSPECTOR') ||
-    p.includes('AUDITOR') ||
     p.includes('CERTIFYING') ||
     p.includes('SHEAROGRAPHY') ||
     p.includes('RESILIOMETER')
   ) {
-    if (cc === '1021' || combined.includes('1021') || combined.includes('QTECH A') || combined.includes('LAB A')) {
+    // 2.1 Qtech A: CC 1022 ทั้งหมด (แยกเป็น Die tech / Lab Technician)
+    if (
+      cc === '1022' ||
+      d.includes('1022') ||
+      combined.includes('1022') ||
+      (d.includes('QUALITY') && (combined.includes('DIE') || combined.includes('LAB') || combined.includes('COMPOUND')))
+    ) {
+      const isDie = combined.includes('DIE');
       return {
         teamKey: 'QTECH',
         teamName: 'Qtech',
         processKey: 'QTECH_A',
         processName: 'Qtech A',
-        machineKey: 'CC_1021',
-        machineName: 'CC 1021 : Qtech A'
+        machineKey: isDie ? 'CC_1022_DIE' : 'CC_1022_LAB',
+        machineName: isDie ? 'CC 1022 : Die Tech' : 'CC 1022 : Lab Technician'
       };
-    } else if (cc === '1022' || combined.includes('1022') || combined.includes('QTECH B') || combined.includes('LAB B') || combined.includes('DIE TECH')) {
+    }
+
+    // 2.2 Qtech B: CC 1021 ทั้งหมด (Build Monitor / Cure Monitor / NTI / อื่นๆ)
+    if (
+      cc === '1021' ||
+      d.includes('1021') ||
+      combined.includes('1021') ||
+      (d.includes('QUALITY') && (combined.includes('BUILD') || combined.includes('CURE') || combined.includes('NTI') || combined.includes('MONITOR')))
+    ) {
+      let machKey = 'CC_1021_OTHER';
+      let machName = 'CC 1021 : Monitor & Support';
+      if (combined.includes('BUILD') || combined.includes('TIRE') || combined.includes('RADIAL TIRE') || combined.includes('CTA')) {
+        machKey = 'CC_1021_BUILD';
+        machName = 'CC 1021 : Build Monitor';
+      } else if (combined.includes('CURE') || combined.includes('PRESS') || combined.includes('THERMO')) {
+        machKey = 'CC_1021_CURE';
+        machName = 'CC 1021 : Cure Monitor';
+      } else if (combined.includes('NTI') || combined.includes('NPI')) {
+        machKey = 'CC_1021_NTI';
+        machName = 'CC 1021 : NTI';
+      }
       return {
         teamKey: 'QTECH',
         teamName: 'Qtech',
         processKey: 'QTECH_B',
         processName: 'Qtech B',
-        machineKey: 'CC_1022',
-        machineName: 'CC 1022 : Qtech B'
+        machineKey: machKey,
+        machineName: machName
       };
-    } else if (
+    }
+
+    // 2.3 Qtech Aero: CC S1040, 1040 (Aero Certifying Staff / SDS Shearography / Burst Test)
+    if (
       cc === 'S1040' ||
+      d.includes('S1040') ||
       combined.includes('S1040') ||
       combined.includes('AERO') ||
-      combined.includes('AV') ||
       combined.includes('SHEAROGRAPHY') ||
       combined.includes('SDS') ||
-      combined.includes('RESILIOMETER') ||
-      combined.includes('X-RAY') ||
       combined.includes('BURST') ||
-      combined.includes('CERTIFYING')
+      combined.includes('RADIAL AV')
     ) {
+      let machKey = 'CC_S1040_CERT';
+      let machName = 'CC S1040 : Aero Certifying Staff';
+      if (combined.includes('BURST') || combined.includes('CUT TIRE')) {
+        machKey = 'CC_1040_BURST';
+        machName = 'CC 1040 : Burst Test';
+      } else if (combined.includes('SHEAROGRAPHY') || combined.includes('SDS') || combined.includes('GEOMETRY')) {
+        machKey = 'CC_S1040_SDS';
+        machName = 'CC S1040 : SDS Shearography';
+      }
       return {
         teamKey: 'QTECH',
         teamName: 'Qtech',
         processKey: 'QTECH_AERO',
         processName: 'Qtech Aero',
-        machineKey: cc === 'S1040' ? 'CC_S1040' : (cc ? `CC_${cc}` : 'CC_S1040'),
-        machineName: `CC ${cc || 'S1040'} : Qtech Aero`
-      };
-    } else {
-      // Default / CC 1040 / QA / PDI / Process Auditor
-      return {
-        teamKey: 'QTECH',
-        teamName: 'Qtech',
-        processKey: 'QTECH_QA',
-        processName: 'QA',
-        machineKey: 'CC_1040',
-        machineName: 'CC 1040 : QA'
+        machineKey: machKey,
+        machineName: machName
       };
     }
+
+    // 2.4 QA: CC 1040 (QA Process Auditor / QA Inspector / PDI Inspector / Resiliometer (DOT) / X-Ray)
+    let machKey = 'CC_1040_INSPECT';
+    let machName = 'CC 1040 : QA Inspector';
+    if (combined.includes('RESILIOMETER') || combined.includes('DOT')) {
+      machKey = 'CC_1040_RESILIO';
+      machName = 'CC 1040 : Resiliometer (DOT)';
+    } else if (combined.includes('X-RAY') || combined.includes('XRAY')) {
+      machKey = 'CC_1040_XRAY';
+      machName = 'CC 1040 : X-Ray';
+    } else if (combined.includes('PDI')) {
+      machKey = 'CC_1040_PDI';
+      machName = 'CC 1040 : PDI Inspector';
+    } else if (combined.includes('AUDITOR') || combined.includes('AUDIT')) {
+      machKey = 'CC_1040_AUDIT';
+      machName = 'CC 1040 : QA Process Auditor';
+    }
+    return {
+      teamKey: 'QTECH',
+      teamName: 'Qtech',
+      processKey: 'QTECH_QA',
+      processName: 'QA',
+      machineKey: machKey,
+      machineName: machName
+    };
   }
 
   // 3. RETREAD PLANT (CC 6320, 6300)
@@ -683,10 +733,27 @@ export function buildPlantHierarchyTree(
         'CC_1161',
         'CC_1164',
         'CC_1210',
-        // Qtech
-        'CC_1021',
+        // Qtech A (CC 1022)
+        'CC_1022_DIE',
+        'CC_1022_LAB',
         'CC_1022',
+        // Qtech B (CC 1021)
+        'CC_1021_BUILD',
+        'CC_1021_CURE',
+        'CC_1021_NTI',
+        'CC_1021_OTHER',
+        'CC_1021',
+        // Qtech Aero (CC S1040, 1040)
+        'CC_S1040_CERT',
+        'CC_S1040_SDS',
+        'CC_1040_BURST',
         'CC_S1040',
+        // QA (CC 1040)
+        'CC_1040_AUDIT',
+        'CC_1040_INSPECT',
+        'CC_1040_PDI',
+        'CC_1040_RESILIO',
+        'CC_1040_XRAY',
         'CC_1040'
       ];
 
