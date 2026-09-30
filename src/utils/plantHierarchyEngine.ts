@@ -114,9 +114,10 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   const m = (machine || '').toUpperCase();
   const combined = `${d} ${cc} ${p} ${m}`;
 
-  // 1. SUPPORT DEPT (7th Branch: CC 1200, 1850, 1860)
+  // 1. SUPPORT DEPT (7th Branch: CC 1050, 1200, 1850, 1860)
   if (
-    ['1200', '1850', '1860'].includes(cc) ||
+    ['1050', '1200', '1850', '1860'].includes(cc) ||
+    d.includes('1050') ||
     d.includes('1200') ||
     d.includes('1850') ||
     d.includes('1860') ||
@@ -125,15 +126,22 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
     d.includes('WASTE') ||
     d.includes('PPIC') ||
     d.includes('KANBAN') ||
+    d.includes('HR') ||
+    d.includes('HUMAN RESOURCE') ||
     p.includes('WAREHOUSE') ||
     p.includes('RECEIVING') ||
     p.includes('WASTE') ||
     p.includes('PPIC') ||
-    p.includes('KANBAN')
+    p.includes('KANBAN') ||
+    p.includes('PAYROLL') ||
+    p.includes('HR ')
   ) {
     let machKey = '1200';
     let machName = '1200 : Receiving & Warehouse';
-    if (cc === '1850' || combined.includes('1850') || combined.includes('WASTE')) {
+    if (cc === '1050' || d.includes('1050') || combined.includes('1050') || d.includes('HR') || p.includes('PAYROLL') || p.includes('HUMAN RESOURCE')) {
+      machKey = '1050';
+      machName = '1050 : HR';
+    } else if (cc === '1850' || combined.includes('1850') || combined.includes('WASTE')) {
       machKey = '1850';
       machName = '1850 : Waste Yard';
     } else if (cc === '1860' || combined.includes('1860') || combined.includes('PPIC') || combined.includes('KANBAN')) {
@@ -612,14 +620,15 @@ export function buildPlantHierarchyTree(
     if (!r.hasScannedIn && r.totalHours <= 0) return;
     if (shiftFilter !== 'ALL' && r.shiftNumber !== shiftFilter) return;
 
-    const isMonthly = r.type === 'Salary' || (r as any).isMonthly;
-    const empType: EmploymentType = isMonthly ? 'MONTHLY' : 'CONTRACTOR_HOURLY';
-    const empLabel = isMonthly ? 'Contractor รายเดือน (Salary WAS)' : 'Contractor รายชั่วโมง (WAS)';
-
     const dept = (r.department || '').trim();
     const cc = (r.closing || '').trim();
     const pos = (r.position || '').trim();
     const mach = (r.location || pos || 'General Contractor').trim();
+
+    const isHourly1050 = cc === '1050' || dept.includes('1050');
+    const isMonthly = !isHourly1050 && (r.type === 'Salary' || (r as any).isMonthly);
+    const empType: EmploymentType = isMonthly ? 'MONTHLY' : 'CONTRACTOR_HOURLY';
+    const empLabel = isMonthly ? 'Contractor รายเดือน (Salary WAS)' : 'Contractor รายชั่วโมง (WAS)';
 
     const fnType = classifyFunction(dept, cc, pos, mach);
     if (categoryFilter === 'PRODUCTION' && fnType !== 'PRODUCTION') return;
@@ -806,7 +815,8 @@ export function buildPlantHierarchyTree(
         '1040_RESILIO',
         '1040_XRAY',
         '1040',
-        // Support Dept (CC 1200, 1850, 1860)
+        // Support Dept (CC 1050, 1200, 1850, 1860)
+        '1050',
         '1200',
         '1850',
         '1860'
