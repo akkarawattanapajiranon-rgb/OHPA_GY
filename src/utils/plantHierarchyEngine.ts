@@ -317,16 +317,18 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   }
 
   // 5. AERO (AVIATION TIRES)
-  // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
+  // Bias Aero: 4140, A5110, A5120, A5130 (or 5210, 5230)
   // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
+    cc === '4140' ||
     cc.startsWith('A5') ||
     cc.startsWith('S5') ||
     ['5210', '5230', '5310', '5330'].includes(cc) ||
     d.startsWith('A5') ||
     d.startsWith('S5') ||
     combined.includes('AERO') ||
-    combined.includes('AVIATION')
+    combined.includes('AVIATION') ||
+    combined.includes('STEELASTIC')
   ) {
     const isRadial = cc.startsWith('S5') || cc === '5310' || cc === '5330' || d.startsWith('S5') || combined.includes('RADIAL');
     const subProcessKey = isRadial ? 'RADIAL' : 'BIAS';
@@ -362,7 +364,16 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         };
       }
     } else {
-      if (cc === 'A5120' || cc === '5230' || combined.includes('CURE')) {
+      if (cc === '4140' || combined.includes('STEELASTIC')) {
+        return {
+          teamKey: 'AERO',
+          teamName: 'Aero (Aviation)',
+          processKey: 'BIAS',
+          processName: 'Bias Aero',
+          machineKey: '4140',
+          machineName: '4140 : Steelastic'
+        };
+      } else if (cc === 'A5120' || cc === '5230' || combined.includes('CURE')) {
         return {
           teamKey: 'AERO',
           teamName: 'Aero (Aviation)',
@@ -485,7 +496,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
       };
     }
   } else {
-    // Component Prep: 4110, 4120, 4130, 4140, 4200
+    // Component Prep: 4110, 4120, 4130, 4200
     if (cc === '4120' || combined.includes('BAND54') || combined.includes('BAND 54')) {
       return {
         teamKey: 'BCA',
@@ -503,15 +514,6 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         processName: 'Component Prep',
         machineKey: '4130',
         machineName: '4130 : Bead & Band 72"'
-      };
-    } else if (cc === '4140') {
-      return {
-        teamKey: 'BCA',
-        teamName: 'BCA',
-        processKey: 'COMPONENT_PREP',
-        processName: 'Component Prep',
-        machineKey: '4140',
-        machineName: '4140 : Bladder & Tube'
       };
     } else if (cc === '4200' || combined.includes('HEX BEAD') || combined.includes('APEX')) {
       return {
@@ -779,12 +781,29 @@ export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNo
         }
       }
 
+      // Ensure all standard Bias Aero stations are always present
+      if (pKey === 'BIAS') {
+        const biasStationDefaults: Record<string, string> = {
+          '4140': '4140 : Steelastic',
+          'A5110': 'A5110 : Bias Building',
+          'A5120': 'A5120 : Bias Curing',
+          'A5130': 'A5130 : Bias Final Finish'
+        };
+        for (const sKey of Object.keys(biasStationDefaults)) {
+          if (!machineMap.has(sKey)) machineMap.set(sKey, []);
+        }
+      }
+
       const machineNodes: HierarchyNode[] = Array.from(machineMap.entries()).map(([mKey, mWorkers]) => {
         const defaultTitleMap: Record<string, string> = {
           '1050': '1050 : HR',
           '1200': '1200 : Receiving & Warehouse',
           '1850': '1850 : Waste Yard',
-          '1860': '1860 : PPIC & Kanban'
+          '1860': '1860 : PPIC & Kanban',
+          '4140': '4140 : Steelastic',
+          'A5110': 'A5110 : Bias Building',
+          'A5120': 'A5120 : Bias Curing',
+          'A5130': 'A5130 : Bias Final Finish'
         };
         const mTitle = mWorkers[0]?.machineName || defaultTitleMap[mKey] || mKey;
         return buildNode(`${tKey}_${pKey}_${mKey}`, mTitle, 'MACHINE', mWorkers);
@@ -801,13 +820,13 @@ export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNo
         '4110',
         '4120',
         '4130',
-        '4140',
         '4200',
         // Consumer
         '5110',
         '5120',
         '5130',
         // Bias Aero
+        '4140',
         'A5110',
         'A5120',
         'A5130',

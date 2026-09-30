@@ -328,9 +328,9 @@ export const classifyArea = (
     };
   }
 
-  // 2. Bias Aero: แผนก A5110, A5120, A5130
+  // 2. Bias Aero: แผนก A5110, A5120, A5130, 4140
   if (
-    ['A5110', 'A5120', 'A5130'].includes(code) ||
+    ['A5110', 'A5120', 'A5130', '4140'].includes(code) ||
     c.includes('bias aero') ||
     (c.includes('aero') && !c.includes('radial') && !loc.includes('STA'))
   ) {
@@ -353,9 +353,9 @@ export const classifyArea = (
     };
   }
 
-  // 4. Consumer: แผนก 4140, 5110, 5120, 5130
+  // 4. Consumer: แผนก 5110, 5120, 5130
   if (
-    ['4140', '5110', '5120', '5130'].includes(code) ||
+    ['5110', '5120', '5130'].includes(code) ||
     c.includes('consumer')
   ) {
     return {
