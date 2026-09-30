@@ -744,8 +744,13 @@ export function buildPlantHierarchyTree(
       processMap.get(w.processKey)!.push(w);
     });
 
+    // Ensure SUPPORT_OPS always exists under SUPPORT
+    if (tKey === 'SUPPORT' && !processMap.has('SUPPORT_OPS')) {
+      processMap.set('SUPPORT_OPS', []);
+    }
+
     const processNodes: HierarchyNode[] = Array.from(processMap.entries()).map(([pKey, pWorkers]) => {
-      const pTitle = pWorkers[0]?.processName || pKey;
+      const pTitle = pWorkers[0]?.processName || (pKey === 'SUPPORT_OPS' ? 'Support Operations' : pKey);
 
       // Level 3: Machines under this process
       const machineMap = new Map<string, HierarchyWorker[]>();
@@ -754,8 +759,27 @@ export function buildPlantHierarchyTree(
         machineMap.get(w.machineKey)!.push(w);
       });
 
+      // Ensure all standard Support Ops stations are always present
+      if (pKey === 'SUPPORT_OPS') {
+        const supportStationDefaults: Record<string, string> = {
+          '1050': '1050 : HR',
+          '1200': '1200 : Receiving & Warehouse',
+          '1850': '1850 : Waste Yard',
+          '1860': '1860 : PPIC & Kanban'
+        };
+        for (const sKey of Object.keys(supportStationDefaults)) {
+          if (!machineMap.has(sKey)) machineMap.set(sKey, []);
+        }
+      }
+
       const machineNodes: HierarchyNode[] = Array.from(machineMap.entries()).map(([mKey, mWorkers]) => {
-        const mTitle = mWorkers[0]?.machineName || mKey;
+        const defaultTitleMap: Record<string, string> = {
+          '1050': '1050 : HR',
+          '1200': '1200 : Receiving & Warehouse',
+          '1850': '1850 : Waste Yard',
+          '1860': '1860 : PPIC & Kanban'
+        };
+        const mTitle = mWorkers[0]?.machineName || defaultTitleMap[mKey] || mKey;
         return buildNode(`${tKey}_${pKey}_${mKey}`, mTitle, 'MACHINE', mWorkers);
       });
 
