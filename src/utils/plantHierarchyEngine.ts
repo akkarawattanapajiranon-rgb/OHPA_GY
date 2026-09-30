@@ -1,6 +1,7 @@
 import { ParsedShiftRecord, EmployeeInfo, DailyAdjustmentRecord } from '../types/attendance';
 import { ContractorScanRecord } from '../types/contractor';
 import { getMonthShiftCycleInfo, getPreviousMonthShift3Records } from './ohpaCalculator';
+import { processScanRecords, normalizeDateToMMDDYYYY } from './parser';
 
 export type FunctionType = 'PRODUCTION' | 'QTECH' | 'ENG' | 'SHARE';
 export type EmploymentType = 'GY_HOURLY' | 'CONTRACTOR_HOURLY' | 'MONTHLY';
@@ -669,6 +670,12 @@ export function buildPlantHierarchyTree(
     });
   });
 
+  const root = buildTreeFromWorkers(allWorkers);
+  return { root, allWorkers };
+}
+
+// Build Complete Hierarchy Tree from any worker list (Single-day or Accumulated Multi-day)
+export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNode {
   // Helper to build Node
   function buildNode(
     id: string,
@@ -889,7 +896,104 @@ export function buildPlantHierarchyTree(
   });
 
   // Level 0: PLANT Root Node
-  const root = buildNode('PLANT', 'Plant', 'PLANT', allWorkers, teamNodes);
+  return buildNode('PLANT', 'Plant', 'PLANT', allWorkers, teamNodes);
+}
 
-  return { root, allWorkers };
+// Helper to convert DD/MM/YYYY or "วันที่ DD/MM/YYYY" to epoch time
+export function parseDateStrToTime(str?: string): number {
+  if (!str) return 0;
+  const clean = str.replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+  const parts = clean.split('/').map(Number);
+  if (parts.length === 3) {
+    const [d, m, y] = parts;
+    return new Date(y, m - 1, d).getTime();
+  }
+  return 0;
+}
+
+// Build Plant Hierarchy Tree for a custom Date Range (จากวันที่ ... ถึงวันที่ ...)
+export function buildPlantHierarchyTreeForRange(
+  startDateStr: string,
+  endDateStr: string,
+  allScanPresets: { name: string; dateFormatted?: string; content: string }[],
+  contractorRecordsByDate: Record<string, { dateFormatted: string; dateShort: string; isoDate: string; records: ContractorScanRecord[] }>,
+  employeeMapping: Record<string, EmployeeInfo>,
+  shiftFilter: number | 'ALL' = 'ALL',
+  dailyAdjustments: DailyAdjustmentRecord[] = [],
+  categoryFilter: 'ALL' | 'PRODUCTION' | 'ENG' | 'QTECH' | 'WAS' = 'ALL',
+  parsedPresetsCache?: Map<string, ParsedShiftRecord[]>
+): { root: HierarchyNode; allWorkers: HierarchyWorker[]; daysCount: number; matchedDates: string[] } {
+  const tStart = parseDateStrToTime(startDateStr);
+  const tEnd = parseDateStrToTime(endDateStr);
+  const minTime = Math.min(tStart, tEnd);
+  const maxTime = Math.max(tStart, tEnd);
+
+  // Filter presets within range
+  const matchedPresets = allScanPresets.filter(p => {
+    const t = parseDateStrToTime(p.dateFormatted || p.name);
+    return t >= minTime && t <= maxTime;
+  });
+
+  const matchedDates: string[] = [];
+  const accumulatedWorkersMap = new Map<string, HierarchyWorker>();
+
+  for (const preset of matchedPresets) {
+    const dateFormatted = preset.dateFormatted || preset.name || '';
+    const clean = dateFormatted.replace(/^[📅📄\s]*วันที่\s*/, '').trim();
+    matchedDates.push(clean);
+
+    // 1. Get GY records
+    let gyRecords: ParsedShiftRecord[] = [];
+    if (parsedPresetsCache && parsedPresetsCache.has(preset.name)) {
+      gyRecords = parsedPresetsCache.get(preset.name)!;
+    } else {
+      gyRecords = processScanRecords(preset.content, employeeMapping, dailyAdjustments).records;
+      if (parsedPresetsCache) {
+        parsedPresetsCache.set(preset.name, gyRecords);
+      }
+    }
+
+    // 2. Get Contractor records
+    let contRecords: ContractorScanRecord[] = [];
+    if (contractorRecordsByDate[clean]) {
+      contRecords = contractorRecordsByDate[clean].records;
+    } else {
+      const matchKey = Object.keys(contractorRecordsByDate).find(k => {
+        return normalizeDateToMMDDYYYY(k) === normalizeDateToMMDDYYYY(clean);
+      });
+      if (matchKey && contractorRecordsByDate[matchKey]) {
+        contRecords = contractorRecordsByDate[matchKey].records;
+      }
+    }
+
+    // 3. Process daily records
+    const { allWorkers: dayWorkers } = buildPlantHierarchyTree(
+      gyRecords,
+      contRecords,
+      employeeMapping,
+      dateFormatted,
+      shiftFilter,
+      allScanPresets,
+      contractorRecordsByDate,
+      dailyAdjustments,
+      categoryFilter
+    );
+
+    // 4. Merge into accumulated map
+    for (const w of dayWorkers) {
+      const key = `${w.empId}_${w.machineKey}`;
+      if (!accumulatedWorkersMap.has(key)) {
+        accumulatedWorkersMap.set(key, { ...w });
+      } else {
+        const existing = accumulatedWorkersMap.get(key)!;
+        existing.normalHours = Math.round((existing.normalHours + w.normalHours) * 10) / 10;
+        existing.otHours = Math.round((existing.otHours + w.otHours) * 10) / 10;
+        existing.totalHours = Math.round((existing.totalHours + w.totalHours) * 10) / 10;
+      }
+    }
+  }
+
+  const allWorkers = Array.from(accumulatedWorkersMap.values());
+  const root = buildTreeFromWorkers(allWorkers);
+  return { root, allWorkers, daysCount: matchedPresets.length, matchedDates };
 }

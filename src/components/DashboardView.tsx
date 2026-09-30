@@ -8,7 +8,8 @@ import {
   HierarchyWorker,
   FunctionType,
   EmploymentType,
-  buildPlantHierarchyTree
+  buildPlantHierarchyTree,
+  buildPlantHierarchyTreeForRange
 } from '../utils/plantHierarchyEngine';
 import {
   BarChart,
@@ -42,6 +43,7 @@ import {
   Award,
   CheckCircle2,
   Calendar,
+  CalendarRange,
   SlidersHorizontal
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
@@ -77,9 +79,64 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [employmentFilter, setEmploymentFilter] = useState<EmploymentType | 'ALL'>('ALL');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  // 1. Build Full Tree from Scan Records
-  const { root, allWorkers } = useMemo(() => {
-    return buildPlantHierarchyTree(
+  // Preset Dates for Quick Selection (Descending: Newest to Oldest)
+  const availablePresetDates = useMemo(() => {
+    const set = new Set<string>();
+    allScanPresets.forEach(p => {
+      if (p.dateFormatted) set.add(p.dateFormatted);
+    });
+    return Array.from(set).sort((a, b) => {
+      const pA = a.split('/').map(Number);
+      const pB = b.split('/').map(Number);
+      return (pB[2] || 0) - (pA[2] || 0) || (pB[1] || 0) - (pA[1] || 0) || (pB[0] || 0) - (pA[0] || 0);
+    });
+  }, [allScanPresets]);
+
+  // Chronological Preset Dates (Ascending: Oldest to Newest)
+  const chronologicalPresetDates = useMemo(() => {
+    return [...availablePresetDates].reverse();
+  }, [availablePresetDates]);
+
+  // Date Mode State: 'SINGLE' (วันเดียว) | 'RANGE' (ช่วงวันที่)
+  const [dateMode, setDateMode] = useState<'SINGLE' | 'RANGE'>('SINGLE');
+  const [rangeStartDate, setRangeStartDate] = useState<string>('');
+  const [rangeEndDate, setRangeEndDate] = useState<string>('');
+
+  const effectiveStartDate = rangeStartDate || chronologicalPresetDates[0] || '01/09/2026';
+  const effectiveEndDate = rangeEndDate || currentScanDateFormatted || availablePresetDates[0] || '29/09/2026';
+
+  // Cache for parsed presets across multiple days to make range calculations instantaneous
+  const parsedPresetsCache = useMemo(() => new Map<string, ParsedShiftRecord[]>(), []);
+
+  // 1. Build Full Tree from Scan Records (Single Day or Date Range)
+  const { root, allWorkers, dateRangeInfo } = useMemo(() => {
+    if (dateMode === 'RANGE') {
+      const rangeResult = buildPlantHierarchyTreeForRange(
+        effectiveStartDate,
+        effectiveEndDate,
+        allScanPresets,
+        contractorRecordsByDate,
+        employeeMapping,
+        shiftFilter,
+        dailyAdjustments,
+        categoryFilter,
+        parsedPresetsCache
+      );
+      return {
+        root: rangeResult.root,
+        allWorkers: rangeResult.allWorkers,
+        dateRangeInfo: {
+          isRange: true,
+          daysCount: rangeResult.daysCount,
+          startDate: effectiveStartDate,
+          endDate: effectiveEndDate,
+          matchedDates: rangeResult.matchedDates
+        }
+      };
+    }
+
+    // Default Single Day Mode
+    const singleDayResult = buildPlantHierarchyTree(
       gyRecords,
       contractorRecords,
       employeeMapping,
@@ -90,7 +147,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       dailyAdjustments,
       categoryFilter
     );
+    return {
+      root: singleDayResult.root,
+      allWorkers: singleDayResult.allWorkers,
+      dateRangeInfo: {
+        isRange: false,
+        daysCount: 1,
+        startDate: currentScanDateFormatted,
+        endDate: currentScanDateFormatted,
+        matchedDates: [currentScanDateFormatted]
+      }
+    };
   }, [
+    dateMode,
+    effectiveStartDate,
+    effectiveEndDate,
     gyRecords,
     contractorRecords,
     employeeMapping,
@@ -99,7 +170,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     allScanPresets,
     contractorRecordsByDate,
     dailyAdjustments,
-    categoryFilter
+    categoryFilter,
+    parsedPresetsCache
   ]);
 
   // 2. Find Currently Selected Node & Breadcrumbs path
@@ -207,21 +279,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const wsWorkers = XLSX.utils.json_to_sheet(workerRows);
     XLSX.utils.book_append_sheet(wb, wsWorkers, 'Worker_Details');
 
-    XLSX.writeFile(wb, `Plant_TotalHours_OT_Hierarchy_${(currentScanDateFormatted || 'Date').replace(/\//g, '')}.xlsx`);
+    const dateLabel = dateMode === 'RANGE'
+      ? `${effectiveStartDate.replace(/\//g, '')}_to_${effectiveEndDate.replace(/\//g, '')}`
+      : (currentScanDateFormatted || 'Date').replace(/\//g, '');
+    XLSX.writeFile(wb, `Plant_TotalHours_OT_Hierarchy_${dateLabel}.xlsx`);
   };
-
-  // Preset Dates for Quick Selection
-  const availablePresetDates = useMemo(() => {
-    const set = new Set<string>();
-    allScanPresets.forEach(p => {
-      if (p.dateFormatted) set.add(p.dateFormatted);
-    });
-    return Array.from(set).sort((a, b) => {
-      const pA = a.split('/').map(Number);
-      const pB = b.split('/').map(Number);
-      return (pB[2] || 0) - (pA[2] || 0) || (pB[1] || 0) - (pA[1] || 0) || (pB[0] || 0) - (pA[0] || 0);
-    });
-  }, [allScanPresets]);
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
@@ -249,20 +311,128 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* Date, Shift, and Export Action Bar */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          {/* Date Selector */}
-          {availablePresetDates.length > 0 && onSelectDate && (
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 shadow-xs">
-              <Calendar className="w-4 h-4 text-slate-500 mr-2" />
-              <span className="text-xs font-semibold text-slate-600 mr-2">วันที่:</span>
-              <select
-                value={currentScanDateFormatted}
-                onChange={(e) => onSelectDate(e.target.value)}
-                className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
-              >
-                {availablePresetDates.map(d => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
-              </select>
+          {/* Date Mode Toggle Pill: วันเดียว | ช่วงวันที่ */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <button
+              type="button"
+              onClick={() => setDateMode('SINGLE')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-lg transition-all ${
+                dateMode === 'SINGLE'
+                  ? 'bg-white text-indigo-700 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="เลือกดูเฉพาะวันเดียว"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              วันเดียว
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setDateMode('RANGE');
+                if (!rangeStartDate && chronologicalPresetDates.length > 0) {
+                  setRangeStartDate(chronologicalPresetDates[0]);
+                }
+                if (!rangeEndDate && availablePresetDates.length > 0) {
+                  setRangeEndDate(availablePresetDates[0]);
+                }
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-lg transition-all ${
+                dateMode === 'RANGE'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              title="เลือกดูสะสมตามช่วงวันที่ (จาก...ถึง...)"
+            >
+              <CalendarRange className="w-3.5 h-3.5" />
+              ช่วงวันที่
+            </button>
+          </div>
+
+          {/* Date Selector: Single vs Range */}
+          {dateMode === 'SINGLE' ? (
+            availablePresetDates.length > 0 && onSelectDate && (
+              <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 shadow-xs">
+                <Calendar className="w-4 h-4 text-indigo-600 mr-2" />
+                <span className="text-xs font-semibold text-slate-600 mr-2">วันที่:</span>
+                <select
+                  value={currentScanDateFormatted}
+                  onChange={(e) => onSelectDate(e.target.value)}
+                  className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+                >
+                  {availablePresetDates.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+            )
+          ) : (
+            <div className="flex flex-wrap items-center gap-2 bg-indigo-50/70 border border-indigo-200 rounded-xl px-3 py-1 shadow-xs">
+              <div className="flex items-center gap-1.5 text-xs">
+                <span className="font-bold text-indigo-900 flex items-center gap-1">
+                  จาก:
+                </span>
+                <select
+                  value={effectiveStartDate}
+                  onChange={(e) => setRangeStartDate(e.target.value)}
+                  className="bg-white border border-indigo-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-400 cursor-pointer shadow-2xs"
+                >
+                  {chronologicalPresetDates.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <span className="text-indigo-400 font-bold text-xs">➔</span>
+
+              <div className="flex items-center gap-1.5 text-xs">
+                <span className="font-bold text-indigo-900">ถึง:</span>
+                <select
+                  value={effectiveEndDate}
+                  onChange={(e) => setRangeEndDate(e.target.value)}
+                  className="bg-white border border-indigo-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-400 cursor-pointer shadow-2xs"
+                >
+                  {chronologicalPresetDates.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <span className="bg-indigo-600 text-white font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-2xs whitespace-nowrap">
+                สะสม {dateRangeInfo.daysCount} วัน
+              </span>
+
+              {/* Quick Shortcuts */}
+              <div className="flex items-center gap-1 pl-1 border-l border-indigo-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (chronologicalPresetDates.length > 0) {
+                      setRangeStartDate(chronologicalPresetDates[0]);
+                      setRangeEndDate(chronologicalPresetDates[chronologicalPresetDates.length - 1]);
+                    }
+                  }}
+                  className="text-[10px] font-bold px-1.5 py-0.5 bg-white hover:bg-indigo-100 text-indigo-700 rounded border border-indigo-200 transition-colors shadow-2xs"
+                  title="เลือกทั้งเดือน (ตั้งแต่วันที่ 1 ถึงวันล่าสุด)"
+                >
+                  ทั้งเดือน (MTD)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (chronologicalPresetDates.length > 0) {
+                      const lastIdx = chronologicalPresetDates.length - 1;
+                      const startIdx = Math.max(0, lastIdx - 6);
+                      setRangeStartDate(chronologicalPresetDates[startIdx]);
+                      setRangeEndDate(chronologicalPresetDates[lastIdx]);
+                    }
+                  }}
+                  className="text-[10px] font-bold px-1.5 py-0.5 bg-white hover:bg-indigo-100 text-indigo-700 rounded border border-indigo-200 transition-colors shadow-2xs"
+                  title="เลือก 7 วันล่าสุด"
+                >
+                  7 วัน
+                </button>
+              </div>
             </div>
           )}
 
@@ -442,9 +612,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <span className="text-[9px] font-black uppercase tracking-wider block opacity-75 leading-none">
                       Root Node (ระดับโรงงาน)
                     </span>
-                    <span className="text-xs font-black tracking-wide">
-                      PLANT (ทั้งโรงงาน Goodyear)
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-black tracking-wide">
+                        PLANT (ทั้งโรงงาน Goodyear)
+                      </span>
+                      {dateRangeInfo.isRange && (
+                        <span className="text-[9px] font-black px-1.5 py-0.5 bg-amber-300 text-slate-950 rounded-full shadow-2xs">
+                          สะสม {dateRangeInfo.daysCount} วัน ({dateRangeInfo.startDate} - {dateRangeInfo.endDate})
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {selectedNodeId === 'PLANT' && (
