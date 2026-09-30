@@ -8,6 +8,7 @@ import { DEFAULT_RETREAD_TONNAGE, RetreadTonnageData } from '../data/default_ret
 import { DEFAULT_RTR_SHUTDOWN_DATA, RtrShutdownEntry } from '../data/default_rtr_shutdown';
 import { calculateOhpaSummary } from '../utils/ohpaCalculator';
 import { buildRawEmployeeRecords, exportTeamRawDataExcel } from '../utils/rawExportHelper';
+import { OpahExecutiveIntelligence } from './OpahExecutiveIntelligence';
 import {
   Calculator,
   RefreshCw,
@@ -2289,105 +2290,16 @@ export const OhpaCalculationView: React.FC<OhpaCalculationViewProps> = ({
         </div>
       </div>
 
-      {/* Shift-by-Shift Performance Matrix */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                ประสิทธิภาพแยกตามกะ (Shift Performance Breakdown - รวม GY + Contractor)
-              </h3>
-              <p className="text-xs text-slate-500">
-                เปรียบเทียบชั่วโมงทำงาน กำลังพล ยอด Stocking และค่า OPAH แต่ละกะ
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className={`grid grid-cols-1 ${
-          ohpaSummary.shifts.length === 4
-            ? 'md:grid-cols-2 lg:grid-cols-4'
-            : ohpaSummary.shifts.length === 2
-            ? 'md:grid-cols-2'
-            : 'md:grid-cols-3'
-        } gap-5`}>
-          {ohpaSummary.shifts.map((s) => (
-            <div
-              key={s.shift}
-              className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between hover:border-blue-300 transition-colors shadow-xs"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
-                <span className="text-sm font-extrabold text-slate-800">
-                  {s.shiftLabel}
-                </span>
-                <div className="flex items-center gap-1 flex-wrap justify-end">
-                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-700">
-                    GY: {s.gyHeadcount}
-                  </span>
-                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-teal-100 text-teal-800">
-                    Cont: {s.contractorHeadcount}
-                  </span>
-                  <span className="text-[11px] font-bold px-1.5 py-0.2 rounded-md bg-purple-100 text-purple-800">
-                    รายเดือน: {s.monthlyHeadcount}
-                  </span>
-                </div>
-              </div>
-
-              <div className="py-3.5 space-y-2">
-                <div className="flex justify-between items-baseline text-xs">
-                  <span className="text-slate-600 font-semibold">ชม. สุทธิคิด OPAH (Net Hours):</span>
-                  <strong className="text-indigo-950 font-black text-sm">{(s.opahWorkingHours || s.totalHours).toLocaleString()} ชม.</strong>
-                </div>
-
-                {/* Formula breakdown badge */}
-                <div className="p-2 bg-white rounded-xl border border-slate-200/80 space-y-1 text-[11px]">
-                  <div className="flex justify-between text-slate-500">
-                    <span>- ฐานรวม (GY + Cont + รายเดือน):</span>
-                    <span className="font-mono font-bold text-slate-800">{(s.grossHours || (s.gyTotalHours + s.contractorTotalHours + (s.monthlyHours || 0))).toLocaleString()} ชม.</span>
-                  </div>
-                  <div className="flex justify-between text-slate-500 pl-2">
-                    <span>(ปกติ {s.normalHours}h + OT +{s.otHours}h)</span>
-                    <span className="font-mono text-[10px] text-slate-400">
-                      GY {s.gyTotalHours}h | Cont {s.contractorTotalHours}h | Mon {s.monthlyHours}h
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-[10px] flex-wrap gap-1">
-                    <span className="text-rose-600 font-bold">🔻 PDI: -{s.pdiDeductHours || 0}h</span>
-                    <span className="text-emerald-600 font-bold">🟢 Bead: +{s.beadAddHours || 0}h</span>
-                    {s.rtrShutdownHours ? (
-                      <span className="inline-flex items-center gap-0.5 text-rose-800 font-bold bg-rose-100/80 px-1 py-0.2 rounded border border-rose-200">
-                        <AlertTriangle className="w-2.5 h-2.5 text-rose-600 inline" />
-                        RTR: -{s.rtrShutdownHours}h
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="flex justify-between text-xs pt-1">
-                  <span className="text-slate-600 font-semibold">ยอด Stocking ประจำกะ:</span>
-                  <strong className="text-emerald-700 font-bold">{s.tonnageKg.toLocaleString()} kg ({s.tonnageLbs.toLocaleString()} lbs)</strong>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-slate-200/60 bg-white -mx-5 -mb-5 p-3.5 px-4 rounded-b-2xl flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase block">OPAH ประจำกะ:</span>
-                  <span className="text-[10px] text-slate-400 font-mono">({s.tonnageLbs.toLocaleString()} lbs ÷ {(s.opahWorkingHours || s.totalHours).toLocaleString()} ชม.)</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-xl font-black text-indigo-700">
-                    {s.opahLbsPerHour}
-                  </span>
-                  <span className="text-xs font-semibold text-slate-500 ml-1">lbs/ชม.</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Executive OPAH Target Intelligence & Actionable Analysis (Replacing Shift Breakdown) */}
+      <OpahExecutiveIntelligence
+        ohpaSummary={ohpaSummary}
+        currentScanDateFormatted={currentScanDateFormatted}
+        viewMode={viewMode}
+        onSelectDate={onSelectGlobalDate}
+        retreadTonnage={retreadTonnage}
+        pdiBeadReport={pdiBeadReport}
+        rtrShutdownData={rtrShutdownData}
+      />
 
       {/* Table Section: 55012 Daily Stocking Tonnage Report */}
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
