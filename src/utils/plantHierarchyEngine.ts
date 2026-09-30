@@ -317,18 +317,16 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   }
 
   // 5. AERO (AVIATION TIRES)
-  // Bias Aero: 4140, A5110, A5120, A5130 (or 5210, 5230)
+  // Bias Aero: A5110, A5120, A5130 (or 5210, 5230)
   // Radial Aero: S5110, S5120, S5130 (or 5310, 5330)
   if (
-    cc === '4140' ||
     cc.startsWith('A5') ||
     cc.startsWith('S5') ||
     ['5210', '5230', '5310', '5330'].includes(cc) ||
     d.startsWith('A5') ||
     d.startsWith('S5') ||
     combined.includes('AERO') ||
-    combined.includes('AVIATION') ||
-    combined.includes('STEELASTIC')
+    combined.includes('AVIATION')
   ) {
     const isRadial = cc.startsWith('S5') || cc === '5310' || cc === '5330' || d.startsWith('S5') || combined.includes('RADIAL');
     const subProcessKey = isRadial ? 'RADIAL' : 'BIAS';
@@ -364,16 +362,7 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         };
       }
     } else {
-      if (cc === '4140' || combined.includes('STEELASTIC')) {
-        return {
-          teamKey: 'AERO',
-          teamName: 'Aero (Aviation)',
-          processKey: 'BIAS',
-          processName: 'Bias Aero',
-          machineKey: '4140',
-          machineName: '4140 : Steelastic'
-        };
-      } else if (cc === 'A5120' || cc === '5230' || combined.includes('CURE')) {
+      if (cc === 'A5120' || cc === '5230' || combined.includes('CURE')) {
         return {
           teamKey: 'AERO',
           teamName: 'Aero (Aviation)',
@@ -405,14 +394,16 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
   }
 
   // 6. CONSUMER (PASSENGER & LIGHT TRUCK)
-  // Build: 5110
+  // Build: 4140, 5110
   // FF / Curing: 5120, 5130
   if (
-    ['5110', '5120', '5130'].includes(cc) ||
+    ['4140', '5110', '5120', '5130'].includes(cc) ||
+    d.startsWith('4140') ||
     d.startsWith('5110') ||
     d.startsWith('5120') ||
     d.startsWith('5130') ||
-    combined.includes('CONSUMER')
+    combined.includes('CONSUMER') ||
+    combined.includes('STEELASTIC')
   ) {
     if (cc === '5120' || combined.includes('CURE')) {
       return {
@@ -431,6 +422,15 @@ export function classifyPlantLocation(dept: string, costCenter: string, position
         processName: 'FF / Curing',
         machineKey: '5130',
         machineName: '5130 : Final Finish'
+      };
+    } else if (cc === '4140' || combined.includes('STEELASTIC')) {
+      return {
+        teamKey: 'CONSUMER',
+        teamName: 'Consumer',
+        processKey: 'BUILD',
+        processName: 'Build (Building)',
+        machineKey: '4140',
+        machineName: '4140 : Steelastic'
       };
     } else {
       return {
@@ -784,12 +784,22 @@ export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNo
       // Ensure all standard Bias Aero stations are always present
       if (pKey === 'BIAS') {
         const biasStationDefaults: Record<string, string> = {
-          '4140': '4140 : Steelastic',
           'A5110': 'A5110 : Bias Building',
           'A5120': 'A5120 : Bias Curing',
           'A5130': 'A5130 : Bias Final Finish'
         };
         for (const sKey of Object.keys(biasStationDefaults)) {
+          if (!machineMap.has(sKey)) machineMap.set(sKey, []);
+        }
+      }
+
+      // Ensure Consumer Build stations are always present
+      if (pKey === 'BUILD' && tKey === 'CONSUMER') {
+        const consumerBuildDefaults: Record<string, string> = {
+          '4140': '4140 : Steelastic',
+          '5110': '5110 : Building'
+        };
+        for (const sKey of Object.keys(consumerBuildDefaults)) {
           if (!machineMap.has(sKey)) machineMap.set(sKey, []);
         }
       }
@@ -801,6 +811,9 @@ export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNo
           '1850': '1850 : Waste Yard',
           '1860': '1860 : PPIC & Kanban',
           '4140': '4140 : Steelastic',
+          '5110': '5110 : Building',
+          '5120': '5120 : Curing',
+          '5130': '5130 : Final Finish',
           'A5110': 'A5110 : Bias Building',
           'A5120': 'A5120 : Bias Curing',
           'A5130': 'A5130 : Bias Final Finish'
@@ -822,11 +835,11 @@ export function buildTreeFromWorkers(allWorkers: HierarchyWorker[]): HierarchyNo
         '4130',
         '4200',
         // Consumer
+        '4140',
         '5110',
         '5120',
         '5130',
         // Bias Aero
-        '4140',
         'A5110',
         'A5120',
         'A5130',
