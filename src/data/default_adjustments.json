@@ -772,22 +772,22 @@
     "dateStr": "25/09/2026",
     "empId": "12808",
     "empName": "เกรียงศักดิ์ โสมอินทร์",
-    "otMachineOverride": "Truker 4roll#1",
+    "otMachineOverride": "แทน WAS",
     "customStartTime": "15:00",
     "customEndTime": "23:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Truker 4roll#1 (15.00-23.00)"
+    "reason": "OT / ทำงานที่ แทน WAS (15.00-23.00)"
   },
   {
     "id": "adj-71-12486",
     "dateStr": "26/09/2026",
     "empId": "12486",
     "empName": "ดวงสิทธิ์ เพ็ญพินิจ",
-    "otMachineOverride": "Truker 4roll#1",
+    "otMachineOverride": "แทน WAS",
     "customStartTime": "07:00",
     "customEndTime": "19:00",
     "isApprovedTiming": true,
-    "reason": "OT / ทำงานที่ Truker 4roll#1 (07.00-19.00)"
+    "reason": "OT / ทำงานที่ แทน WAS (07.00-19.00)"
   },
   {
     "id": "adj-72-12674",
@@ -832,5 +832,93 @@
     "customEndTime": "15:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
+  },
+  {
+    "id": "adj-76-12783",
+    "dateStr": "28/09/2026",
+    "empId": "12783",
+    "empName": "พุทธินันท์ แสนกล้า",
+    "otMachineOverride": "แทน WAS",
+    "customStartTime": "07:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ แทน WAS (07.00-23.00)"
+  },
+  {
+    "id": "adj-77-12342",
+    "dateStr": "28/09/2026",
+    "empId": "12342",
+    "empName": "อดิศักดิ์ โนนทา",
+    "otMachineOverride": "Splice 4roll #2",
+    "customStartTime": "15:00",
+    "customEndTime": "19:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Splice 4roll #2 (15.00-19.00)"
+  },
+  {
+    "id": "adj-78-10385",
+    "dateStr": "29/09/2026",
+    "empId": "10385",
+    "empName": "ถวิล บุญให้",
+    "otMachineOverride": "แทน WAS",
+    "customStartTime": "23:00",
+    "customEndTime": "07:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ แทน WAS (23.00-07.00)"
+  },
+  {
+    "id": "adj-79-12674",
+    "dateStr": "29/09/2026",
+    "empId": "12674",
+    "empName": "พงศกรณ์ พวงใส",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "15:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (15.00-23.00)"
+  },
+  {
+    "id": "adj-80-12945",
+    "dateStr": "29/09/2026",
+    "empId": "12945",
+    "empName": "วรวุฒิ  มาพงษ์",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-81-12851",
+    "dateStr": "29/09/2026",
+    "empId": "12851",
+    "empName": "ศรายุทธ พิมพ์แก้ว",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "18:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-18.00)"
+  },
+  {
+    "id": "adj-82-12462",
+    "dateStr": "30/09/2026",
+    "empId": "12462",
+    "empName": "อธิวัฒน์ งามสม",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
+  },
+  {
+    "id": "adj-83-12645",
+    "dateStr": "30/09/2026",
+    "empId": "12645",
+    "empName": "สหชาติ มะธิปะระชะตัง",
+    "otMachineOverride": "แทน WAS",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ แทน WAS (07.00-15.00)"
   }
 ]

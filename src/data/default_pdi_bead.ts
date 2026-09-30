@@ -53,7 +53,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "26": 28,
         "27": 0,
         "28": 70,
-        "29": 0,
+        "29": 64,
         "30": 0,
         "31": 0
       }
@@ -204,7 +204,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "25": 2,
         "26": 0,
         "27": 0,
-        "28": 0,
+        "28": 1,
         "29": 0,
         "30": 0,
         "31": 0
@@ -239,8 +239,8 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "25": 66,
     "26": 39,
     "27": 0,
-    "28": 92,
-    "29": 0,
+    "28": 93,
+    "29": 64,
     "30": 0,
     "31": 0
   },
@@ -273,7 +273,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "26": 110,
     "27": 30,
     "28": 179.01,
-    "29": 0,
+    "29": 204,
     "30": 0,
     "31": 0
   },
@@ -409,5 +409,5 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "30": 0,
     "31": 0
   },
-  "updatedAt": "2026-09-30T01:15:09.426Z"
+  "updatedAt": "2026-09-30T03:59:47.725Z"
 };

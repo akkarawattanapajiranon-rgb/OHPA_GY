@@ -634,7 +634,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className={`grid grid-cols-3 gap-1 pt-1.5 border-t text-center ${selectedNodeId === 'PLANT' ? 'border-black/15' : 'border-slate-800'}`}>
                 <div className="bg-black/10 rounded-md py-0.5 px-1">
                   <span className="text-[8.5px] block opacity-75 font-semibold">กำลังพลรวม</span>
-                  <span className="text-[10.5px] font-black">👥 {root.metrics.headcount.toLocaleString()} คน</span>
+                  <span className="text-[10.5px] font-black inline-flex items-center justify-center gap-1">
+                    <Users className={`w-3.5 h-3.5 inline ${selectedNodeId === 'PLANT' ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                    {root.metrics.headcount.toLocaleString()} คน
+                  </span>
                 </div>
                 <div className="bg-black/10 rounded-md py-0.5 px-1">
                   <span className="text-[8.5px] block opacity-75 font-semibold">ชม. ทำงานรวม</span>
@@ -701,7 +704,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Banbury / Prep</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {bcaNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'BCA' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {bcaNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {bcaNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {bcaNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -755,7 +758,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -807,7 +813,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-amber-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -855,7 +864,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Assembly & Cure</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {conNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'CONSUMER' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {conNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {conNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {conNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -909,7 +918,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -961,7 +973,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-cyan-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1009,7 +1024,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Aviation Tire Ops</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {aeroNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'AERO' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {aeroNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {aeroNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {aeroNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -1063,7 +1078,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1115,7 +1133,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-purple-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1162,7 +1183,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Retread Plant</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {retNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'RETREAD' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {retNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {retNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {retNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -1211,7 +1232,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   isMachSelected ? 'text-slate-950 font-black' : 'text-emerald-300'
                                 }`}>
                                   <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                  <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                  <span className="inline-flex items-center gap-0.5">
+                                    <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                    {mach.metrics.headcount}p
+                                  </span>
                                 </div>
                               </button>
                             );
@@ -1257,7 +1281,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Engineering & Maint</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {engNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'ENG' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {engNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {engNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {engNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -1311,7 +1335,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1363,7 +1390,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-orange-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1413,7 +1443,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Quality & Tech</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {qtechNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'QTECH' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {qtechNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {qtechNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {qtechNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -1472,7 +1502,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1524,7 +1557,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1576,7 +1612,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1628,7 +1667,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                       isMachSelected ? 'text-slate-950 font-black' : 'text-rose-300'
                                     }`}>
                                       <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                      <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                      <span className="inline-flex items-center gap-0.5">
+                                        <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                        {mach.metrics.headcount}p
+                                      </span>
                                     </div>
                                   </button>
                                 );
@@ -1675,7 +1717,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                       <div className="text-[8px] sm:text-[8.5px] opacity-80 mt-0.5 truncate">Support Dept</div>
                       <div className="mt-1 pt-1 border-t border-black/10 flex items-center justify-around text-[8px] sm:text-[9.5px] font-bold">
-                        <span>👥 {supportNode?.metrics.headcount || 0}</span>
+                        <span className="inline-flex items-center gap-0.5"><Users className={`w-2.5 h-2.5 inline shrink-0 ${(selectedNodeId === 'SUPPORT' || isTeamSelected) ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} /> {supportNode?.metrics.headcount || 0}</span>
                         <span>⏱️ {supportNode?.metrics.totalHours || 0}h</span>
                         <span className="text-amber-300 drop-shadow-xs">OT {supportNode?.metrics.otHours || 0}h</span>
                       </div>
@@ -1708,7 +1750,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                                   isMachSelected ? 'text-slate-950 font-black' : 'text-teal-300'
                                 }`}>
                                   <span>⏱️ {mach.metrics.totalHours.toLocaleString()}h</span>
-                                  <span className="opacity-90">👥 {mach.metrics.headcount}p</span>
+                                  <span className="inline-flex items-center gap-0.5">
+                                    <Users className={`w-2.5 h-2.5 shrink-0 ${isMachSelected ? 'text-slate-950 fill-slate-950/40' : 'text-cyan-300 fill-cyan-300/50 drop-shadow-xs'}`} />
+                                    {mach.metrics.headcount}p
+                                  </span>
                                 </div>
                               </button>
                             );

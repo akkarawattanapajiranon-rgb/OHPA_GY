@@ -41,7 +41,8 @@ import {
   SlidersHorizontal,
   ArrowRight,
   Calendar,
-  ShieldCheck
+  ShieldCheck,
+  Users
 } from 'lucide-react';
 import { OhpaSummary, StockingTonnageReport, DailyMtdItem, OhpaAreaMetrics } from '../types/ohpa';
 import { RetreadTonnageData } from '../data/default_retread_tonnage';
@@ -699,7 +700,7 @@ export const OpahExecutiveIntelligence: React.FC<OpahExecutiveIntelligenceProps>
               </div>
 
               <div className="bg-white p-4 rounded-2xl border border-slate-200/80 space-y-1.5">
-                <span className="font-black text-slate-800 block text-xs">👥 การบริหารกำลังพล (Labor Allocation)</span>
+                <span className="font-black text-slate-800 block text-xs"><Users className="w-3.5 h-3.5 inline mr-1 text-cyan-600 align-text-bottom" /> การบริหารกำลังพล (Labor Allocation)</span>
                 <p className="text-slate-600 leading-relaxed">
                   {selectedDeptKey === 'Consumer' && 'จัดสรรกำลังพลผู้รับเหมา (WAS Contractor) เข้าทดแทนจุดงานทั่วไป และสงวนพนักงาน GY ฝีมือสูงไว้ที่เครื่องสร้างหลัก VMI'}
                   {selectedDeptKey.includes('Aero') && 'ควบคุมชั่วโมงโอเวอร์ไทม์ของช่างตรวจสภาพและช่างประกอบยางให้สอดคล้องกับคิวยางที่รอตรวจสอบจริง'}
