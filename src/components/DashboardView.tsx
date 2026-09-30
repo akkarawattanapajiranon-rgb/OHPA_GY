@@ -1504,27 +1504,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </div>
                     </div>
 
-                    {/* Stem down to Process */}
+                    {/* Stem directly down to Level 3 Stations */}
                     <div className="w-0.5 h-3 bg-slate-600" />
 
-                    {/* Level 2 Process for Support Dept */}
-                    <div className="w-full flex flex-col items-center pt-2 min-w-0">
-                      <div
-                        onClick={() => setSelectedNodeId('SUPPORT_SUPPORT_OPS')}
-                        className={`w-full p-1 rounded-md text-center transition-all cursor-pointer shadow-xs ${
-                          selectedNodeId === 'SUPPORT_SUPPORT_OPS'
-                            ? 'bg-teal-600 text-white ring-2 ring-teal-300'
-                            : 'bg-slate-900 border border-teal-500/40 hover:border-teal-400 text-teal-100 hover:bg-teal-950/50'
-                        }`}
-                      >
-                        <div className="text-[9px] sm:text-[9.5px] font-black leading-tight truncate">Support Ops</div>
-                        <div className="text-[8px] text-teal-300 font-semibold mt-0.5 truncate">
-                          {supportOpsNode?.metrics.totalHours || 0}h ({supportOpsNode?.metrics.headcount || 0}p)
-                        </div>
-                      </div>
-
-                      {/* Stem to Level 3 Stations */}
-                      <div className="w-0.5 h-2.5 bg-slate-700" />
+                    {/* Level 3 Stations for Support Dept */}
+                    <div className="w-full flex flex-col items-center pt-1 min-w-0">
                       <div className="w-full space-y-1">
                         {supportOpsNode?.children && supportOpsNode.children.length > 0 ? (
                           supportOpsNode.children.map(mach => {
