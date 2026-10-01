@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { DailyAdjustmentRecord, EmployeeInfo } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
+import { CONSUMER_STANDARD_HC } from '../data/consumer_standard_hc';
 import { normalizeDateToMMDDYYYY } from '../utils/parser';
 import {
   X,
@@ -63,7 +64,12 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
 
   if (!isOpen) return null;
 
-  const machineOptions = TEAM_A_STANDARD_HC.map(s => s.positionName);
+  const machineOptions = Array.from(
+    new Set([
+      ...CONSUMER_STANDARD_HC.map(s => s.positionName),
+      ...TEAM_A_STANDARD_HC.map(s => s.positionName)
+    ])
+  );
 
   const handleAddRow = () => {
     if (!newEmpId.trim()) return;

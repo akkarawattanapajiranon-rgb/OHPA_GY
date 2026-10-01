@@ -240,6 +240,8 @@ export default function App() {
   const {
     records,
     manpowerComparison,
+    consumerManpowerComparison,
+    teamAManpowerComparison,
     dateStringFormatted
   } = processedData;
 
@@ -652,7 +654,7 @@ export default function App() {
             </span>
           </button>
 
-          {/* Page 3 Tab: Standard Manpower Comparison */}
+          {/* Page 3 Tab: Standard Manpower Comparison & Dashboard */}
           <button
             onClick={() => setActiveTab('PAGE_3_MANPOWER')}
             className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
@@ -662,7 +664,12 @@ export default function App() {
             }`}
           >
             <TableProperties className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">Standard HC</span>
+            <span className="truncate">หน้า 3: แดชบอร์ด Standard HC</span>
+            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+              activeTab === 'PAGE_3_MANPOWER' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-700'
+            }`}>
+              Consumer
+            </span>
           </button>
 
           {/* Page 4 Tab: OPAH CAL */}
@@ -744,9 +751,14 @@ export default function App() {
           />
         )}
 
-        {/* Tab 3: Standard HC Comparison Table */}
+        {/* Tab 3: Standard HC Comparison Table & Dashboard */}
         {activeTab === 'PAGE_3_MANPOWER' && (
-          <ManpowerGapTable data={manpowerComparison} />
+          <ManpowerGapTable
+            data={consumerManpowerComparison || manpowerComparison}
+            consumerData={consumerManpowerComparison}
+            teamAData={teamAManpowerComparison}
+            scanDate={dateStringFormatted}
+          />
         )}
 
         {/* Tab 4: OHPA Calculation View */}

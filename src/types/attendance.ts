@@ -117,6 +117,9 @@ export interface ManpowerComparisonRow {
   id?: number;
   positionName: string;
   costCenter: string;
+  unit?: 'Consumer' | 'Team A';
+  subDepartment?: 'Building' | 'Curing' | 'Final Finishing' | 'Stock Prep' | 'Mixing' | 'Other';
+  uniqueKey?: string;
   
   shift1Target: number;
   shift1Actual: number;
@@ -144,6 +147,10 @@ export interface ManpowerComparisonRow {
   shift3OtPeople?: number;
   shift3Gap: number;
   shift3Status: 'EXACT' | 'OVER' | 'UNDER';
+
+  totalTarget?: number;
+  totalActual?: number;
+  totalGap?: number;
 }
 
 export interface OtCategorySummary {

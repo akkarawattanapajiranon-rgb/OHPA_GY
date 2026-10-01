@@ -54,7 +54,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "27": 0,
         "28": 70,
         "29": 64,
-        "30": 0,
+        "30": 40,
         "31": 0
       }
     },
@@ -205,8 +205,8 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
         "26": 0,
         "27": 0,
         "28": 1,
-        "29": 0,
-        "30": 0,
+        "29": 1,
+        "30": 1,
         "31": 0
       }
     }
@@ -240,8 +240,8 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "26": 39,
     "27": 0,
     "28": 93,
-    "29": 64,
-    "30": 0,
+    "29": 65,
+    "30": 41,
     "31": 0
   },
   "beadDailyTotals": {
@@ -274,7 +274,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 30,
     "28": 179.01,
     "29": 204,
-    "30": 0,
+    "30": 154,
     "31": 0
   },
   "bcaReductionDailyMinutes": {
@@ -307,7 +307,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 1122,
     "29": 951,
-    "30": 693,
+    "30": 723,
     "31": 1
   },
   "bcaReductionDailyHours": {
@@ -340,7 +340,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 18.7,
     "29": 15.85,
-    "30": 11.55,
+    "30": 12.05,
     "31": 0.02
   },
   "bcaDevDailyMinutes": {
@@ -373,7 +373,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 120,
     "29": 180,
-    "30": 0,
+    "30": 30,
     "31": 0
   },
   "bcaDevDailyHours": {
@@ -406,8 +406,8 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 2,
     "29": 3,
-    "30": 0,
+    "30": 0.5,
     "31": 0
   },
-  "updatedAt": "2026-10-01T01:48:43.232Z"
+  "updatedAt": "2026-10-01T04:35:43.686Z"
 };

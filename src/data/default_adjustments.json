@@ -942,5 +942,16 @@
     "customEndTime": "15:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
+  },
+  {
+    "id": "adj-86-12676",
+    "dateStr": "10/01/2026",
+    "empId": "12676",
+    "empName": "ประชา ไชยโชติ",
+    "otMachineOverride": "Chaffer Lay-up",
+    "customStartTime": "07:00",
+    "customEndTime": "23:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ Chaffer Lay-up (07.00-23.00)"
   }
 ]

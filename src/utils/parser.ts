@@ -11,6 +11,7 @@ import {
   DailyAdjustmentRecord
 } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
+import { CONSUMER_STANDARD_HC } from '../data/consumer_standard_hc';
 
 export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!dateStr) return '';
@@ -209,6 +210,100 @@ export function mapBcaPosToStdPosition(bcaPos: string, dept: string, machine?: s
   return null;
 }
 
+export function mapConsumerPosToStdPosition(
+  pos: string,
+  dept: string,
+  machine?: string
+): { positionName: string; subDepartment: 'Building' | 'Curing' | 'Final Finishing'; key: string } | null {
+  const m = (machine || '').toLowerCase().trim();
+  const p = (pos || '').toLowerCase().trim();
+  const d = (dept || '').trim();
+
+  // 1. Building (Dept 5110 or 4140)
+  if (
+    d.startsWith('5110') ||
+    d.startsWith('4140') ||
+    m.includes('vmi') ||
+    m.includes('r1 & r2.5') ||
+    m.includes('slitter') ||
+    m.includes('steelastic')
+  ) {
+    if (m === 'team leader' || p.includes('team leader') || p.includes('people leader') || p.includes('business center manager')) {
+      return { positionName: 'Team Leader', subDepartment: 'Building', key: 'Building_Team Leader' };
+    }
+    if (m.includes('r1 & r2.5') || m.includes('r1') || p.includes('r1 & r2.5')) {
+      return { positionName: 'TBM - R1 & R2.5', subDepartment: 'Building', key: 'Building_TBM - R1 & R2.5' };
+    }
+    if (m.includes('vmi248') || m.includes('vmi') || p.includes('vmi') || p.includes('wbr tire builder') || p.includes('tire builder')) {
+      return { positionName: 'TBM - VMI248', subDepartment: 'Building', key: 'Building_TBM - VMI248' };
+    }
+    if (m.includes('calemard') || p.includes('calemard') || m === 'calemard slitter') {
+      return { positionName: 'Calemard Slitter', subDepartment: 'Building', key: 'Building_Calemard Slitter' };
+    }
+    if (m.includes('steelastic') || p.includes('steelastic') || d.startsWith('4140')) {
+      return { positionName: 'Steelastic', subDepartment: 'Building', key: 'Building_Steelastic' };
+    }
+    if (p.includes('component service')) {
+      return { positionName: 'Calemard Slitter', subDepartment: 'Building', key: 'Building_Calemard Slitter' };
+    }
+  }
+
+  // 2. Curing (Dept 5120)
+  if (
+    d.startsWith('5120') ||
+    m.includes('curing') ||
+    m.includes('spray') ||
+    m.includes('mold & bladder')
+  ) {
+    if (m === 'team leader' || p.includes('team leader') || p.includes('people lead')) {
+      return { positionName: 'Team Leader', subDepartment: 'Curing', key: 'Curing_Team Leader' };
+    }
+    if (m.includes('spray') || p.includes('spray')) {
+      return { positionName: 'Spray', subDepartment: 'Curing', key: 'Curing_Spray' };
+    }
+    if (m.includes('mold & bladder') || m.includes('mold') || m.includes('bladder') || p.includes('mold') || p.includes('bladder')) {
+      return { positionName: 'Mold & Bladder', subDepartment: 'Curing', key: 'Curing_Mold & Bladder' };
+    }
+    if (m.includes('curing') || p.includes('cure') || p.includes('greentire') || p.includes('buff repair') || d.startsWith('5120')) {
+      return { positionName: 'Consumer Curing', subDepartment: 'Curing', key: 'Curing_Consumer Curing' };
+    }
+  }
+
+  // 3. Final Finishing (Dept 5130)
+  if (
+    d.startsWith('5130') ||
+    m.includes('smart grinder') ||
+    m.includes('dbm') ||
+    m.includes('fvm') ||
+    m.includes('stocking') ||
+    m.includes('inspection')
+  ) {
+    if (m.includes('smart grinder') || p.includes('smart grinder') || m.includes('grinder') || p.includes('grinder')) {
+      return { positionName: 'Smart Grinder', subDepartment: 'Final Finishing', key: 'Final Finishing_Smart Grinder' };
+    }
+    if (m.includes('inspection') || p.includes('inspection') || p.includes('inspector') || p.includes('classifier') || p.includes('spray mold')) {
+      return { positionName: 'Inspection', subDepartment: 'Final Finishing', key: 'Final Finishing_Inspection' };
+    }
+    if (m.includes('fvm') || p.includes('fvm') || p.includes('finishing crew')) {
+      return { positionName: 'FVM', subDepartment: 'Final Finishing', key: 'Final Finishing_FVM' };
+    }
+    if (m.includes('dbm') || p.includes('dbm') || p.includes('dinamic balance') || p.includes('dynamic balance')) {
+      return { positionName: 'DBM', subDepartment: 'Final Finishing', key: 'Final Finishing_DBM' };
+    }
+    if (m.includes('buffing') || m.includes('buff/repair') || p.includes('buff/repair') || p.includes('buffing')) {
+      return { positionName: 'Buffing & Repair', subDepartment: 'Final Finishing', key: 'Final Finishing_Buffing & Repair' };
+    }
+    if (m.includes('stocking') || m.includes('stock') || p.includes('stock')) {
+      return { positionName: 'Stocking', subDepartment: 'Final Finishing', key: 'Final Finishing_Stocking' };
+    }
+    if (d.startsWith('5130')) {
+      return { positionName: 'Inspection', subDepartment: 'Final Finishing', key: 'Final Finishing_Inspection' };
+    }
+  }
+
+  return null;
+}
+
 export function cleanEmpScanClusters(empScans: RawScanRecord[]): RawScanRecord[] {
   if (empScans.length <= 1) return empScans;
   const sorted = [...empScans].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
@@ -269,6 +364,8 @@ export function processScanRecords(
   shiftSummaries: ShiftSummary[];
   departmentSummaries: DepartmentSummary[];
   manpowerComparison: ManpowerComparisonRow[];
+  consumerManpowerComparison: ManpowerComparisonRow[];
+  teamAManpowerComparison: ManpowerComparisonRow[];
   otCategorySummary: OtCategorySummary;
   overallKPIs: OverallKPIs;
   dateStringFormatted: string;
@@ -287,6 +384,8 @@ export function processScanRecords(
       shiftSummaries: [],
       departmentSummaries: [],
       manpowerComparison: [],
+      consumerManpowerComparison: [],
+      teamAManpowerComparison: [],
       otCategorySummary: {
         scheduledOtWorkers: 0,
         scheduledOtHours: 0,
@@ -366,6 +465,13 @@ export function processScanRecords(
   const actualCounts: Record<string, { shift1: number; shift2: number; shift3: number }> = {};
   TEAM_A_STANDARD_HC.forEach(std => {
     actualCounts[std.positionName] = { shift1: 0, shift2: 0, shift3: 0 };
+  });
+
+  // Track Standard HC counts for each position (Consumer)
+  const consumerActualCounts: Record<string, { shift1: number; shift2: number; shift3: number }> = {};
+  CONSUMER_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    consumerActualCounts[key] = { shift1: 0, shift2: 0, shift3: 0 };
   });
 
   const processedRecords: ParsedShiftRecord[] = [];
@@ -863,6 +969,36 @@ export function processScanRecords(
       }
     }
 
+    // Increment Standard HC actual count for Consumer
+    const isConsumer =
+      dept.startsWith('51') ||
+      dept.startsWith('4140') ||
+      (empInfo.category === 'Consumer' && !dept.startsWith('1')) ||
+      (empInfo.mu === 'Consumer' && !dept.startsWith('1')) ||
+      Boolean(
+        regularMachineOverride &&
+          (regularMachineOverride.includes('TBM') ||
+            regularMachineOverride.includes('VMI') ||
+            regularMachineOverride.includes('Slitter') ||
+            regularMachineOverride.includes('Steelastic') ||
+            regularMachineOverride.includes('Curing') ||
+            regularMachineOverride.includes('Grinder') ||
+            regularMachineOverride.includes('DBM') ||
+            regularMachineOverride.includes('FVM') ||
+            regularMachineOverride.includes('Stocking'))
+      );
+
+    if (isConsumer) {
+      const effectiveMachine = regularMachineOverride || machine;
+      const effectivePos = regularMachineOverride || position;
+      const consumerPos = mapConsumerPosToStdPosition(effectivePos, dept, effectiveMachine);
+      if (consumerPos && consumerActualCounts[consumerPos.key]) {
+        if (shiftNum === 1) consumerActualCounts[consumerPos.key].shift1++;
+        if (shiftNum === 2) consumerActualCounts[consumerPos.key].shift2++;
+        if (shiftNum === 3) consumerActualCounts[consumerPos.key].shift3++;
+      }
+    }
+
     const officialStart = inScan ? inScan.timestamp : new Date();
     const officialEnd = outScan ? outScan.timestamp : new Date();
 
@@ -907,7 +1043,7 @@ export function processScanRecords(
     });
   });
 
-  // Pre-calculate OT hours covering each shift for each Standard HC position (BCA only)
+  // Pre-calculate OT hours covering each shift for each Standard HC position (Team A)
   const posOtCoverage: Record<string, {
     s1OtHours: number;
     s2OtHours: number;
@@ -928,11 +1064,134 @@ export function processScanRecords(
     };
   });
 
+  // Pre-calculate OT hours covering each shift for each Standard HC position (Consumer)
+  const consumerPosOtCoverage: Record<string, {
+    s1OtHours: number;
+    s2OtHours: number;
+    s3OtHours: number;
+    s1OtPeople: number;
+    s2OtPeople: number;
+    s3OtPeople: number;
+  }> = {};
+
+  CONSUMER_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    consumerPosOtCoverage[key] = {
+      s1OtHours: 0,
+      s2OtHours: 0,
+      s3OtHours: 0,
+      s1OtPeople: 0,
+      s2OtPeople: 0,
+      s3OtPeople: 0
+    };
+  });
+
   processedRecords.forEach(r => {
-    if (r.category && r.category !== 'BCA' && !r.otMachineOverride) return; // Only BCA employees cover Team A Standard HC, unless OT assigned to BCA/แทน WAS
     if (r.otHours <= 0) return;
 
     const empAdjs: DailyAdjustmentRecord[] = adjMap[r.empId] || [];
+
+    // Check if employee is in Consumer
+    const isEmpConsumer =
+      r.dept.startsWith('51') ||
+      r.dept.startsWith('4140') ||
+      (r.category === 'Consumer' && !r.dept.startsWith('1')) ||
+      (r.mu === 'Consumer' && !r.dept.startsWith('1')) ||
+      Boolean(
+        r.regularMachineOverride &&
+          (r.regularMachineOverride.includes('TBM') ||
+            r.regularMachineOverride.includes('VMI') ||
+            r.regularMachineOverride.includes('Slitter') ||
+            r.regularMachineOverride.includes('Steelastic') ||
+            r.regularMachineOverride.includes('Curing') ||
+            r.regularMachineOverride.includes('Grinder') ||
+            r.regularMachineOverride.includes('DBM') ||
+            r.regularMachineOverride.includes('FVM') ||
+            r.regularMachineOverride.includes('Stocking'))
+      );
+
+    if (isEmpConsumer) {
+      const getTargetConsumerStdPosForShift = (targetShift: ShiftType): string | null => {
+        const matchingAdj = empAdjs.find(a => {
+          if (!a.customStartTime) return Boolean(a.otMachineOverride);
+          const h = parseInt(a.customStartTime.split(':')[0], 10);
+          if (targetShift === 1) return (h >= 6 && h <= 8);
+          if (targetShift === 2) return (h >= 14 && h <= 18);
+          if (targetShift === 3) return (h >= 22 || h <= 1);
+          return false;
+        });
+
+        if (matchingAdj) {
+          const targetMach = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || '').trim();
+          const targetP = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || r.position || '').trim();
+          const res = mapConsumerPosToStdPosition(targetP, r.dept, targetMach);
+          return res ? res.key : null;
+        }
+
+        const hasOtherShiftSpecificAdj = empAdjs.some(a => Boolean(a.customStartTime));
+        if (hasOtherShiftSpecificAdj) {
+          const res = mapConsumerPosToStdPosition(r.position, r.dept, r.machine);
+          return res ? res.key : null;
+        }
+
+        const targetMach = (r.otMachineOverride || r.regularMachineOverride || r.machine || '').trim();
+        const targetP = (r.otMachineOverride || r.regularMachineOverride || r.position || '').trim();
+        const res = mapConsumerPosToStdPosition(targetP, r.dept, targetMach);
+        return res ? res.key : null;
+      };
+
+      if (r.shift === 1) {
+        const s2Key = getTargetConsumerStdPosForShift(2);
+        if (s2Key && consumerPosOtCoverage[s2Key]) {
+          consumerPosOtCoverage[s2Key].s2OtPeople++;
+          if (r.otHours <= 8) {
+            consumerPosOtCoverage[s2Key].s2OtHours += r.otHours;
+          } else {
+            consumerPosOtCoverage[s2Key].s2OtHours += 8;
+          }
+        }
+        if (r.otHours > 8) {
+          const s3Key = getTargetConsumerStdPosForShift(3);
+          if (s3Key && consumerPosOtCoverage[s3Key]) {
+            consumerPosOtCoverage[s3Key].s3OtHours += (r.otHours - 8);
+            consumerPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 2) {
+        const outH = r.outTime ? r.outTime.getHours() : 23;
+        if (r.isPreShiftReliefOt && outH >= 22 && outH <= 23) {
+          const s1Key = getTargetConsumerStdPosForShift(1);
+          if (s1Key && consumerPosOtCoverage[s1Key]) {
+            consumerPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            consumerPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        } else {
+          const s3Key = getTargetConsumerStdPosForShift(3);
+          if (s3Key && consumerPosOtCoverage[s3Key]) {
+            consumerPosOtCoverage[s3Key].s3OtHours += r.otHours;
+            consumerPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 3) {
+        const inH = r.inTime ? r.inTime.getHours() : 23;
+        if (inH >= 17 && inH < 22) {
+          const s2Key = getTargetConsumerStdPosForShift(2);
+          if (s2Key && consumerPosOtCoverage[s2Key]) {
+            consumerPosOtCoverage[s2Key].s2OtHours += r.otHours;
+            consumerPosOtCoverage[s2Key].s2OtPeople++;
+          }
+        } else {
+          const s1Key = getTargetConsumerStdPosForShift(1);
+          if (s1Key && consumerPosOtCoverage[s1Key]) {
+            consumerPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            consumerPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        }
+      }
+      return;
+    }
+
+    if (r.category && r.category !== 'BCA' && !r.otMachineOverride) return; // Only BCA employees cover Team A Standard HC, unless OT assigned to BCA/แทน WAS
 
     // Helper to resolve the target Standard HC position for a given OT shift
     const getTargetStdPosForShift = (targetShift: ShiftType): string | null => {
@@ -1019,8 +1278,13 @@ export function processScanRecords(
     }
   });
 
+  const getStatus = (target: number, actual: number): 'EXACT' | 'OVER' | 'UNDER' => {
+    if (actual === target) return 'EXACT';
+    return actual > target ? 'OVER' : 'UNDER';
+  };
+
   // Build ManpowerComparison Rows based on TEAM_A_STANDARD_HC
-  const manpowerComparison: ManpowerComparisonRow[] = TEAM_A_STANDARD_HC.map(std => {
+  const teamAManpowerComparison: ManpowerComparisonRow[] = TEAM_A_STANDARD_HC.map(std => {
     const actuals = actualCounts[std.positionName] || { shift1: 0, shift2: 0, shift3: 0 };
     const otCov = posOtCoverage[std.positionName] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0, s1OtPeople: 0, s2OtPeople: 0, s3OtPeople: 0 };
 
@@ -1076,15 +1340,17 @@ export function processScanRecords(
     const s2Gap = s2Actual - s2Target;
     const s3Gap = s3Actual - s3Target;
 
-    const getStatus = (target: number, actual: number): 'EXACT' | 'OVER' | 'UNDER' => {
-      if (actual === target) return 'EXACT';
-      return actual > target ? 'OVER' : 'UNDER';
-    };
+    const totTarget = s1Target + s2Target + s3Target;
+    const totActual = s1Actual + s2Actual + s3Actual;
+    const totGap = totActual - totTarget;
 
     return {
       id: std.id,
       positionName: std.positionName,
       costCenter: std.costCenter,
+      unit: 'Team A',
+      subDepartment: 'Stock Prep',
+      uniqueKey: `TeamA_${std.positionName}`,
       shift1Target: s1Target,
       shift1Actual: s1Actual,
       shift1Regular: actuals.shift1,
@@ -1110,9 +1376,84 @@ export function processScanRecords(
       shift3OtHours: otCov.s3OtHours,
       shift3OtPeople: otCov.s3OtPeople,
       shift3Gap: s3Gap,
-      shift3Status: getStatus(s3Target, s3Actual)
+      shift3Status: getStatus(s3Target, s3Actual),
+
+      totalTarget: totTarget,
+      totalActual: totActual,
+      totalGap: totGap
     };
   });
+
+  // Build ManpowerComparison Rows based on CONSUMER_STANDARD_HC
+  const consumerManpowerComparison: ManpowerComparisonRow[] = CONSUMER_STANDARD_HC.map(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    const actuals = consumerActualCounts[key] || { shift1: 0, shift2: 0, shift3: 0 };
+    const otCov = consumerPosOtCoverage[key] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0, s1OtPeople: 0, s2OtPeople: 0, s3OtPeople: 0 };
+
+    const s1Target = std.shift1Target;
+    const s2Target = std.shift2Target;
+    const s3Target = std.shift3Target;
+
+    const s1OtHC = Math.round(otCov.s1OtHours / 8);
+    const s1Actual = actuals.shift1 + s1OtHC;
+
+    const s2OtHC = Math.round(otCov.s2OtHours / 8);
+    const s2Actual = actuals.shift2 + s2OtHC;
+
+    const s3OtHC = Math.round(otCov.s3OtHours / 8);
+    const s3Actual = actuals.shift3 + s3OtHC;
+
+    const s1Gap = s1Actual - s1Target;
+    const s2Gap = s2Actual - s2Target;
+    const s3Gap = s3Actual - s3Target;
+
+    const totTarget = s1Target + s2Target + s3Target;
+    const totActual = s1Actual + s2Actual + s3Actual;
+    const totGap = totActual - totTarget;
+
+    return {
+      id: std.id,
+      positionName: std.positionName,
+      costCenter: std.costCenter,
+      unit: 'Consumer',
+      subDepartment: std.subDepartment,
+      uniqueKey: key,
+
+      shift1Target: s1Target,
+      shift1Actual: s1Actual,
+      shift1Regular: actuals.shift1,
+      shift1OtHC: s1OtHC,
+      shift1OtHours: otCov.s1OtHours,
+      shift1OtPeople: otCov.s1OtPeople,
+      shift1Gap: s1Gap,
+      shift1Status: getStatus(s1Target, s1Actual),
+
+      shift2Target: s2Target,
+      shift2Actual: s2Actual,
+      shift2Regular: actuals.shift2,
+      shift2OtHC: s2OtHC,
+      shift2OtHours: otCov.s2OtHours,
+      shift2OtPeople: otCov.s2OtPeople,
+      shift2Gap: s2Gap,
+      shift2Status: getStatus(s2Target, s2Actual),
+
+      shift3Target: s3Target,
+      shift3Actual: s3Actual,
+      shift3Regular: actuals.shift3,
+      shift3OtHC: s3OtHC,
+      shift3OtHours: otCov.s3OtHours,
+      shift3OtPeople: otCov.s3OtPeople,
+      shift3Gap: s3Gap,
+      shift3Status: getStatus(s3Target, s3Actual),
+
+      totalTarget: totTarget,
+      totalActual: totActual,
+      totalGap: totGap
+    };
+  });
+
+  // Default manpowerComparison to Consumer (as requested by user)
+  const manpowerComparison = consumerManpowerComparison;
 
   // Overall KPIs
   const totalWorkers = processedRecords.length;
@@ -1137,6 +1478,8 @@ export function processScanRecords(
     shiftSummaries: [],
     departmentSummaries: [],
     manpowerComparison,
+    consumerManpowerComparison,
+    teamAManpowerComparison,
     otCategorySummary: {
       scheduledOtWorkers: totalOtWorkers,
       scheduledOtHours: totalOtHours,
