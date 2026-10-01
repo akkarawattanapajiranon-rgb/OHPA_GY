@@ -12,6 +12,7 @@ import {
 } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
 import { CONSUMER_STANDARD_HC } from '../data/consumer_standard_hc';
+import { BIAS_AERO_STANDARD_HC } from '../data/bias_aero_standard_hc';
 
 export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!dateStr) return '';
@@ -320,6 +321,111 @@ export function mapConsumerPosToStdPosition(
   return null;
 }
 
+export function mapBiasAeroPosToStdPosition(
+  pos: string,
+  dept: string,
+  machine?: string
+): { positionName: string; subDepartment: 'Build' | 'Curing & FF'; key: string } | null {
+  const m = (machine || '').toLowerCase().trim();
+  const p = (pos || '').toLowerCase().trim();
+  const d = (dept || '').trim();
+
+  // 1. Build (Dept A5110)
+  if (
+    d.startsWith('A5110') ||
+    m.includes('u2') ||
+    m.includes('u3') ||
+    m.includes('u1') ||
+    m.includes('taku') ||
+    m.includes('material handling')
+  ) {
+    if (
+      m === 'team leader' ||
+      m === 'leader' ||
+      p.includes('team leader') ||
+      p.includes('production team leader') ||
+      p.includes('people lead') ||
+      p.includes('hpt leader')
+    ) {
+      return { positionName: 'Leader', subDepartment: 'Build', key: 'Build_Leader' };
+    }
+    if (
+      m.includes('u2') ||
+      m.includes('u3') ||
+      m.includes('u1') ||
+      m.includes('taku') ||
+      p.includes('aircraft tire builder') ||
+      p.includes('builder')
+    ) {
+      return {
+        positionName: 'TBM - U2 , U3 , U1 , Taku Bias',
+        subDepartment: 'Build',
+        key: 'Build_TBM - U2 , U3 , U1 , Taku Bias'
+      };
+    }
+    if (m.includes('material') || p.includes('material') || p.includes('service operator') || p.includes('service')) {
+      return { positionName: 'Material Handling', subDepartment: 'Build', key: 'Build_Material Handling' };
+    }
+    if (d.startsWith('A5110')) {
+      return {
+        positionName: 'TBM - U2 , U3 , U1 , Taku Bias',
+        subDepartment: 'Build',
+        key: 'Build_TBM - U2 , U3 , U1 , Taku Bias'
+      };
+    }
+  }
+
+  // 2. Curing & FF (Dept A5120 & A5130)
+  if (
+    d.startsWith('A5120') ||
+    d.startsWith('A5130') ||
+    m.includes('curing') ||
+    m.includes('spray') ||
+    m.includes('mold') ||
+    m.includes('bladder') ||
+    m.includes('inspection') ||
+    m.includes('final finishing') ||
+    m.includes('buffing') ||
+    m.includes('repair')
+  ) {
+    if (
+      m === 'team leader' ||
+      m === 'leader' ||
+      p.includes('team leader') ||
+      p.includes('production team leader') ||
+      p.includes('people lead')
+    ) {
+      return { positionName: 'Leader', subDepartment: 'Curing & FF', key: 'Curing & FF_Leader' };
+    }
+    if (m.includes('spray') || p.includes('spray')) {
+      return { positionName: 'Spray', subDepartment: 'Curing & FF', key: 'Curing & FF_Spray' };
+    }
+    if (m.includes('mold') || m.includes('bladder') || p.includes('mold') || p.includes('bladder')) {
+      return { positionName: 'Mold & Bladder', subDepartment: 'Curing & FF', key: 'Curing & FF_Mold & Bladder' };
+    }
+    if (m.includes('curing') || p.includes('cure')) {
+      return { positionName: 'Curing', subDepartment: 'Curing & FF', key: 'Curing & FF_Curing' };
+    }
+    if (m.includes('inspection') || p.includes('inspect') || p.includes('trim')) {
+      return { positionName: 'Inspection', subDepartment: 'Curing & FF', key: 'Curing & FF_Inspection' };
+    }
+    if (m.includes('final finishing') || p.includes('finishing operator') || p.includes('finishing')) {
+      return { positionName: 'Final Finishing', subDepartment: 'Curing & FF', key: 'Curing & FF_Final Finishing' };
+    }
+    if (m.includes('buff') || p.includes('buff') || m.includes('repair') || p.includes('repair')) {
+      return { positionName: 'Buffing & Repair', subDepartment: 'Curing & FF', key: 'Curing & FF_Buffing & Repair' };
+    }
+    if (d.startsWith('A5120')) {
+      return { positionName: 'Curing', subDepartment: 'Curing & FF', key: 'Curing & FF_Curing' };
+    }
+    if (d.startsWith('A5130')) {
+      return { positionName: 'Final Finishing', subDepartment: 'Curing & FF', key: 'Curing & FF_Final Finishing' };
+    }
+  }
+
+  return null;
+}
+
 export function cleanEmpScanClusters(empScans: RawScanRecord[]): RawScanRecord[] {
   if (empScans.length <= 1) return empScans;
   const sorted = [...empScans].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
@@ -381,6 +487,7 @@ export function processScanRecords(
   departmentSummaries: DepartmentSummary[];
   manpowerComparison: ManpowerComparisonRow[];
   consumerManpowerComparison: ManpowerComparisonRow[];
+  biasAeroManpowerComparison: ManpowerComparisonRow[];
   teamAManpowerComparison: ManpowerComparisonRow[];
   otCategorySummary: OtCategorySummary;
   overallKPIs: OverallKPIs;
@@ -401,6 +508,7 @@ export function processScanRecords(
       departmentSummaries: [],
       manpowerComparison: [],
       consumerManpowerComparison: [],
+      biasAeroManpowerComparison: [],
       teamAManpowerComparison: [],
       otCategorySummary: {
         scheduledOtWorkers: 0,
@@ -488,6 +596,13 @@ export function processScanRecords(
   CONSUMER_STANDARD_HC.forEach(std => {
     const key = `${std.subDepartment}_${std.positionName}`;
     consumerActualCounts[key] = { shift1: 0, shift2: 0, shift3: 0 };
+  });
+
+  // Track Standard HC counts for each position (Bias Aero)
+  const biasAeroActualCounts: Record<string, { shift1: number; shift2: number; shift3: number }> = {};
+  BIAS_AERO_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    biasAeroActualCounts[key] = { shift1: 0, shift2: 0, shift3: 0 };
   });
 
   const processedRecords: ParsedShiftRecord[] = [];
@@ -1018,6 +1133,36 @@ export function processScanRecords(
       }
     }
 
+    // Increment Standard HC actual count for Bias Aero (Permanent GY employees only)
+    const isBiasAero =
+      ((dept.startsWith('A51') ||
+        empInfo.category === 'Bias Aero' ||
+        empInfo.mu === 'Bias Aero' ||
+        Boolean(
+          regularMachineOverride &&
+            (regularMachineOverride.includes('U2') ||
+              regularMachineOverride.includes('U3') ||
+              regularMachineOverride.includes('U1') ||
+              regularMachineOverride.includes('Taku') ||
+              regularMachineOverride.includes('Material Handling') ||
+              regularMachineOverride.includes('A51'))
+        )) &&
+        !dept.startsWith('1') &&
+        !empInfo.mor?.includes('Contractor') &&
+        !empInfo.sourceSheet?.includes('Contractor') &&
+        !empId.startsWith('9'));
+
+    if (isBiasAero) {
+      const effectiveMachine = regularMachineOverride || machine;
+      const effectivePos = regularMachineOverride || position;
+      const biasPos = mapBiasAeroPosToStdPosition(effectivePos, dept, effectiveMachine);
+      if (biasPos && biasAeroActualCounts[biasPos.key]) {
+        if (shiftNum === 1) biasAeroActualCounts[biasPos.key].shift1++;
+        if (shiftNum === 2) biasAeroActualCounts[biasPos.key].shift2++;
+        if (shiftNum === 3) biasAeroActualCounts[biasPos.key].shift3++;
+      }
+    }
+
     const officialStart = inScan ? inScan.timestamp : new Date();
     const officialEnd = outScan ? outScan.timestamp : new Date();
 
@@ -1096,6 +1241,28 @@ export function processScanRecords(
   CONSUMER_STANDARD_HC.forEach(std => {
     const key = `${std.subDepartment}_${std.positionName}`;
     consumerPosOtCoverage[key] = {
+      s1OtHours: 0,
+      s2OtHours: 0,
+      s3OtHours: 0,
+      s1OtPeople: 0,
+      s2OtPeople: 0,
+      s3OtPeople: 0
+    };
+  });
+
+  // Pre-calculate OT hours covering each shift for each Standard HC position (Bias Aero)
+  const biasAeroPosOtCoverage: Record<string, {
+    s1OtHours: number;
+    s2OtHours: number;
+    s3OtHours: number;
+    s1OtPeople: number;
+    s2OtPeople: number;
+    s3OtPeople: number;
+  }> = {};
+
+  BIAS_AERO_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    biasAeroPosOtCoverage[key] = {
       s1OtHours: 0,
       s2OtHours: 0,
       s3OtHours: 0,
@@ -1205,6 +1372,104 @@ export function processScanRecords(
           if (s1Key && consumerPosOtCoverage[s1Key]) {
             consumerPosOtCoverage[s1Key].s1OtHours += r.otHours;
             consumerPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        }
+      }
+      return;
+    }
+
+    // Check if employee is in Bias Aero (Permanent GY employees only)
+    const isEmpBiasAero =
+      ((r.dept.startsWith('A51') ||
+        r.category === 'Bias Aero' ||
+        r.mu === 'Bias Aero' ||
+        Boolean(
+          r.regularMachineOverride &&
+            (r.regularMachineOverride.includes('U2') ||
+              r.regularMachineOverride.includes('U3') ||
+              r.regularMachineOverride.includes('U1') ||
+              r.regularMachineOverride.includes('Taku') ||
+              r.regularMachineOverride.includes('Material Handling') ||
+              r.regularMachineOverride.includes('A51'))
+        )) &&
+        !r.dept.startsWith('1') &&
+        !r.empId.startsWith('9'));
+
+    if (isEmpBiasAero) {
+      const getTargetBiasAeroStdPosForShift = (targetShift: ShiftType): string | null => {
+        const matchingAdj = empAdjs.find(a => {
+          if (!a.customStartTime) return Boolean(a.otMachineOverride);
+          const h = parseInt(a.customStartTime.split(':')[0], 10);
+          if (targetShift === 1) return (h >= 6 && h <= 8);
+          if (targetShift === 2) return (h >= 14 && h <= 18);
+          if (targetShift === 3) return (h >= 22 || h <= 1);
+          return false;
+        });
+
+        if (matchingAdj) {
+          const targetMach = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || '').trim();
+          const targetP = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || r.position || '').trim();
+          const res = mapBiasAeroPosToStdPosition(targetP, r.dept, targetMach);
+          return res ? res.key : null;
+        }
+
+        const hasOtherShiftSpecificAdj = empAdjs.some(a => Boolean(a.customStartTime));
+        if (hasOtherShiftSpecificAdj) {
+          const res = mapBiasAeroPosToStdPosition(r.position, r.dept, r.machine);
+          return res ? res.key : null;
+        }
+
+        const targetMach = (r.otMachineOverride || r.regularMachineOverride || r.machine || '').trim();
+        const targetP = (r.otMachineOverride || r.regularMachineOverride || r.position || '').trim();
+        const res = mapBiasAeroPosToStdPosition(targetP, r.dept, targetMach);
+        return res ? res.key : null;
+      };
+
+      if (r.shift === 1) {
+        const s2Key = getTargetBiasAeroStdPosForShift(2);
+        if (s2Key && biasAeroPosOtCoverage[s2Key]) {
+          biasAeroPosOtCoverage[s2Key].s2OtPeople++;
+          if (r.otHours <= 8) {
+            biasAeroPosOtCoverage[s2Key].s2OtHours += r.otHours;
+          } else {
+            biasAeroPosOtCoverage[s2Key].s2OtHours += 8;
+          }
+        }
+        if (r.otHours > 8) {
+          const s3Key = getTargetBiasAeroStdPosForShift(3);
+          if (s3Key && biasAeroPosOtCoverage[s3Key]) {
+            biasAeroPosOtCoverage[s3Key].s3OtHours += (r.otHours - 8);
+            biasAeroPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 2) {
+        const outH = r.outTime ? r.outTime.getHours() : 23;
+        if (r.isPreShiftReliefOt && outH >= 22 && outH <= 23) {
+          const s1Key = getTargetBiasAeroStdPosForShift(1);
+          if (s1Key && biasAeroPosOtCoverage[s1Key]) {
+            biasAeroPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            biasAeroPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        } else {
+          const s3Key = getTargetBiasAeroStdPosForShift(3);
+          if (s3Key && biasAeroPosOtCoverage[s3Key]) {
+            biasAeroPosOtCoverage[s3Key].s3OtHours += r.otHours;
+            biasAeroPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 3) {
+        const inH = r.inTime ? r.inTime.getHours() : 23;
+        if (inH >= 17 && inH < 22) {
+          const s2Key = getTargetBiasAeroStdPosForShift(2);
+          if (s2Key && biasAeroPosOtCoverage[s2Key]) {
+            biasAeroPosOtCoverage[s2Key].s2OtHours += r.otHours;
+            biasAeroPosOtCoverage[s2Key].s2OtPeople++;
+          }
+        } else {
+          const s1Key = getTargetBiasAeroStdPosForShift(1);
+          if (s1Key && biasAeroPosOtCoverage[s1Key]) {
+            biasAeroPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            biasAeroPosOtCoverage[s1Key].s1OtPeople++;
           }
         }
       }
@@ -1472,6 +1737,74 @@ export function processScanRecords(
     };
   });
 
+  // Build ManpowerComparison Rows based on BIAS_AERO_STANDARD_HC
+  const biasAeroManpowerComparison: ManpowerComparisonRow[] = BIAS_AERO_STANDARD_HC.map(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    const actuals = biasAeroActualCounts[key] || { shift1: 0, shift2: 0, shift3: 0 };
+    const otCov = biasAeroPosOtCoverage[key] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0, s1OtPeople: 0, s2OtPeople: 0, s3OtPeople: 0 };
+
+    const s1Target = std.shift1Target;
+    const s2Target = std.shift2Target;
+    const s3Target = std.shift3Target;
+
+    const s1OtHC = Math.round(otCov.s1OtHours / 8);
+    const s1Actual = actuals.shift1 + s1OtHC;
+
+    const s2OtHC = Math.round(otCov.s2OtHours / 8);
+    const s2Actual = actuals.shift2 + s2OtHC;
+
+    const s3OtHC = Math.round(otCov.s3OtHours / 8);
+    const s3Actual = actuals.shift3 + s3OtHC;
+
+    const s1Gap = s1Actual - s1Target;
+    const s2Gap = s2Actual - s2Target;
+    const s3Gap = s3Actual - s3Target;
+
+    const totTarget = s1Target + s2Target + s3Target;
+    const totActual = s1Actual + s2Actual + s3Actual;
+    const totGap = totActual - totTarget;
+
+    return {
+      id: std.id,
+      positionName: std.positionName,
+      costCenter: std.costCenter,
+      unit: 'Bias Aero',
+      subDepartment: std.subDepartment,
+      uniqueKey: key,
+
+      shift1Target: s1Target,
+      shift1Actual: s1Actual,
+      shift1Regular: actuals.shift1,
+      shift1OtHC: s1OtHC,
+      shift1OtHours: otCov.s1OtHours,
+      shift1OtPeople: otCov.s1OtPeople,
+      shift1Gap: s1Gap,
+      shift1Status: getStatus(s1Target, s1Actual),
+
+      shift2Target: s2Target,
+      shift2Actual: s2Actual,
+      shift2Regular: actuals.shift2,
+      shift2OtHC: s2OtHC,
+      shift2OtHours: otCov.s2OtHours,
+      shift2OtPeople: otCov.s2OtPeople,
+      shift2Gap: s2Gap,
+      shift2Status: getStatus(s2Target, s2Actual),
+
+      shift3Target: s3Target,
+      shift3Actual: s3Actual,
+      shift3Regular: actuals.shift3,
+      shift3OtHC: s3OtHC,
+      shift3OtHours: otCov.s3OtHours,
+      shift3OtPeople: otCov.s3OtPeople,
+      shift3Gap: s3Gap,
+      shift3Status: getStatus(s3Target, s3Actual),
+
+      totalTarget: totTarget,
+      totalActual: totActual,
+      totalGap: totGap
+    };
+  });
+
   // Default manpowerComparison to Consumer (as requested by user)
   const manpowerComparison = consumerManpowerComparison;
 
@@ -1499,6 +1832,7 @@ export function processScanRecords(
     departmentSummaries: [],
     manpowerComparison,
     consumerManpowerComparison,
+    biasAeroManpowerComparison,
     teamAManpowerComparison,
     otCategorySummary: {
       scheduledOtWorkers: totalOtWorkers,

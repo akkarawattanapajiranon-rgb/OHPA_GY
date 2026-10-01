@@ -241,6 +241,7 @@ export default function App() {
     records,
     manpowerComparison,
     consumerManpowerComparison,
+    biasAeroManpowerComparison,
     teamAManpowerComparison,
     dateStringFormatted
   } = processedData;
@@ -732,6 +733,7 @@ export default function App() {
           <ManpowerGapTable
             data={consumerManpowerComparison || manpowerComparison}
             consumerData={consumerManpowerComparison}
+            biasAeroData={biasAeroManpowerComparison}
             teamAData={teamAManpowerComparison}
             scanDate={dateStringFormatted}
           />

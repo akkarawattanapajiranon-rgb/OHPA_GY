@@ -117,8 +117,8 @@ export interface ManpowerComparisonRow {
   id?: number;
   positionName: string;
   costCenter: string;
-  unit?: 'Consumer' | 'Team A';
-  subDepartment?: 'Building' | 'Curing' | 'Final Finishing' | 'Stock Prep' | 'Mixing' | 'Other';
+  unit?: 'Consumer' | 'Team A' | 'Bias Aero';
+  subDepartment?: 'Building' | 'Curing' | 'Final Finishing' | 'Stock Prep' | 'Mixing' | 'Build' | 'Curing & FF' | 'Other';
   uniqueKey?: string;
   
   shift1Target: number;
