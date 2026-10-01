@@ -35,14 +35,17 @@ function registerApiMiddlewares(middlewares: any) {
             if (fs.existsSync(sourceDir)) {
               try {
                 const dirFiles = fs.readdirSync(sourceDir);
-                const matchingFiles = dirFiles.filter(f => /^(2026\d{4}|\d{8})\.txt$/i.test(f) || (f.endsWith('.txt') && f.includes('2026')));
-                for (const netFile of matchingFiles) {
+                for (const item of dirFiles) {
                   try {
-                    const src = path.join(sourceDir, netFile);
-                    const dest = path.join(scansDir, netFile);
-                    const srcStat = fs.statSync(src);
-                    if (!fs.existsSync(dest) || srcStat.mtimeMs > fs.statSync(dest).mtimeMs) {
-                      fs.copyFileSync(src, dest);
+                    const fullSrc = path.join(sourceDir, item);
+                    const stat = fs.statSync(fullSrc);
+                    if (stat.isDirectory()) {
+                      syncFromFolder(fullSrc);
+                    } else if (/^(2026\d{4}|\d{8})\.txt$/i.test(item) || (item.endsWith('.txt') && item.includes('2026'))) {
+                      const dest = path.join(scansDir, item);
+                      if (!fs.existsSync(dest) || stat.mtimeMs > fs.statSync(dest).mtimeMs) {
+                        fs.copyFileSync(fullSrc, dest);
+                      }
                     }
                   } catch (e) {}
                 }
@@ -811,20 +814,65 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
             } catch (e) {}
           }
 
-          // Sync scan records
-          if (fs.existsSync(networkWasScanDir)) {
-            try {
-              const files = fs.readdirSync(networkWasScanDir);
-              for (const f of files) {
-                if (f.endsWith('.xls') || f.endsWith('.xlsx') || f.endsWith('.csv') || f.endsWith('.txt')) {
-                  const src = path.join(networkWasScanDir, f);
-                  const dest = path.join(wasScansDir, f);
-                  if (!fs.existsSync(dest) || fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs) {
-                    fs.copyFileSync(src, dest);
-                  }
+          const isNonContractorScanFile = (name: string) => {
+            const lower = name.toLowerCase();
+            return (
+              lower.includes('name list') ||
+              lower === 'was_รายเดือน.xlsx' ||
+              lower === 'was_รายเดือน.xls' ||
+              lower === 'was_salary.xlsx' ||
+              lower.includes('opah hour') ||
+              lower.includes('pdi') ||
+              lower.includes('bead') ||
+              lower.includes('retread') ||
+              lower.startsWith('~$')
+            );
+          };
+
+          const isContractorScanFile = (name: string) => {
+            if (!name.endsWith('.xls') && !name.endsWith('.xlsx')) return false;
+            if (isNonContractorScanFile(name)) return false;
+            const lower = name.toLowerCase();
+            return (
+              lower.includes('รายงานเวลาทำงาน') ||
+              lower.includes('was') ||
+              lower.includes('time') ||
+              lower.includes('รายงานการทำงาน') ||
+              lower.includes('ช่าง')
+            );
+          };
+
+          // Recursive sync function for WAS files into local wasScansDir
+          const syncWasFromFolder = (sourceDir: string) => {
+            if (fs.existsSync(sourceDir)) {
+              try {
+                const items = fs.readdirSync(sourceDir);
+                for (const item of items) {
+                  try {
+                    const fullSrc = path.join(sourceDir, item);
+                    const stat = fs.statSync(fullSrc);
+                    if (stat.isDirectory()) {
+                      syncWasFromFolder(fullSrc);
+                    } else if (isContractorScanFile(item)) {
+                      const dest = path.join(wasScansDir, item);
+                      if (!fs.existsSync(dest) || stat.mtimeMs > fs.statSync(dest).mtimeMs) {
+                        fs.copyFileSync(fullSrc, dest);
+                      }
+                    }
+                  } catch (e) {}
                 }
-              }
-            } catch (e) {}
+              } catch (e) {}
+            }
+          };
+
+          if (fs.existsSync(networkWasScanDir)) {
+            syncWasFromFolder(networkWasScanDir);
+          }
+          // Also check Downloads folder for recently downloaded WAS reports
+          const userHome = process.env.USERPROFILE || 'C:\\Users\\aa11909';
+          const downloadsDir = path.join(userHome, 'Downloads');
+          if (fs.existsSync(downloadsDir)) {
+            syncWasFromFolder(downloadsDir);
           }
 
           const findFile = (dir1: string, dir2: string, pattern: string) => {
@@ -874,24 +922,10 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           if (nameListPath) parseContractorSheet(nameListPath);
           if (monthlyListPath) parseContractorSheet(monthlyListPath);
 
-          // Find ALL scan files (excluding mapping files & non-contractor files)
-          const targetWasDir = fs.existsSync(networkWasScanDir) ? networkWasScanDir : wasScansDir;
-          const isNonContractorScanFile = (name: string) => {
-            const lower = name.toLowerCase();
-            return (
-              lower.includes('name list') ||
-              lower === 'was_รายเดือน.xlsx' ||
-              lower === 'was_รายเดือน.xls' ||
-              lower === 'was_salary.xlsx' ||
-              lower.includes('opah hour') ||
-              lower.includes('pdi') ||
-              lower.includes('bead') ||
-              lower.includes('retread') ||
-              lower.startsWith('~$')
-            );
-          };
+          // Find ALL scan files in local wasScansDir
+          const targetWasDir = wasScansDir;
           const wasFiles = fs.existsSync(targetWasDir)
-            ? fs.readdirSync(targetWasDir).filter(f => (f.endsWith('.xls') || f.endsWith('.xlsx')) && !isNonContractorScanFile(f))
+            ? fs.readdirSync(targetWasDir).filter(f => isContractorScanFile(f))
             : [];
 
           if (!nameListPath && !monthlyListPath && wasFiles.length === 0) {
@@ -1178,31 +1212,49 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                     dateShort: dateInfo.formattedShort
                   };
 
-                  if (!recordsByDate[dateKey]) {
-                    recordsByDate[dateKey] = {
-                      dateFormatted: dateInfo.formattedThai,
-                      dateShort: dateKey,
-                      isoDate: dateInfo.iso,
-                      records: []
-                    };
+                  const pad = (n: number) => String(n).padStart(2, '0');
+                  const keysToStore = [
+                    dateKey,
+                    dateInfo.formattedShort
+                  ];
+                  if (dateInfo.iso) {
+                    const [y, m, d] = dateInfo.iso.split('-');
+                    const dNum = parseInt(d, 10);
+                    const mNum = parseInt(m, 10);
+                    keysToStore.push(`${dNum}/${mNum}/${y}`);
+                    keysToStore.push(`${pad(dNum)}/${pad(mNum)}/${y}`);
+                    keysToStore.push(`${dNum}/${pad(mNum)}/${y}`);
+                    keysToStore.push(`${pad(dNum)}/${mNum}/${y}`);
                   }
+                  const uniqueKeys = Array.from(new Set(keysToStore));
 
-                  const existingIdx = recordsByDate[dateKey].records.findIndex((r: any) => r.empCode === empCode);
-                  if (existingIdx >= 0) {
-                    const existing = recordsByDate[dateKey].records[existingIdx];
-                    // Keep the most complete record (prefer non-empty scanOut and higher OT)
-                    if (record.scanOut || !existing.scanOut || record.otHours > existing.otHours || (!existing.hasScannedIn && record.hasScannedIn)) {
-                      recordsByDate[dateKey].records[existingIdx] = {
-                        ...existing,
-                        ...record,
-                        scanOut: record.scanOut || existing.scanOut,
-                        otHours: Math.max(record.otHours, existing.otHours),
-                        totalHours: Math.max(record.totalHours, existing.totalHours),
-                        status: (record.otHours > 0 || existing.otHours > 0) ? `ปกติ (+OT ${Math.max(record.otHours, existing.otHours)} ชม.)` : (record.status || existing.status)
+                  for (const k of uniqueKeys) {
+                    if (!recordsByDate[k]) {
+                      recordsByDate[k] = {
+                        dateFormatted: dateInfo.formattedThai,
+                        dateShort: dateKey,
+                        isoDate: dateInfo.iso,
+                        records: []
                       };
                     }
-                  } else {
-                    recordsByDate[dateKey].records.push(record);
+
+                    const existingIdx = recordsByDate[k].records.findIndex((r: any) => r.empCode === empCode);
+                    if (existingIdx >= 0) {
+                      const existing = recordsByDate[k].records[existingIdx];
+                      // Keep the most complete record (prefer non-empty scanOut and higher OT)
+                      if (record.scanOut || !existing.scanOut || record.otHours > existing.otHours || (!existing.hasScannedIn && record.hasScannedIn)) {
+                        recordsByDate[k].records[existingIdx] = {
+                          ...existing,
+                          ...record,
+                          scanOut: record.scanOut || existing.scanOut,
+                          otHours: Math.max(record.otHours, existing.otHours),
+                          totalHours: Math.max(record.totalHours, existing.totalHours),
+                          status: (record.otHours > 0 || existing.otHours > 0) ? `ปกติ (+OT ${Math.max(record.otHours, existing.otHours)} ชม.)` : (record.status || existing.status)
+                        };
+                      }
+                    } else {
+                      recordsByDate[k].records.push(record);
+                    }
                   }
                 }
               });

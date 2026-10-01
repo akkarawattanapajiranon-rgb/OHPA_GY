@@ -1174,6 +1174,7 @@ export interface RawScanFileItem {
 export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: string; name: string; content: string; dateFormatted: string; dateTimestamp: number }[] {
   const allEvents: { raw: string; parsed: RawScanRecord }[] = [];
   const seenRaw = new Set<string>();
+  const eventsByEmpAndDate = new Map<string, { raw: string; parsed: RawScanRecord }[]>();
 
   for (const f of files) {
     const lines = f.content.split(/\r?\n/);
@@ -1183,7 +1184,15 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
       const parsed = parseScanLine(trimmed);
       if (parsed) {
         seenRaw.add(trimmed);
-        allEvents.push({ raw: trimmed, parsed });
+        const item = { raw: trimmed, parsed };
+        allEvents.push(item);
+        const key = `${parsed.empId}_${parsed.dateStr}`;
+        let list = eventsByEmpAndDate.get(key);
+        if (!list) {
+          list = [];
+          eventsByEmpAndDate.set(key, list);
+        }
+        list.push(item);
       }
     }
   }
@@ -1213,23 +1222,22 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
 
     const isMorningCheckoutOfPrevNight = (empId: string, event: RawScanRecord) => {
       const hh = event.timestamp.getHours();
-      const mm = event.timestamp.getMinutes();
-      const mins = hh * 60 + mm;
+      const min = event.timestamp.getMinutes();
+      const mins = hh * 60 + min;
       if (mins < 4 * 60 || mins > 8 * 60 + 30) return false;
 
       // Had night shift entry (>= 17:00) on D-1?
-      const hadNightShiftPrevDay = allEvents.some(item =>
-        item.parsed.empId === empId &&
-        item.parsed.dateStr === prevDayStr &&
+      const prevEvents = eventsByEmpAndDate.get(`${empId}_${prevDayStr}`);
+      if (!prevEvents) return false;
+      const hadNightShiftPrevDay = prevEvents.some(item =>
         item.parsed.io === 'I' &&
         item.parsed.timestamp.getHours() >= 17
       );
       if (!hadNightShiftPrevDay) return false;
 
       // Has a real shift out later on day D (>= 12:00)?
-      const hasRealDayShiftOut = allEvents.some(item =>
-        item.parsed.empId === empId &&
-        item.parsed.dateStr === dayStr &&
+      const curEvents = eventsByEmpAndDate.get(`${empId}_${dayStr}`) || [];
+      const hasRealDayShiftOut = curEvents.some(item =>
         item.parsed.io === 'O' &&
         item.parsed.timestamp.getHours() >= 12
       );
@@ -1237,8 +1245,11 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
       return !hasRealDayShiftOut;
     };
 
+    // Candidate events for day D (only events on dayStr or nextDayStr)
+    const dayCandidates = allEvents.filter(e => e.parsed.dateStr === dayStr || e.parsed.dateStr === nextDayStr);
+
     // Operational day D events
-    const dayLines = allEvents.filter(item => {
+    const dayLines = dayCandidates.filter(item => {
       const e = item.parsed;
       if (e.dateStr === dayStr) {
         // Exclude morning checkout punch belonging to previous night's shift
@@ -1248,12 +1259,11 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
 
         if (e.io === 'O') {
           const hh = e.timestamp.getHours();
-          const mm = e.timestamp.getMinutes();
-          const mins = hh * 60 + mm;
+          const min = e.timestamp.getMinutes();
+          const mins = hh * 60 + min;
           if (mins >= 4 * 60 && mins <= 8 * 60 + 30) {
-            return allEvents.some(cur =>
-              cur.parsed.empId === e.empId &&
-              cur.parsed.dateStr === dayStr &&
+            const curEvents = eventsByEmpAndDate.get(`${e.empId}_${dayStr}`) || [];
+            return curEvents.some(cur =>
               cur.parsed.io === 'I' &&
               cur.parsed.timestamp.getTime() < e.timestamp.getTime()
             );
@@ -1262,12 +1272,11 @@ export function createPresetsFromScanFiles(files: RawScanFileItem[]): { id: stri
         return true;
       } else if (e.dateStr === nextDayStr && e.io === 'O') {
         const hh = e.timestamp.getHours();
-        const mm = e.timestamp.getMinutes();
-        const mins = hh * 60 + mm;
+        const min = e.timestamp.getMinutes();
+        const mins = hh * 60 + min;
         if (mins <= 8 * 60 + 30) {
-          return allEvents.some(cur =>
-            cur.parsed.empId === e.empId &&
-            cur.parsed.dateStr === dayStr &&
+          const curEvents = eventsByEmpAndDate.get(`${e.empId}_${dayStr}`) || [];
+          return curEvents.some(cur =>
             cur.parsed.io === 'I' &&
             cur.parsed.timestamp.getHours() >= 11
           );

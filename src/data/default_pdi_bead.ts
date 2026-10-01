@@ -307,7 +307,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 1122,
     "29": 951,
-    "30": 1,
+    "30": 693,
     "31": 1
   },
   "bcaReductionDailyHours": {
@@ -340,7 +340,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "27": 0,
     "28": 18.7,
     "29": 15.85,
-    "30": 0.02,
+    "30": 11.55,
     "31": 0.02
   },
   "bcaDevDailyMinutes": {
@@ -409,5 +409,5 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "30": 0,
     "31": 0
   },
-  "updatedAt": "2026-09-30T03:59:47.725Z"
+  "updatedAt": "2026-10-01T01:37:46.611Z"
 };

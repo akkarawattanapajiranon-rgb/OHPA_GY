@@ -920,5 +920,27 @@
     "customEndTime": "15:00",
     "isApprovedTiming": true,
     "reason": "OT / ทำงานที่ แทน WAS (07.00-15.00)"
+  },
+  {
+    "id": "adj-84-12851",
+    "dateStr": "30/09/2026",
+    "empId": "12851",
+    "empName": "ศรายุทธ พิมพ์แก้ว",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "15:00",
+    "customEndTime": "21:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (15.00-21.00)"
+  },
+  {
+    "id": "adj-85-12462",
+    "dateStr": "10/01/2026",
+    "empId": "12462",
+    "empName": "อธิวัฒน์ งามสม",
+    "otMachineOverride": "3-Roll Calender",
+    "customStartTime": "07:00",
+    "customEndTime": "15:00",
+    "isApprovedTiming": true,
+    "reason": "OT / ทำงานที่ 3-Roll Calender (7.00-15.00)"
   }
 ]
