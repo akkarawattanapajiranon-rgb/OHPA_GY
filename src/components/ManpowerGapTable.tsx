@@ -605,17 +605,17 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* Unit Selector Toggle */}
-            <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200">
+            {/* Unit Selector Toggle (Organized in 2 rows) */}
+            <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1 border border-slate-200">
               <button
                 onClick={() => {
                   setSelectedUnit('Consumer');
                   setSelectedSubDept('ALL');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   selectedUnit === 'Consumer'
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 <span>🟢 ทีม Consumer</span>
@@ -633,10 +633,10 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
                   setSelectedUnit('Bias Aero');
                   setSelectedSubDept('ALL');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   selectedUnit === 'Bias Aero'
                     ? 'bg-amber-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 <span>✈️ ทีม Bias Aero</span>
@@ -654,10 +654,10 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
                   setSelectedUnit('Radial Aero');
                   setSelectedSubDept('ALL');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   selectedUnit === 'Radial Aero'
                     ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 <span>🚀 ทีม Radial Aero</span>
@@ -675,13 +675,20 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
                   setSelectedUnit('Team A');
                   setSelectedSubDept('ALL');
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-between gap-2 ${
                   selectedUnit === 'Team A'
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 <span>🔵 ทีม A (Prep)</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    selectedUnit === 'Team A' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  {selectedUnit === 'Team A' ? `${metrics.totalTarget} คน` : '190 คน'}
+                </span>
               </button>
             </div>
 
