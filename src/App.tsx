@@ -617,19 +617,20 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
         {/* Tab Navigation (6 Pages) */}
-        <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2.5">
+        <div className="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-xs grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
           {/* Page 1 Tab: GY Scans */}
           <button
             onClick={() => setActiveTab('PAGE_1_DETAILS')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="1. สแกนนิ้ว GY"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_1_DETAILS'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <UserCheck className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">ตารางสแกน (GY)</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <UserCheck className="w-4 h-4 shrink-0" />
+            <span className="truncate">1. สแกนนิ้ว GY</span>
+            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
             }`}>
               {records.length}
@@ -639,15 +640,16 @@ export default function App() {
           {/* Page 2 Tab: Contractor WAS Scans */}
           <button
             onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="2. สแกนนิ้ว Cont"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_2_CONTRACTOR'
                 ? 'bg-teal-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <HardHat className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">ตารางสแกน (Cont)</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <HardHat className="w-4 h-4 shrink-0" />
+            <span className="truncate">2. สแกนนิ้ว Cont</span>
+            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
             }`}>
               {currentContractorCount}
@@ -657,15 +659,16 @@ export default function App() {
           {/* Page 3 Tab: Standard Manpower Comparison & Dashboard */}
           <button
             onClick={() => setActiveTab('PAGE_3_MANPOWER')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="3. HC Standard"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_3_MANPOWER'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <TableProperties className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">หน้า 3: แดชบอร์ด Standard HC</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <TableProperties className="w-4 h-4 shrink-0" />
+            <span className="truncate">3. HC Standard</span>
+            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_3_MANPOWER' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-700'
             }`}>
               Consumer
@@ -675,55 +678,48 @@ export default function App() {
           {/* Page 4 Tab: OPAH CAL */}
           <button
             onClick={() => setActiveTab('PAGE_4_OHPA')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="4. OPAH CAL"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_4_OHPA'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <Calculator className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">OPAH CAL</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
+            <Calculator className="w-4 h-4 shrink-0" />
+            <span className="truncate">4. OPAH CAL</span>
+            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
               activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
             }`}>
               55012
             </span>
           </button>
 
-          {/* Page 5 Tab: Dashboard */}
+          {/* Page 5 Tab: Org(Hour&OT) */}
           <button
             onClick={() => setActiveTab('PAGE_5_DASHBOARD')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="5. Org(Hour&OT)"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_5_DASHBOARD'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <LayoutDashboard className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">หน้า 5: แดชบอร์ด</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_5_DASHBOARD' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-800'
-            }`}>
-              ชม. & OT
-            </span>
+            <LayoutDashboard className="w-4 h-4 shrink-0" />
+            <span className="truncate">5. Org(Hour&OT)</span>
           </button>
 
-          {/* Page 6 Tab: Late & Early Leave Dashboard */}
+          {/* Page 6 Tab: Late record */}
           <button
             onClick={() => setActiveTab('PAGE_6_LATE_EARLY')}
-            className={`py-3 px-2 sm:px-3 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+            title="6. Late record"
+            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'PAGE_6_LATE_EARLY'
                 ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <Clock className="w-4.5 h-4.5 shrink-0" />
-            <span className="truncate">หน้า 6: สาย/กลับก่อน</span>
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_6_LATE_EARLY' ? 'bg-rose-500 text-white' : 'bg-rose-100 text-rose-800'
-            }`}>
-              สรุปรายวัน/ด.
-            </span>
+            <Clock className="w-4 h-4 shrink-0" />
+            <span className="truncate">6. Late record</span>
           </button>
         </div>
 
