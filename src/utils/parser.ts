@@ -969,24 +969,27 @@ export function processScanRecords(
       }
     }
 
-    // Increment Standard HC actual count for Consumer
+    // Increment Standard HC actual count for Consumer (Permanent GY employees only)
     const isConsumer =
-      dept.startsWith('51') ||
-      dept.startsWith('4140') ||
-      (empInfo.category === 'Consumer' && !dept.startsWith('1')) ||
-      (empInfo.mu === 'Consumer' && !dept.startsWith('1')) ||
-      Boolean(
-        regularMachineOverride &&
-          (regularMachineOverride.includes('TBM') ||
-            regularMachineOverride.includes('VMI') ||
-            regularMachineOverride.includes('Slitter') ||
-            regularMachineOverride.includes('Steelastic') ||
-            regularMachineOverride.includes('Curing') ||
-            regularMachineOverride.includes('Grinder') ||
-            regularMachineOverride.includes('DBM') ||
-            regularMachineOverride.includes('FVM') ||
-            regularMachineOverride.includes('Stocking'))
-      );
+      (dept.startsWith('51') ||
+        dept.startsWith('4140') ||
+        (empInfo.category === 'Consumer' && !dept.startsWith('1')) ||
+        (empInfo.mu === 'Consumer' && !dept.startsWith('1')) ||
+        Boolean(
+          regularMachineOverride &&
+            (regularMachineOverride.includes('TBM') ||
+              regularMachineOverride.includes('VMI') ||
+              regularMachineOverride.includes('Slitter') ||
+              regularMachineOverride.includes('Steelastic') ||
+              regularMachineOverride.includes('Curing') ||
+              regularMachineOverride.includes('Grinder') ||
+              regularMachineOverride.includes('DBM') ||
+              regularMachineOverride.includes('FVM') ||
+              regularMachineOverride.includes('Stocking'))
+        )) &&
+      !empInfo.mor?.includes('Contractor') &&
+      !empInfo.sourceSheet?.includes('Contractor') &&
+      !empId.startsWith('9');
 
     if (isConsumer) {
       const effectiveMachine = regularMachineOverride || machine;
@@ -1091,24 +1094,25 @@ export function processScanRecords(
 
     const empAdjs: DailyAdjustmentRecord[] = adjMap[r.empId] || [];
 
-    // Check if employee is in Consumer
+    // Check if employee is in Consumer (Permanent GY employees only)
     const isEmpConsumer =
-      r.dept.startsWith('51') ||
-      r.dept.startsWith('4140') ||
-      (r.category === 'Consumer' && !r.dept.startsWith('1')) ||
-      (r.mu === 'Consumer' && !r.dept.startsWith('1')) ||
-      Boolean(
-        r.regularMachineOverride &&
-          (r.regularMachineOverride.includes('TBM') ||
-            r.regularMachineOverride.includes('VMI') ||
-            r.regularMachineOverride.includes('Slitter') ||
-            r.regularMachineOverride.includes('Steelastic') ||
-            r.regularMachineOverride.includes('Curing') ||
-            r.regularMachineOverride.includes('Grinder') ||
-            r.regularMachineOverride.includes('DBM') ||
-            r.regularMachineOverride.includes('FVM') ||
-            r.regularMachineOverride.includes('Stocking'))
-      );
+      (r.dept.startsWith('51') ||
+        r.dept.startsWith('4140') ||
+        (r.category === 'Consumer' && !r.dept.startsWith('1')) ||
+        (r.mu === 'Consumer' && !r.dept.startsWith('1')) ||
+        Boolean(
+          r.regularMachineOverride &&
+            (r.regularMachineOverride.includes('TBM') ||
+              r.regularMachineOverride.includes('VMI') ||
+              r.regularMachineOverride.includes('Slitter') ||
+              r.regularMachineOverride.includes('Steelastic') ||
+              r.regularMachineOverride.includes('Curing') ||
+              r.regularMachineOverride.includes('Grinder') ||
+              r.regularMachineOverride.includes('DBM') ||
+              r.regularMachineOverride.includes('FVM') ||
+              r.regularMachineOverride.includes('Stocking'))
+        )) &&
+      !r.empId.startsWith('9');
 
     if (isEmpConsumer) {
       const getTargetConsumerStdPosForShift = (targetShift: ShiftType): string | null => {
