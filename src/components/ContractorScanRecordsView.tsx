@@ -35,20 +35,29 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
 
   const [localDateKey, setLocalDateKey] = useState<string>('');
 
-  // Sort available date keys in descending order (latest date first) - only valid date keys (D/M/YYYY)
+  // Sort available date keys in descending order (latest date first) - deduplicated and strictly chronological for 2026
   const sortedDateKeys = useMemo(() => {
-    return Object.keys(recordsByDate)
-      .filter(k => /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(k))
-      .sort((a, b) => {
-        const pA = a.split('/').map(n => parseInt(n, 10));
-        const pB = b.split('/').map(n => parseInt(n, 10));
-        if (pA.length === 3 && pB.length === 3) {
-          const timeA = new Date(pA[2], pA[1] - 1, pA[0]).getTime();
-          const timeB = new Date(pB[2], pB[1] - 1, pB[0]).getTime();
-          return timeB - timeA;
+    const uniqueMap = new Map<string, number>();
+
+    Object.keys(recordsByDate).forEach(k => {
+      const norm = normalizeToDMY(k);
+      if (!norm) return;
+      const parts = norm.split('/').map(n => parseInt(n, 10));
+      if (parts.length === 3) {
+        const [d, m, y] = parts;
+        // Only accept current operational year (2026)
+        if (y === 2026 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+          const timestamp = new Date(y, m - 1, d).getTime();
+          if (!uniqueMap.has(norm)) {
+            uniqueMap.set(norm, timestamp);
+          }
         }
-        return b.localeCompare(a);
-      });
+      }
+    });
+
+    return Array.from(uniqueMap.keys()).sort((a, b) => {
+      return (uniqueMap.get(b) || 0) - (uniqueMap.get(a) || 0);
+    });
   }, [recordsByDate]);
 
   // When currentDateFormatted changes from top navbar, reset local override to stay in sync
@@ -58,16 +67,18 @@ export const ContractorScanRecordsView: React.FC<ContractorScanRecordsViewProps>
 
   // Active date key matched directly to Navbar currentDateFormatted or local selection
   const activeDateKey = useMemo(() => {
-    if (localDateKey && recordsByDate[localDateKey]) {
-      return localDateKey;
+    if (localDateKey) {
+      const normLocal = normalizeToDMY(localDateKey);
+      if (sortedDateKeys.includes(normLocal)) return normLocal;
+      if (recordsByDate[localDateKey]) return localDateKey;
     }
     const targetNorm = normalizeToDMY(currentDateFormatted);
-    if (recordsByDate[targetNorm]) return targetNorm;
+    if (sortedDateKeys.includes(targetNorm)) return targetNorm;
 
     const match = sortedDateKeys.find(k => normalizeToDMY(k) === targetNorm);
     if (match) return match;
 
-    return sortedDateKeys[0] || '1/9/2026';
+    return sortedDateKeys[0] || '1/10/2026';
   }, [localDateKey, currentDateFormatted, recordsByDate, sortedDateKeys]);
 
   // Current day summary

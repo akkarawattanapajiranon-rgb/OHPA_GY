@@ -947,20 +947,22 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
           };
 
           const excelDateToDateObj = (serial: any) => {
-            if (typeof serial === 'number' && serial >= 30000 && serial <= 70000) {
+            if (typeof serial === 'number' && serial >= 45000 && serial <= 47000) {
               const utc_days = Math.floor(serial - 25569);
               const utc_value = utc_days * 86400;
               const d = new Date(utc_value * 1000);
               const day = d.getUTCDate();
               const month = d.getUTCMonth() + 1;
               const year = d.getUTCFullYear();
-              const pad = (n: number) => String(n).padStart(2, '0');
-              return {
-                isValid: true,
-                iso: `${year}-${pad(month)}-${pad(day)}`,
-                formattedThai: `วันที่ ${day}/${month}/${year}`,
-                formattedShort: `${day}/${month}/${year}`
-              };
+              if (year === 2026) {
+                const pad = (n: number) => String(n).padStart(2, '0');
+                return {
+                  isValid: true,
+                  iso: `${year}-${pad(month)}-${pad(day)}`,
+                  formattedThai: `วันที่ ${day}/${month}/${year}`,
+                  formattedShort: `${day}/${month}/${year}`
+                };
+              }
             }
             const str = String(serial || '').trim();
             const dmy = str.replace(/^[^\d]*/, '').trim();
@@ -971,7 +973,7 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               let y = parseInt(parts[2], 10);
               if (y < 100) y += 2000;
               else if (y > 2400) y -= 543;
-              if (d >= 1 && d <= 31 && m >= 1 && m <= 12 && y >= 2020 && y <= 2035) {
+              if (d >= 1 && d <= 31 && m >= 1 && m <= 12 && y === 2026) {
                 const pad = (n: number) => String(n).padStart(2, '0');
                 return {
                   isValid: true,
@@ -1212,49 +1214,34 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
                     dateShort: dateInfo.formattedShort
                   };
 
-                  const pad = (n: number) => String(n).padStart(2, '0');
-                  const keysToStore = [
-                    dateKey,
-                    dateInfo.formattedShort
-                  ];
-                  if (dateInfo.iso) {
-                    const [y, m, d] = dateInfo.iso.split('-');
-                    const dNum = parseInt(d, 10);
-                    const mNum = parseInt(m, 10);
-                    keysToStore.push(`${dNum}/${mNum}/${y}`);
-                    keysToStore.push(`${pad(dNum)}/${pad(mNum)}/${y}`);
-                    keysToStore.push(`${dNum}/${pad(mNum)}/${y}`);
-                    keysToStore.push(`${pad(dNum)}/${mNum}/${y}`);
-                  }
-                  const uniqueKeys = Array.from(new Set(keysToStore));
+                  const parts = dateInfo.formattedShort.split('/');
+                  const canonicalKey = `${parseInt(parts[0], 10)}/${parseInt(parts[1], 10)}/${parts[2]}`;
 
-                  for (const k of uniqueKeys) {
-                    if (!recordsByDate[k]) {
-                      recordsByDate[k] = {
-                        dateFormatted: dateInfo.formattedThai,
-                        dateShort: dateKey,
-                        isoDate: dateInfo.iso,
-                        records: []
+                  if (!recordsByDate[canonicalKey]) {
+                    recordsByDate[canonicalKey] = {
+                      dateFormatted: dateInfo.formattedThai,
+                      dateShort: canonicalKey,
+                      isoDate: dateInfo.iso,
+                      records: []
+                    };
+                  }
+
+                  const existingIdx = recordsByDate[canonicalKey].records.findIndex((r: any) => r.empCode === empCode);
+                  if (existingIdx >= 0) {
+                    const existing = recordsByDate[canonicalKey].records[existingIdx];
+                    // Keep the most complete record (prefer non-empty scanOut and higher OT)
+                    if (record.scanOut || !existing.scanOut || record.otHours > existing.otHours || (!existing.hasScannedIn && record.hasScannedIn)) {
+                      recordsByDate[canonicalKey].records[existingIdx] = {
+                        ...existing,
+                        ...record,
+                        scanOut: record.scanOut || existing.scanOut,
+                        otHours: Math.max(record.otHours, existing.otHours),
+                        totalHours: Math.max(record.totalHours, existing.totalHours),
+                        status: (record.otHours > 0 || existing.otHours > 0) ? `ปกติ (+OT ${Math.max(record.otHours, existing.otHours)} ชม.)` : (record.status || existing.status)
                       };
                     }
-
-                    const existingIdx = recordsByDate[k].records.findIndex((r: any) => r.empCode === empCode);
-                    if (existingIdx >= 0) {
-                      const existing = recordsByDate[k].records[existingIdx];
-                      // Keep the most complete record (prefer non-empty scanOut and higher OT)
-                      if (record.scanOut || !existing.scanOut || record.otHours > existing.otHours || (!existing.hasScannedIn && record.hasScannedIn)) {
-                        recordsByDate[k].records[existingIdx] = {
-                          ...existing,
-                          ...record,
-                          scanOut: record.scanOut || existing.scanOut,
-                          otHours: Math.max(record.otHours, existing.otHours),
-                          totalHours: Math.max(record.totalHours, existing.totalHours),
-                          status: (record.otHours > 0 || existing.otHours > 0) ? `ปกติ (+OT ${Math.max(record.otHours, existing.otHours)} ชม.)` : (record.status || existing.status)
-                        };
-                      }
-                    } else {
-                      recordsByDate[k].records.push(record);
-                    }
+                  } else {
+                    recordsByDate[canonicalKey].records.push(record);
                   }
                 }
               });
@@ -1262,6 +1249,18 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = ${JSON.stringify(result, n
               console.warn(`Error reading scan file ${scanFilePath}:`, scanErr);
             }
           }
+
+          // Sort recordsByDate strictly by chronological date descending
+          const sortedRecordsByDate: Record<string, any> = {};
+          Object.keys(recordsByDate)
+            .sort((a, b) => {
+              const pA = a.split('/').map(Number);
+              const pB = b.split('/').map(Number);
+              return new Date(pB[2], pB[1] - 1, pB[0]).getTime() - new Date(pA[2], pA[1] - 1, pA[0]).getTime();
+            })
+            .forEach(k => {
+              sortedRecordsByDate[k] = recordsByDate[k];
+            });
 
           // Auto persist to default_contractor_data.ts
           const contractorTs = `import { ContractorScanRecord, ContractorEmployeeInfo } from '../types/contractor';
@@ -1273,7 +1272,7 @@ export const DEFAULT_CONTRACTOR_RECORDS_BY_DATE: Record<string, {
   dateShort: string;
   isoDate: string;
   records: ContractorScanRecord[];
-}> = ${JSON.stringify(recordsByDate, null, 2)};
+}> = ${JSON.stringify(sortedRecordsByDate, null, 2)};
 `;
           writeFileIfChanged(path.resolve(__dirname, 'src/data/default_contractor_data.ts'), contractorTs);
 
