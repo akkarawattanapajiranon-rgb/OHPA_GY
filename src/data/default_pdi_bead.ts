@@ -409,5 +409,5 @@ export const DEFAULT_PDI_BEAD_REPORT: PdiBeadReport = {
     "30": 0.5,
     "31": 0
   },
-  "updatedAt": "2026-10-01T05:02:29.755Z"
+  "updatedAt": "2026-10-01T05:05:26.118Z"
 };

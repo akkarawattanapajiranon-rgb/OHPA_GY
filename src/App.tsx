@@ -622,104 +622,84 @@ export default function App() {
           <button
             onClick={() => setActiveTab('PAGE_1_DETAILS')}
             title="1. สแกนนิ้ว GY"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_1_DETAILS'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <UserCheck className="w-4 h-4 shrink-0" />
-            <span className="truncate">1. สแกนนิ้ว GY</span>
-            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_1_DETAILS' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
-            }`}>
-              {records.length}
-            </span>
+            <span className="whitespace-nowrap">1. สแกนนิ้ว GY</span>
           </button>
 
           {/* Page 2 Tab: Contractor WAS Scans */}
           <button
             onClick={() => setActiveTab('PAGE_2_CONTRACTOR')}
             title="2. สแกนนิ้ว Cont"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_2_CONTRACTOR'
                 ? 'bg-teal-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <HardHat className="w-4 h-4 shrink-0" />
-            <span className="truncate">2. สแกนนิ้ว Cont</span>
-            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_2_CONTRACTOR' ? 'bg-teal-500 text-white' : 'bg-teal-100 text-teal-800'
-            }`}>
-              {currentContractorCount}
-            </span>
+            <span className="whitespace-nowrap">2. สแกนนิ้ว Cont</span>
           </button>
 
           {/* Page 3 Tab: Standard Manpower Comparison & Dashboard */}
           <button
             onClick={() => setActiveTab('PAGE_3_MANPOWER')}
             title="3. HC Standard"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_3_MANPOWER'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <TableProperties className="w-4 h-4 shrink-0" />
-            <span className="truncate">3. HC Standard</span>
-            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_3_MANPOWER' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-700'
-            }`}>
-              Consumer
-            </span>
+            <span className="whitespace-nowrap">3. HC Standard</span>
           </button>
 
           {/* Page 4 Tab: OPAH CAL */}
           <button
             onClick={() => setActiveTab('PAGE_4_OHPA')}
             title="4. OPAH CAL"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_4_OHPA'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <Calculator className="w-4 h-4 shrink-0" />
-            <span className="truncate">4. OPAH CAL</span>
-            <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full font-extrabold shrink-0 ${
-              activeTab === 'PAGE_4_OHPA' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-700'
-            }`}>
-              55012
-            </span>
+            <span className="whitespace-nowrap">4. OPAH CAL</span>
           </button>
 
           {/* Page 5 Tab: Org(Hour&OT) */}
           <button
             onClick={() => setActiveTab('PAGE_5_DASHBOARD')}
             title="5. Org(Hour&OT)"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_5_DASHBOARD'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <LayoutDashboard className="w-4 h-4 shrink-0" />
-            <span className="truncate">5. Org(Hour&OT)</span>
+            <span className="whitespace-nowrap">5. Org(Hour&OT)</span>
           </button>
 
           {/* Page 6 Tab: Late record */}
           <button
             onClick={() => setActiveTab('PAGE_6_LATE_EARLY')}
             title="6. Late record"
-            className={`py-2.5 px-2 sm:px-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
               activeTab === 'PAGE_6_LATE_EARLY'
                 ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
             <Clock className="w-4 h-4 shrink-0" />
-            <span className="truncate">6. Late record</span>
+            <span className="whitespace-nowrap">6. Late record</span>
           </button>
         </div>
 
