@@ -816,56 +816,6 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
         </div>
       )}
 
-      {/* 4. Shortages & Action Alert Box (if any position understaffed) */}
-      {metrics.shortages.length > 0 ? (
-        <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-4 shadow-xs">
-          <div className="flex items-start gap-3">
-            <div className="p-2 bg-amber-100 text-amber-700 rounded-xl shrink-0 mt-0.5">
-              <AlertCircle className="w-4.5 h-4.5" />
-            </div>
-            <div className="flex-1">
-              <h4 className="text-xs font-bold text-amber-900">
-                ⚠️ พบตำแหน่งงานที่กำลังคนไม่พอกับเป้าหมาย Standard HC ({metrics.shortages.length} จุด)
-              </h4>
-              <p className="text-[11px] text-amber-800 mt-0.5">
-                โปรดพิจารณาจัดพนักงาน OT หรือสลับกำลังคนข้ามกะเพื่อป้องกันผลกระทบต่อแผนการผลิต:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-2.5">
-                {metrics.shortages.map((s, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white p-2 rounded-xl border border-amber-200 text-xs flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="font-bold text-slate-800">{s.position}</div>
-                      <div className="text-[10px] text-slate-500">
-                        กะ {s.shift} {s.subDept ? `• ${s.subDept}` : ''}
-                      </div>
-                    </div>
-                    <span className="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-2 py-0.5 rounded-full">
-                      ขาด {Math.abs(s.gap)} คน
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-3.5 shadow-xs flex items-center gap-3">
-          <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl shrink-0">
-            <Check className="w-4 h-4" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-emerald-900">
-              ✅ กำลังคนครบตามมาตรฐาน Standard HC ทุกตำแหน่ง
-            </h4>
-            <p className="text-[11px] text-emerald-700">
-              ไม่มีตำแหน่งงานใดที่ขาดคนในวันและกะที่เลือก การดำเนินงานเป็นไปตามแผนอัตรากำลังคน 100%
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* 5. Search & Status Filter Controls */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4">
