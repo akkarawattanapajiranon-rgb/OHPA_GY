@@ -15,9 +15,9 @@ export const RADIAL_AERO_STANDARD_HC: RadialAeroStandardHCRow[] = [
     positionName: 'Bart',
     costCenter: 'S5110',
     subDepartment: 'Build',
-    shift1Target: 16,
-    shift2Target: 16,
-    shift3Target: 16
+    shift1Target: 15,
+    shift2Target: 15,
+    shift3Target: 15
   },
   {
     id: 2,

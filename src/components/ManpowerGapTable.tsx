@@ -666,7 +666,7 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
                     selectedUnit === 'Radial Aero' ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-700'
                   }`}
                 >
-                  {selectedUnit === 'Radial Aero' ? `${metrics.totalTarget} คน` : '75 คน'}
+                  {selectedUnit === 'Radial Aero' ? `${metrics.totalTarget} คน` : '72 คน'}
                 </span>
               </button>
 
@@ -831,7 +831,7 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
             >
               <Building2 className="w-3.5 h-3.5" />
               <span>Build (S5110)</span>
-              <span className="text-[10px] opacity-80">(เป้า 19/กะ)</span>
+              <span className="text-[10px] opacity-80">(เป้า 18/กะ)</span>
             </button>
             <button
               onClick={() => setSelectedSubDept('Cure & FF')}
