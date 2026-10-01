@@ -106,12 +106,12 @@ export const CONSUMER_STANDARD_HC: ConsumerStandardHCRow[] = [
   },
   {
     id: 11,
-    positionName: 'Inspection',
+    positionName: 'Inspector & Classifier',
     costCenter: '5130',
     subDepartment: 'Final Finishing',
-    shift1Target: 3,
-    shift2Target: 3,
-    shift3Target: 3
+    shift1Target: 4,
+    shift2Target: 4,
+    shift3Target: 4
   },
   {
     id: 12,

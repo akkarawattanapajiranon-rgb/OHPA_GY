@@ -281,8 +281,20 @@ export function mapConsumerPosToStdPosition(
     if (m.includes('smart grinder') || p.includes('smart grinder') || m.includes('grinder') || p.includes('grinder')) {
       return { positionName: 'Smart Grinder', subDepartment: 'Final Finishing', key: 'Final Finishing_Smart Grinder' };
     }
-    if (m.includes('inspection') || p.includes('inspection') || p.includes('inspector') || p.includes('classifier') || p.includes('spray mold')) {
-      return { positionName: 'Inspection', subDepartment: 'Final Finishing', key: 'Final Finishing_Inspection' };
+    if (
+      m.includes('inspection') ||
+      m.includes('inspector') ||
+      m.includes('classifier') ||
+      p.includes('inspection') ||
+      p.includes('inspector') ||
+      p.includes('classifier') ||
+      p.includes('spray mold')
+    ) {
+      return {
+        positionName: 'Inspector & Classifier',
+        subDepartment: 'Final Finishing',
+        key: 'Final Finishing_Inspector & Classifier'
+      };
     }
     if (m.includes('fvm') || p.includes('fvm') || p.includes('finishing crew')) {
       return { positionName: 'FVM', subDepartment: 'Final Finishing', key: 'Final Finishing_FVM' };
@@ -297,7 +309,11 @@ export function mapConsumerPosToStdPosition(
       return { positionName: 'Stocking', subDepartment: 'Final Finishing', key: 'Final Finishing_Stocking' };
     }
     if (d.startsWith('5130')) {
-      return { positionName: 'Inspection', subDepartment: 'Final Finishing', key: 'Final Finishing_Inspection' };
+      return {
+        positionName: 'Inspector & Classifier',
+        subDepartment: 'Final Finishing',
+        key: 'Final Finishing_Inspector & Classifier'
+      };
     }
   }
 

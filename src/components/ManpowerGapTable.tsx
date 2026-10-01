@@ -446,7 +446,7 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
                     selectedUnit === 'Consumer' ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-700'
                   }`}
                 >
-                  145 คน
+                  {selectedUnit === 'Consumer' ? `${metrics.totalTarget} คน` : '148 คน'}
                 </span>
               </button>
 
@@ -528,7 +528,7 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
             >
               <Eye className="w-3.5 h-3.5" />
               <span>Final Finishing (5130)</span>
-              <span className="text-[10px] opacity-80">(เป้า 10/9/9)</span>
+              <span className="text-[10px] opacity-80">(เป้า 11/10/10)</span>
             </button>
           </div>
         )}
