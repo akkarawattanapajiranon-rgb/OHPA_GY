@@ -4,6 +4,7 @@ import { DailyAdjustmentRecord, EmployeeInfo } from '../types/attendance';
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
 import { CONSUMER_STANDARD_HC } from '../data/consumer_standard_hc';
 import { BIAS_AERO_STANDARD_HC } from '../data/bias_aero_standard_hc';
+import { RADIAL_AERO_STANDARD_HC } from '../data/radial_aero_standard_hc';
 import { normalizeDateToMMDDYYYY } from '../utils/parser';
 import {
   X,
@@ -69,6 +70,7 @@ export const DailyAdjustmentModal: React.FC<DailyAdjustmentModalProps> = ({
     new Set([
       ...CONSUMER_STANDARD_HC.map(s => s.positionName),
       ...BIAS_AERO_STANDARD_HC.map(s => s.positionName),
+      ...RADIAL_AERO_STANDARD_HC.map(s => s.positionName),
       ...TEAM_A_STANDARD_HC.map(s => s.positionName)
     ])
   );

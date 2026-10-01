@@ -13,6 +13,7 @@ import {
 import { TEAM_A_STANDARD_HC } from '../data/teamA_standard_hc';
 import { CONSUMER_STANDARD_HC } from '../data/consumer_standard_hc';
 import { BIAS_AERO_STANDARD_HC } from '../data/bias_aero_standard_hc';
+import { RADIAL_AERO_STANDARD_HC } from '../data/radial_aero_standard_hc';
 
 export function normalizeDateToMMDDYYYY(dateStr?: string | number): string {
   if (!dateStr) return '';
@@ -426,6 +427,59 @@ export function mapBiasAeroPosToStdPosition(
   return null;
 }
 
+export function mapRadialAeroPosToStdPosition(
+  pos: string,
+  dept: string,
+  machine?: string
+): { positionName: string; subDepartment: 'Build' | 'Cure & FF'; key: string } | null {
+  const m = (machine || '').toLowerCase().trim();
+  const p = (pos || '').toLowerCase().trim();
+  const d = (dept || '').trim();
+
+  // 1. Cure & FF (S5120 & S5130)
+  if (
+    d.startsWith('S5130') ||
+    m.includes('ff') ||
+    m.includes('final') ||
+    p.includes('finishing')
+  ) {
+    return { positionName: 'F/F', subDepartment: 'Cure & FF', key: 'Cure & FF_F/F' };
+  }
+  if (
+    d.startsWith('S5120') ||
+    m.includes('cure') ||
+    p.includes('cure')
+  ) {
+    return { positionName: 'Cure', subDepartment: 'Cure & FF', key: 'Cure & FF_Cure' };
+  }
+
+  // 2. Build (S5110)
+  if (
+    d.startsWith('S5110') ||
+    m.includes('bart') ||
+    m.includes('tart') ||
+    m.includes('steel')
+  ) {
+    if (m.includes('tart') || p.includes('tart')) {
+      return { positionName: 'Tart', subDepartment: 'Build', key: 'Build_Tart' };
+    }
+    if (m.includes('steel') || p.includes('steel')) {
+      return { positionName: 'Steel', subDepartment: 'Build', key: 'Build_Steel' };
+    }
+    if (
+      m.includes('bart') ||
+      p.includes('bart') ||
+      m.includes('leader') ||
+      p.includes('leader') ||
+      d.startsWith('S5110')
+    ) {
+      return { positionName: 'Bart', subDepartment: 'Build', key: 'Build_Bart' };
+    }
+  }
+
+  return null;
+}
+
 export function cleanEmpScanClusters(empScans: RawScanRecord[]): RawScanRecord[] {
   if (empScans.length <= 1) return empScans;
   const sorted = [...empScans].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
@@ -488,6 +542,7 @@ export function processScanRecords(
   manpowerComparison: ManpowerComparisonRow[];
   consumerManpowerComparison: ManpowerComparisonRow[];
   biasAeroManpowerComparison: ManpowerComparisonRow[];
+  radialAeroManpowerComparison: ManpowerComparisonRow[];
   teamAManpowerComparison: ManpowerComparisonRow[];
   otCategorySummary: OtCategorySummary;
   overallKPIs: OverallKPIs;
@@ -509,6 +564,7 @@ export function processScanRecords(
       manpowerComparison: [],
       consumerManpowerComparison: [],
       biasAeroManpowerComparison: [],
+      radialAeroManpowerComparison: [],
       teamAManpowerComparison: [],
       otCategorySummary: {
         scheduledOtWorkers: 0,
@@ -603,6 +659,13 @@ export function processScanRecords(
   BIAS_AERO_STANDARD_HC.forEach(std => {
     const key = `${std.subDepartment}_${std.positionName}`;
     biasAeroActualCounts[key] = { shift1: 0, shift2: 0, shift3: 0 };
+  });
+
+  // Track Standard HC counts for each position (Radial Aero)
+  const radialAeroActualCounts: Record<string, { shift1: number; shift2: number; shift3: number }> = {};
+  RADIAL_AERO_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    radialAeroActualCounts[key] = { shift1: 0, shift2: 0, shift3: 0 };
   });
 
   const processedRecords: ParsedShiftRecord[] = [];
@@ -1163,6 +1226,35 @@ export function processScanRecords(
       }
     }
 
+    // Increment Standard HC actual count for Radial Aero (Permanent GY employees only)
+    const isRadialAero =
+      ((dept.startsWith('S51') ||
+        empInfo.category === 'Radial Aero' ||
+        empInfo.mu === 'Radial Aero' ||
+        Boolean(
+          regularMachineOverride &&
+            (regularMachineOverride.includes('Bart') ||
+              regularMachineOverride.includes('Tart') ||
+              regularMachineOverride.includes('Steel') ||
+              regularMachineOverride.includes('S51'))
+        )) &&
+        !dept.startsWith('1') &&
+        !dept.startsWith('S1') &&
+        !empInfo.mor?.includes('Contractor') &&
+        !empInfo.sourceSheet?.includes('Contractor') &&
+        !empId.startsWith('9'));
+
+    if (isRadialAero) {
+      const effectiveMachine = regularMachineOverride || machine;
+      const effectivePos = regularMachineOverride || position;
+      const radialPos = mapRadialAeroPosToStdPosition(effectivePos, dept, effectiveMachine);
+      if (radialPos && radialAeroActualCounts[radialPos.key]) {
+        if (shiftNum === 1) radialAeroActualCounts[radialPos.key].shift1++;
+        if (shiftNum === 2) radialAeroActualCounts[radialPos.key].shift2++;
+        if (shiftNum === 3) radialAeroActualCounts[radialPos.key].shift3++;
+      }
+    }
+
     const officialStart = inScan ? inScan.timestamp : new Date();
     const officialEnd = outScan ? outScan.timestamp : new Date();
 
@@ -1263,6 +1355,28 @@ export function processScanRecords(
   BIAS_AERO_STANDARD_HC.forEach(std => {
     const key = `${std.subDepartment}_${std.positionName}`;
     biasAeroPosOtCoverage[key] = {
+      s1OtHours: 0,
+      s2OtHours: 0,
+      s3OtHours: 0,
+      s1OtPeople: 0,
+      s2OtPeople: 0,
+      s3OtPeople: 0
+    };
+  });
+
+  // Pre-calculate OT hours covering each shift for each Standard HC position (Radial Aero)
+  const radialAeroPosOtCoverage: Record<string, {
+    s1OtHours: number;
+    s2OtHours: number;
+    s3OtHours: number;
+    s1OtPeople: number;
+    s2OtPeople: number;
+    s3OtPeople: number;
+  }> = {};
+
+  RADIAL_AERO_STANDARD_HC.forEach(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    radialAeroPosOtCoverage[key] = {
       s1OtHours: 0,
       s2OtHours: 0,
       s3OtHours: 0,
@@ -1470,6 +1584,103 @@ export function processScanRecords(
           if (s1Key && biasAeroPosOtCoverage[s1Key]) {
             biasAeroPosOtCoverage[s1Key].s1OtHours += r.otHours;
             biasAeroPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        }
+      }
+      return;
+    }
+
+    // Check if employee is in Radial Aero (Permanent GY employees only)
+    const isEmpRadialAero =
+      ((r.dept.startsWith('S51') ||
+        r.category === 'Radial Aero' ||
+        r.mu === 'Radial Aero' ||
+        Boolean(
+          r.regularMachineOverride &&
+            (r.regularMachineOverride.includes('Bart') ||
+              r.regularMachineOverride.includes('Tart') ||
+              r.regularMachineOverride.includes('Steel') ||
+              r.regularMachineOverride.includes('S51'))
+        )) &&
+        !r.dept.startsWith('1') &&
+        !r.dept.startsWith('S1') &&
+        !r.empId.startsWith('9'));
+
+    if (isEmpRadialAero) {
+      const getTargetRadialAeroStdPosForShift = (targetShift: ShiftType): string | null => {
+        const matchingAdj = empAdjs.find(a => {
+          if (!a.customStartTime) return Boolean(a.otMachineOverride);
+          const h = parseInt(a.customStartTime.split(':')[0], 10);
+          if (targetShift === 1) return (h >= 6 && h <= 8);
+          if (targetShift === 2) return (h >= 14 && h <= 18);
+          if (targetShift === 3) return (h >= 22 || h <= 1);
+          return false;
+        });
+
+        if (matchingAdj) {
+          const targetMach = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || '').trim();
+          const targetP = (matchingAdj.otMachineOverride || matchingAdj.regularMachineOverride || r.position || '').trim();
+          const res = mapRadialAeroPosToStdPosition(targetP, r.dept, targetMach);
+          return res ? res.key : null;
+        }
+
+        const hasOtherShiftSpecificAdj = empAdjs.some(a => Boolean(a.customStartTime));
+        if (hasOtherShiftSpecificAdj) {
+          const res = mapRadialAeroPosToStdPosition(r.position, r.dept, r.machine);
+          return res ? res.key : null;
+        }
+
+        const targetMach = (r.otMachineOverride || r.regularMachineOverride || r.machine || '').trim();
+        const targetP = (r.otMachineOverride || r.regularMachineOverride || r.position || '').trim();
+        const res = mapRadialAeroPosToStdPosition(targetP, r.dept, targetMach);
+        return res ? res.key : null;
+      };
+
+      if (r.shift === 1) {
+        const s2Key = getTargetRadialAeroStdPosForShift(2);
+        if (s2Key && radialAeroPosOtCoverage[s2Key]) {
+          radialAeroPosOtCoverage[s2Key].s2OtPeople++;
+          if (r.otHours <= 8) {
+            radialAeroPosOtCoverage[s2Key].s2OtHours += r.otHours;
+          } else {
+            radialAeroPosOtCoverage[s2Key].s2OtHours += 8;
+          }
+        }
+        if (r.otHours > 8) {
+          const s3Key = getTargetRadialAeroStdPosForShift(3);
+          if (s3Key && radialAeroPosOtCoverage[s3Key]) {
+            radialAeroPosOtCoverage[s3Key].s3OtHours += (r.otHours - 8);
+            radialAeroPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 2) {
+        const outH = r.outTime ? r.outTime.getHours() : 23;
+        if (r.isPreShiftReliefOt && outH >= 22 && outH <= 23) {
+          const s1Key = getTargetRadialAeroStdPosForShift(1);
+          if (s1Key && radialAeroPosOtCoverage[s1Key]) {
+            radialAeroPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            radialAeroPosOtCoverage[s1Key].s1OtPeople++;
+          }
+        } else {
+          const s3Key = getTargetRadialAeroStdPosForShift(3);
+          if (s3Key && radialAeroPosOtCoverage[s3Key]) {
+            radialAeroPosOtCoverage[s3Key].s3OtHours += r.otHours;
+            radialAeroPosOtCoverage[s3Key].s3OtPeople++;
+          }
+        }
+      } else if (r.shift === 3) {
+        const inH = r.inTime ? r.inTime.getHours() : 23;
+        if (inH >= 17 && inH < 22) {
+          const s2Key = getTargetRadialAeroStdPosForShift(2);
+          if (s2Key && radialAeroPosOtCoverage[s2Key]) {
+            radialAeroPosOtCoverage[s2Key].s2OtHours += r.otHours;
+            radialAeroPosOtCoverage[s2Key].s2OtPeople++;
+          }
+        } else {
+          const s1Key = getTargetRadialAeroStdPosForShift(1);
+          if (s1Key && radialAeroPosOtCoverage[s1Key]) {
+            radialAeroPosOtCoverage[s1Key].s1OtHours += r.otHours;
+            radialAeroPosOtCoverage[s1Key].s1OtPeople++;
           }
         }
       }
@@ -1805,6 +2016,74 @@ export function processScanRecords(
     };
   });
 
+  // Build ManpowerComparison Rows based on RADIAL_AERO_STANDARD_HC
+  const radialAeroManpowerComparison: ManpowerComparisonRow[] = RADIAL_AERO_STANDARD_HC.map(std => {
+    const key = `${std.subDepartment}_${std.positionName}`;
+    const actuals = radialAeroActualCounts[key] || { shift1: 0, shift2: 0, shift3: 0 };
+    const otCov = radialAeroPosOtCoverage[key] || { s1OtHours: 0, s2OtHours: 0, s3OtHours: 0, s1OtPeople: 0, s2OtPeople: 0, s3OtPeople: 0 };
+
+    const s1Target = std.shift1Target;
+    const s2Target = std.shift2Target;
+    const s3Target = std.shift3Target;
+
+    const s1OtHC = Math.round(otCov.s1OtHours / 8);
+    const s1Actual = actuals.shift1 + s1OtHC;
+
+    const s2OtHC = Math.round(otCov.s2OtHours / 8);
+    const s2Actual = actuals.shift2 + s2OtHC;
+
+    const s3OtHC = Math.round(otCov.s3OtHours / 8);
+    const s3Actual = actuals.shift3 + s3OtHC;
+
+    const s1Gap = s1Actual - s1Target;
+    const s2Gap = s2Actual - s2Target;
+    const s3Gap = s3Actual - s3Target;
+
+    const totTarget = s1Target + s2Target + s3Target;
+    const totActual = s1Actual + s2Actual + s3Actual;
+    const totGap = totActual - totTarget;
+
+    return {
+      id: std.id,
+      positionName: std.positionName,
+      costCenter: std.costCenter,
+      unit: 'Radial Aero',
+      subDepartment: std.subDepartment,
+      uniqueKey: key,
+
+      shift1Target: s1Target,
+      shift1Actual: s1Actual,
+      shift1Regular: actuals.shift1,
+      shift1OtHC: s1OtHC,
+      shift1OtHours: otCov.s1OtHours,
+      shift1OtPeople: otCov.s1OtPeople,
+      shift1Gap: s1Gap,
+      shift1Status: getStatus(s1Target, s1Actual),
+
+      shift2Target: s2Target,
+      shift2Actual: s2Actual,
+      shift2Regular: actuals.shift2,
+      shift2OtHC: s2OtHC,
+      shift2OtHours: otCov.s2OtHours,
+      shift2OtPeople: otCov.s2OtPeople,
+      shift2Gap: s2Gap,
+      shift2Status: getStatus(s2Target, s2Actual),
+
+      shift3Target: s3Target,
+      shift3Actual: s3Actual,
+      shift3Regular: actuals.shift3,
+      shift3OtHC: s3OtHC,
+      shift3OtHours: otCov.s3OtHours,
+      shift3OtPeople: otCov.s3OtPeople,
+      shift3Gap: s3Gap,
+      shift3Status: getStatus(s3Target, s3Actual),
+
+      totalTarget: totTarget,
+      totalActual: totActual,
+      totalGap: totGap
+    };
+  });
+
   // Default manpowerComparison to Consumer (as requested by user)
   const manpowerComparison = consumerManpowerComparison;
 
@@ -1833,6 +2112,7 @@ export function processScanRecords(
     manpowerComparison,
     consumerManpowerComparison,
     biasAeroManpowerComparison,
+    radialAeroManpowerComparison,
     teamAManpowerComparison,
     otCategorySummary: {
       scheduledOtWorkers: totalOtWorkers,

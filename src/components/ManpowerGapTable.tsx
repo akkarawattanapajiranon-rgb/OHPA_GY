@@ -20,6 +20,7 @@ interface ManpowerGapTableProps {
   data: ManpowerComparisonRow[];
   consumerData?: ManpowerComparisonRow[];
   biasAeroData?: ManpowerComparisonRow[];
+  radialAeroData?: ManpowerComparisonRow[];
   teamAData?: ManpowerComparisonRow[];
   scanDate?: string;
 }
@@ -28,11 +29,12 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
   data,
   consumerData = [],
   biasAeroData = [],
+  radialAeroData = [],
   teamAData = [],
   scanDate = '-'
 }) => {
-  const [selectedUnit, setSelectedUnit] = useState<'Consumer' | 'Bias Aero' | 'Team A'>('Consumer');
-  const [selectedSubDept, setSelectedSubDept] = useState<'ALL' | 'Building' | 'Curing' | 'Final Finishing' | 'Build' | 'Curing & FF'>('ALL');
+  const [selectedUnit, setSelectedUnit] = useState<'Consumer' | 'Bias Aero' | 'Radial Aero' | 'Team A'>('Consumer');
+  const [selectedSubDept, setSelectedSubDept] = useState<'ALL' | 'Building' | 'Curing' | 'Final Finishing' | 'Build' | 'Curing & FF' | 'Cure & FF'>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'OVER_ONLY' | 'UNDER_ONLY' | 'EXACT_ONLY'>('ALL');
 
@@ -46,18 +48,22 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
       return biasAeroData.length > 0
         ? biasAeroData
         : data.filter(r => r.unit === 'Bias Aero' || r.costCenter.startsWith('A51'));
+    } else if (selectedUnit === 'Radial Aero') {
+      return radialAeroData.length > 0
+        ? radialAeroData
+        : data.filter(r => r.unit === 'Radial Aero' || r.costCenter.startsWith('S51'));
     } else {
       return teamAData.length > 0
         ? teamAData
         : data.filter(r => r.unit === 'Team A' || !r.costCenter.startsWith('51'));
     }
-  }, [selectedUnit, consumerData, biasAeroData, teamAData, data]);
+  }, [selectedUnit, consumerData, biasAeroData, radialAeroData, teamAData, data]);
 
   // Filter dataset by subdepartment, search, and status
   const filteredData = useMemo(() => {
     return activeDataset.filter(row => {
-      // Sub-department filter (for Consumer or Bias Aero)
-      if ((selectedUnit === 'Consumer' || selectedUnit === 'Bias Aero') && selectedSubDept !== 'ALL') {
+      // Sub-department filter (for Consumer, Bias Aero, Radial Aero)
+      if ((selectedUnit === 'Consumer' || selectedUnit === 'Bias Aero' || selectedUnit === 'Radial Aero') && selectedSubDept !== 'ALL') {
         if (row.subDepartment !== selectedSubDept) return false;
       }
 
@@ -271,10 +277,71 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
       });
     }
 
+    if (selectedUnit === 'Radial Aero') {
+      const depts: Array<{
+        key: 'Building' | 'Curing' | 'Final Finishing' | 'Build' | 'Curing & FF' | 'Cure & FF';
+        name: string;
+        costCenter: string;
+        icon: any;
+        color: string;
+        bg: string;
+        border: string;
+      }> = [
+        {
+          key: 'Build',
+          name: 'Build (ประกอบยาง Radial Aero)',
+          costCenter: 'S5110',
+          icon: Building2,
+          color: 'text-indigo-600',
+          bg: 'bg-indigo-50/70',
+          border: 'border-indigo-200'
+        },
+        {
+          key: 'Cure & FF',
+          name: 'Cure & FF (นึ่งและตรวจสอบ)',
+          costCenter: 'S5120 / S5130',
+          icon: Flame,
+          color: 'text-rose-600',
+          bg: 'bg-rose-50/70',
+          border: 'border-rose-200'
+        }
+      ];
+
+      return depts.map(d => {
+        const rows = activeDataset.filter(r => r.subDepartment === d.key);
+        const s1T = rows.reduce((a, b) => a + b.shift1Target, 0);
+        const s1A = rows.reduce((a, b) => a + b.shift1Actual, 0);
+        const s2T = rows.reduce((a, b) => a + b.shift2Target, 0);
+        const s2A = rows.reduce((a, b) => a + b.shift2Actual, 0);
+        const s3T = rows.reduce((a, b) => a + b.shift3Target, 0);
+        const s3A = rows.reduce((a, b) => a + b.shift3Actual, 0);
+
+        const totT = s1T + s2T + s3T;
+        const totA = s1A + s2A + s3A;
+        const gap = totA - totT;
+        const pct = totT > 0 ? (totA / totT) * 100 : 100;
+
+        return {
+          ...d,
+          s1T,
+          s1A,
+          s2T,
+          s2A,
+          s3T,
+          s3A,
+          totT,
+          totA,
+          gap,
+          pct,
+          count: rows.length
+        };
+      });
+    }
+
     return [];
   }, [activeDataset, selectedUnit]);
 
-  // Group filtered data by sub-department for Consumer and Bias Aero
+  // Group filtered data by sub-department for Consumer, Bias Aero, and Radial Aero
   const groupedData = useMemo(() => {
     if (selectedUnit === 'Consumer') {
       const groups: { [key: string]: ManpowerComparisonRow[] } = {};
@@ -315,6 +382,27 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
             k === 'Build'
               ? '1. Build (แผนกประกอบยาง Bias Aero - A5110)'
               : '2. Curing & FF (แผนกนึ่งยางและตรวจสอบ - A5120 / A5130)',
+          subDeptKey: k,
+          items: groups[k]
+        }));
+    }
+
+    if (selectedUnit === 'Radial Aero') {
+      const groups: { [key: string]: ManpowerComparisonRow[] } = {};
+      filteredData.forEach(r => {
+        const g = r.subDepartment || 'Build';
+        if (!groups[g]) groups[g] = [];
+        groups[g].push(r);
+      });
+
+      const order = ['Build', 'Cure & FF'];
+      return order
+        .filter(k => groups[k] && groups[k].length > 0)
+        .map(k => ({
+          groupName:
+            k === 'Build'
+              ? '1. Build (แผนกประกอบยาง Radial Aero - S5110)'
+              : '2. Cure & FF (แผนกนึ่งยางและตรวจสอบ - S5120 / S5130)',
           subDeptKey: k,
           items: groups[k]
         }));
@@ -563,12 +651,33 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
 
               <button
                 onClick={() => {
+                  setSelectedUnit('Radial Aero');
+                  setSelectedSubDept('ALL');
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  selectedUnit === 'Radial Aero'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <span>🚀 ทีม Radial Aero</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    selectedUnit === 'Radial Aero' ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  {selectedUnit === 'Radial Aero' ? `${metrics.totalTarget} คน` : '75 คน'}
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
                   setSelectedUnit('Team A');
                   setSelectedSubDept('ALL');
                 }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   selectedUnit === 'Team A'
-                    ? 'bg-indigo-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -684,6 +793,50 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
               <Flame className="w-3.5 h-3.5" />
               <span>Curing & FF (A5120 / A5130)</span>
               <span className="text-[10px] opacity-80">(เป้า 14/กะ)</span>
+            </button>
+          </div>
+        )}
+
+        {/* Sub-Department Pills (for Radial Aero) */}
+        {selectedUnit === 'Radial Aero' && (
+          <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-slate-500 flex items-center gap-1 mr-1">
+              <Filter className="w-3.5 h-3.5" />
+              เลือกแผนก:
+            </span>
+            <button
+              onClick={() => setSelectedSubDept('ALL')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                selectedSubDept === 'ALL'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              ทั้งหมด (Radial Aero 2 แผนก)
+            </button>
+            <button
+              onClick={() => setSelectedSubDept('Build')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                selectedSubDept === 'Build'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border border-indigo-200/60'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Build (S5110)</span>
+              <span className="text-[10px] opacity-80">(เป้า 19/กะ)</span>
+            </button>
+            <button
+              onClick={() => setSelectedSubDept('Cure & FF')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                selectedSubDept === 'Cure & FF'
+                  ? 'bg-violet-600 text-white shadow-xs'
+                  : 'bg-violet-50 text-violet-800 hover:bg-violet-100 border border-violet-200/60'
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5" />
+              <span>Cure & FF (S5120 / S5130)</span>
+              <span className="text-[10px] opacity-80">(เป้า 6/กะ)</span>
             </button>
           </div>
         )}
@@ -903,8 +1056,8 @@ export const ManpowerGapTable: React.FC<ManpowerGapTableProps> = ({
         </div>
       </div>
 
-      {/* 3. Sub-Department Breakdown Cards (for Consumer & Bias Aero) */}
-      {(selectedUnit === 'Consumer' || selectedUnit === 'Bias Aero') && subDeptMetrics.length > 0 && (
+      {/* 3. Sub-Department Breakdown Cards (for Consumer, Bias Aero & Radial Aero) */}
+      {(selectedUnit === 'Consumer' || selectedUnit === 'Bias Aero' || selectedUnit === 'Radial Aero') && subDeptMetrics.length > 0 && (
         <div className={`grid grid-cols-1 ${selectedUnit === 'Consumer' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
           {subDeptMetrics.map(dept => {
             const Icon = dept.icon;

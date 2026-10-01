@@ -242,6 +242,7 @@ export default function App() {
     manpowerComparison,
     consumerManpowerComparison,
     biasAeroManpowerComparison,
+    radialAeroManpowerComparison,
     teamAManpowerComparison,
     dateStringFormatted
   } = processedData;
@@ -734,6 +735,7 @@ export default function App() {
             data={consumerManpowerComparison || manpowerComparison}
             consumerData={consumerManpowerComparison}
             biasAeroData={biasAeroManpowerComparison}
+            radialAeroData={radialAeroManpowerComparison}
             teamAData={teamAManpowerComparison}
             scanDate={dateStringFormatted}
           />
